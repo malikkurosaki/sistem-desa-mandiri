@@ -76,7 +76,7 @@ model User {
   nik                        String                       @unique
   name                       String
   phone                      String                       @unique
-  email                      String                       @unique
+  email                      String?                      @unique
   gender                     String                       @default("M") //M= Male, F= Female
   isActive                   Boolean                      @default(true)
   createdAt                  DateTime                     @default(now())

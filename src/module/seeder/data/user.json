@@ -1,0 +1,29 @@
+[
+   {
+      "id": "devAmalia",
+      "idUserRole": "dev",
+      "nik": "1111111",
+      "name": "Amalia",
+      "phone": "6298980185458",
+      "email": "amalia@bip.com",
+      "gender": "F"
+   },
+   {
+      "id": "devLukman",
+      "idUserRole": "dev",
+      "nik": "2222222",
+      "name": "Lukman",
+      "phone": "6287701790942",
+      "email": "lukman@bip.com",
+      "gender": "M"
+   },
+   {
+      "id": "devMalik",
+      "idUserRole": "dev",
+      "nik": "3333333",
+      "name": "Malik",
+      "phone": "6289697338821",
+      "email": "malik@bip.com",
+      "gender": "M"
+   }
+]

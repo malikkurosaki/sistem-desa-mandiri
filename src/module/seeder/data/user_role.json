@@ -1,0 +1,32 @@
+[
+   {
+      "id": "dev",
+      "name": "Developer",
+      "desc": "-"
+   },
+   {
+      "id": "supadmin",
+      "name": "Super Admin",
+      "desc": "-"
+   },
+   {
+      "id": "cosupadmin",
+      "name": "Wakil Super Admin",
+      "desc": "-"
+   },
+   {
+      "id": "admin",
+      "name": "Admin",
+      "desc": "-"
+   },
+   {
+      "id": "coadmin",
+      "name": "Wakil Admin",
+      "desc": "-"
+   },
+   {
+      "id": "user",
+      "name": "User",
+      "desc": "-"
+   }
+]
