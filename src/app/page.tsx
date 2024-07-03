@@ -1,12 +1,10 @@
-import { Box, Text } from "@mantine/core";
-import Image from "next/image";
+import { ViewLogin } from "@/module/auth";
+import { Box, Image, rem, Stack, Text } from "@mantine/core";
 
 export default function Home() {
   return (
     <>
-    <Box>
-      <Text>AWAL BRANCH</Text>
-    </Box>
+      <ViewLogin/>
     </>
   );
 }
