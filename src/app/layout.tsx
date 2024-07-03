@@ -8,6 +8,7 @@ import {
 } from "@mantine/core";
 import { WARNA } from "@/module/_global";
 import { Lato } from "next/font/google";
+import '@mantine/carousel/styles.css';
 
 export const metadata = {
   title: "SISTEM DESA MANDIRI",
