@@ -1,4 +1,3 @@
-"use client"
 import { LayoutNavbarHome, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Group, rem, Stack, Text } from '@mantine/core';
 import React from 'react';
@@ -26,12 +25,10 @@ export default function ViewHome() {
                 <HiOutlineUser size={20} color='white' />
               </ActionIcon>
             </Group>
-          </Group>
-        </LayoutNavbarHome>
       <Box p={20}>
         <Stack >
           <Carosole />
-          <Features/>
+          <Features />
         </Stack>
       </Box>
 

@@ -20,7 +20,8 @@ function ViewLogin() {
     "Kami akan mengirim kode verifikasi melalui WhatsApp, guna mengonfirmasikan nomor Anda.";
   
   function onMasuk() {
-    router.push("/verification")
+    // router.push("/verification")
+    window.location.href = "/verification"
   }
   
   return (

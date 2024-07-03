@@ -1,3 +1,4 @@
+'use client'
 import React, { useRef } from 'react';
 import { Carousel } from '@mantine/carousel';
 import { WARNA } from '@/module/_global';
