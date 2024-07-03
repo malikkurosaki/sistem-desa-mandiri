@@ -8,7 +8,8 @@ export default function ViewVerification() {
   const router = useRouter();
 
   function onNext() {
-    router.push("/welcome");
+    // router.push("/welcome");
+    window.location.href = "/welcome"
   }
   return (
     <>

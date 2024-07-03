@@ -37,7 +37,8 @@ export function ViewWelcome() {
 
   function onLanjutkan() {
     if (index === listTextWellcome.length - 1) {
-      return router.push("/home");
+      // return router.push("/home");
+      return window.location.href = "/home"
     }
     setIndex(index + 1);
   }

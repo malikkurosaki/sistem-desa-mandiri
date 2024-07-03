@@ -1,3 +1,4 @@
+'use client'
 import { WARNA } from '@/module/_global';
 import { ActionIcon, Box, Center, Grid, SimpleGrid, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
