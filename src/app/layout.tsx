@@ -30,7 +30,7 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className={`${LatoFont.className}`}>
+      <body className={`${LatoFont.className}`} suppressHydrationWarning>
         <MantineProvider>
           <Box bg={'#252A2F'}>
             <Container h={"100vh"} p={0} size={rem(550)} bg={WARNA.bgWhite}>
