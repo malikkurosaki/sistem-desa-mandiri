@@ -28,7 +28,7 @@ export default function Features() {
               <Text fz={15} c={WARNA.biruTua}>Divisi</Text>
             </Center>
           </Box>
-          <Box>
+          <Box onClick={() => router.push('/project')}>
             <Center>
               <ActionIcon variant="gradient"
                 size={68}
