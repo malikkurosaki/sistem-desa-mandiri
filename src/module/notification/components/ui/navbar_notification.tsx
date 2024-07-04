@@ -7,7 +7,6 @@ import React from 'react';
 export default function NavbarNotification() {
   const router = useRouter()
   return (
-    <Box>
       <LayoutNavbarHome>
         <Grid justify='center' align='center'>
           <Grid.Col span="auto">
@@ -19,7 +18,6 @@ export default function NavbarNotification() {
           <Grid.Col span="auto"></Grid.Col>
         </Grid>
       </LayoutNavbarHome>
-    </Box>
   );
 }
 
