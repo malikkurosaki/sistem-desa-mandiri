@@ -1,0 +1,1 @@
+export { default as list_devision } from "./list_devision.json";
