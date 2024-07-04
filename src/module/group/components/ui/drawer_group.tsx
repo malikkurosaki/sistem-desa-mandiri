@@ -1,7 +1,6 @@
 import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { Box, Button, Center, Flex, Group, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
-import { useAtom } from 'jotai';
 import React, { useState } from 'react';
 import { IoAddCircle } from "react-icons/io5";
 
