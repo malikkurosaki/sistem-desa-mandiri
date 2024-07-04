@@ -1,6 +1,5 @@
 import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Group, Text, TextInput } from '@mantine/core';
-import { useAtom } from 'jotai';
 import React from 'react';
 import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
