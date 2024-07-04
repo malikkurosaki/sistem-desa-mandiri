@@ -32,8 +32,10 @@ export default function RootLayout({
       </head>
       <body className={`${LatoFont.className}`} suppressHydrationWarning>
         <MantineProvider>
-          <Box bg={'#252A2F'}>
-            <Container h={"100vh"} p={0} size={rem(550)} bg={WARNA.bgWhite}>
+          <Box bg={'#252A2F'} pos={"fixed"} w={"100%"} h={"100%"} style={{
+            overflowY: "auto"
+          }}>
+            <Container mih={'100vh'} p={0} size={rem(550)} bg={WARNA.bgWhite}>
               {children}
             </Container>
           </Box>

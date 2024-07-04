@@ -1,6 +1,6 @@
 "use client"
 import { WARNA } from '@/module/_global';
-import { ActionIcon, Box, Center, Grid, Group, ScrollArea, Text } from '@mantine/core';
+import { ActionIcon, Box, Center, Grid, Group, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { HiUser } from 'react-icons/hi2';
