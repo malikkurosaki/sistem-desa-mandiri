@@ -1,14 +1,14 @@
 "use client"
 import { isDrawer, LayoutDrawer, LayoutIconBack, LayoutNavbarHome, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Drawer, Grid, Group, Text } from '@mantine/core';
-import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React from 'react';
 import { HiMenu } from "react-icons/hi";
 import DrawerGroup from './drawer_group';
+import { useHookstate } from '@hookstate/core';
 
 export default function NavbarGroup() {
-  const [openDrawer, setOpenDrawer] = useAtom(isDrawer)
+  const openDrawer = useHookstate(isDrawer)
   const router = useRouter()
   return (
     <>
@@ -22,14 +22,14 @@ export default function NavbarGroup() {
           </Grid.Col>
           <Grid.Col span="auto">
             <Group justify='flex-end'>
-              <ActionIcon onClick={() => setOpenDrawer(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+              <ActionIcon onClick={() => openDrawer.set(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
                 <HiMenu size={20} color='white' />
               </ActionIcon>
             </Group>
           </Grid.Col>
         </Grid>
       </LayoutNavbarHome>
-      <LayoutDrawer opened={openDrawer} title={'MENU'} onClose={() => setOpenDrawer(false)}>
+      <LayoutDrawer opened={openDrawer.get()} title={'MENU'} onClose={() => openDrawer.set(false)}>
         <DrawerGroup />
       </LayoutDrawer>
     </>

@@ -1,4 +1,5 @@
 import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 import { Box, Button, Center, Flex, Group, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import { useAtom } from 'jotai';
 import React, { useState } from 'react';
@@ -6,11 +7,11 @@ import { IoAddCircle } from "react-icons/io5";
 
 export default function DrawerGroup() {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
-  const [openDrawer, setOpenDrawer] = useAtom(isDrawer)
+  const openDrawer = useHookstate(isDrawer)
 
   function onCLose() {
     setOpenDrawerGroup(false)
-    setOpenDrawer(false)
+    openDrawer.set(false)
   }
   return (
     <Box>
@@ -55,7 +56,7 @@ export default function DrawerGroup() {
               MASUK
             </Button>
           </Box>
-          </Box>
+        </Box>
       </LayoutDrawer>
     </Box>
   );
