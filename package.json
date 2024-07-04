@@ -12,6 +12,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@hookstate/core": "^4.0.1",
     "@mantine/carousel": "^7.11.1",
     "@mantine/charts": "^7.11.0",
     "@mantine/code-highlight": "^7.11.0",
