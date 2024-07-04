@@ -1,8 +1,10 @@
-import { WARNA } from '@/module/_global';
+import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Group, Text, TextInput } from '@mantine/core';
+import { useAtom } from 'jotai';
 import React from 'react';
 import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
+import EditDrawerGroup from './ui/edit_drawer_group';
 
 const dataGroup = [
   {
@@ -62,7 +64,7 @@ export default function ListGroup() {
               border: `1px solid ${"#DCEED8"}`,
               padding: 10,
               borderRadius: 10
-            }}>
+            }} >
               <Box>
                 <ActionIcon variant="light" bg={'#DCEED8'} size={50} radius={100} aria-label="icon">
                   <HiOutlineOfficeBuilding color={WARNA.biruTua} size={25} />
@@ -75,6 +77,9 @@ export default function ListGroup() {
           </Box>
         )
       })}
+      {/* <LayoutDrawer opened={openDrawer} onClose={() => setOpenDrawer(false)} title="LEMBAGA PENGKREDITAN DESA">
+        <EditDrawerGroup />
+      </LayoutDrawer> */}
     </Box>
   );
 }
