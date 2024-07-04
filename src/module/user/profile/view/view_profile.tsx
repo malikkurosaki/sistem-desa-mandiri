@@ -1,7 +1,10 @@
 import { LayoutNavbarHome, WARNA } from "@/module/_global";
-import { ActionIcon, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Anchor, Box, Flex, Group, Stack, Text } from "@mantine/core";
 import { BsInfo } from "react-icons/bs";
 import { HiUser } from "react-icons/hi2";
+import { RiIdCardFill } from "react-icons/ri";
+import { FaSquarePhone } from "react-icons/fa6";
+import { MdEmail } from "react-icons/md";
 
 export default function ViewProfile() {
    return (
@@ -18,12 +21,41 @@ export default function ViewProfile() {
                justify="center"
                gap="xs"
             >
-
-               <HiUser size={150} color='white' />
+               <HiUser size={100} color='white' />
                <Text c={'white'} fw={'bold'} fz={25}>Fibra Marcell</Text>
                <Text c={'white'} fw={'lighter'} fz={15}>Kepala Urusan Pengembangan</Text>
             </Stack>
          </LayoutNavbarHome>
+         <Box p={20}>
+            <Group justify="space-between" grow py={5}>
+               <Text fw={'bold'} fz={20}>Informasi</Text>
+               <Anchor href="profile/edit" ta={"right"}>
+                  Edit
+               </Anchor>
+            </Group>
+            <Group justify="space-between" grow py={5}>
+               <Group>
+                  <RiIdCardFill size={28}/>
+                  <Text fz={18}>NIK</Text>
+               </Group>
+               <Text fz={18} fw={'bold'} ta={"right"}>513177782899</Text>
+            </Group>
+            <Group justify="space-between" grow py={5}>
+               <Group>
+                  <FaSquarePhone size={28}/>
+                  <Text fz={18}>NoTelepon</Text>
+               </Group>
+               <Text fz={18} fw={'bold'} ta={"right"}>+62038939293</Text>
+            </Group>
+            <Group justify="space-between" grow py={5}>
+               <Group>
+                  <MdEmail size={28}/>
+                  <Text fz={18}>Email</Text>
+               </Group>
+               <Text fz={18} fw={'bold'} ta={"right"}>marcel@gmail.com</Text>
+            </Group>
+
+         </Box>
       </>
    )
 }
