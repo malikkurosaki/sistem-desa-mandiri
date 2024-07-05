@@ -42,7 +42,7 @@ export default function Features() {
               <Text fz={15} c={WARNA.biruTua}>Proyek</Text>
             </Center>
           </Box>
-          <Box>
+          <Box onClick={() => router.push('/announcement')}>
             <Center>
               <ActionIcon variant="gradient"
                 size={68}
