@@ -1,8 +1,10 @@
+'use client'
 import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
-import { ActionIcon, Box, Group, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Anchor, Box, Group, Text, TextInput } from '@mantine/core';
 import React from 'react';
 import { TfiAnnouncement } from "react-icons/tfi";
 import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { useRouter } from 'next/navigation';
 
 const dataPengumuman = [
    {
@@ -48,6 +50,7 @@ const dataPengumuman = [
 ]
 
 export default function ListAnnouncement() {
+   const router = useRouter()
    return (
       <Box p={20}>
          <TextInput
@@ -65,7 +68,9 @@ export default function ListAnnouncement() {
          />
          {dataPengumuman.map((v, i) => {
             return (
-               <Box pt={20} key={i}>
+               <Box pt={20} key={i} onClick={() => {
+                  router.push(`/announcement/${v.id}`)
+               }}>
                   <Group align='center' style={{
                      borderBottom: `1px solid #D9D9D9`,
                      padding: 10,
