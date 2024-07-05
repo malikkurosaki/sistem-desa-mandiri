@@ -56,7 +56,7 @@ export default function ViewDetailFeature() {
                 <Text fz={15} c={WARNA.biruTua}>Proyek</Text>
               </Center>
             </Box>
-            <Box>
+            <Box onClick={() => router.push('/announcement')}>
               <Center>
                 <ActionIcon variant="gradient"
                   size={68}
@@ -70,7 +70,7 @@ export default function ViewDetailFeature() {
                 <Text fz={15} c={WARNA.biruTua}>Pengumuman</Text>
               </Center>
             </Box>
-            <Box>
+            <Box onClick={() => router.push('/member')}>
               <Center>
                 <ActionIcon variant="gradient"
                   size={68}
