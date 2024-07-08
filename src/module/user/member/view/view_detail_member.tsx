@@ -1,31 +1,17 @@
-import { LayoutNavbarHome, LayoutIconBack, WARNA } from "@/module/_global";
+import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, isDrawer } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import { ActionIcon, Box, Group, Stack, Text } from "@mantine/core";
-import { BsInfo } from "react-icons/bs";
 import { FaSquarePhone } from "react-icons/fa6";
+import { HiMenu } from "react-icons/hi";
 import { HiUser } from "react-icons/hi2";
 import { MdEmail } from "react-icons/md";
 import { RiIdCardFill } from "react-icons/ri";
+import NavbarDetailMember from "../component/ui/navbar_detail_member";
 
 export default function ViewDetailMember({ data }: { data: string }) {
    return (
       <Box>
-         <LayoutNavbarHome>
-            <Group justify="space-between">
-               <LayoutIconBack />
-               <ActionIcon variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
-                  <BsInfo size={20} color='white' />
-               </ActionIcon>
-            </Group>
-            <Stack
-               align="center"
-               justify="center"
-               gap="xs"
-            >
-               <HiUser size={100} color='white' />
-               <Text c={'white'} fw={'bold'} fz={25}>Fibra Marcell</Text>
-               <Text c={'white'} fw={'lighter'} fz={15}>Kepala Urusan Pengembangan</Text>
-            </Stack>
-         </LayoutNavbarHome>
+         <NavbarDetailMember />
          <Box p={20}>
             <Group justify="space-between" grow py={5}>
                <Group>
@@ -48,7 +34,6 @@ export default function ViewDetailMember({ data }: { data: string }) {
                </Group>
                <Text fz={18} fw={'bold'} ta={"right"}>marcel@gmail.com</Text>
             </Group>
-
          </Box>
       </Box>
    )
