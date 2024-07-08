@@ -8,7 +8,7 @@ import DrawerGroup from './drawer_group';
 import { useHookstate } from '@hookstate/core';
 
 export default function NavbarGroup() {
-  const openDrawer = useHookstate(isDrawer)
+  const openDrawerMenu = useHookstate(isDrawer)
   const router = useRouter()
   return (
     <>
@@ -22,14 +22,14 @@ export default function NavbarGroup() {
           </Grid.Col>
           <Grid.Col span="auto">
             <Group justify='flex-end'>
-              <ActionIcon onClick={() => openDrawer.set(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+              <ActionIcon onClick={() => openDrawerMenu.set(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
                 <HiMenu size={20} color='white' />
               </ActionIcon>
             </Group>
           </Grid.Col>
         </Grid>
       </LayoutNavbarHome>
-      <LayoutDrawer opened={openDrawer.get()} title={'MENU'} onClose={() => openDrawer.set(false)}>
+      <LayoutDrawer opened={openDrawerMenu.get()} title={'MENU'} onClose={() => openDrawerMenu.set(false)}>
         <DrawerGroup />
       </LayoutDrawer>
     </>
