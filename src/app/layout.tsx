@@ -9,6 +9,7 @@ import {
 import { WARNA } from "@/module/_global";
 import { Lato } from "next/font/google";
 import '@mantine/carousel/styles.css';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
   title: "SISTEM DESA MANDIRI",
@@ -35,6 +36,7 @@ export default function RootLayout({
           <Box bg={'#252A2F'} pos={"fixed"} w={"100%"} h={"100%"} style={{
             overflowY: "auto"
           }}>
+            <Toaster/>
             <Container mih={'100vh'} p={0} size={rem(550)} bg={WARNA.bgWhite}>
               {children}
             </Container>
