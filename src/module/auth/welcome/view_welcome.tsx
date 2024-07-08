@@ -1,6 +1,7 @@
 "use client";
 import {
   Anchor,
+  Box,
   Button,
   Center,
   Flex,
@@ -37,8 +38,8 @@ export function ViewWelcome() {
 
   function onLanjutkan() {
     if (index === listTextWellcome.length - 1) {
-      // return router.push("/home");
-      return window.location.href = "/home"
+      return router.replace("/home");
+      // return window.location.href = "/home"
     }
     setIndex(index + 1);
   }
@@ -51,9 +52,10 @@ export function ViewWelcome() {
   }
   return (
     <Stack>
-      <Group pos={"absolute"} top={20} right={40}>
-        <Anchor>Lewati</Anchor>
-      </Group>
+      <Flex justify={'right'} mr={30} mt={20}>
+        <Anchor onClick={() => router.replace("/home")}>Lewati</Anchor>
+      </Flex>
+
       <Stack gap={"xl"} p={"xl"} pt={50}>
         <WelcomeItem index={index} listTextWellcome={listTextWellcome} />
       </Stack>
@@ -66,6 +68,8 @@ export function ViewWelcome() {
         right={0}
         p={"xl"}
         align={"center"}
+        maw={550}
+        m={"0 auto"}
       >
         <Button
           display={index === 0 ? "none" : "block"}

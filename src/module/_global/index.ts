@@ -4,6 +4,7 @@ import LayoutIconBack from "./layout/layout_icon_back";
 import LoadingPage from "./layout/layout_loading_page";
 import LayoutLogin from "./layout/layout_login";
 import LayoutNavbarHome from "./layout/layout_navbar_home";
+import LayoutNavbarNew from "./layout/layout_navbar_new";
 import { isDrawer } from "./val/isDrawer";
 import { isModal } from "./val/isModal";
 
@@ -15,3 +16,4 @@ export { LoadingPage }
 export { LayoutDrawer }
 export { isDrawer }
 export { isModal }
+export { LayoutNavbarNew }
