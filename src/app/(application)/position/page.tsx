@@ -1,10 +1,9 @@
+import { ViewListPosition } from '@/module/position';
 import React from 'react';
 
 function Page() {
   return (
-    <div>
-      Page
-    </div>
+    <ViewListPosition />
   );
 }
 
