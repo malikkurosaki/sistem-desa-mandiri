@@ -8,7 +8,8 @@ export const LayoutNavbarHome = ({ children }: { children: React.ReactNode }) =>
         style={{
           borderBottomLeftRadius: 20,
           borderBottomRightRadius: 20,
-          zIndex: 100
+          zIndex: 100,
+          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)"
         }}
       >
         {children}
