@@ -1,23 +1,24 @@
 "use client"
-import { isModal, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import { Box, Button, Flex, Modal, Stack, Text, TextInput } from "@mantine/core";
-import HeaderEditProfile from "../component/ui/header_edit_profile";
 import { HiUser } from "react-icons/hi2";
-import { useHookstate } from "@hookstate/core";
-import { BsQuestionCircleFill } from "react-icons/bs"
 import toast from "react-hot-toast";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useState } from "react";
 
 export default function EditProfile() {
-  const openModal = useHookstate(isModal)
+  const [isValModal, setValModal] = useState(false)
 
-  function onTrue() {
-    toast.success("Sukses! Data tersimpan");
-    openModal.set(false)
+  function onTrue(val: boolean) {
+    if (val) {
+      toast.success("Sukses! Data tersimpan");
+    }
+    setValModal(false)
   }
+
   return (
     <Box>
-      <HeaderEditProfile />
+      <LayoutNavbarNew back='' title='Edit Profil' menu='' />
       <Stack
         align="center"
         justify="center"
@@ -79,15 +80,15 @@ export default function EditProfile() {
           size="md"
           radius={30}
           fullWidth
-          onClick={() => openModal.set(true)}
+          onClick={() => setValModal(true)}
         >
           Simpan
         </Button>
       </Box>
-      <LayoutModal opened={openModal.get()} onClose={() => openModal.set(false)}
-        description="Apakah Anda Ingin Mengganti
-        Status Aktivasi Data?"
-        onYes={onTrue} />
+      <LayoutModal opened={isValModal} onClose={() => setValModal(false)}
+        description="Apakah Anda yakin ingin
+        melakukan perubahan data?"
+        onYes={(val) => { onTrue(val) }} />
     </Box>
   )
 }
