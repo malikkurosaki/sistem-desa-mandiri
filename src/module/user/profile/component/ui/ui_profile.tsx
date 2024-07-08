@@ -8,7 +8,7 @@ export function InfoTitleProfile() {
    return (
       <Group justify="space-between" grow py={5}>
          <Text fw={'bold'} fz={20}>Informasi</Text>
-         <Text ta={"right"} c={"blue"} onClick={() => router.push('/profile/edit')}>Edit</Text>
+         <Text style={{ cursor: 'pointer' }} ta={"right"} c={"blue"} onClick={() => router.push('/profile/edit')}>Edit</Text>
       </Group>
    )
 }

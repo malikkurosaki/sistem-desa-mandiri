@@ -1,21 +1,39 @@
 'use client'
 import { isDrawer, WARNA } from "@/module/_global";
+import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
 import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaPencil } from "react-icons/fa6";
 import { ImUserCheck } from "react-icons/im";
 
-export default function DrawerDetailMember() {
+export default function DrawerDetailMember({ onDeleted }: { onDeleted: (val: boolean) => void }) {
    const router = useRouter()
-   const openDrawer = useHookstate(isDrawer)
+   const [isModal, setModal] = useState(false)
+
+   function onTrue(val: boolean) {
+      if (val) {
+         toast.success('Sukses! data tersimpan')
+         onDeleted(true)
+      }
+
+      setModal(false)
+   }
+
    return (
       <Box>
          <Stack pt={10}>
             <SimpleGrid
                cols={{ base: 3, sm: 3, lg: 3 }}
             >
-               <Flex justify={'center'} align={'center'} direction={'column'}>
+               <Flex justify={'center'} align={'center'} direction={'column'}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                     setModal(true)
+                  }}
+               >
                   <Box>
                      <ImUserCheck size={30} color={WARNA.biruTua} />
                   </Box>
@@ -25,9 +43,9 @@ export default function DrawerDetailMember() {
                </Flex>
 
                <Flex justify={'center'} align={'center'} direction={'column'}
+                  style={{ cursor: 'pointer' }}
                   onClick={() => {
                      router.push('/member/edit/123')
-                     openDrawer.set(false)
                   }}
                >
                   <Box>
@@ -39,6 +57,9 @@ export default function DrawerDetailMember() {
                </Flex>
             </SimpleGrid>
          </Stack>
+         <LayoutModal opened={isModal} onClose={() => setModal(false)}
+            description="Apakah Anda yakin ingin mengubah status aktifasi anggota?"
+            onYes={(val) => { onTrue(val) }} />
       </Box>
    )
 }

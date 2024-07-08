@@ -1,16 +1,21 @@
-import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
-import { useHookstate } from '@hookstate/core';
-import { Box, Button, Center, Flex, Group, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { WARNA } from '@/module/_global';
+import LayoutModal from '@/module/_global/layout/layout_modal';
+import { Box, Flex, SimpleGrid, Stack, Text, } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaPencil, FaTrash } from 'react-icons/fa6';
 
-export default function DrawerDetailAnnouncement() {
-   const openDrawer = useHookstate(isDrawer)
+export default function DrawerDetailAnnouncement({ onDeleted }: { onDeleted: (val: boolean) => void }) {
    const router = useRouter()
+   const [isOpen, setOpen] = useState(false)
 
-   function onCLose() {
-      openDrawer.set(false)
+   function onTrue(val: boolean) {
+      if (val) {
+         toast.success('Sukses! Data terhapus')
+         onDeleted(true)
+      }
+      setOpen(false)
    }
    return (
       <Box>
@@ -18,7 +23,7 @@ export default function DrawerDetailAnnouncement() {
             <SimpleGrid
                cols={{ base: 3, sm: 3, lg: 3 }}
             >
-               <Flex justify={'center'} align={'center'} direction={'column'}>
+               <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => setOpen(true)}>
                   <Box>
                      <FaTrash size={30} color={WARNA.biruTua} />
                   </Box>
@@ -29,8 +34,7 @@ export default function DrawerDetailAnnouncement() {
 
                <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => {
                   router.push('edit/123')
-                  onCLose()
-               }}>
+               }} style={{ cursor: 'pointer' }}>
                   <Box>
                      <FaPencil size={30} color={WARNA.biruTua} />
                   </Box>
@@ -40,6 +44,9 @@ export default function DrawerDetailAnnouncement() {
                </Flex>
             </SimpleGrid>
          </Stack>
+         <LayoutModal opened={isOpen} onClose={() => setOpen(false)}
+            description="Apakah Anda yakin ingin menghapus data?"
+            onYes={(val) => { onTrue(val) }} />
       </Box>
    );
 }
