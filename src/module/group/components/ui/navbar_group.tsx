@@ -27,7 +27,7 @@ export default function NavbarGroup() {
           </Grid.Col>
         </Grid>
       </LayoutNavbarHome>
-      <LayoutDrawer opened={openDrawerMenu.get()} title={'MENU'} onClose={() => openDrawerMenu.set(false)}>
+      <LayoutDrawer opened={openDrawerMenu.get()} title={'Menu'} onClose={() => openDrawerMenu.set(false)}>
         <DrawerGroup />
       </LayoutDrawer>
     </>
