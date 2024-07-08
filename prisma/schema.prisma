@@ -1,0 +1,364 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  name      String
+  desc      String   @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User[]
+}
+
+model Village {
+  id          String        @id @default(cuid())
+  name        String
+  desc        String        @db.Text
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Group       Group[]
+  User        User[]
+  Annoucement Annoucement[]
+  Project     Project[]
+  Division    Division[]
+}
+
+model Group {
+  id                String              @id @default(cuid())
+  Village           Village             @relation(fields: [idVillage], references: [id])
+  idVillage         String
+  name              String
+  isActive          Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  Position          Position[]
+  User              User[]
+  Project           Project[]
+  Division          Division[]
+  AnnoucementMember AnnoucementMember[]
+}
+
+model Position {
+  id        String   @id @default(cuid())
+  Group     Group    @relation(fields: [idGroup], references: [id])
+  idGroup   String
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User[]
+}
+
+model User {
+  id                         String                       @id @default(cuid())
+  UserRole                   UserRole                     @relation(fields: [idUserRole], references: [id])
+  idUserRole                 String
+  Village                    Village?                     @relation(fields: [idVillage], references: [id])
+  idVillage                  String?
+  Group                      Group?                       @relation(fields: [idGroup], references: [id])
+  idGroup                    String?
+  Position                   Position?                    @relation(fields: [idPosition], references: [id])
+  idPosition                 String?
+  nik                        String                       @unique
+  name                       String
+  phone                      String                       @unique
+  email                      String?                      @unique
+  gender                     String                       @default("M") //M= Male, F= Female
+  isActive                   Boolean                      @default(true)
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  Annoucement                Annoucement[]
+  Project                    Project[]
+  ProjectMember              ProjectMember[]
+  ProjectComment             ProjectComment[]
+  UserLog                    UserLog[]
+  Division                   Division[]
+  DivisionMember             DivisionMember[]
+  DivisionProjectMember      DivisionProjectMember[]
+  DivisionProjectFile        DivisionProjectFile[]
+  DivisionDisscussion        DivisionDisscussion[]
+  DivisionDisscussionComment DivisionDisscussionComment[]
+  DivisionDocumentFolderFile DivisionDocumentFolderFile[]
+  DivisionCalendar           DivisionCalendar[]
+}
+
+model UserLog {
+  id        String   @id @default(cuid())
+  User      User     @relation(fields: [idUser], references: [id])
+  idUser    String
+  action    String
+  desc      String   @db.Text
+  idContent String
+  tbContent String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Annoucement {
+  id                String              @id @default(cuid())
+  Village           Village             @relation(fields: [idVillage], references: [id])
+  idVillage         String
+  title             String
+  desc              String              @db.Text
+  isActive          Boolean             @default(true)
+  User              User                @relation(fields: [createdBy], references: [id])
+  createdBy         String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  AnnoucementMember AnnoucementMember[]
+}
+
+model AnnoucementMember {
+  id            String      @id @default(cuid())
+  Annoucement   Annoucement @relation(fields: [idAnnoucement], references: [id])
+  idAnnoucement String
+  Group         Group       @relation(fields: [idGroup], references: [id])
+  idGroup       String
+  Division      Division    @relation(fields: [idDivision], references: [id])
+  idDivision    String
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Project {
+  id             String           @id @default(cuid())
+  Village        Village          @relation(fields: [idVillage], references: [id])
+  idVillage      String
+  Group          Group            @relation(fields: [idGroup], references: [id])
+  idGroup        String
+  name           String
+  desc           String           @db.Text
+  isActive       Boolean          @default(true)
+  User           User             @relation(fields: [createdBy], references: [id])
+  createdBy      String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  ProjectMember  ProjectMember[]
+  ProjectFile    ProjectFile[]
+  ProjectComment ProjectComment[]
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  Project   Project  @relation(fields: [idProject], references: [id])
+  idProject String
+  User      User     @relation(fields: [idUser], references: [id])
+  idUser    String
+  isLeader  Boolean  @default(false)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProjectFile {
+  id        String   @id @default(cuid())
+  Project   Project  @relation(fields: [idProject], references: [id])
+  idProject String
+  name      String
+  extension String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProjectComment {
+  id        String   @id @default(cuid())
+  Project   Project  @relation(fields: [idProject], references: [id])
+  idProject String
+  User      User     @relation(fields: [createdBy], references: [id])
+  createdBy String
+  comment   String   @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Division {
+  id                         String                       @id @default(cuid())
+  Village                    Village                      @relation(fields: [idVillage], references: [id])
+  idVillage                  String
+  Group                      Group                        @relation(fields: [idGroup], references: [id])
+  idGroup                    String
+  name                       String
+  desc                       String                       @db.Text
+  isActive                   Boolean                      @default(true)
+  User                       User                         @relation(fields: [createdBy], references: [id])
+  createdBy                  String
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  DivisionMember             DivisionMember[]
+  AnnoucementMember          AnnoucementMember[]
+  DivisionProject            DivisionProject[]
+  DivisionProjectTask        DivisionProjectTask[]
+  DivisionProjectMember      DivisionProjectMember[]
+  DivisionProjectFile        DivisionProjectFile[]
+  DivisionDisscussion        DivisionDisscussion[]
+  DivisionDocumentFolderFile DivisionDocumentFolderFile[]
+  DivisionDocumentShare      DivisionDocumentShare[]
+  DivisionCalendar           DivisionCalendar[]
+  DivisionCalendarReminder   DivisionCalendarReminder[]
+}
+
+model DivisionMember {
+  id         String   @id @default(cuid())
+  Division   Division @relation(fields: [idDivision], references: [id])
+  idDivision String
+  User       User     @relation(fields: [idUser], references: [id])
+  idUser     String
+  isAdmin    Boolean  @default(false)
+  isLeader   Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model DivisionProject {
+  id         String   @id @default(cuid())
+  Division   Division @relation(fields: [idDivision], references: [id])
+  idDivision String
+  title      String
+  desc       String   @db.Text
+  status     Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model DivisionProjectTask {
+  id         String   @id @default(cuid())
+  Division   Division @relation(fields: [idDivision], references: [id])
+  idDivision String
+  title      String
+  desc       String   @db.Text
+  status     Int      @default(0)
+  dateStart  DateTime @db.Date
+  dateEnd    DateTime @db.Date
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model DivisionProjectMember {
+  id         String   @id @default(cuid())
+  Division   Division @relation(fields: [idDivision], references: [id])
+  idDivision String
+  User       User     @relation(fields: [idUser], references: [id])
+  idUser     String
+  isLeader   Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model DivisionProjectFile {
+  id         String   @id @default(cuid())
+  Division   Division @relation(fields: [idDivision], references: [id])
+  idDivision String
+  name       String
+  extension  String
+  isActive   Boolean  @default(true)
+  User       User     @relation(fields: [createdBy], references: [id])
+  createdBy  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model DivisionDisscussion {
+  id         String   @id @default(cuid())
+  Division   Division @relation(fields: [idDivision], references: [id])
+  idDivision String
+  title      String
+  desc       String   @db.Text
+  status     Int      @default(1) // 1 = open, 2 = close
+  isActive   Boolean  @default(true)
+  User       User     @relation(fields: [createdBy], references: [id])
+  createdBy  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model DivisionDisscussionComment {
+  id            String   @id @default(cuid())
+  idDisscussion String
+  comment       String   @db.Text
+  isActive      Boolean  @default(true)
+  User          User     @relation(fields: [createdBy], references: [id])
+  createdBy     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model DivisionDocumentFolderFile {
+  id                    String                  @id @default(cuid())
+  Division              Division                @relation(fields: [idDivision], references: [id])
+  idDivision            String
+  category              String                  @default("FOLDER") // FOLDER OR FILE
+  name                  String
+  extension             String
+  path                  String
+  isActive              Boolean                 @default(true)
+  User                  User                    @relation(fields: [createdBy], references: [id])
+  createdBy             String
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  DivisionDocumentShare DivisionDocumentShare[]
+}
+
+model DivisionDocumentShare {
+  id                         String                     @id @default(cuid())
+  DivisionDocumentFolderFile DivisionDocumentFolderFile @relation(fields: [idDocument], references: [id])
+  idDocument                 String
+  Division                   Division                   @relation(fields: [idDivision], references: [id])
+  idDivision                 String
+  isActive                   Boolean                    @default(true)
+  createdAt                  DateTime                   @default(now())
+  updatedAt                  DateTime                   @updatedAt
+}
+
+model DivisionCalendar {
+  id                       String                     @id @default(cuid())
+  Division                 Division                   @relation(fields: [idDivision], references: [id])
+  idDivision               String
+  title                    String
+  desc                     String                     @db.Text
+  dateStart                DateTime                   @db.Date
+  dateEnd                  DateTime                   @db.Date
+  repeatEventTyper         String
+  reminderInterval         String
+  status                   Int                        @default(0)
+  isActive                 Boolean                    @default(true)
+  User                     User                       @relation(fields: [createdBy], references: [id])
+  createdBy                String
+  createdAt                DateTime                   @default(now())
+  DivisionCalendarReminder DivisionCalendarReminder[]
+}
+
+model DivisionCalendarReminder {
+  id               String           @id @default(cuid())
+  Division         Division         @relation(fields: [idDivision], references: [id])
+  idDivision       String
+  DivisionCalendar DivisionCalendar @relation(fields: [idCalendar], references: [id])
+  idCalendar       String
+  dateStart        DateTime         @db.Date
+  dateEnd          DateTime         @db.Date
+  status           Int              @default(0)
+  isActive         Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
