@@ -1,9 +1,11 @@
 import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Group, Text, TextInput } from '@mantine/core';
-import React from 'react';
+import React, { useState } from 'react';
 import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import EditDrawerGroup from './ui/edit_drawer_group';
+import { useHookstate } from '@hookstate/core';
+import { useRouter } from 'next/navigation';
 
 const dataGroup = [
   {
@@ -40,9 +42,11 @@ const dataGroup = [
   },
 ]
 
-export default function ListGroup() {
+export default function ListGroupActive() {
+  // const openDrawerEdit = useHookstate(isDrawer)
+  const [openDrawer, setOpenDrawer] = useState(false)
   return (
-    <Box p={20}>
+    <Box pt={20}>
       <TextInput
         styles={{
           input: {
@@ -63,7 +67,7 @@ export default function ListGroup() {
               border: `1px solid ${"#DCEED8"}`,
               padding: 10,
               borderRadius: 10
-            }} >
+            }} onClick={() => setOpenDrawer(true)} >
               <Box>
                 <ActionIcon variant="light" bg={'#DCEED8'} size={50} radius={100} aria-label="icon">
                   <HiOutlineOfficeBuilding color={WARNA.biruTua} size={25} />
@@ -76,9 +80,9 @@ export default function ListGroup() {
           </Box>
         )
       })}
-      {/* <LayoutDrawer opened={openDrawer} onClose={() => setOpenDrawer(false)} title="LEMBAGA PENGKREDITAN DESA">
+      <LayoutDrawer opened={openDrawer} onClose={() => setOpenDrawer(false)} title="LEMBAGA PENGKREDITAN DESA">
         <EditDrawerGroup />
-      </LayoutDrawer> */}
+      </LayoutDrawer>
     </Box>
   );
 }

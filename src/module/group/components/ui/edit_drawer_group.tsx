@@ -1,33 +1,34 @@
 'use client'
 import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 import { Box, Button, Center, Flex, Group, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
-import { IoAddCircle } from "react-icons/io5";
+import { IoAddCircle, IoCloseCircleOutline } from "react-icons/io5";
 
 export default function EditDrawerGroup() {
-  // const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
-  // const [openDrawer, setOpenDrawer] = useAtom(isDrawer)
+  const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
+  const openDrawerEdit = useHookstate(isDrawer)
 
-  // function onCLose() {
-  //   setOpenDrawerGroup(false)
-  //   setOpenDrawer(false)
-  // }
+  function onCLose() {
+    setOpenDrawerGroup(false)
+    openDrawerEdit.set(false)
+  }
   return (
     <Box>
-      {/* <Stack pt={10}>
+      <Stack pt={10}>
         <SimpleGrid
           cols={{ base: 3, sm: 3, lg: 3 }}
-          onClick={() => setOpenDrawerGroup(true)}
+          
         >
           <Flex justify={'center'} align={'center'} direction={'column'} >
             <Box>
-              <IoAddCircle size={30} color={WARNA.biruTua} />
+              <IoCloseCircleOutline size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
               <Text c={WARNA.biruTua}>Tidak Aktif</Text>
             </Box>
           </Flex>
-          <Flex justify={'center'} align={'center'} direction={'column'} >
+          <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => setOpenDrawerGroup(true)}>
             <Box>
               <IoAddCircle size={30} color={WARNA.biruTua} />
             </Box>
@@ -64,7 +65,7 @@ export default function EditDrawerGroup() {
             </Button>
           </Box>
         </Box>
-      </LayoutDrawer> */}
+      </LayoutDrawer>
     </Box>
   );
 }
