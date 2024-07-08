@@ -1,7 +1,6 @@
 "use client"
 import { isDrawer, LayoutDrawer, LayoutIconBack, LayoutNavbarHome, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Drawer, Grid, Group, Text } from '@mantine/core';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 import { HiMenu } from "react-icons/hi";
 import DrawerGroup from './drawer_group';
@@ -9,7 +8,6 @@ import { useHookstate } from '@hookstate/core';
 
 export default function NavbarGroup() {
   const openDrawerMenu = useHookstate(isDrawer)
-  const router = useRouter()
   return (
     <>
       <LayoutNavbarHome>
