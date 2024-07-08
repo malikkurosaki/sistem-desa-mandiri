@@ -1,30 +1,20 @@
 import { LayoutNavbarHome, WARNA } from '@/module/_global';
-import { ActionIcon, Box, Group, rem, Stack, Text } from '@mantine/core';
+import { ActionIcon, Anchor, Box, Group, rem, Stack, Text } from '@mantine/core';
 import React from 'react';
 import { HiMagnifyingGlass, HiOutlineBell, HiOutlineUser } from "react-icons/hi2";
 import Carosole from '../components/carosole';
 import Features from '../components/features';
-// import { useRouter } from 'next/navigation';
+import IconNavbar from '../components/ui/icon_navbar';
+
 
 
 export default function ViewHome() {
-  // const router = useRouter()
   return (
     <>
       <LayoutNavbarHome>
         <Group justify='space-between'>
           <Text fw={'bold'} c={'white'} >Perbekal Darmasaba</Text>
-          <Group>
-            {/* <ActionIcon onClick={() => router.push('/search')} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
-              <HiMagnifyingGlass size={20} color='white' />
-            </ActionIcon> */}
-            <ActionIcon variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
-              <HiOutlineBell size={20} color='white' />
-            </ActionIcon>
-            <ActionIcon variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
-              <HiOutlineUser size={20} color='white' />
-            </ActionIcon>
-          </Group>
+          <IconNavbar/>
         </Group>
       </LayoutNavbarHome>
       <Box p={20}>

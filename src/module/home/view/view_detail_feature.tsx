@@ -6,6 +6,7 @@ import { HiMiniUserGroup, HiMiniPresentationChartBar, HiMegaphone, HiSquares2X2,
 import { PiUsersFourFill } from "react-icons/pi";
 import { FaUsersRays, FaUserTie } from "react-icons/fa6";
 import { useRouter } from 'next/navigation';
+import LayoutIconBack from '@/module/_global/layout/layout_icon_back';
 
 export default function ViewDetailFeature() {
   const router = useRouter()
@@ -13,10 +14,8 @@ export default function ViewDetailFeature() {
     <>
       <LayoutNavbarHome>
         <Grid justify='center' align='center'>
-        <Grid.Col span="auto">
-            <ActionIcon variant="light" onClick={() => router.push('/home')} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
-              <HiChevronLeft size={20} color='white' />
-            </ActionIcon>
+          <Grid.Col span="auto">
+            <LayoutIconBack back='/home' />
           </Grid.Col>
           <Grid.Col span={6}>
             <Text ta={'center'} fw={'bold'} c={'white'} >SEMUA FITUR</Text>
@@ -43,7 +42,7 @@ export default function ViewDetailFeature() {
                 <Text fz={15} c={WARNA.biruTua}>Divisi</Text>
               </Center>
             </Box>
-            <Box>
+            <Box onClick={() => router.push('/project')}>
               <Center>
                 <ActionIcon variant="gradient"
                   size={68}
@@ -57,7 +56,7 @@ export default function ViewDetailFeature() {
                 <Text fz={15} c={WARNA.biruTua}>Proyek</Text>
               </Center>
             </Box>
-            <Box>
+            <Box onClick={() => router.push('/announcement')}>
               <Center>
                 <ActionIcon variant="gradient"
                   size={68}
@@ -71,7 +70,7 @@ export default function ViewDetailFeature() {
                 <Text fz={15} c={WARNA.biruTua}>Pengumuman</Text>
               </Center>
             </Box>
-            <Box>
+            <Box onClick={() => router.push('/member')}>
               <Center>
                 <ActionIcon variant="gradient"
                   size={68}
@@ -85,7 +84,7 @@ export default function ViewDetailFeature() {
                 <Text fz={15} c={WARNA.biruTua}>Anggota</Text>
               </Center>
             </Box>
-            <Box>
+            <Box onClick={() => router.push('/group')}>
               <Center>
                 <ActionIcon variant="gradient"
                   size={68}
@@ -99,7 +98,7 @@ export default function ViewDetailFeature() {
                 <Text fz={15} c={WARNA.biruTua}>Group</Text>
               </Center>
             </Box>
-            <Box>
+            <Box onClick={() => router.push('/position')}>
               <Center>
                 <ActionIcon variant="gradient"
                   size={68}

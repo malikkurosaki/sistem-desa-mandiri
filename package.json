@@ -38,11 +38,14 @@
     "embla-carousel-react": "^7.1.0",
     "lodash": "^4.17.21",
     "next": "14.2.4",
+    "prettier": "^3.3.2",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
     "react-simple-toasts": "^5.10.0",
-    "recharts": "2"
+    "readdirp": "^3.6.0",
+    "recharts": "2",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
