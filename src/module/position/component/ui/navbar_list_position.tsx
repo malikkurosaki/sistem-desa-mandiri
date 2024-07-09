@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 export default function NavbarListPosition() {
    const [isOpen, setOpen] = useState(false)
    return (
-      <Box>
+      <>
          <LayoutNavbarNew back="/home" title="Jabatan"
             menu={
                <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
@@ -23,6 +23,6 @@ export default function NavbarListPosition() {
                toast.success('Sukses! data tersimpan')
             }} />
          </LayoutDrawer>
-      </Box>
+      </>
    );
 }
