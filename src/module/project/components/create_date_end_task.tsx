@@ -77,6 +77,21 @@ export default function ViewDateEndTask() {
             </Group>
           </Box>
         </Stack>
+        <Box pt={30}>
+          <Group justify="space-between">
+            <Text>Anggota Terpilih</Text>
+            <Text>Total 10 Anggota</Text>
+          </Group>
+          <Box pt={20}>
+            <Box mb={20}>
+              <Box style={{
+                border: `1px solid ${'#C7D6E8'}`
+              }} p={20}>
+                <Text>Divisi Kerohanian</Text>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
