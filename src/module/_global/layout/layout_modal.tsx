@@ -1,11 +1,8 @@
-import { useHookstate } from '@hookstate/core';
 import { Box, Button, Flex, Modal, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import { BsQuestionCircleFill } from 'react-icons/bs';
-import { isModal } from '../val/isModal';
 
 export default function LayoutModal({ opened, onClose, description, onYes }: { opened: boolean, onClose: () => void, description: string, onYes: (val: boolean) => void }) {
-  const openModal = useHookstate(isModal)
   const [isValModal, setValModal] = useState(opened)
   return (
     <Modal styles={{

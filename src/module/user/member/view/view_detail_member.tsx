@@ -1,9 +1,5 @@
-import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, isDrawer } from "@/module/_global";
-import { useHookstate } from "@hookstate/core";
-import { ActionIcon, Box, Group, Stack, Text } from "@mantine/core";
+import {  Box, Group, Text } from "@mantine/core";
 import { FaSquarePhone } from "react-icons/fa6";
-import { HiMenu } from "react-icons/hi";
-import { HiUser } from "react-icons/hi2";
 import { MdEmail } from "react-icons/md";
 import { RiIdCardFill } from "react-icons/ri";
 import NavbarDetailMember from "../component/ui/navbar_detail_member";
