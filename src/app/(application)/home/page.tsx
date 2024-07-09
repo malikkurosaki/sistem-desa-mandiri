@@ -1,9 +1,13 @@
-import LayoutNavbarHome from '@/module/_global/layout/layout_navbar_home';
-import { ViewHome } from '@/module/home';
-import { Flex, Group, Text } from '@mantine/core';
+import { ViewDetailFeature, ViewHome, ViewNotification, ViewSearch } from '@/module/home';
 import React from 'react';
 
-function Page() {
+function Page({ searchParams }: { searchParams: { cat: string } }) {
+  if (searchParams.cat == "notification")
+    return <ViewNotification />
+  if (searchParams.cat == "search")
+    return <ViewSearch />
+  if (searchParams.cat == "fitur")
+    return <ViewDetailFeature />
   return (
     <>
       <ViewHome />
