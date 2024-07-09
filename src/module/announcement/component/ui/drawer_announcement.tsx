@@ -15,6 +15,9 @@ export default function DrawerAnnouncement() {
                cols={{ base: 3, sm: 3, lg: 3 }}
             >
                <Flex justify={'center'} align={'center'} direction={'column'}
+                  style={{
+                     cursor: 'pointer'
+                  }}
                   onClick={() => {
                      router.push('/announcement/create')
                   }}
@@ -27,7 +30,14 @@ export default function DrawerAnnouncement() {
                   </Box>
                </Flex>
 
-               <Flex justify={'center'} align={'center'} direction={'column'} >
+               <Flex justify={'center'} align={'center'} direction={'column'}
+                  style={{
+                     cursor: 'pointer'
+                  }}
+                  onClick={() => {
+                     router.push('/announcement?page=filter')
+                  }}
+               >
                   <Box>
                      <RiFilter2Line size={30} color={WARNA.biruTua} />
                   </Box>

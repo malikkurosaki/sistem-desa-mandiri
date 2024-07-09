@@ -32,6 +32,9 @@ export default function DrawerListMember() {
 
                <Flex justify={'center'} align={'center'} direction={'column'}
                   style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                     router.push('/member?page=filter')
+                  }}
                >
                   <Box>
                      <RiFilter2Line size={30} color={WARNA.biruTua} />
