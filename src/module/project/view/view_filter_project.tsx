@@ -10,23 +10,23 @@ const dataFilter = [
     name: 'Semua Proyek'
   },
   {
-    id: 1,
+    id: 2,
     name: 'Proyek Dinas'
   },
   {
-    id: 1,
+    id: 3,
     name: 'Proyek Lpd'
   },
   {
-    id: 1,
+    id: 4,
     name: 'Proyek Lembaga 1'
   },
   {
-    id: 1,
+    id: 5,
     name: 'Proyek Lembaga 2'
   },
   {
-    id: 1,
+    id: 6,
     name: 'Proyek Lembaga 3'
   },
 ]
