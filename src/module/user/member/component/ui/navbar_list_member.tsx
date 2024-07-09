@@ -16,7 +16,7 @@ export default function NavbarListMember() {
                </ActionIcon>
             }
          />
-         <LayoutDrawer opened={isOpenDrawer} title={'MENU'} onClose={() => setOpenDrawer(false)}>
+         <LayoutDrawer opened={isOpenDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
             <DrawerListMember />
          </LayoutDrawer>
       </>
