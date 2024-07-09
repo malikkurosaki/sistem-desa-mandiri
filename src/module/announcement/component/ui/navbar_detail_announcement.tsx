@@ -15,7 +15,7 @@ export default function NavbarDetailAnnouncement() {
                   <HiMenu size={20} color='white' />
                </ActionIcon>}
          />
-         <LayoutDrawer opened={isOpenDrawer} title={'MENU'} onClose={() => setOpenDrawer(false)}>
+         <LayoutDrawer opened={isOpenDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
             <DrawerDetailAnnouncement onDeleted={() => setOpenDrawer(false)} />
          </LayoutDrawer>
       </Box>
