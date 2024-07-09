@@ -1,15 +1,12 @@
-
-import { LayoutIconBack, LayoutNavbarHome, WARNA } from '@/module/_global';
-import { ActionIcon, Box, Grid, Text, TextInput } from '@mantine/core';
-import { useRouter } from 'next/navigation';
+import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { Box, TextInput } from '@mantine/core';
 import React from 'react';
-import { HiChevronLeft, HiMagnifyingGlass } from 'react-icons/hi2';
-import NavbarSearch from '../components/ui/navbar_search';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
 
 export default function ViewSearch() {
   return (
     <>
-      <NavbarSearch />
+      <LayoutNavbarNew back='/home' title='Pencarian' menu={<></>} />
       <Box p={20}>
         <TextInput
           styles={{

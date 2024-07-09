@@ -1,13 +1,12 @@
-import { LayoutIconBack, LayoutNavbarHome } from '@/module/_global'
-import { Box, Grid, Text } from '@mantine/core'
+import { LayoutNavbarNew } from '@/module/_global'
+import { Box, } from '@mantine/core'
 import React from 'react'
-import NavbarNotification from '../components/ui/navbar_notification'
 import ListNotification from '../components/list_notification'
 
 export default function ViewNotification() {
     return (
         <Box>
-            <NavbarNotification />
+            <LayoutNavbarNew back='/home' title='Notifikasi' menu={<></>} />
             <Box p={20}>
                 <ListNotification />
             </Box>
