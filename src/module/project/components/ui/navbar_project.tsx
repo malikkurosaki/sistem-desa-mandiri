@@ -156,7 +156,7 @@ export default function NavbarProject() {
             <Box pt={20}>
               {dataProject.map((v, i) => {
                 return (
-                  <Box key={i}>
+                  <Box key={i} mb={20}>
                     <Card shadow="sm" padding="md" component="a" radius={10}>
                       <Card.Section>
                         <Box h={120} bg={WARNA.biruTua}>
