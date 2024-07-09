@@ -7,6 +7,7 @@ import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiS
 import { MdAccountCircle } from 'react-icons/md';
 import { RiCircleFill } from "react-icons/ri";
 import DrawerProject from './drawer_project';
+import { useRouter } from 'next/navigation';
 
 const dataProject = [
   {
@@ -56,6 +57,7 @@ const dataProject = [
 export default function NavbarProject() {
   const [isList, setIsList] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false)
+  const router = useRouter()
 
   const handleList = () => {
     setIsList(!isList)
@@ -123,7 +125,7 @@ export default function NavbarProject() {
               {dataProject.map((v, i) => {
                 return (
                   <Box key={i}>
-                    <Group justify="space-between" mb={10}>
+                    <Group justify="space-between" mb={10} onClick={() => router.push(`/project/${v.id}`)}>
                       <Group>
                         <Center>
                           <ActionIcon
@@ -156,7 +158,7 @@ export default function NavbarProject() {
               {dataProject.map((v, i) => {
                 return (
                   <Box key={i} mb={20}>
-                    <Card shadow="sm" padding="md" component="a" radius={10}>
+                    <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/project/${v.id}`)}>
                       <Card.Section>
                         <Box h={120} bg={WARNA.biruTua}>
                           <Flex justify={'center'} align={'center'} h={"100%"}>

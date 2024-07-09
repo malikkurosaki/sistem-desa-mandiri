@@ -1,13 +1,58 @@
 "use client";
 import { LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Box, Group, Input, SimpleGrid, Stack, Text } from "@mantine/core";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Group,
+  Input,
+  SimpleGrid,
+  Stack,
+  Text,
+} from "@mantine/core";
 import React, { useState } from "react";
 import { DatePicker } from "@mantine/dates";
 import moment from "moment";
 import { IoIosArrowDropright } from "react-icons/io";
+import { useRouter } from "next/navigation";
+
+const dataTugas = [
+  {
+    id: 1,
+    name: "Iqbal Ramadan",
+    image: "https://i.pravatar.cc/1000?img=5",
+    email: "iqbal.ramadan@gmail.com",
+  },
+  {
+    id: 2,
+    name: "Doni Setiawan",
+    image: "https://i.pravatar.cc/1000?img=10",
+    email: "doni.setiawan@gmail.com",
+  },
+  {
+    id: 3,
+    name: "Rangga Agung",
+    image: "https://i.pravatar.cc/1000?img=51",
+    email: "rangga.agung@gmail.com",
+  },
+  {
+    id: 4,
+    name: "Ramadan Sananta",
+    image: "https://i.pravatar.cc/1000?img=15",
+    email: "ramadan@gmail.com",
+  },
+  {
+    id: 5,
+    name: "Imam Baroni",
+    image: "https://i.pravatar.cc/1000?img=22",
+    email: "imam.baroni@gmail.com",
+  },
+];
 
 export default function ViewDateEndTask() {
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
+  const router = useRouter()
 
   return (
     <Box>
@@ -41,7 +86,7 @@ export default function ViewDateEndTask() {
             </Group>
           </Box>
           <Box>
-            <Text>Tanggal Berakhir</Text>
+            <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
             <Group
               justify="center"
               bg={"white"}
@@ -63,7 +108,7 @@ export default function ViewDateEndTask() {
             placeholder="Input Nama Tahapan"
             size="md"
           />
-          <Box >
+          <Box onClick={() => router.push('/project/create?page=create-users')}>
             <Group
               justify="space-between"
               p={10}
@@ -72,25 +117,69 @@ export default function ViewDateEndTask() {
                 borderRadius: 10,
               }}
             >
-              <Text>Tambah Anggota</Text>
+              <Text c={WARNA.biruTua}>Tambah Anggota</Text>
               <IoIosArrowDropright size={25} />
             </Group>
           </Box>
         </Stack>
         <Box pt={30}>
           <Group justify="space-between">
-            <Text>Anggota Terpilih</Text>
-            <Text>Total 10 Anggota</Text>
+            <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
+            <Text c={WARNA.biruTua}>Total 10 Anggota</Text>
           </Group>
-          <Box pt={20}>
+          <Box pt={10}>
             <Box mb={20}>
-              <Box style={{
-                border: `1px solid ${'#C7D6E8'}`
-              }} p={20}>
-                <Text>Divisi Kerohanian</Text>
+              <Box
+                style={{
+                  border: `1px solid ${"#C7D6E8"}`,
+                  borderRadius: 10,
+                }}
+                px={20}
+                py={10}
+              >
+                <Text c={WARNA.biruTua} fw={"bold"}>
+                  Divisi Kerohanian
+                </Text>
+                {dataTugas.map((v, i) => {
+                  return (
+                    <Flex
+                      justify={"space-between"}
+                      align={"center"}
+                      mt={20}
+                      key={i}
+                    >
+                      <Group>
+                        <Avatar src={v.image} alt="it's me" size="lg" />
+                        <Box>
+                          <Text c={WARNA.biruTua} fw={"bold"}>
+                            {v.name}
+                          </Text>
+                          <Text c={"#5A687D"} fz={14}>
+                            {v.email}
+                          </Text>
+                        </Box>
+                      </Group>
+                      <Text c={WARNA.biruTua} fw={"bold"}>
+                        Anggota
+                      </Text>
+                    </Flex>
+                  );
+                })}
               </Box>
             </Box>
           </Box>
+        </Box>
+        <Box mt={"xl"}>
+          <Button
+            c={"white"}
+            bg={WARNA.biruTua}
+            size="lg"
+            radius={30}
+            fullWidth
+            onClick={() => router.push('/project/create?anggota=yes')}
+          >
+            Simpan
+          </Button>
         </Box>
       </Box>
     </Box>
