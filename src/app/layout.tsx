@@ -10,6 +10,7 @@ import { WARNA } from "@/module/_global";
 import { Lato } from "next/font/google";
 import '@mantine/carousel/styles.css';
 import { Toaster } from 'react-hot-toast';
+import '@mantine/dates/styles.css';
 
 export const metadata = {
   title: "SISTEM DESA MANDIRI",
