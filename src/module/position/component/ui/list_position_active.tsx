@@ -1,4 +1,4 @@
-import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
+import { LayoutDrawer, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Group, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { FaUserTie } from 'react-icons/fa6';
@@ -44,6 +44,7 @@ const dataGroup = [
 export default function ListPositionActive() {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [isData, setData] = useState("")
+
   return (
     <Box pt={20}>
       <TextInput

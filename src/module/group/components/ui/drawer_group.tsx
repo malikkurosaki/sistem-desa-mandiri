@@ -1,17 +1,16 @@
-import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
-import { useHookstate } from '@hookstate/core';
+import { LayoutDrawer, WARNA } from '@/module/_global';
 import { Box, Button, Center, Flex, Group, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { IoAddCircle } from "react-icons/io5";
 
-export default function DrawerGroup() {
+export default function DrawerGroup({ onSuccess }: { onSuccess: (val: boolean) => void }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
-  const openDrawer = useHookstate(isDrawer)
 
   function onCLose() {
     setOpenDrawerGroup(false)
-    openDrawer.set(false)
+    onSuccess(true)
   }
+
   return (
     <Box>
       <Stack pt={10}>
@@ -29,7 +28,7 @@ export default function DrawerGroup() {
           </Flex>
         </SimpleGrid>
       </Stack>
-      <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'TAMBAH GRUP'}>
+      <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Tambah Grup'}>
         <Box pt={10}>
           <TextInput
             styles={{
@@ -41,7 +40,7 @@ export default function DrawerGroup() {
             }}
             size="lg"
             radius={10}
-            placeholder="Tambah Grup"
+            placeholder="Grup"
           />
           <Box mt={'xl'}>
             <Button
@@ -52,7 +51,7 @@ export default function DrawerGroup() {
               fullWidth
               onClick={onCLose}
             >
-              MASUK
+              Simpan
             </Button>
           </Box>
         </Box>
