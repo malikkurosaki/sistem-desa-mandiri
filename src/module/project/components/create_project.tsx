@@ -69,7 +69,7 @@ export default function CreateProject({ searchParams }: { searchParams: any }) {
           (searchParams.button == 'yes') &&
           <>
             <Box mt="xl">
-              <Button color="white" bg={WARNA.biruTua} size="lg" radius={30} fullWidth onClick={() => router.push('/project/create')}>
+              <Button color="white" bg={WARNA.biruTua} size="lg" radius={30} fullWidth onClick={() => router.push('/project')}>
                 Simpan
               </Button>
             </Box>
