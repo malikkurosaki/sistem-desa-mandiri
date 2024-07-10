@@ -4,7 +4,9 @@ import React from 'react';
 import Carosole from '../components/carosole';
 import Features from '../components/features';
 import IconNavbar from '../components/ui/icon_navbar';
-
+import ListProjects from '../components/list_project';
+import ListDivisi from '../components/list_divisi';
+import ListEvent from '../components/list_event';
 
 
 export default function ViewHome() {
@@ -20,6 +22,9 @@ export default function ViewHome() {
         <Stack >
           <Carosole />
           <Features />
+          <ListProjects />
+          <ListDivisi />
+          <ListEvent />
         </Stack>
       </Box>
 
