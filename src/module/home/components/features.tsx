@@ -14,7 +14,7 @@ export default function Features() {
         <SimpleGrid
           cols={{ base: 4, sm: 4, lg: 4 }}
         >
-          <Box>
+          <Box onClick={() => router.push('/division')}>
             <Center>
               <ActionIcon variant="gradient"
                 size={68}
