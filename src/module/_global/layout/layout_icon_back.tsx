@@ -11,7 +11,7 @@ function LayoutIconBack({ back }: { back?: string }) {
   return (
     <Box>
       <ActionIcon variant="light" onClick={() => {
-        if (!_.isUndefined(back) && !_.isNull(back)) {
+        if (!_.isUndefined(back) && !_.isNull(back) && !_.isEmpty(back)) {
           return router.push(back)
         } else {
           return router.back()

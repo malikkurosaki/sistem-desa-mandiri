@@ -13,9 +13,9 @@ export default function ViewProfile() {
          <LayoutNavbarHome>
             <Group justify="space-between">
                <LayoutIconBack />
-               <ActionIcon variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
+               {/* <ActionIcon variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
                   <BsInfo size={20} color='white' />
-               </ActionIcon>
+               </ActionIcon> */}
             </Group>
             <Stack
                align="center"

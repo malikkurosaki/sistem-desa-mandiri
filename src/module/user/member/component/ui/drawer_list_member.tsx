@@ -1,18 +1,13 @@
-import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
-import { useHookstate } from '@hookstate/core';
-import { Box, Button, Center, Flex, Group, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { WARNA } from '@/module/_global';
+import { Box, Flex, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { IoAddCircle } from "react-icons/io5";
 import { RiFilter2Line } from 'react-icons/ri';
 
 export default function DrawerListMember() {
-   const openDrawer = useHookstate(isDrawer)
    const router = useRouter()
 
-   function onCLose() {
-      openDrawer.set(false)
-   }
    return (
       <Box>
          <Stack pt={10}>
@@ -20,9 +15,11 @@ export default function DrawerListMember() {
                cols={{ base: 3, sm: 3, lg: 3 }}
             >
                <Flex justify={'center'} align={'center'} direction={'column'}
+                  style={{
+                     cursor: 'pointer'
+                  }}
                   onClick={() => {
                      router.push('/member/create')
-                     onCLose()
                   }}
                >
                   <Box>
@@ -33,7 +30,12 @@ export default function DrawerListMember() {
                   </Box>
                </Flex>
 
-               <Flex justify={'center'} align={'center'} direction={'column'} >
+               <Flex justify={'center'} align={'center'} direction={'column'}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                     router.push('/member?page=filter')
+                  }}
+               >
                   <Box>
                      <RiFilter2Line size={30} color={WARNA.biruTua} />
                   </Box>

@@ -1,16 +1,14 @@
-import { isDrawer, WARNA, LayoutDrawer } from "@/module/_global";
-import { useHookstate } from "@hookstate/core";
+import { WARNA, LayoutDrawer } from "@/module/_global";
 import { Box, Stack, SimpleGrid, Flex, TextInput, Button, Text, Select } from "@mantine/core";
 import { useState } from "react";
 import { IoAddCircle } from "react-icons/io5";
 
-export default function DrawerListPosition() {
+export default function DrawerListPosition({ onCreated }: { onCreated: (val: boolean) => void }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
-   const openDrawer = useHookstate(isDrawer)
 
    function onCLose() {
       setOpenDrawerGroup(false)
-      openDrawer.set(false)
+      onCreated(true)
    }
    return (
       <Box>

@@ -56,7 +56,7 @@ export default function Features() {
               <Text fz={15} c={WARNA.biruTua}>Pengumuman</Text>
             </Center>
           </Box>
-          <Box onClick={() => router.push('detail-feature')}>
+          <Box onClick={() => router.push('/home?cat=fitur')}>
             <Center>
               <ActionIcon variant="gradient"
                 size={68}

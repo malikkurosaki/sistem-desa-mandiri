@@ -1,9 +1,10 @@
-import { isDrawer, LayoutDrawer, WARNA } from '@/module/_global';
+import { LayoutDrawer, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Group, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { FaUserTie } from 'react-icons/fa6';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import DrawerDetailPosition from './drawer_detail_position';
+import toast from 'react-hot-toast';
 
 const dataGroup = [
   {
@@ -42,6 +43,8 @@ const dataGroup = [
 
 export default function ListPositionActive() {
   const [openDrawer, setOpenDrawer] = useState(false)
+  const [isData, setData] = useState("")
+
   return (
     <Box pt={20}>
       <TextInput
@@ -64,7 +67,10 @@ export default function ListPositionActive() {
               border: `1px solid ${"#DCEED8"}`,
               padding: 10,
               borderRadius: 10
-            }} onClick={() => setOpenDrawer(true)} >
+            }} onClick={() => {
+              setData(v.name)
+              setOpenDrawer(true)
+            }} >
               <Box>
                 <ActionIcon variant="light" bg={'#DCEED8'} size={50} radius={100} aria-label="icon">
                   <FaUserTie color={WARNA.biruTua} size={25} />
@@ -77,8 +83,11 @@ export default function ListPositionActive() {
           </Box>
         )
       })}
-      <LayoutDrawer opened={openDrawer} onClose={() => setOpenDrawer(false)} title="LEMBAGA PENGKREDITAN DESA">
-        <DrawerDetailPosition />
+      <LayoutDrawer opened={openDrawer} onClose={() => setOpenDrawer(false)} title={isData}>
+        <DrawerDetailPosition onUpdated={() => {
+          setOpenDrawer(false)
+          toast.success('Sukses! data tersimpan')
+        }} />
       </LayoutDrawer>
     </Box>
   );
