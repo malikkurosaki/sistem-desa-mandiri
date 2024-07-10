@@ -1,4 +1,5 @@
-import { ViewDivision } from '@/module/new_division';
+
+import { ViewDivision } from '@/module/division_new';
 import React from 'react';
 
 function Page() {
