@@ -19,7 +19,7 @@ export default function DrawerProject() {
               <Text c={WARNA.biruTua}>Tambah Proyek</Text>
             </Box>
           </Flex>
-          <Flex onClick={() => window.location.href = "/project/filter"}  justify={'center'} align={'center'} direction={'column'} >
+          <Flex onClick={() => window.location.href = "/project?cat=filter"} justify={'center'} align={'center'} direction={'column'} >
             <Box>
               <HiOutlineFilter size={30} color={WARNA.biruTua} />
             </Box>
