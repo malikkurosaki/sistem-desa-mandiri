@@ -1,13 +1,26 @@
-"use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, Center, Checkbox, Flex, Grid, Group, Progress, SimpleGrid, Text } from '@mantine/core';
-import React from 'react';
-import { HiMiniPresentationChartBar } from 'react-icons/hi2';
-import { IoIosArrowDropright } from 'react-icons/io';
-import ResultsDateAndTask from './results_date-and_task';
-import ResultsFile from './results_file';
-import { AiOutlineFileSync } from 'react-icons/ai';
-import { useRouter } from 'next/navigation';
+"use client";
+import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import {
+  ActionIcon,
+  Avatar,
+  Box,
+  Center,
+  Checkbox,
+  Flex,
+  Grid,
+  Group,
+  Progress,
+  SimpleGrid,
+  Text,
+} from "@mantine/core";
+import React from "react";
+import { HiMiniPresentationChartBar } from "react-icons/hi2";
+import { IoIosArrowDropright } from "react-icons/io";
+import ResultsDateAndTask from "../results_date-and_task";
+import ResultsFile from "../results_file";
+import { AiOutlineFileSync } from "react-icons/ai";
+import { useRouter } from "next/navigation";
+import { LuClipboardEdit } from "react-icons/lu";
 
 const dataTugas = [
   {
@@ -43,73 +56,91 @@ const dataTugas = [
 ];
 
 export default function DetailProject() {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <Box>
-      <LayoutNavbarNew back="/project" title="Detail Proyek" menu />
+      <LayoutNavbarNew
+        back="/project"
+        title="Proyek Desa Maju"
+        menu={
+          <ActionIcon
+            variant="light"
+            bg={WARNA.bgIcon}
+            size="lg"
+            radius="lg"
+            aria-label="Settings"
+            onClick={() => router.push("/project/update-detail")}
+          >
+            <LuClipboardEdit size={20} color="white" />
+          </ActionIcon>
+        }
+      />
       <Box p={20}>
-        <Text fz={20} c={WARNA.biruTua} fw={"bold"} ta={"center"}>Proyek Desa Maju</Text>
         <Box mt={10}>
-          <Box p={20} bg={"#DCEED8"} style={{
-            borderRadius: 10
-          }}>
-
-            <Grid gutter={'lg'}>
+          <Box
+            p={20}
+            bg={"#DCEED8"}
+            style={{
+              borderRadius: 10,
+            }}
+          >
+            <Grid gutter={"lg"}>
               <Grid.Col span={3}>
-                <ActionIcon variant="gradient"
+                <ActionIcon
+                  variant="gradient"
                   size={68}
                   aria-label="Gradient action icon"
                   radius={100}
-                  gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
+                  gradient={{ from: "#DFDA7C", to: "#F2AF46", deg: 174 }}
+                >
                   <HiMiniPresentationChartBar size={35} color={WARNA.biruTua} />
                 </ActionIcon>
               </Grid.Col>
               <Grid.Col span={9}>
                 <Box>
                   <Text>Kemajuan Proyek 60%</Text>
-                  <Progress style={{
-                    border: `1px solid ${'#BDBDBD'}`
-                  }} w={'100%'} color="#FCAA4B" radius="md" size="xl" value={60} />
+                  <Progress
+                    style={{
+                      border: `1px solid ${"#BDBDBD"}`,
+                    }}
+                    w={"100%"}
+                    color="#FCAA4B"
+                    radius="md"
+                    size="xl"
+                    value={60}
+                  />
                   <Text>18 Juni 2024</Text>
                 </Box>
               </Grid.Col>
             </Grid>
           </Box>
         </Box>
-        <Box mt={20}>
-          <Group
-            justify="space-between"
-            bg={'white'}
-            p={10}
-            style={{
-              border: `1px solid ${"#D6D8F6"}`,
-              borderRadius: 10,
-            }}
-            onClick={() => router.push('/project/update-detail')}
-          >
-            <Text>Update Kemajuan Tugas</Text>
-            <IoIosArrowDropright size={25} />
-          </Group>
-        </Box>
         <Box pt={20}>
-          <Text fw={'bold'} c={WARNA.biruTua}>Tanggal & Tugas</Text>
-          <Box bg={"white"} style={{
-            borderRadius: 10,
-            border: `1px solid ${"#D6D8F6"}`,
-            padding: 20
-          }}>
+          <Text fw={"bold"} c={WARNA.biruTua}>
+            Tanggal & Tugas
+          </Text>
+          <Box
+            bg={"white"}
+            style={{
+              borderRadius: 10,
+              border: `1px solid ${"#D6D8F6"}`,
+              padding: 20,
+            }}
+          >
             <Grid>
-              <Grid.Col span={'auto'}>
+              <Grid.Col span={"auto"}>
                 <Center>
-                  <Checkbox  color="teal" size="md" />
+                  <Checkbox color="teal" size="md" />
                 </Center>
               </Grid.Col>
               <Grid.Col span={10}>
-                <Box style={{
-                  borderRadius: 10,
-                  border: `1px solid ${"#D6D8F6"}`,
-                  padding: 10
-                }}>
+                <Box
+                  style={{
+                    borderRadius: 10,
+                    border: `1px solid ${"#D6D8F6"}`,
+                    padding: 10,
+                  }}
+                >
                   <Group>
                     <AiOutlineFileSync size={25} />
                     <Text>Laporan Permasyarakatan</Text>
@@ -123,7 +154,10 @@ export default function DetailProject() {
                         justify="center"
                         bg={"white"}
                         h={45}
-                        style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
+                        style={{
+                          borderRadius: 10,
+                          border: `1px solid ${"#D6D8F6"}`,
+                        }}
                       >
                         <Text>16 Juni 2024</Text>
                       </Group>
@@ -134,7 +168,10 @@ export default function DetailProject() {
                         justify="center"
                         bg={"white"}
                         h={45}
-                        style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
+                        style={{
+                          borderRadius: 10,
+                          border: `1px solid ${"#D6D8F6"}`,
+                        }}
                       >
                         <Text>20 Juni 2024</Text>
                       </Group>
@@ -197,4 +234,3 @@ export default function DetailProject() {
     </Box>
   );
 }
-

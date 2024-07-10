@@ -6,6 +6,9 @@ import CreateUsersProject from "./components/create_users_project";
 import ViewFileSave from "./view/view_file_save";
 import ViewDetailProject from "./view/view_detail_project";
 import ViewUpdateProgres from "./view/view_update_progres";
+import DetailCreateUserProject from "./components/detail_project/detail_create_user_project";
+import DetailDateEndTask from "./components/detail_project/detail_date_end_task";
+import DetailFileSave from "./components/detail_project/detail_file_save";
 
 export { ViewProject }
 export { ViewCreateProject }
@@ -15,3 +18,6 @@ export { CreateUsersProject }
 export { ViewFileSave }
 export { ViewDetailProject }
 export { ViewUpdateProgres }
+export { DetailCreateUserProject }
+export { DetailDateEndTask }
+export { DetailFileSave }

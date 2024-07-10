@@ -19,7 +19,7 @@ export const LayoutNavbarNew = ({ back, title, menu }: { back: string, title: st
             <Grid.Col span="auto">
                <LayoutIconBack back={back} />
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span={8}>
                {/* <Text ta={'center'} fw={'bold'} c={'white'}>GROUP</Text> */}
                <Title c={WARNA.bgWhite} ta={'center'} order={3}>{_.startCase(title)}</Title>
             </Grid.Col>
