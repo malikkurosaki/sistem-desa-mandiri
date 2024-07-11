@@ -1,6 +1,8 @@
+import { ViewDetailDivisionTask } from "@/module/division_new"
+
 function Page() {
    return (
-      <>Detail task</>
+      <ViewDetailDivisionTask />
    )
 }
 
