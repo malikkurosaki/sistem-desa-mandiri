@@ -3,5 +3,6 @@ export const WARNA = {
     biruTua: "#19345E",
     bgIcon: "#384288",
     borderOrange: "#FCAA4B",
-    bgHijauMuda: "#DCEED8"
+    bgHijauMuda: "#DCEED8",
+    borderBiruMuda: "#9EBDED"
 }

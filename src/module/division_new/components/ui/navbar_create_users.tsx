@@ -78,11 +78,11 @@ export default function NavbarCreateUsers() {
               {dataUser.map((v, index) => {
                 const isSelected = selectedFiles[index];
                 return (
-                  <Box key={index} mb={20}>
+                  <Box key={index} mb={10}>
                     <Box
-
+                      bg={isSelected ? WARNA.bgHijauMuda : "white"}
                       style={{
-                        border: `${isSelected ? "2px solid #FFC107" : `1px solid ${WARNA.biruTua}`}`,
+                        border: `1px solid ${WARNA.biruTua}`,
                         borderRadius: 20,
                       }}
                       py={10}
