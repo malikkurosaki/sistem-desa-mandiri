@@ -1,10 +1,9 @@
+import { ViewDivisionTask } from '@/module/division_new';
 import React from 'react';
 
 function Page() {
   return (
-    <div>
-      Page
-    </div>
+    <ViewDivisionTask />
   );
 }
 

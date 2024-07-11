@@ -1,3 +1,6 @@
+import ViewDetailDivisionTask from "./_division_fitur/task/view/view_detail_division_task";
+import ViewDivisionTask from "./_division_fitur/task/view/view_division_task";
+import ViewUpdateProgressDivisionTask from "./_division_fitur/task/view/view_update_progress_division_task";
 import CreateAdminDivision from "./components/create_admin_division";
 import CreateUsers from "./components/create_users";
 import ViewCreateDivision from "./view/view_create_division";
@@ -11,3 +14,6 @@ export { CreateUsers }
 export { CreateAdminDivision }
 export { ViewCreateReport }
 export { ViewDetailDivision }
+export { ViewDivisionTask }
+export { ViewDetailDivisionTask }
+export { ViewUpdateProgressDivisionTask }
