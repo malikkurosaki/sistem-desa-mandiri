@@ -96,7 +96,7 @@ export default function NavbarDivision() {
             {dataDivisi.map((v, i) => {
               return (
                 <Box key={i}>
-                  <Group justify="space-between" mb={10} onClick={() => router.push(``)}>
+                  <Group justify="space-between" mb={10} onClick={() => router.push(`/division/${v.id}`)}>
                     <Group>
                       <Center>
                         <ActionIcon
@@ -126,7 +126,7 @@ export default function NavbarDivision() {
             {dataDivisi.map((v, i) => {
               return (
                 <Box key={i} mb={20}>
-                  <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/project/${v.id}`)}>
+                  <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
                     <Card.Section>
                       <Box h={120} bg={WARNA.biruTua}>
                         <Flex justify={'center'} align={'center'} h={"100%"}>
