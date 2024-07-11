@@ -1,8 +1,10 @@
 "use client"
-import { LayoutNavbarNew } from '@/module/_global';
+import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { Box, Select, Stack } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import React, { useState } from 'react';
+import EchartPaiReport from './echart_pai_report';
+import EchartBarReport from './echart_bar_report';
 
 export default function CreateReport() {
   const [value, setValue] = useState<Date | null>(null);
@@ -27,6 +29,26 @@ export default function CreateReport() {
             label="Date input"
             placeholder="Date input"
           />
+          <Box pt={10}>
+            <Box bg={'white'} style={{
+              border: `1px solid ${WARNA.borderBiruMuda}`,
+              borderRadius: 10,
+              padding: 10
+            }}>
+              <EchartPaiReport />
+            </Box>
+          </Box>
+          <Box pt={10}>
+            <Box bg={'white'} style={{
+              border: `1px solid ${WARNA.borderBiruMuda}`,
+              borderRadius: 10,
+              padding: 10
+            }}>
+              <EchartBarReport />
+            </Box>
+
+          </Box>
+
         </Stack>
       </Box>
     </Box>
