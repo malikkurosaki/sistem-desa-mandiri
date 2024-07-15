@@ -49,14 +49,16 @@ export default function ListEvent() {
                      }} mb={10}>
                         <Group>
                            <GoDiscussionClosed size={25} />
-                           <Text fw={'bold'}>{v.judul}</Text>
+                           <Box w={{ base: 230, md: 400 }}>
+                              <Text fw={'bold'}>{v.judul}</Text>
+                           </Box>
                         </Group>
-                        <Group justify="space-between" mt={10} c={'#8C8C8C'}>
-                           <Group>
+                        <Group justify="space-between" mt={20} c={'#8C8C8C'}>
+                           <Group gap={5} align="center">
                               <CiUser size={18} />
                               <Text fz={13}>{v.user}</Text>
-                           </Group>
-                           <Group>
+                           </Group >
+                           <Group gap={5} align="center">
                               <CiClock2 size={18} />
                               <Text fz={13}>{v.date}</Text>
                            </Group>

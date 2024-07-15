@@ -11,7 +11,7 @@ export const LayoutNavbarNew = ({ back, title, menu }: { back: string, title: st
          style={{
             borderBottomLeftRadius: 20,
             borderBottomRightRadius: 20,
-            zIndex: 100,
+            zIndex: 900,
             boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)"
          }}
       >
@@ -20,7 +20,6 @@ export const LayoutNavbarNew = ({ back, title, menu }: { back: string, title: st
                <LayoutIconBack back={back} />
             </Grid.Col>
             <Grid.Col span={8}>
-               {/* <Text ta={'center'} fw={'bold'} c={'white'}>GROUP</Text> */}
                <Title c={WARNA.bgWhite} ta={'center'} order={3}>{_.startCase(title)}</Title>
             </Grid.Col>
             <Grid.Col span="auto">

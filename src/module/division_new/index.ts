@@ -1,3 +1,5 @@
+import ViewCreateDivisionCalender from "./_division_fitur/calender/view/view_create_division_calender";
+import ViewDivisionCalender from "./_division_fitur/calender/view/view_division_calender";
 import ViewCreateTaskDivision from "./_division_fitur/task/view/view_create_division_task";
 import ViewDetailDivisionTask from "./_division_fitur/task/view/view_detail_division_task";
 import ViewDivisionTask from "./_division_fitur/task/view/view_division_task";
@@ -18,4 +20,6 @@ export { ViewDetailDivision }
 export { ViewDivisionTask }
 export { ViewDetailDivisionTask }
 export { ViewUpdateProgressDivisionTask }
+export { ViewDivisionCalender }
+export { ViewCreateDivisionCalender }
 export { ViewCreateTaskDivision }
