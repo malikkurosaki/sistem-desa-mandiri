@@ -3,6 +3,7 @@ import React from 'react';
 import CarouselDivision from './carousel_division';
 import { LayoutNavbarNew } from '@/module/_global';
 import FeatureDetailDivision from './feature_detail_division';
+import ListDiscussionOnDetailDivision from './list_discussion';
 
 export default function DetailDivision() {
   return (
@@ -12,6 +13,7 @@ export default function DetailDivision() {
         <Stack>
           <CarouselDivision />
           <FeatureDetailDivision />
+          <ListDiscussionOnDetailDivision />
         </Stack>
       </Box>
     </Box>

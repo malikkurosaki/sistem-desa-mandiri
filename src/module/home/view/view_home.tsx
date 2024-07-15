@@ -6,7 +6,10 @@ import Features from '../components/features';
 import IconNavbar from '../components/ui/icon_navbar';
 import ListProjects from '../components/list_project';
 import ListDivisi from '../components/list_divisi';
-import ListEvent from '../components/list_event';
+import ListDiscussion from '../components/list_discussion';
+import ListEventHome from '../components/list_event';
+import ChartProgressHome from '../components/chart_progress_tugas';
+import ChartDocumentHome from '../components/chart_document';
 
 
 export default function ViewHome() {
@@ -24,7 +27,10 @@ export default function ViewHome() {
           <Features />
           <ListProjects />
           <ListDivisi />
-          <ListEvent />
+          <ChartProgressHome />
+          <ChartDocumentHome />
+          <ListEventHome />
+          <ListDiscussion />
         </Stack>
       </Box>
 
