@@ -50,13 +50,13 @@ const dataTugas = [
   },
 ];
 
-export default function ViewDateEndTask() {
+export default function ViewDateEndTask({ kategori }: { kategori: string }) {
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const router = useRouter()
 
   return (
     <Box>
-      <LayoutNavbarNew back="/project/create" title={"Tanggal Tugas"} menu />
+      <LayoutNavbarNew back="" title={"Tanggal Tugas"} menu />
       <Box p={20}>
         <Group
           justify="center"
@@ -108,7 +108,7 @@ export default function ViewDateEndTask() {
             placeholder="Input Nama Tahapan"
             size="md"
           />
-          <Box onClick={() => router.push('/project/create?page=create-users')}>
+          <Box onClick={() => router.push(`/${kategori}/create?page=create-users`)}>
             <Group
               justify="space-between"
               p={10}
@@ -176,7 +176,7 @@ export default function ViewDateEndTask() {
             size="lg"
             radius={30}
             fullWidth
-            onClick={() => router.push('/project/create?anggota=yes')}
+            onClick={() => router.push(`/${kategori}/create?anggota=yes`)}
           >
             Simpan
           </Button>

@@ -50,138 +50,138 @@ const dataTugas = [
   },
 ];
 
-export default function DetailDateEndTask() {
+export default function DetailDateEndTask({ kategori }: { kategori: string }) {
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const router = useRouter()
   return (
     <Box>
-    <LayoutNavbarNew back="/project/update-detail" title={"Tanggal Tugas"} menu />
-    <Box p={20}>
-      <Group
-        justify="center"
-        bg={"white"}
-        py={20}
-        style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
-      >
-        <DatePicker
-          styles={{}}
-          type="range"
-          value={value}
-          onChange={setValue}
-          size="md"
-          c={WARNA.biruTua}
-        />
-      </Group>
-      <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
-        <Box>
-          <Text>Tanggal Mulai</Text>
-          <Group
-            justify="center"
-            bg={"white"}
-            h={45}
-            style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
-          >
-            <Text>{value[0] ? `${value[0].toLocaleDateString()}` : ""}</Text>
-          </Group>
-        </Box>
-        <Box>
-          <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
-          <Group
-            justify="center"
-            bg={"white"}
-            h={45}
-            style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
-          >
-            <Text>{value[1] ? `${value[1].toLocaleDateString()}` : ""}</Text>
-          </Group>
-        </Box>
-      </SimpleGrid>
-      <Stack pt={15}>
-        <Input
-          styles={{
-            input: {
-              border: `1px solid ${"#D6D8F6"}`,
-              borderRadius: 10,
-            },
-          }}
-          placeholder="Input Nama Tahapan"
-          size="md"
-        />
-        <Box onClick={() => router.push('/project/update-detail?page=detail-create-user')}>
-          <Group
-            justify="space-between"
-            p={10}
-            style={{
-              border: `1px solid ${"#D6D8F6"}`,
-              borderRadius: 10,
-            }}
-          >
-            <Text c={WARNA.biruTua}>Tambah Anggota</Text>
-            <IoIosArrowDropright size={25} />
-          </Group>
-        </Box>
-      </Stack>
-      <Box pt={30}>
-        <Group justify="space-between">
-          <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-          <Text c={WARNA.biruTua}>Total 10 Anggota</Text>
+      <LayoutNavbarNew back="" title={"Tanggal Tugas"} menu />
+      <Box p={20}>
+        <Group
+          justify="center"
+          bg={"white"}
+          py={20}
+          style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
+        >
+          <DatePicker
+            styles={{}}
+            type="range"
+            value={value}
+            onChange={setValue}
+            size="md"
+            c={WARNA.biruTua}
+          />
         </Group>
-        <Box pt={10}>
-          <Box mb={20}>
-            <Box
+        <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
+          <Box>
+            <Text>Tanggal Mulai</Text>
+            <Group
+              justify="center"
+              bg={"white"}
+              h={45}
+              style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
+            >
+              <Text>{value[0] ? `${value[0].toLocaleDateString()}` : ""}</Text>
+            </Group>
+          </Box>
+          <Box>
+            <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+            <Group
+              justify="center"
+              bg={"white"}
+              h={45}
+              style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
+            >
+              <Text>{value[1] ? `${value[1].toLocaleDateString()}` : ""}</Text>
+            </Group>
+          </Box>
+        </SimpleGrid>
+        <Stack pt={15}>
+          <Input
+            styles={{
+              input: {
+                border: `1px solid ${"#D6D8F6"}`,
+                borderRadius: 10,
+              },
+            }}
+            placeholder="Input Nama Tahapan"
+            size="md"
+          />
+          <Box onClick={() => router.push(`/${kategori}/update/1?page=detail-create-user`)}>
+            <Group
+              justify="space-between"
+              p={10}
               style={{
-                border: `1px solid ${"#C7D6E8"}`,
+                border: `1px solid ${"#D6D8F6"}`,
                 borderRadius: 10,
               }}
-              px={20}
-              py={10}
             >
-              <Text c={WARNA.biruTua} fw={"bold"}>
-                Divisi Kerohanian
-              </Text>
-              {dataTugas.map((v, i) => {
-                return (
-                  <Flex
-                    justify={"space-between"}
-                    align={"center"}
-                    mt={20}
-                    key={i}
-                  >
-                    <Group>
-                      <Avatar src={v.image} alt="it's me" size="lg" />
-                      <Box>
-                        <Text c={WARNA.biruTua} fw={"bold"}>
-                          {v.name}
-                        </Text>
-                        <Text c={"#5A687D"} fz={14}>
-                          {v.email}
-                        </Text>
-                      </Box>
-                    </Group>
-                    <Text c={WARNA.biruTua} fw={"bold"}>
-                      Anggota
-                    </Text>
-                  </Flex>
-                );
-              })}
+              <Text c={WARNA.biruTua}>Tambah Anggota</Text>
+              <IoIosArrowDropright size={25} />
+            </Group>
+          </Box>
+        </Stack>
+        <Box pt={30}>
+          <Group justify="space-between">
+            <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
+            <Text c={WARNA.biruTua}>Total 10 Anggota</Text>
+          </Group>
+          <Box pt={10}>
+            <Box mb={20}>
+              <Box
+                style={{
+                  border: `1px solid ${"#C7D6E8"}`,
+                  borderRadius: 10,
+                }}
+                px={20}
+                py={10}
+              >
+                <Text c={WARNA.biruTua} fw={"bold"}>
+                  Divisi Kerohanian
+                </Text>
+                {dataTugas.map((v, i) => {
+                  return (
+                    <Flex
+                      justify={"space-between"}
+                      align={"center"}
+                      mt={20}
+                      key={i}
+                    >
+                      <Group>
+                        <Avatar src={v.image} alt="it's me" size="lg" />
+                        <Box>
+                          <Text c={WARNA.biruTua} fw={"bold"}>
+                            {v.name}
+                          </Text>
+                          <Text c={"#5A687D"} fz={14}>
+                            {v.email}
+                          </Text>
+                        </Box>
+                      </Group>
+                      <Text c={WARNA.biruTua} fw={"bold"}>
+                        Anggota
+                      </Text>
+                    </Flex>
+                  );
+                })}
+              </Box>
             </Box>
           </Box>
         </Box>
-      </Box>
-      <Box mt={"xl"}>
-        <Button
-          c={"white"}
-          bg={WARNA.biruTua}
-          size="lg"
-          radius={30}
-          fullWidth
-          onClick={() => router.push('/project/update-detail?tugas=yes')}
-        >
-          Simpan
-        </Button>
+        <Box mt={"xl"}>
+          <Button
+            c={"white"}
+            bg={WARNA.biruTua}
+            size="lg"
+            radius={30}
+            fullWidth
+            onClick={() => router.push(`/${kategori}/update/1?tugas=yes`)}
+          >
+            Simpan
+          </Button>
+        </Box>
       </Box>
     </Box>
-  </Box>
   );
 }
 

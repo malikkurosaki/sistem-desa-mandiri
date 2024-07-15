@@ -3,11 +3,11 @@ import React from "react";
 
 function Page({ searchParams }: { searchParams: any }) {
   if (searchParams.page == "task")
-    return <ViewDateEndTask />;
+    return <ViewDateEndTask kategori="project" />;
   if (searchParams.page == "create-users")
-    return <CreateUsersProject />
+    return <CreateUsersProject kategori="project" />
   if (searchParams.page == "file-save")
-    return <ViewFileSave />
+    return <ViewFileSave kategori="project" />
 
   return <ViewCreateProject searchParams={searchParams} />;
 }
