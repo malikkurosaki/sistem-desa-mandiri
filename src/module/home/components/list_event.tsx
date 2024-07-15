@@ -1,72 +1,66 @@
-import { WARNA } from "@/module/_global";
-import { Box, Group, Text } from "@mantine/core";
-import { GoDiscussionClosed } from "react-icons/go";
-import { CiClock2, CiUser } from "react-icons/ci";
+import { WARNA } from "@/module/_global"
+import { Box, Divider, Group, Text } from "@mantine/core"
 
-const dataDiskusi = [
+const dataEvent = [
    {
       id: 1,
-      judul: 'Mengatasi Limbah Makanan ',
-      user: 'Fibra Marcell',
-      date: '21 Juni 2024'
+      title: 'Pembahasan Mengenai Darmasaba',
+      jamAwal: "10.00",
+      jamAkhir: "11.00",
+      dibuat: "Jhon"
    },
    {
       id: 2,
-      judul: 'Pentingnya Menjaga Kelestarian Hutan ',
-      user: 'Bayu Tegar',
-      date: '15 Juni 2024'
+      title: 'Pembahasan Mengenai Darmasaba',
+      jamAwal: "11.00",
+      jamAkhir: "12.00",
+      dibuat: "Jhon"
    },
    {
       id: 3,
-      judul: 'Mengatasi Limbah Industri ',
-      user: 'Nian Putri',
-      date: '11 Mei 2024'
+      title: 'Pembahasan Mengenai Darmasaba',
+      jamAwal: "13.00",
+      jamAkhir: "14.00",
+      dibuat: "Jhon"
    },
    {
       id: 4,
-      judul: 'Manfaat Sampah Plastik',
-      user: 'Budi Prasetyo',
-      date: '10 Mei 2024'
+      title: 'Pembahasan Mengenai Darmasaba',
+      jamAwal: "15.00",
+      jamAkhir: "16.00",
+      dibuat: "Jhon"
    },
 ]
 
-export default function ListEvent() {
+export default function ListEventHome() {
    return (
       <Box pt={10}>
-         <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Diskusi</Text>
+         <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Event Hari Ini</Text>
          <Box bg={"white"} style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,
             padding: 20
          }}>
-            {
-               dataDiskusi.map((v, i) => {
-                  return (
-                     <Box key={i} style={{
-                        borderRadius: 10,
-                        border: `1px solid ${"#D6D8F6"}`,
-                        padding: 10
-                     }} mb={10}>
+            {dataEvent.map((event, index) => {
+               const bgColor = ['#D8D8F1', '#FED6C5'][index % 2]
+               const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
+               return (
+                  <Box key={event.id} m={10}>
+                     <Box bg={bgColor} pl={15} p={10} style={{
+                        borderRadius: 10
+                     }} h={113}>
                         <Group>
-                           <GoDiscussionClosed size={25} />
-                           <Box w={{ base: 230, md: 400 }}>
-                              <Text fw={'bold'}>{v.judul}</Text>
+                           <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
+                           <Box>
+                              <Text>{event.jamAwal} - {event.jamAkhir}</Text>
+                              <Text fw={"bold"}>{event.title}</Text>
+                              <Text>Dibuat oleh : {event.dibuat}</Text>
                            </Box>
                         </Group>
-                        <Group justify="space-between" mt={20} c={'#8C8C8C'}>
-                           <Group gap={5} align="center">
-                              <CiUser size={18} />
-                              <Text fz={13}>{v.user}</Text>
-                           </Group >
-                           <Group gap={5} align="center">
-                              <CiClock2 size={18} />
-                              <Text fz={13}>{v.date}</Text>
-                           </Group>
-                        </Group>
                      </Box>
-                  )
-               })
-            }
+                  </Box>
+               )
+            })}
          </Box>
       </Box>
    )
