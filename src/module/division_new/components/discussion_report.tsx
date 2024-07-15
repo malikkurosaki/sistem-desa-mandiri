@@ -43,7 +43,7 @@ export default function DiscussionReport() {
                         }} mb={10}>
                             <Group align="center">
                                 <GoDiscussionClosed size={25} />
-                                <Box w={{ base: 230, md: 400 }}>
+                                <Box w={{ base: 230, md: 300 }}>
                                     <Text truncate="end" fw={'bold'}>{v.judul}</Text>
                                 </Box>
                             </Group>
