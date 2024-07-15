@@ -19,7 +19,7 @@ export default function DawerDivisionCalender() {
               <Text ta={"center"} c={WARNA.biruTua}>Tambah Kalender</Text>
             </Box>
           </Flex>
-          <Flex onClick={() => window.location.href = ""} justify={'center'} align={'center'} direction={'column'} >
+          <Flex onClick={() => window.location.href = "/calender/history"} justify={'center'} align={'center'} direction={'column'} >
             <Box>
               <AiOutlineFileSearch size={30} color={WARNA.biruTua} />
             </Box>

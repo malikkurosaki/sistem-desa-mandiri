@@ -1,6 +1,7 @@
 import { WARNA } from '@/module/_global';
 import { Box, Divider, Group, Indicator, Text } from '@mantine/core';
 import { DatePicker, DatePickerProps } from '@mantine/dates';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const HariIni = [
@@ -37,6 +38,7 @@ const Besok = [
 ]
 
 export default function DateEventDivision() {
+  const router = useRouter()
   const dayRenderer: DatePickerProps['renderDay'] = (date) => {
     const day = date.getDate();
     return (
@@ -62,7 +64,7 @@ export default function DateEventDivision() {
           const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
           return (
             <Box key={event.id} mt={10}>
-              <Box bg={bgColor} pl={15} p={10} style={{
+              <Box onClick={() => router.push("/calender?page=detail-event")} bg={bgColor} pl={15} p={10} style={{
                 borderRadius: 10
               }} h={113}>
                 <Group>
@@ -83,7 +85,7 @@ export default function DateEventDivision() {
           const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
           return (
             <Box key={event.id} mt={10}>
-              <Box bg={bgColor} pl={15} p={10} style={{
+              <Box onClick={() => router.push("/calender?page=detail-event")}  bg={bgColor} pl={15} p={10} style={{
                 borderRadius: 10
               }} h={113}>
                 <Group>

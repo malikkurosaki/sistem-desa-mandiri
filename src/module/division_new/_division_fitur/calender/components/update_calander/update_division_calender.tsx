@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import toast from 'react-hot-toast';
 
-export default function NavbarCreateDivisionCalender() {
+export default function UpdateDivisionCalender() {
   const [isModal, setModal] = useState(false)
 
   function onTrue(val: boolean) {
@@ -21,7 +21,7 @@ export default function NavbarCreateDivisionCalender() {
   const router = useRouter()
   return (
     <Box>
-      <LayoutNavbarNew back="/calender" title="tambah kalender" menu />
+      <LayoutNavbarNew back="/calender" title="Edit kalender" menu />
       <Box p={20}>
         <Stack>
           <TextInput
@@ -83,7 +83,7 @@ export default function NavbarCreateDivisionCalender() {
             placeholder="Link Meet"
             label="Link Meet"
           />
-          <Box mt={5} onClick={() => router.push('/calender/create?page=ulangi-event')}>
+          <Box mt={5} onClick={() => router.push('/calender/update?page=update-ulangi-event')}>
             <Group
               justify="space-between"
               p={10}
@@ -96,7 +96,7 @@ export default function NavbarCreateDivisionCalender() {
               <IoIosArrowDropright size={25} />
             </Group>
           </Box>
-          <Box mt={5} onClick={() => router.push('/calender/create?page=user-calender')}>
+          <Box mt={5} onClick={() => router.push('/calender/update?page=update-user-calender')}>
             <Group
               justify="space-between"
               p={10}
@@ -135,4 +135,5 @@ export default function NavbarCreateDivisionCalender() {
         onYes={(val) => { onTrue(val) }} />
     </Box>
   );
-} 
+}
+
