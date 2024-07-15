@@ -33,7 +33,7 @@ const dataFile = [
 ];
 
 
-export default function FileSave() {
+export default function FileSave({ kategori }: { kategori: string }) {
   const router = useRouter()
   const [selectedFiles, setSelectedFiles] = useState<Record<number, boolean>>({});
 
@@ -46,7 +46,7 @@ export default function FileSave() {
 
   return (
     <Box>
-      <LayoutNavbarNew back="/project/create" title="File Tersimpan" menu />
+      <LayoutNavbarNew back="" title="File Tersimpan" menu />
       <Box p={20}>
         <SimpleGrid
           cols={{ base: 2, sm: 2, lg: 2 }}
@@ -78,7 +78,7 @@ export default function FileSave() {
           })}
         </SimpleGrid>
         <Box mt="xl">
-          <Button color="white" bg={WARNA.biruTua} size="lg" radius={30} fullWidth onClick={() => router.push('/project/create?anggota=yes&files=yes&button=yes')}>
+          <Button color="white" bg={WARNA.biruTua} size="lg" radius={30} fullWidth onClick={() => router.push(`/${kategori}/create?anggota=yes&files=yes&button=yes`)}>
             Simpan
           </Button>
         </Box>
