@@ -1,6 +1,8 @@
 import ViewCreateDivisionCalender from "./_division_fitur/calender/view/view_create_division_calender";
 import ViewDivisionCalender from "./_division_fitur/calender/view/view_division_calender";
 import ViewCreateDiscussion from "./_division_fitur/discussion/view/view_create_discussion";
+import ViewDetailDiscussion from "./_division_fitur/discussion/view/view_detail_discussion";
+import ViewEditDiscussion from "./_division_fitur/discussion/view/view_edit_discussion";
 import ViewListDiscussion from "./_division_fitur/discussion/view/view_list_discussion";
 import ViewCreateTaskDivision from "./_division_fitur/task/view/view_create_division_task";
 import ViewDetailDivisionTask from "./_division_fitur/task/view/view_detail_division_task";
@@ -27,3 +29,5 @@ export { ViewCreateDivisionCalender }
 export { ViewCreateTaskDivision }
 export { ViewListDiscussion }
 export { ViewCreateDiscussion }
+export { ViewDetailDiscussion }
+export { ViewEditDiscussion }
