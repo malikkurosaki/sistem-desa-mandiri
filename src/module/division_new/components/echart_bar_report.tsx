@@ -16,9 +16,11 @@ export default function EchartBarReport() {
   const loadData = () => {
     const option: EChartsOption = {
       title: {
-        text: "SENTIMENT ANALYSIS",
+        text: "DOKUMEN",
+        top: '2%',
+        left: 'center',
         textStyle: {
-          color: "white"
+          color: WARNA.biruTua
         }
       },
       tooltip: {
