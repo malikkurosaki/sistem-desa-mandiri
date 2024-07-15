@@ -43,13 +43,13 @@ const DateUsers = [
   },
 ];
 
-export default function DetailCreateUserProject() {
+export default function DetailCreateUserProject({ kategori }: { kategori: string }) {
   const router = useRouter();
 
   return (
     <Box>
       <LayoutNavbarNew
-        back="/project/update-detail?page=detail-date-task"
+        back=""
         title="Pilih Anggota"
         menu
       />
@@ -104,7 +104,7 @@ export default function DetailCreateUserProject() {
             size="lg"
             radius={30}
             fullWidth
-            onClick={() => router.push("/project/update-detail?page=detail-date-task")}
+            onClick={() => router.push(`/${kategori}/update/1?page=detail-date-task`)}
           >
             Simpan
           </Button>
