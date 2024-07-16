@@ -11,6 +11,7 @@ import ViewCreateDiscussion from "./_division_fitur/discussion/view/view_create_
 import ViewDetailDiscussion from "./_division_fitur/discussion/view/view_detail_discussion";
 import ViewEditDiscussion from "./_division_fitur/discussion/view/view_edit_discussion";
 import ViewListDiscussion from "./_division_fitur/discussion/view/view_list_discussion";
+import ViewDocumentDivision from "./_division_fitur/document/view/view_document_division";
 import ViewCreateTaskDivision from "./_division_fitur/task/view/view_create_division_task";
 import ViewDetailDivisionTask from "./_division_fitur/task/view/view_detail_division_task";
 import ViewDivisionTask from "./_division_fitur/task/view/view_division_task";
@@ -45,4 +46,5 @@ export { ViewListDiscussion }
 export { ViewCreateDiscussion }
 export { ViewDetailDiscussion }
 export { ViewEditDiscussion }
+export { ViewDocumentDivision }
 

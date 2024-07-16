@@ -1,7 +1,7 @@
 'use client'
 import { WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { Avatar, Box, Button, Group, Text, Textarea } from "@mantine/core";
+import { Avatar, Box, Button, Center, Grid, Group, Text, Textarea } from "@mantine/core";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -18,15 +18,27 @@ export default function FormCreateDiscussion() {
    return (
       <Box>
          <Box p={20}>
-            <Group>
-               <Avatar src={'https://i.pravatar.cc/1000?img=32'} alt="it's me" size="lg" />
-               <Box>
-                  <Textarea
-                     placeholder="Tuliskan apa yang ingin anda diskusikan"
-                     w={"100%"}
-                  />
-               </Box>
-            </Group>
+            <Grid gutter={2}>
+               <Grid.Col span={"auto"}>
+                  <Center>
+                     <Avatar src={'https://i.pravatar.cc/1000?img=32'} alt="it's me" size="lg" />
+                  </Center>
+               </Grid.Col>
+               <Grid.Col span={10}>
+                  <Box>
+                     <Textarea
+                        placeholder="Tuliskan apa yang ingin anda diskusikan"
+                        w={"100%"}
+                        styles={{
+                           input: {
+                              border: 'none',
+                              backgroundColor: 'transparent',
+                           }
+                        }}
+                     />
+                  </Box>
+               </Grid.Col>
+            </Grid>
             <Box mt="xl">
                <Button
                   color="white"
