@@ -5,6 +5,7 @@ import { LayoutNavbarNew } from '@/module/_global';
 import FeatureDetailDivision from './feature_detail_division';
 import ListDiscussionOnDetailDivision from './list_discussion';
 import ListTaskOnDetailDivision from './list_task';
+import ListDocumentOnDetailDivision from './list_document';
 
 export default function DetailDivision() {
   return (
@@ -15,6 +16,7 @@ export default function DetailDivision() {
           <CarouselDivision />
           <FeatureDetailDivision />
           <ListTaskOnDetailDivision />
+          <ListDocumentOnDetailDivision />
           <ListDiscussionOnDetailDivision />
         </Stack>
       </Box>
