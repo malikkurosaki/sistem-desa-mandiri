@@ -49,7 +49,7 @@ export default function UpdateProgres({ searchParams }: { searchParams: any }) {
               borderRadius: 10,
             }}
             onClick={() =>
-              router.push("/project/update-detail?page=detail-date-task")
+              router.push("/project/update/1?page=detail-date-task")
             }
           >
             <Text>Tambah Tanggal & Tugas</Text>
@@ -256,7 +256,7 @@ export default function UpdateProgres({ searchParams }: { searchParams: any }) {
           </Box>
           <Box
             onClick={() =>
-              router.push("/project/update-detail?page=upload-progres")
+              router.push("/project/update/1?page=upload-progres")
             }
           >
             <Box

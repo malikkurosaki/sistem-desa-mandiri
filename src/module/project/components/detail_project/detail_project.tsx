@@ -69,7 +69,7 @@ export default function DetailProject() {
             size="lg"
             radius="lg"
             aria-label="Settings"
-            onClick={() => router.push("/project/update-detail")}
+            onClick={() => router.push("/project/update/1")}
           >
             <LuClipboardEdit size={20} color="white" />
           </ActionIcon>

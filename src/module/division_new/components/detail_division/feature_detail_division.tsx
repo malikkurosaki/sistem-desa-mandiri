@@ -52,7 +52,7 @@ export default function FeatureDetailDivision() {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push('/documents')}>
+        }} onClick={() => router.push('/document')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
                 <ActionIcon variant="filled"

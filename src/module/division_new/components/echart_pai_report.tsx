@@ -30,7 +30,7 @@ export default function EchartPaiReport() {
         {
           name: 'Progres Tugas',
           type: 'pie',
-          radius: '80%',
+          radius: '70%',
           avoidLabelOverlap: false,
           itemStyle: {
             borderRadius: 2,

@@ -8,6 +8,7 @@ import ViewUpdateProgres from "./view/view_update_progres";
 import DetailCreateUserProject from "./components/detail_project/detail_create_user_project";
 import DetailDateEndTask from "./components/detail_project/detail_date_end_task";
 import DetailFileSave from "./components/detail_project/detail_file_save";
+import FileUploadProgres from "./components/detail_project/file_upload_progres";
 
 export { ViewProject }
 export { ViewCreateProject }
@@ -19,3 +20,4 @@ export { ViewUpdateProgres }
 export { DetailCreateUserProject }
 export { DetailDateEndTask }
 export { DetailFileSave }
+export { FileUploadProgres }
