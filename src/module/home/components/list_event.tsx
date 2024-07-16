@@ -39,7 +39,7 @@ export default function ListEventHome() {
          <Box bg={"white"} style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,
-            padding: 20
+            padding: 10
          }}>
             {dataEvent.map((event, index) => {
                const bgColor = ['#D8D8F1', '#FED6C5'][index % 2]

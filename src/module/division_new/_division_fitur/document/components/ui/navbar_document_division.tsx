@@ -1,11 +1,16 @@
 'use client'
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
-import { ActionIcon, Box, Checkbox, Divider, Flex, Grid, Group, Text } from '@mantine/core';
+import { ActionIcon, Box, Checkbox, Divider, Flex, Grid, Group, SimpleGrid, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import DrawerMenuDocumentDivision from './drawer_menu_document_division';
 import ListDocumentsDivision from '../list_documents_division';
 import { FcDocument, FcFolder, FcImageFile } from 'react-icons/fc';
+import { BsDownload } from 'react-icons/bs';
+import { AiOutlineDelete } from 'react-icons/ai';
+import { CgRename } from "react-icons/cg";
+import { LuShare2 } from 'react-icons/lu';
+import { MdOutlineMoreHoriz } from 'react-icons/md';
 
 const dataDocuments = [
   {
@@ -65,6 +70,12 @@ export default function NavbarDocumentDivision() {
     setIsChecked(!isChecked);
   };
   const [isOpen, setOpen] = useState(false)
+
+  const [isDelete, setIsDelete] = useState(false)
+  const [rename, setRename] = useState(false)
+  const [share, setShare] = useState(false)
+  const [more, setMore] = useState(false)
+
   return (
     <Box>
       {isChecked && (
@@ -72,12 +83,38 @@ export default function NavbarDocumentDivision() {
           <Box h={90} w={{ base: "100%", md: "38.2%" }} bg={WARNA.biruTua} pos={'fixed'} top={0} style={{
             zIndex: 999,
           }}>
-            zxsdsd
+            <Flex justify={'space-between'} ml={30} mr={30} align={'center'} h={"100%"}>
+              <Text c={'white'}>Dibatalkan</Text>
+              <Text c={'white'}>Pilih Semua</Text>
+            </Flex>
           </Box>
           <Box h={70} w={{ base: "100%", md: "38.2%" }} bg={WARNA.biruTua} pos={'fixed'} bottom={0} style={{
             zIndex: 999,
           }}>
-            zxsdsd
+            <Flex justify={"center"} align={"center"} h={"100%"} w={"100%"}>
+              <SimpleGrid cols={{ base: 5, sm: 5, lg: 5 }}>
+                <Flex justify={'center'} align={'center'} direction={'column'}>
+                  <BsDownload size={20} color='white' />
+                  <Text fz={12} c={'white'}>Unduh</Text>
+                </Flex>
+                <Flex onClick={() => setIsDelete(true)} justify={'center'} align={'center'} direction={'column'}>
+                  <AiOutlineDelete size={20} color='white' />
+                  <Text fz={12} c={'white'}>Hapus</Text>
+                </Flex>
+                <Flex onClick={() => setRename(true)} justify={'center'} align={'center'} direction={'column'}>
+                  <CgRename size={20} color='white' />
+                  <Text fz={12} c={'white'}>Ganti Name</Text>
+                </Flex>
+                <Flex onClick={() => setShare(true)} justify={'center'} align={'center'} direction={'column'}>
+                  <LuShare2 size={20} color='white' />
+                  <Text fz={12} c={'white'}>Bagikan</Text>
+                </Flex>
+                <Flex onClick={() => setMore(false)} justify={'center'} align={'center'} direction={'column'}>
+                  <MdOutlineMoreHoriz size={20} color='white' />
+                  <Text fz={12} c={'white'}>Lainnya</Text>
+                </Flex>
+              </SimpleGrid>
+            </Flex>
           </Box>
         </>
       )}
