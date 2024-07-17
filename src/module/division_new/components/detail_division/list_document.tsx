@@ -55,7 +55,7 @@ export default function ListDocumentOnDetailDivision() {
                            </Center>
                         </Paper>
                         <Box p={"sm"}>
-                           <Text c={"dimmed"}>{v.title}</Text>
+                           <Text c={"dimmed"} truncate="end"ta={"center"}>{v.title}</Text>
                         </Box>
                      </Stack>
                   </UnstyledButton>

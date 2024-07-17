@@ -53,7 +53,7 @@ export default function ListEventHome() {
                            <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
                            <Box>
                               <Text>{event.jamAwal} - {event.jamAkhir}</Text>
-                              <Text fw={"bold"}>{event.title}</Text>
+                              <Text fw={"bold"} truncate="end">{event.title}</Text>
                               <Text>Dibuat oleh : {event.dibuat}</Text>
                            </Box>
                         </Group>

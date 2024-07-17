@@ -52,7 +52,7 @@ export default function ListDiscussionOnDetailDivision() {
                            <Group>
                               <GoDiscussionClosed size={25} />
                               <Box w={{ base: 230, md: 400 }}>
-                                 <Text fw={'bold'}>{v.judul}</Text>
+                                 <Text fw={'bold'} truncate="end">{v.judul}</Text>
                               </Box>
                            </Group>
                            <Group justify="space-between" mt={20} c={'#8C8C8C'}>
