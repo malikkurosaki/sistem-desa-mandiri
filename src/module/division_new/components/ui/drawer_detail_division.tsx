@@ -1,11 +1,13 @@
+"use client"
 import { WARNA } from "@/module/_global";
 import { Box, Stack, SimpleGrid, Flex, Text } from "@mantine/core";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import { BsInfoCircle } from "react-icons/bs";
 import { FaPencil } from "react-icons/fa6";
 import { TbReportAnalytics } from "react-icons/tb";
 
 export default function DrawerDetailDivision() {
+   const router = useRouter()
    return (
       <Box>
          <Stack pt={10}>
