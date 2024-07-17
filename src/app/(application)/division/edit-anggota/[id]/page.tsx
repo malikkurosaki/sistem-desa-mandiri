@@ -1,6 +1,8 @@
+import { ViewEditAnggotaDivision } from "@/module/division_new";
+
 function Page() {
    return (
-      <>Edit Anggota divisi</>
+      <ViewEditAnggotaDivision/>
    )
 }
 

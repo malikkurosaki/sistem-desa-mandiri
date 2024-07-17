@@ -22,6 +22,10 @@ import ViewCreateDivision from "./view/view_create_division";
 import ViewCreateReport from "./view/view_create_report";
 import ViewDetailDivision from "./view/view_detail_division";
 import ViewDivision from "./view/view_division";
+import ViewEditAnggotaDivision from "./view/view_edit_anggota_division";
+import ViewEditDivision from "./view/view_edit_division";
+import ViewInformationDivision from "./view/view_Information_division";
+import ViewReportDivision from "./view/view_report_division";
 
 export { ViewDivision }
 export { ViewCreateDivision }
@@ -47,4 +51,7 @@ export { ViewCreateDiscussion }
 export { ViewDetailDiscussion }
 export { ViewEditDiscussion }
 export { ViewDocumentDivision }
-
+export { ViewReportDivision }
+export { ViewInformationDivision }
+export { ViewEditDivision }
+export { ViewEditAnggotaDivision }

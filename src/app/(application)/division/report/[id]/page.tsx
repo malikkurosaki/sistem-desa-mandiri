@@ -1,6 +1,8 @@
+import { ViewReportDivision } from "@/module/division_new"
+
 function Page() {
    return (
-      <>Report divisi</>
+      <ViewReportDivision/>
    )
 }
 
