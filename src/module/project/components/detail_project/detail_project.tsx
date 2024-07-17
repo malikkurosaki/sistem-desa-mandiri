@@ -60,7 +60,7 @@ export default function DetailProject() {
   return (
     <Box>
       <LayoutNavbarNew
-        back="/project"
+        back=""
         title="Proyek Desa Maju"
         menu={
           <ActionIcon

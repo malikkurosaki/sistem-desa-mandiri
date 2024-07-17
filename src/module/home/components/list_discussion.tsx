@@ -1,7 +1,9 @@
+'use client'
 import { WARNA } from "@/module/_global";
 import { Box, Group, Text } from "@mantine/core";
 import { GoDiscussionClosed } from "react-icons/go";
 import { CiClock2, CiUser } from "react-icons/ci";
+import { useRouter } from "next/navigation";
 
 const dataDiskusi = [
    {
@@ -31,6 +33,8 @@ const dataDiskusi = [
 ]
 
 export default function ListDiscussion() {
+   const router = useRouter()
+
    return (
       <Box pt={10}>
          <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Diskusi</Text>
@@ -46,7 +50,7 @@ export default function ListDiscussion() {
                         borderRadius: 10,
                         border: `1px solid ${"#D6D8F6"}`,
                         padding: 10
-                     }} mb={10}>
+                     }} mb={10} onClick={() => router.push(`/discussion/1`)}>
                         <Group>
                            <GoDiscussionClosed size={25} />
                            <Box w={{ base: 230, md: 400 }}>
