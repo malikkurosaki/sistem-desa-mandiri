@@ -40,7 +40,7 @@ export default function ListTaskOnDetailDivision() {
             {dataTask.map((v, i) =>
                <Carousel.Slide key={v.id}>
                   <Box p={20} w={{ base: 300, md: 400 }} bg={WARNA.biruTua} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
-                     <Text fw={'bold'} c={WARNA.bgWhite}>{v.title}</Text>
+                     <Text fw={'bold'} c={WARNA.bgWhite} truncate="end">{v.title}</Text>
                      <Group justify="space-between" mt={20} c={'#aeaeae'}>
                         <Group gap={5} align="center">
                            <CiClock2 size={18} />

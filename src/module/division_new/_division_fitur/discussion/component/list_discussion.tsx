@@ -1,8 +1,9 @@
 'use client'
 import { WARNA } from "@/module/_global";
-import { Avatar, Badge, Box, Flex, Group, Text } from "@mantine/core";
+import { Avatar, Badge, Box, Divider, Flex, Group, Text, TextInput } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { GrChatOption } from "react-icons/gr";
+import { HiMagnifyingGlass } from "react-icons/hi2";
 
 const dataAnggota = [
    {
@@ -51,17 +52,30 @@ export default function ListDiscussion() {
    const router = useRouter()
    return (
       <Box p={20}>
+         <TextInput
+            styles={{
+               input: {
+                  color: WARNA.biruTua,
+                  borderRadius: WARNA.biruTua,
+                  borderColor: WARNA.biruTua,
+               },
+            }}
+            size="md"
+            radius={30}
+            leftSection={<HiMagnifyingGlass size={20} />}
+            placeholder="Pencarian"
+         />
          {dataAnggota.map((v, i) => {
             return (
-               <>
+               <Box key={i} pl={10} pr={10}
+                  onClick={() => {
+                     router.push(`/discussion/${v.id}`)
+                  }}
+               >
                   <Flex
                      justify={"space-between"}
                      align={"center"}
                      mt={20}
-                     key={i}
-                     onClick={() => {
-                        router.push(`/discussion/${v.id}`)
-                     }}
                   >
                      <Group>
                         <Avatar src={v.image} alt="it's me" size="lg" />
@@ -74,7 +88,7 @@ export default function ListDiscussion() {
                      </Group>
                      <Text c={"grey"}>1 Jam</Text>
                   </Flex>
-                  <Box>{v.desc}</Box>
+                  <Box mt={10}>{v.desc}</Box>
                   <Group justify="space-between" mt={20} c={'#8C8C8C'}>
                      <Group gap={5} align="center">
                         <GrChatOption size={18} />
@@ -84,7 +98,10 @@ export default function ListDiscussion() {
                         <Text fz={13}>{v.jumlah} Komentar</Text>
                      </Group>
                   </Group>
-               </>
+                  <Box mt={20}>
+                     <Divider size={"xs"} />
+                  </Box>
+               </Box>
             );
          })}
       </Box>

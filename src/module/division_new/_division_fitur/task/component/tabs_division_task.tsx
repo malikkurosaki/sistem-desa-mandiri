@@ -17,16 +17,16 @@ export default function TabsDivisionTask() {
                padding: 5,
                borderRadius: 100
             }}>
-               <Tabs.Tab value="segera" leftSection={<TbClockPause style={iconStyle} />}>
+               <Tabs.Tab value="segera" w={"23%"} leftSection={<TbClockPause style={iconStyle} />}>
                   Segera
                </Tabs.Tab>
-               <Tabs.Tab value="dikerjakan" leftSection={<RiProgress3Line style={iconStyle} />}>
+               <Tabs.Tab value="dikerjakan"  w={"28%"} leftSection={<RiProgress3Line style={iconStyle} />}>
                   Dikerjakan
                </Tabs.Tab>
-               <Tabs.Tab value="selesai" leftSection={<IoIosCheckmarkCircleOutline style={iconStyle} />}>
+               <Tabs.Tab value="selesai"  w={"23%"} leftSection={<IoIosCheckmarkCircleOutline style={iconStyle} />}>
                   Selesai
                </Tabs.Tab>
-               <Tabs.Tab value="batal" leftSection={<IoCloseCircleOutline style={iconStyle} />}>
+               <Tabs.Tab value="batal"  w={"20%"} leftSection={<IoCloseCircleOutline style={iconStyle} />}>
                   Batal
                </Tabs.Tab>
             </Tabs.List>

@@ -9,7 +9,7 @@ export default function NavbarDetailDiscussion() {
    const [openDrawer, setOpenDrawer] = useState(false)
    return (
       <>
-         <LayoutNavbarNew back="" title="Diskusi Divisi Keuangan"
+         <LayoutNavbarNew back="" title="Diskusi "
             menu={
                <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
                   <HiMenu size={20} color='white' />
