@@ -9,42 +9,50 @@ const dataMember = [
    {
       id: 1,
       name: 'Ali akbar',
-      desc: 'Perbekel'
+      desc: 'Perbekel',
+      grup: 'Dinas'
    },
    {
       id: 2,
       name: 'Fibra Marcell',
-      desc: 'Kasi Kesejahteraan'
+      desc: 'Kasi Kesejahteraan',
+      grup: 'Dinas'
    },
    {
       id: 3,
       name: 'Burhan',
-      desc: 'Kasi Kesejahteraan'
+      desc: 'Kasi Kesejahteraan',
+      grup: 'Dinas'
    },
    {
       id: 4,
       name: 'Chandra',
-      desc: 'Kasi Kesejahteraan'
+      desc: 'Kasi Kesejahteraan',
+      grup: 'Dinas'
    },
    {
       id: 5,
       name: 'Ayu',
-      desc: 'Kasi Kesejahteraan'
+      desc: 'Kasi Kesejahteraan',
+      grup: 'PKK'
    },
    {
       id: 6,
       name: 'Heriawan',
-      desc: 'Kasi Kesejahteraan'
+      desc: 'Kasi Kesejahteraan',
+      grup: 'Karang Taruna'
    },
    {
       id: 7,
       name: 'Jinan',
-      desc: 'Kasi Kesejahteraan'
+      desc: 'Kasi Kesejahteraan',
+      grup: 'Dinas'
    },
    {
       id: 8,
       name: 'Rizal',
-      desc: 'Kasi Kesejahteraan'
+      desc: 'Kasi Kesejahteraan',
+      grup: 'LPD'
    },
 ]
 
@@ -81,6 +89,7 @@ export default function ListMember() {
                      </Box>
                      <Box>
                         <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
+                        <Text fw={'lighter'} fz={12}>{v.grup + ' - ' + v.desc}</Text>
                      </Box>
                   </Group>
                </Box>

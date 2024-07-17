@@ -1,7 +1,7 @@
 'use client'
 import { WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { Box, Button, Stack, TextInput } from "@mantine/core";
+import { Box, Button, Select, Stack, TextInput } from "@mantine/core";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiUser } from "react-icons/hi2";
@@ -31,6 +31,28 @@ export default function CreateMember() {
                }}>
                <HiUser size={100} color={WARNA.bgWhite} />
             </Box>
+            <Select
+               placeholder="Pilih Grup" label="Grup" w={"100%"} size="md" required withAsterisk radius={30}
+               styles={{
+                  input: {
+                     color: WARNA.biruTua,
+                     borderRadius: WARNA.biruTua,
+                     borderColor: WARNA.biruTua,
+                  },
+               }}
+               data={['Dinas', 'Adat', 'LPD', 'PKK']}
+            />
+            <Select
+               placeholder="Pilih Jabatan" label="Jabatan" w={"100%"} size="md" required withAsterisk radius={30}
+               styles={{
+                  input: {
+                     color: WARNA.biruTua,
+                     borderRadius: WARNA.biruTua,
+                     borderColor: WARNA.biruTua,
+                  },
+               }}
+               data={['Kepala', 'Sekretaris', 'Bendahara', 'Anggota']}
+            />
             <TextInput
                size="md" type="number" radius={30} placeholder="NIK" withAsterisk label="NIK" w={"100%"}
                styles={{
@@ -71,8 +93,19 @@ export default function CreateMember() {
                   },
                }}
             />
+            <Select
+               placeholder="Pilih Gender" label="Gender" w={"100%"} size="md" required withAsterisk radius={30}
+               styles={{
+                  input: {
+                     color: WARNA.biruTua,
+                     borderRadius: WARNA.biruTua,
+                     borderColor: WARNA.biruTua,
+                  },
+               }}
+               data={['Laki-laki', 'Perempuan']}
+            />
          </Stack>
-         <Box mt={30} mx={20}>
+         <Box mt={30} mx={20} pb={20}>
             <Button
                c={"white"}
                bg={WARNA.biruTua}
