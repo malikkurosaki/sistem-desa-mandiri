@@ -3,7 +3,7 @@ import { WARNA } from '@/module/_global';
 import { ActionIcon, Box, Center, Grid, Group, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { HiUser } from 'react-icons/hi2';
+import { FaBell } from 'react-icons/fa6';
 
 const dataNotification = [
   {
@@ -69,23 +69,21 @@ export default function ListNotification() {
     <Box>
       {dataNotification.map((v, i) => {
         return (
-          <Grid style={{
-            border: `1px solid ${WARNA.borderOrange}`,
-            padding: 15,
-            borderRadius: 15
-          }} gutter={1} key={i} mb={"sm"}>
-            <Grid.Col span={3} pl={'xs'}>
-              <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
-                <HiUser size={30} color='white' />
-              </ActionIcon>
-            </Grid.Col>
-            <Grid.Col span={9}>
-              <Box>
+          <Box key={i} my={15}>
+            <Box style={{
+              border: `1px solid ${WARNA.borderOrange}`,
+              padding: 20,
+              borderRadius: 15
+            }} >
+              <Group align='center'>
+                <ActionIcon variant="light" bg={WARNA.biruTua} size={35} radius={100} aria-label="icon">
+                  <FaBell size={20} color='white' />
+                </ActionIcon>
                 <Text fw={'bold'} fz={18}>{v.title}</Text>
-                <Text fz={15}>{v.description}</Text>
-              </Box>
-            </Grid.Col>
-          </Grid>
+              </Group>
+              <Text mt={10} fz={15}>{v.description}</Text>
+            </Box>
+          </Box>
         )
       })}
     </Box>
