@@ -1,7 +1,9 @@
-import { Avatar, Badge, Box, Flex, Group, Text } from "@mantine/core";
+"use client"
+import { Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Text, TextInput } from "@mantine/core";
 import NavbarDetailDiscussion from "../component/navbar_detail_discussion";
 import { WARNA } from "@/module/_global";
 import { GrChatOption } from "react-icons/gr";
+import { LuSendHorizonal } from "react-icons/lu";
 
 const dataAnggota = [
    {
@@ -38,7 +40,7 @@ const dataAnggota = [
    },
    {
       id: 5,
-      name: "Imam Baroni",
+      name: "Imam Baronis",
       image: "https://i.pravatar.cc/1000?img=22",
       status: false,
       jumlah: 29,
@@ -68,7 +70,7 @@ export default function ViewDetailDiscussion() {
                </Group>
                <Text c={"grey"}>1 Jam</Text>
             </Flex>
-            <Box>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged</Box>
+            <Box mt={10}>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged</Box>
             <Group justify="space-between" mt={20} c={'#8C8C8C'}>
                <Group gap={5} align="center">
                   <GrChatOption size={18} />
@@ -79,27 +81,56 @@ export default function ViewDetailDiscussion() {
             <Box p={10}>
                {dataAnggota.map((v, i) => {
                   return (
-                     <Box key={i} style={{ borderBottom: "1px solid #8C8C8C" }} p={5}>
+                     <Box key={i} p={10}>
                         <Flex
                            justify={"space-between"}
                            align={"center"}
                         >
                            <Group>
-                              <Avatar src={v.image} alt="it's me" size="lg" />
+                              <Avatar src={v.image} alt="it's me" size="md" />
                               <Box>
-                                 <Text c={WARNA.biruTua} fw={"bold"}>
+                                 <Text c={WARNA.biruTua} fw={"bold"} fz={15}>
                                     {v.name}
                                  </Text>
                               </Box>
                            </Group>
                            <Text c={"grey"}>1 Jam</Text>
                         </Flex>
-                        <Box>{v.desc}</Box>
+                        <Box mt={10}>{v.desc}</Box>
+                        <Box mt={20}>
+                           <Divider size={"xs"} />
+                        </Box>
                      </Box>
                   );
                })}
             </Box>
-
+            <Box h={60} pos={"fixed"} bottom={0} w={{ base: "90%", md: "35.5%" }} style={{
+               zIndex: 999
+            }}>
+               <Grid bg={"white"} style={{
+                  border: '1px solid gray',
+                  borderRadius: 40
+               }} justify="center" align="center">
+                  <Grid.Col span={10}>
+                     <TextInput
+                        styles={{
+                           input: {
+                              color: WARNA.biruTua,
+                              border: "none",
+                              backgroundColor: "transparent"
+                           },
+                        }}
+                        size="md"
+                        placeholder="Kirim Komentar"
+                     />
+                  </Grid.Col>
+                  <Grid.Col span={2}>
+                     <Center>
+                        <LuSendHorizonal size={30} />
+                     </Center>
+                  </Grid.Col>
+               </Grid>
+            </Box>
          </Box>
       </>
    )

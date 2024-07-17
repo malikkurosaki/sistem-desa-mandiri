@@ -28,6 +28,12 @@ export default function FormEditDiscussion() {
                   <Textarea
                      placeholder="Tuliskan apa yang ingin anda diskusikan"
                      w={"100%"}
+                     styles={{
+                        input: {
+                           border: 'none',
+                           backgroundColor: 'transparent',
+                        }
+                     }}
                   />
                </Box>
             </Group>
