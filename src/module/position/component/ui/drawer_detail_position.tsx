@@ -2,8 +2,7 @@ import { LayoutDrawer, WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button } from "@mantine/core"
 import { useState } from "react"
-import { FaPencil } from "react-icons/fa6"
-import { ImUserCheck } from "react-icons/im"
+import { FaPencil, FaToggleOff } from "react-icons/fa6"
 
 export default function DrawerDetailPosition({ onUpdated }: { onUpdated: (val: boolean) => void }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
@@ -32,10 +31,10 @@ export default function DrawerDetailPosition({ onUpdated }: { onUpdated: (val: b
                   onClick={() => setModal(true)}
                >
                   <Box>
-                     <ImUserCheck size={30} color={WARNA.biruTua} />
+                     <FaToggleOff size={30} color={WARNA.biruTua} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua} ta='center'>Status</Text>
+                     <Text c={WARNA.biruTua}>Non Aktifkan</Text>
                   </Box>
                </Flex>
 

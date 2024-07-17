@@ -1,7 +1,11 @@
+import { ViewFilter } from '@/module/_global';
 import { ViewListPosition } from '@/module/position';
 import React from 'react';
 
-function Page() {
+function Page({ searchParams }: { searchParams: { page: string } }) {
+  if (searchParams.page == "filter")
+    return <ViewFilter />
+
   return (
     <ViewListPosition />
   );
