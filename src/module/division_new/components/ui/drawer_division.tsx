@@ -20,7 +20,7 @@ export default function DrawerDivision() {
               <IoAddCircle size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Tambah Proyek</Text>
+              <Text c={WARNA.biruTua}>Tambah Divisi</Text>
             </Box>
           </Flex>
           <Flex onClick={() => {

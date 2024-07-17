@@ -1,16 +1,16 @@
-import { Box, Stack } from '@mantine/core';
+import { ActionIcon, Box, Stack } from '@mantine/core';
 import React from 'react';
 import CarouselDivision from './carousel_division';
-import { LayoutNavbarNew } from '@/module/_global';
 import FeatureDetailDivision from './feature_detail_division';
 import ListDiscussionOnDetailDivision from './list_discussion';
 import ListTaskOnDetailDivision from './list_task';
 import ListDocumentOnDetailDivision from './list_document';
+import NavbarDetailDivision from '../ui/navbar_detail_division';
 
 export default function DetailDivision() {
   return (
     <Box>
-      <LayoutNavbarNew back="/division" title={"Divisi kerohanian"} menu />
+      <NavbarDetailDivision />
       <Box p={20}>
         <Stack>
           <CarouselDivision />
