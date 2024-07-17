@@ -28,12 +28,12 @@ export default function ListDivisi() {
    return (
       <>
          <Box pt={10}>
-            <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Divisi Terbaru</Text>
+            <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Divisi Teraktif</Text>
             <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
                {dataProject.map((v) =>
                   <Carousel.Slide key={v.id}>
                      <Box w={{ base: 300, md: 400 }}>
-                        <Card shadow="sm" padding="md" component="a" radius={10}>
+                        <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
                            <Card.Section>
                               <Box h={120} bg={`linear-gradient(180deg, rgba(223,218,124,1) 25%, rgba(242,175,70,1) 100%)`}>
                                  <Flex justify={'center'} align={'center'} h={"100%"}>
