@@ -3,6 +3,7 @@ import { LayoutDrawer, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { Box, Button, Center, Flex, Group, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
+import { FaPencil, FaToggleOff } from 'react-icons/fa6';
 import { IoAddCircle, IoCloseCircleOutline } from "react-icons/io5";
 
 export default function EditDrawerGroup({ onUpdated }: { onUpdated: (val: boolean) => void }) {
@@ -27,15 +28,15 @@ export default function EditDrawerGroup({ onUpdated }: { onUpdated: (val: boolea
         <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }}>
           <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => setModal(true)} style={{ cursor: 'pointer' }}>
             <Box>
-              <IoCloseCircleOutline size={30} color={WARNA.biruTua} />
+              <FaToggleOff size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Tidak Aktif</Text>
+              <Text c={WARNA.biruTua}>Non Aktifkan</Text>
             </Box>
           </Flex>
           <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => setOpenDrawerGroup(true)} style={{ cursor: 'pointer' }}>
             <Box>
-              <IoAddCircle size={30} color={WARNA.biruTua} />
+              <FaPencil size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
               <Text c={WARNA.biruTua}>Edit</Text>
