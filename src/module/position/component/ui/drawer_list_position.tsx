@@ -1,10 +1,13 @@
 import { WARNA, LayoutDrawer } from "@/module/_global";
 import { Box, Stack, SimpleGrid, Flex, TextInput, Button, Text, Select } from "@mantine/core";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoAddCircle } from "react-icons/io5";
+import { RiFilter2Line } from "react-icons/ri";
 
 export default function DrawerListPosition({ onCreated }: { onCreated: (val: boolean) => void }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
+   const router = useRouter()
 
    function onCLose() {
       setOpenDrawerGroup(false)
@@ -23,6 +26,14 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                   </Box>
                   <Box>
                      <Text ta={'center'} c={WARNA.biruTua}>Tambah Jabatan</Text>
+                  </Box>
+               </Flex>
+               <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => router.push('/position?page=filter')}>
+                  <Box>
+                     <RiFilter2Line size={30} color={WARNA.biruTua} />
+                  </Box>
+                  <Box>
+                     <Text ta={'center'} c={WARNA.biruTua}>Filter</Text>
                   </Box>
                </Flex>
             </SimpleGrid>

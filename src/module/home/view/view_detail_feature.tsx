@@ -5,7 +5,7 @@ import React from 'react';
 import { HiMiniUserGroup, HiMiniPresentationChartBar, HiMegaphone, HiSquares2X2, HiChevronLeft, HiUserGroup, HiUsers } from "react-icons/hi2";
 import { PiUsersFourFill } from "react-icons/pi";
 import { useRouter } from 'next/navigation';
-import { FaUserTie } from 'react-icons/fa6';
+import { FaUserTag, FaUserTie } from 'react-icons/fa6';
 
 export default function ViewDetailFeature() {
   const router = useRouter()
@@ -73,20 +73,6 @@ export default function ViewDetailFeature() {
                 <Text fz={15} c={WARNA.biruTua}>Anggota</Text>
               </Center>
             </Box>
-            <Box onClick={() => router.push('/group')}>
-              <Center>
-                <ActionIcon variant="gradient"
-                  size={68}
-                  aria-label="Gradient action icon"
-                  radius={100}
-                  gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <HiUsers size={35} color={WARNA.biruTua} />
-                </ActionIcon>
-              </Center>
-              <Center>
-                <Text fz={15} c={WARNA.biruTua}>Group</Text>
-              </Center>
-            </Box>
             <Box onClick={() => router.push('/position')}>
               <Center>
                 <ActionIcon variant="gradient"
@@ -99,6 +85,20 @@ export default function ViewDetailFeature() {
               </Center>
               <Center>
                 <Text fz={15} c={WARNA.biruTua}>Jabatan</Text>
+              </Center>
+            </Box>
+            <Box onClick={() => router.push('/group')}>
+              <Center>
+                <ActionIcon variant="gradient"
+                  size={68}
+                  aria-label="Gradient action icon"
+                  radius={100}
+                  gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
+                  <FaUserTag size={35} color={WARNA.biruTua} />
+                </ActionIcon>
+              </Center>
+              <Center>
+                <Text fz={15} c={WARNA.biruTua}>Group</Text>
               </Center>
             </Box>
           </SimpleGrid>

@@ -9,35 +9,43 @@ import toast from 'react-hot-toast';
 const dataGroup = [
    {
       id: 1,
-      name: 'Anggota'
+      name: 'Kepala',
+      grup: 'Dinas'
    },
    {
       id: 2,
-      name: 'Anggota'
+      name: 'Sekretaris',
+      grup: 'LPD'
    },
    {
       id: 3,
-      name: 'Anggota'
+      name: 'Bendahara',
+      grup: 'Dinas'
    },
    {
       id: 4,
-      name: 'Anggota'
+      name: 'Anggota',
+      grup: 'Karang Taruna'
    },
    {
       id: 5,
-      name: 'Anggota'
+      name: 'Kepala Urusan Kemasyarakatan',
+      grup: 'Dinas'
    },
    {
       id: 6,
-      name: 'Anggota'
+      name: 'Kepala Urusan Pemerintahan',
+      grup: 'Dinas'
    },
    {
       id: 7,
-      name: 'Anggota'
+      name: 'Kepala Urusan Kependudukan',
+      grup: 'Dinas'
    },
    {
       id: 8,
-      name: 'Anggota'
+      name: 'Anggota',
+      grup: 'Dinas'
    },
 ]
 
@@ -78,6 +86,7 @@ export default function ListPositionNonActive() {
                      </Box>
                      <Box>
                         <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
+                        <Text fw={'lighter'} fz={12}>{v.grup}</Text>
                      </Box>
                   </Group>
                </Box>
