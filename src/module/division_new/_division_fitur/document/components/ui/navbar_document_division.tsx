@@ -1,6 +1,6 @@
 'use client'
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
-import { ActionIcon, Box, Checkbox, Divider, Flex, Grid, Group, SimpleGrid, Text } from '@mantine/core';
+import { ActionIcon, Box, Button, Checkbox, Divider, Flex, Grid, Group, Modal, Select, SimpleGrid, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import DrawerMenuDocumentDivision from './drawer_menu_document_division';
@@ -11,6 +11,9 @@ import { AiOutlineDelete } from 'react-icons/ai';
 import { CgRename } from "react-icons/cg";
 import { LuShare2 } from 'react-icons/lu';
 import { MdOutlineMoreHoriz } from 'react-icons/md';
+import LayoutModal from '@/module/_global/layout/layout_modal';
+import toast from 'react-hot-toast';
+import DrawerMore from './drawer_more';
 
 const dataDocuments = [
   {
@@ -76,6 +79,19 @@ export default function NavbarDocumentDivision() {
   const [share, setShare] = useState(false)
   const [more, setMore] = useState(false)
 
+  function onTrue(val: boolean) {
+    if (val) {
+      toast.success("Sukses! Data dihapus");
+    }
+    setIsDelete(false)
+  }
+  function onEdit(val: boolean) {
+    if (val) {
+      toast.success("Sukses! Edit Data");
+    }
+    setRename(false)
+  }
+
   return (
     <Box>
       {isChecked && (
@@ -109,7 +125,7 @@ export default function NavbarDocumentDivision() {
                   <LuShare2 size={20} color='white' />
                   <Text fz={12} c={'white'}>Bagikan</Text>
                 </Flex>
-                <Flex onClick={() => setMore(false)} justify={'center'} align={'center'} direction={'column'}>
+                <Flex onClick={() => setMore(true)} justify={'center'} align={'center'} direction={'column'}>
                   <MdOutlineMoreHoriz size={20} color='white' />
                   <Text fz={12} c={'white'}>Lainnya</Text>
                 </Flex>
@@ -164,6 +180,79 @@ export default function NavbarDocumentDivision() {
       </Box>
       <LayoutDrawer opened={isOpen} title={'Menu'} onClose={() => setOpen(false)}>
         <DrawerMenuDocumentDivision />
+      </LayoutDrawer>
+      <LayoutModal opened={isDelete} onClose={() => setIsDelete(false)}
+        description="Apakah Anda yakin ingin menghapus data?"
+        onYes={(val) => { onTrue(val) }} />
+      <Modal styles={{
+        body: {
+          borderRadius: 20
+        },
+        content: {
+          borderRadius: 20,
+          border: `2px solid ${"#828AFC"}`
+        }
+      }} opened={rename} onClose={() => setRename(false)} centered withCloseButton={false}>
+        <Box p={20}>
+          <Text ta={"center"} fw={"bold"}>Edit Folder</Text>
+          <Box mt={20} mb={20}>
+            <TextInput
+              styles={{
+                input: {
+                  color: WARNA.biruTua,
+                  borderRadius: '#828AFC',
+                  borderColor: '#828AFC',
+                },
+              }}
+              size="md"
+              radius={10}
+              placeholder="Buat Folder Baru"
+            />
+          </Box>
+          <Grid mt={40}>
+            <Grid.Col span={6}>
+              <Button variant="subtle" fullWidth color='#969494' onClick={() => setRename(false)}>Batalkan</Button>
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Button variant="subtle" fullWidth color={WARNA.biruTua} onClick={(val) => onEdit(true)}>Edit</Button>
+            </Grid.Col>
+          </Grid>
+        </Box>
+      </Modal>
+      <LayoutDrawer opened={share} title={'Bagikan'} onClose={() => setShare(false)} size='lg'>
+        <Box pt={10}>
+          <Select
+            styles={{
+              input: {
+                color: WARNA.biruTua,
+                borderRadius: WARNA.biruTua,
+                borderColor: WARNA.biruTua,
+              },
+            }}
+            size="lg"
+            radius={10}
+            placeholder="Pilih Divisi"
+          />
+          <Box h={90} pos={"fixed"} bottom={0} w={{ base: "92%", md: "94%" }} style={{
+            zIndex: 999
+          }}>
+            <Box>
+              <Button
+                c={"white"}
+                bg={WARNA.biruTua}
+                size="lg"
+                radius={30}
+                fullWidth
+                onClick={() => ''}
+              >
+                Simpan
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </LayoutDrawer>
+      <LayoutDrawer opened={more} title={''} onClose={() => setMore(false)}>
+        <DrawerMore />
       </LayoutDrawer>
     </Box>
   );
