@@ -12,7 +12,7 @@ export default function DrawerDetailDivision() {
       <Box>
          <Stack pt={10}>
             <SimpleGrid
-               cols={{ base: 3, sm: 3, lg: 3 }}
+               cols={{ base: 2, sm: 2, lg: 3 }}
             >
                <Flex onClick={() => router.push('/division/info/1')} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
@@ -20,26 +20,6 @@ export default function DrawerDetailDivision() {
                   </Box>
                   <Box>
                      <Text c={WARNA.biruTua}>Informasi Divisi</Text>
-                  </Box>
-               </Flex>
-               <Flex onClick={() => {
-                  router.push('/division/edit/1')
-               }} justify={'center'} align={'center'} direction={'column'} >
-                  <Box>
-                     <FaPencil size={30} color={WARNA.biruTua} />
-                  </Box>
-                  <Box>
-                     <Text c={WARNA.biruTua}>Edit Divisi</Text>
-                  </Box>
-               </Flex>
-               <Flex onClick={() => {
-                  router.push('/division/edit-anggota/1')
-               }} justify={'center'} align={'center'} direction={'column'} >
-                  <Box>
-                     <TbReportAnalytics size={30} color={WARNA.biruTua} />
-                  </Box>
-                  <Box>
-                     <Text c={WARNA.biruTua}>Edit Anggota</Text>
                   </Box>
                </Flex>
                <Flex onClick={() => {
