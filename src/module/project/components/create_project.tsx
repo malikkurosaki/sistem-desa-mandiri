@@ -1,28 +1,52 @@
 "use client";
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Box, Button, Center, Flex, Group, Input, Stack, Text } from "@mantine/core";
+import { Box, Button, Center, Flex, Group, Select, Stack, Text, TextInput } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
 import { BsFiletypeCsv } from "react-icons/bs";
 import ResultsDateAndTask from "./results_date-and_task";
 import ResultsFile from "./results_file";
+import LayoutModal from "@/module/_global/layout/layout_modal";
+import toast from "react-hot-toast";
 
 export default function CreateProject({ searchParams }: { searchParams: any }) {
   const router = useRouter();
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [isModal, setModal] = useState(false)
+
+  function onTrue(val: boolean) {
+    if (val) {
+      toast.success("Sukses! Data tersimpan");
+      router.push('/project')
+    }
+    setModal(false)
+  }
+
   return (
     <Box>
       <LayoutNavbarNew back="/project" title="tambah proyek" menu />
       <Box p={20}>
         <Stack>
-          <Input
+          <Select
+            placeholder="Pilih Grup" label="Grup" w={"100%"} size="md" required withAsterisk radius={30}
             styles={{
               input: {
                 border: `1px solid ${"#D6D8F6"}`,
                 borderRadius: 10,
               },
             }}
+            data={['Dinas', 'Adat', 'LPD', 'PKK']}
+          />
+          <TextInput
+            label="Proyek"
+            styles={{
+              input: {
+                border: `1px solid ${"#D6D8F6"}`,
+                borderRadius: 10,
+              },
+            }}
+            required withAsterisk
             placeholder="Nama Proyek"
             size="md"
           />
@@ -69,14 +93,12 @@ export default function CreateProject({ searchParams }: { searchParams: any }) {
           (searchParams.button == 'yes') &&
           <>
             <Box mt="xl">
-              <Button color="white" bg={WARNA.biruTua} size="lg" radius={30} fullWidth onClick={() => router.push('/project')}>
+              <Button color="white" bg={WARNA.biruTua} size="lg" radius={30} fullWidth onClick={() => setModal(true)}>
                 Simpan
               </Button>
             </Box>
           </>
         }
-
-
       </Box>
 
 
@@ -125,6 +147,10 @@ export default function CreateProject({ searchParams }: { searchParams: any }) {
           </Box>
         </Flex>
       </LayoutDrawer>
+
+      <LayoutModal opened={isModal} onClose={() => setModal(false)}
+        description="Apakah Anda yakin ingin mengubah data?"
+        onYes={(val) => { onTrue(val) }} />
     </Box >
   );
 }
