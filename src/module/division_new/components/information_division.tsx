@@ -65,50 +65,59 @@ export default function InformationDivision() {
       <Box p={20}>
         <Box>
           <Text fw={"bold"}>Deskripsi Divisi</Text>
-          <Text mt={10} ta={"justify"}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the  standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </Text>
+          <Box p={20} bg={"white"} style={{
+            borderRadius: 10,
+            border: `1px solid ${WARNA.borderBiruMuda}`,
+          }}>
+            <Text ta={"justify"}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the  standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </Text>
+          </Box>
         </Box>
-        <Divider my={"md"} />
         <Box mt={20}>
-          <Box>
-            <Text>20 Anggota</Text>
-          </Box>
-          <Box mt={15}>
-            <Group align='center' onClick={() => router.push('/division/create-anggota/1')}>
-              <Avatar size="lg">
-                <AiOutlineUserAdd size={30} color={WARNA.biruTua} />
-              </Avatar>
-              <Text>Tambah Anggota</Text>
-            </Group>
-          </Box>
-          <Box pt={10}>
-            <Box mb={10}>
-              {dataUser.map((v, i) => {
-                return (
-                  <Box key={i}>
-                    <Flex
-                      justify={"space-between"}
-                      align={"center"}
-                      mt={10}
-                      onClick={() => setDrawer(true)}
-                    >
-                      <Group>
-                        <Avatar src={v.img} alt="it's me" size="lg" />
-                        <Box>
-                          <Text c={WARNA.biruTua} fw={"bold"}>
-                            {v.name}
-                          </Text>
-                        </Box>
-                      </Group>
-                      <Text c={WARNA.biruTua} fw={"bold"}>
-                        {v.role}
-                      </Text>
-                    </Flex>
-                    <Box mt={10}>
-                      <Divider size={"xs"} />
+          <Box p={20} bg={"white"} style={{
+            borderRadius: 10,
+            border: `1px solid ${WARNA.borderBiruMuda}`,
+          }}>
+            <Box>
+              <Text>20 Anggota</Text>
+            </Box>
+            <Box mt={15}>
+              <Group align='center' onClick={() => router.push('/division/create-anggota/1')}>
+                <Avatar size="lg">
+                  <AiOutlineUserAdd size={30} color={WARNA.biruTua} />
+                </Avatar>
+                <Text>Tambah Anggota</Text>
+              </Group>
+            </Box>
+            <Box pt={10}>
+              <Box mb={10}>
+                {dataUser.map((v, i) => {
+                  return (
+                    <Box key={i}>
+                      <Flex
+                        justify={"space-between"}
+                        align={"center"}
+                        mt={10}
+                        onClick={() => setDrawer(true)}
+                      >
+                        <Group>
+                          <Avatar src={v.img} alt="it's me" size="lg" />
+                          <Box>
+                            <Text c={WARNA.biruTua} fw={"bold"}>
+                              {v.name}
+                            </Text>
+                          </Box>
+                        </Group>
+                        <Text c={WARNA.biruTua} fw={"bold"}>
+                          {v.role}
+                        </Text>
+                      </Flex>
+                      <Box mt={10}>
+                        <Divider size={"xs"} />
+                      </Box>
                     </Box>
-                  </Box>
-                );
-              })}
+                  );
+                })}
+              </Box>
             </Box>
           </Box>
         </Box>
@@ -116,13 +125,13 @@ export default function InformationDivision() {
 
       <LayoutDrawer opened={openDrawer} onClose={() => setDrawer(false)} title="">
         <Box>
-          <Group align='center' mb={20}>
+          <Group align='center' mb={20} onClick={() => setDrawer(false)}>
             <ActionIcon variant="light" size={60} aria-label="admin" radius="xl">
               <FaUserTie size={30} color={WARNA.biruTua} />
             </ActionIcon>
             <Text c={WARNA.biruTua}>Jadikan Admin</Text>
           </Group>
-          <Group align='center'>
+          <Group align='center' onClick={() => setDrawer(false)}>
             <ActionIcon variant="light" size={60} aria-label="admin" radius="xl">
               <IoIosCloseCircle size={40} color={WARNA.biruTua} />
             </ActionIcon>

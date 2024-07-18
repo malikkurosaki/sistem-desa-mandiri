@@ -134,7 +134,7 @@ export default function NavbarDocumentDivision() {
           </Box>
         </>
       )}
-      <LayoutNavbarNew back='/division' title='Divisi kerohanian'
+      <LayoutNavbarNew back='' title='Divisi kerohanian'
         menu={
           <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
             <HiMenu size={20} color='white' />
