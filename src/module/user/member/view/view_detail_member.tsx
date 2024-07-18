@@ -3,6 +3,7 @@ import { FaSquarePhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { RiIdCardFill } from "react-icons/ri";
 import NavbarDetailMember from "../component/ui/navbar_detail_member";
+import { IoMaleFemale } from "react-icons/io5";
 
 export default function ViewDetailMember({ data }: { data: string }) {
    return (
@@ -19,7 +20,7 @@ export default function ViewDetailMember({ data }: { data: string }) {
             <Group justify="space-between" grow py={5}>
                <Group>
                   <FaSquarePhone size={28} />
-                  <Text fz={18}>NoTelepon</Text>
+                  <Text fz={18}>No Telepon</Text>
                </Group>
                <Text fz={18} fw={'bold'} ta={"right"}>+62038939293</Text>
             </Group>
@@ -29,6 +30,13 @@ export default function ViewDetailMember({ data }: { data: string }) {
                   <Text fz={18}>Email</Text>
                </Group>
                <Text fz={18} fw={'bold'} ta={"right"}>marcel@gmail.com</Text>
+            </Group>
+            <Group justify="space-between" grow py={5}>
+               <Group>
+                  <IoMaleFemale size={28} />
+                  <Text fz={18}>Gender</Text>
+               </Group>
+               <Text fz={18} fw={'bold'} ta={"right"}>Laki-laki</Text>
             </Group>
          </Box>
       </Box>

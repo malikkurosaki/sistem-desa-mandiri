@@ -5,7 +5,7 @@ import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { FaPencil } from "react-icons/fa6";
+import { FaPencil, FaToggleOff } from "react-icons/fa6";
 import { ImUserCheck } from "react-icons/im";
 
 export default function DrawerDetailMember({ onDeleted }: { onDeleted: (val: boolean) => void }) {
@@ -34,10 +34,10 @@ export default function DrawerDetailMember({ onDeleted }: { onDeleted: (val: boo
                   }}
                >
                   <Box>
-                     <ImUserCheck size={30} color={WARNA.biruTua} />
+                     <FaToggleOff size={30} color={WARNA.biruTua} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua} ta='center'>Status</Text>
+                     <Text c={WARNA.biruTua} ta='center'>Non Aktifkan</Text>
                   </Box>
                </Flex>
 
