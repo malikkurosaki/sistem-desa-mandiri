@@ -8,8 +8,8 @@ import DrawerDetailDivision from "./drawer_detail_division";
 export default function NavbarDetailDivision() {
    const [openDrawer, setOpenDrawer] = useState(false)
    return (
-      <Box>
-         <LayoutNavbarNew back="" title={"Divisi kerohanian"} menu={
+      <>
+         <LayoutNavbarNew back="" title={"Divisi kemasyarakatan"} menu={
             <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
                <HiMenu size={20} color='white' />
             </ActionIcon>
@@ -17,7 +17,7 @@ export default function NavbarDetailDivision() {
          <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
             <DrawerDetailDivision />
          </LayoutDrawer>
-      </Box>
+      </>
 
 
    );
