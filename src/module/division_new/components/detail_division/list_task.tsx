@@ -2,6 +2,7 @@
 import { WARNA } from "@/module/_global";
 import { Carousel } from "@mantine/carousel";
 import { Avatar, Box, Group, Text } from "@mantine/core";
+import { useRouter } from "next/navigation";
 import { CiClock2 } from "react-icons/ci";
 import { MdAccountCircle } from "react-icons/md";
 
@@ -33,13 +34,14 @@ const dataTask = [
 ]
 
 export default function ListTaskOnDetailDivision() {
+   const router = useRouter()
    return (
       <Box pt={10}>
          <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Tugas Hari Ini</Text>
          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
             {dataTask.map((v, i) =>
                <Carousel.Slide key={v.id}>
-                  <Box p={20} w={{ base: 300, md: 400 }} bg={WARNA.biruTua} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
+                  <Box p={20} w={{ base: 300, md: 400 }} onClick={() => router.push(`/task/${v.id}`)} bg={WARNA.biruTua} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
                      <Text fw={'bold'} c={WARNA.bgWhite} truncate="end">{v.title}</Text>
                      <Group justify="space-between" mt={20} c={'#aeaeae'}>
                         <Group gap={5} align="center">

@@ -13,3 +13,4 @@ function Page({ searchParams }: { searchParams: any }) {
 }
 
 export default Page
+// onClick={() => router.push('/document?page=list-document')}
