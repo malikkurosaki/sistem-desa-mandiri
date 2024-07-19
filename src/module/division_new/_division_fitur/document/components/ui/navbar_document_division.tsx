@@ -14,6 +14,7 @@ import { MdOutlineMoreHoriz } from 'react-icons/md';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import toast from 'react-hot-toast';
 import DrawerMore from './drawer_more';
+import { useRouter } from 'next/navigation';
 
 const dataDocuments = [
   {
@@ -68,6 +69,7 @@ const dataDocuments = [
 
 export default function NavbarDocumentDivision() {
   const [isChecked, setIsChecked] = useState(false);
+  const router = useRouter()
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -147,8 +149,8 @@ export default function NavbarDocumentDivision() {
             return (
               <Box key={i}>
                 <Box mt={10} mb={10}>
-                  <Grid align='center'>
-                    <Grid.Col span={10}>
+                  <Grid align='center' >
+                    <Grid.Col span={10} onClick={() => router.push('/document?page=list-document')}>
                       <Group gap={20}>
                         <Box>
                           {v.icon}

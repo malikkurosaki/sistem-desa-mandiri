@@ -3,6 +3,7 @@ import { WARNA } from "@/module/_global";
 import { Carousel } from "@mantine/carousel";
 import { Box, Image, Text, Center, Paper, Stack, UnstyledButton } from "@mantine/core";
 import * as ICON from '../../../division/lib/file_icon'
+import { useRouter } from "next/navigation";
 
 const iconContainer = (icon: string) => 'data:image/svg+xml;base64,' + btoa(icon)
 
@@ -41,13 +42,14 @@ const listDocument = [
 ]
 
 export default function ListDocumentOnDetailDivision() {
+   const router = useRouter()
    return (
       <Box pt={10}>
          <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Dokumen Terbaru</Text>
          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
             {
                listDocument.map((v) => <Carousel.Slide key={v.id}>
-                  <UnstyledButton>
+                  <UnstyledButton onClick={() => router.push(`/document`)}>
                      <Stack gap={0}>
                         <Paper withBorder shadow="sm" radius={12} >
                            <Center p={"md"}>
