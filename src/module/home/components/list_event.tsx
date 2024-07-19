@@ -1,5 +1,7 @@
+'use client'
 import { WARNA } from "@/module/_global"
 import { Box, Divider, Group, Text } from "@mantine/core"
+import { useRouter } from "next/navigation"
 
 const dataEvent = [
    {
@@ -33,19 +35,20 @@ const dataEvent = [
 ]
 
 export default function ListEventHome() {
+   const router = useRouter()
    return (
       <Box pt={10}>
          <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Event Hari Ini</Text>
          <Box bg={"white"} style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,
-            padding: 20
+            padding: 10
          }}>
             {dataEvent.map((event, index) => {
                const bgColor = ['#D8D8F1', '#FED6C5'][index % 2]
                const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
                return (
-                  <Box key={event.id} m={10}>
+                  <Box key={event.id} m={10} onClick={() => router.push(`/calender?page=detail-event`)}>
                      <Box bg={bgColor} pl={15} p={10} style={{
                         borderRadius: 10
                      }} h={113}>
@@ -53,7 +56,7 @@ export default function ListEventHome() {
                            <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
                            <Box>
                               <Text>{event.jamAwal} - {event.jamAkhir}</Text>
-                              <Text fw={"bold"}>{event.title}</Text>
+                              <Text fw={"bold"} truncate="end">{event.title}</Text>
                               <Text>Dibuat oleh : {event.dibuat}</Text>
                            </Box>
                         </Group>

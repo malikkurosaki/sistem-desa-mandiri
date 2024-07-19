@@ -1,91 +1,54 @@
 'use client'
 import { WARNA } from '@/module/_global';
-import { ActionIcon, Box, Group, Text, TextInput } from '@mantine/core';
+import { Box, rem, Tabs, TextInput } from '@mantine/core';
 import React from 'react';
 import { HiMagnifyingGlass, HiMiniUser } from 'react-icons/hi2';
-import { useRouter } from 'next/navigation';
-
-const dataMember = [
-   {
-      id: 1,
-      name: 'Ali akbar',
-      desc: 'Perbekel'
-   },
-   {
-      id: 2,
-      name: 'Fibra Marcell',
-      desc: 'Kasi Kesejahteraan'
-   },
-   {
-      id: 3,
-      name: 'Burhan',
-      desc: 'Kasi Kesejahteraan'
-   },
-   {
-      id: 4,
-      name: 'Chandra',
-      desc: 'Kasi Kesejahteraan'
-   },
-   {
-      id: 5,
-      name: 'Ayu',
-      desc: 'Kasi Kesejahteraan'
-   },
-   {
-      id: 6,
-      name: 'Heriawan',
-      desc: 'Kasi Kesejahteraan'
-   },
-   {
-      id: 7,
-      name: 'Jinan',
-      desc: 'Kasi Kesejahteraan'
-   },
-   {
-      id: 8,
-      name: 'Rizal',
-      desc: 'Kasi Kesejahteraan'
-   },
-]
+import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
+import { IoCloseCircleOutline } from 'react-icons/io5';
+import TabListMember from './ui/tab_list_member';
 
 export default function ListMember() {
-   const router = useRouter()
+   const iconStyle = { width: rem(20), height: rem(20) };
+
    return (
       <Box p={20}>
-         <TextInput
-            styles={{
-               input: {
-                  color: WARNA.biruTua,
-                  borderRadius: WARNA.biruTua,
-                  borderColor: WARNA.biruTua,
-               },
-            }}
-            size="md"
-            radius={30}
-            leftSection={<HiMagnifyingGlass size={20} />}
-            placeholder="Pencarian"
-         />
-         {dataMember.map((v, i) => {
-            return (
-               <Box pt={20} key={i} onClick={() => {
-                  router.push(`/member/${v.id}`)
-               }}>
-                  <Group align='center' style={{
-                     borderBottom: `1px solid #D9D9D9`,
-                     padding: 10,
-                  }} >
-                     <Box>
-                        <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
-                           <HiMiniUser color={'white'} size={25} />
-                        </ActionIcon>
-                     </Box>
-                     <Box>
-                        <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
-                     </Box>
-                  </Group>
-               </Box>
-            )
-         })}
+         <Tabs variant="pills" color='#FF9861' radius="xl" defaultValue="aktif">
+            <Tabs.List bg={"white"} style={{
+               border: `1px solid ${"#EDEDED"}`,
+               padding: 5,
+               borderRadius: 100
+            }}>
+               <Tabs.Tab value="aktif" w={"45%"} leftSection={<IoMdCheckmarkCircleOutline style={iconStyle} />}>
+                  Aktif
+               </Tabs.Tab>
+               <Tabs.Tab value="tidak-aktif" w={"53%"} leftSection={<IoCloseCircleOutline style={iconStyle} />}>
+                  Tidak Aktif
+               </Tabs.Tab>
+            </Tabs.List>
+
+            <TextInput
+               styles={{
+                  input: {
+                     color: WARNA.biruTua,
+                     borderRadius: WARNA.biruTua,
+                     borderColor: WARNA.biruTua,
+                  },
+               }}
+               size="md"
+               radius={30}
+               leftSection={<HiMagnifyingGlass size={20} />}
+               placeholder="Pencarian" 
+               my={10}
+            />
+
+            <Tabs.Panel value="aktif">
+               <TabListMember />
+            </Tabs.Panel>
+
+            <Tabs.Panel value="tidak-aktif">
+               <TabListMember />
+            </Tabs.Panel>
+         </Tabs>
       </Box>
    );
 }

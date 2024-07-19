@@ -46,7 +46,7 @@ export default function DetailEventDivision() {
   const [openDrawer, setOpenDrawer] = useState(false)
   return (
     <Box>
-      <LayoutNavbarNew back="/calender" title="Detail Event"
+      <LayoutNavbarNew back="" title="Detail Event"
         menu={<ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
           <HiMenu size={20} color='white' />
         </ActionIcon>} />

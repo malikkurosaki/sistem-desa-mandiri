@@ -1,6 +1,6 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Box, Button, Flex, Modal, Stack, Text, TextInput } from "@mantine/core";
+import { Box, Button, Flex, Modal, Select, Stack, Text, TextInput } from "@mantine/core";
 import { HiUser } from "react-icons/hi2";
 import toast from "react-hot-toast";
 import LayoutModal from "@/module/_global/layout/layout_modal";
@@ -71,6 +71,17 @@ export default function EditProfile() {
               borderColor: WARNA.biruTua,
             },
           }}
+        />
+        <Select
+          placeholder="Pilih Gender" label="Gender" w={"100%"} size="md" required withAsterisk radius={30}
+          styles={{
+            input: {
+              color: WARNA.biruTua,
+              borderRadius: WARNA.biruTua,
+              borderColor: WARNA.biruTua,
+            },
+          }}
+          data={['Laki-laki', 'Perempuan']}
         />
       </Stack>
       <Box mt={30} mx={20} pb={20}>
