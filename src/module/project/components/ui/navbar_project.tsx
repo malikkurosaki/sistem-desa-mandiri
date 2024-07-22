@@ -66,7 +66,7 @@ export default function NavbarProject() {
 
       <Box p={20}>
         <Tabs variant="pills" radius="xl" defaultValue="segera">
-          <Tabs.List>
+          <Tabs.List grow justify='center'>
             {tabsData.map((tab) => (
               <Tabs.Tab
                 key={tab.value}
