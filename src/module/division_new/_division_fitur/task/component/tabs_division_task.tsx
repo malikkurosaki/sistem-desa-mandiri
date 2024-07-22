@@ -12,7 +12,7 @@ export default function TabsDivisionTask() {
    return (
       <Box p={20}>
          <Tabs variant="pills" color='#FF9861' radius="xl" defaultValue="segera">
-            <Tabs.List bg={"white"} style={{
+            <Tabs.List grow bg={"white"} style={{
                border: `1px solid ${"#EDEDED"}`,
                padding: 5,
                borderRadius: 100
