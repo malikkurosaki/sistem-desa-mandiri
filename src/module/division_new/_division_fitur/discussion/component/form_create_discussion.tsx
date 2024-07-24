@@ -18,27 +18,21 @@ export default function FormCreateDiscussion() {
    return (
       <Box>
          <Box p={20}>
-            <Grid gutter={2}>
-               <Grid.Col span={"auto"}>
-                  <Center>
-                     <Avatar src={'https://i.pravatar.cc/1000?img=32'} alt="it's me" size="lg" />
-                  </Center>
-               </Grid.Col>
-               <Grid.Col span={10}>
-                  <Box>
-                     <Textarea
-                        placeholder="Tuliskan apa yang ingin anda diskusikan"
-                        w={"100%"}
-                        styles={{
-                           input: {
-                              border: 'none',
-                              backgroundColor: 'transparent',
-                           }
-                        }}
-                     />
-                  </Box>
-               </Grid.Col>
-            </Grid>
+            <Group>
+               <Avatar src={'https://i.pravatar.cc/1000?img=32'} alt="it's me" size="lg" />
+               <Box>
+                  <Textarea
+                     placeholder="Tuliskan apa yang ingin anda diskusikan"
+                     w={"100%"}
+                     styles={{
+                        input: {
+                           border: 'none',
+                           backgroundColor: 'transparent',
+                        }
+                     }}
+                  />
+               </Box>
+            </Group>
             <Box mt="xl">
                <Button
                   color="white"
