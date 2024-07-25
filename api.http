@@ -5,3 +5,112 @@ Content-Type: application/json
 {
     "phone": "6287701790942"
 }
+
+// GROUP 
+
+###
+GET http://localhost:3000/api/group/get?path=list-group HTTP/1.1
+
+###
+POST http://localhost:3000/api/group/post?path=create-group HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "amalia2",
+    "idVillage": "121212"
+}
+
+
+###
+POST http://localhost:3000/api/group/post?path=update-group HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "1",
+    "name": "LPD2",
+    "idVillage": "121212"
+}
+
+###
+POST http://localhost:3000/api/group/post?path=delete-group HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "1",
+    "idVillage": "121212"
+}
+
+###
+GET http://localhost:3000/api/group/get?path=get-one-group HTTP/1.1
+
+
+// VILLAGE
+
+###
+GET http://localhost:3000/api/village/get?path=get-all-village HTTP/1.1
+
+###
+GET http://localhost:3000/api/village/get?path=get-one-village HTTP/1.1
+
+###
+POST http://localhost:3000/api/village/post?path=create-village HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "nama satu satu ",
+    "desc": "description data"
+}
+
+###
+POST http://localhost:3000/api/village/post?path=update-village HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "11",
+    "name": "nama satu new",
+    "desc": "description data new"
+}
+
+###
+POST http://localhost:3000/api/village/post?path=delete-village HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "11"
+}
+
+
+// POSITION
+
+###
+GET http://localhost:3000/api/position/get?path=get-all-position HTTP/1.1
+
+###
+GET http://localhost:3000/api/position/get?path=get-one-position HTTP/1.1
+
+###
+POST http://localhost:3000/api/position/post?path=create-position HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Wakil Bendahara 10",
+    "idGroup": "2"
+}
+
+###
+POST http://localhost:3000/api/position/post?path=update-position HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "1",
+    "name": "Wakil Sekertaris",
+    "idGroup": "2"
+}
+
+###
+POST http://localhost:3000/api/position/post?path=delete-position HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "1"
+}
