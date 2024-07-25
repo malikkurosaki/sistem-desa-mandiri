@@ -1,8 +1,7 @@
 ###
 POST http://localhost:3000/api/auth/login/ HTTP/1.1
 Content-Type: application/json
+
 {
-    "id": "devLukman",
-    "phone": "6287701790942",
-    "email": "lukman@bip.com"
+    "phone": "6287701790942"
 }
