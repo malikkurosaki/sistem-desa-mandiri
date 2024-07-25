@@ -1,3 +1,4 @@
+"use client"
 import { LayoutIconBack, LayoutNavbarHome, WARNA } from "@/module/_global";
 import { ActionIcon, Anchor, Box, Button, Flex, Group, Stack, Text } from "@mantine/core";
 import { BsInfo } from "react-icons/bs";
@@ -7,16 +8,34 @@ import { FaSquarePhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { InfoTitleProfile } from "../component/ui/ui_profile";
 import { IoMaleFemale } from "react-icons/io5";
+import toast from "react-hot-toast";
+import { LuLogOut } from "react-icons/lu";
+import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useState } from "react";
 
 export default function ViewProfile() {
+   const [openModal, setOpenModal] = useState(false);
+
+   async function onLogout() {
+      try {
+         await fetch('/api/auth/logout', {
+            method: 'DELETE',
+         });
+         toast.success('Logout Success')
+         window.location.href = '/';
+      } catch (error) {
+         console.error(error);
+      }
+   }
    return (
       <>
          <LayoutNavbarHome>
             <Group justify="space-between">
                <LayoutIconBack />
-               {/* <ActionIcon variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
-                  <BsInfo size={20} color='white' />
-               </ActionIcon> */}
+
+            <ActionIcon  onClick={() => { setOpenModal(true) }} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
+               <LuLogOut size={20} color='white' />
+            </ActionIcon>
             </Group>
             <Stack
                align="center"
@@ -60,6 +79,10 @@ export default function ViewProfile() {
             </Group>
 
          </Box>
+
+         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+            description="Apakah Anda yakin ingin Keluar?"
+            onYes={() => onLogout()} />
       </>
    )
 }
