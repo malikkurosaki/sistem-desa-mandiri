@@ -1,11 +1,12 @@
-import prisma from "@/module/_global/bin/prisma";
-import { Login } from "@/types/auth/login";
+
+import { prisma } from "@/module/_global";
+import { ILogin } from "@/types";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { email }: Login = await req.json();
+  const { phone }: ILogin = await req.json();
   const user = await prisma.user.findUnique({
-    where: { email, isActive: true },
+    where: { phone, isActive: true },
     select: { id: true, phone: true },
   });
 
