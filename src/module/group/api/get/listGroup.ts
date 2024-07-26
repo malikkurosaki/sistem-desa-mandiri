@@ -1,10 +1,15 @@
 import { prisma } from "@/module/_global";
+import { NextRequest } from "next/server";
 
-export async function listGroup(req: Request): Promise<Response> {
+export async function listGroups(req: NextRequest): Promise<Response> {
+  
   try {
+    const searchParams = req.nextUrl.searchParams
+    const villaId = searchParams.get('villageId');
     const groups = await prisma.group.findMany({
       where: {
         isActive: true,
+        idVillage: String(villaId),
       },
       select: {
         id: true,

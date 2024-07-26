@@ -1,9 +1,13 @@
 import { prisma } from "@/module/_global";
+import { NextRequest } from "next/server";
 
-export async function getAllPosition(req: Request) {
+export async function getAllPosition(req: NextRequest) {
   try {
+    const searchParams = req.nextUrl.searchParams
+    const groupID = searchParams.get('groupID');
     const positions = await prisma.position.findMany({
       where: {
+        idGroup: String(groupID),
         isActive: true,
       },
       select: {

@@ -1,6 +1,7 @@
-import { apiGroup } from "@/module/group";
+
+import { apiUser } from "@/module/user";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
-    return apiGroup(req, "GET")
+    return apiUser(req, "GET")
 }
