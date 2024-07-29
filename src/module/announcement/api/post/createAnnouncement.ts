@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 export async function createAnnouncement(req: NextRequest) {
   try {
     const data = await req.json();
-    const announcement = await prisma.annoucement.create({
+    const announcement = await prisma.announcement.create({
       data: {
         title: data.title,
         desc: data.desc,
@@ -26,7 +26,7 @@ export async function createAnnouncement(req: NextRequest) {
       isActive: true,
     }));
 
-    const announcementMember = await prisma.annoucementMember.createMany({
+    const announcementMember = await prisma.announcementMember.createMany({
       data: dataMember,
     });
 

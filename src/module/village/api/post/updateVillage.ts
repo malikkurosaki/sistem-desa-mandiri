@@ -1,4 +1,5 @@
 import { prisma } from "@/module/_global";
+import { createLogUser } from "@/module/user";
 
 export async function updateVillage(req: Request) {
   try {
@@ -14,8 +15,11 @@ export async function updateVillage(req: Request) {
       },
     });
 
+    // create log user
+    const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data desa baru', table: 'village', data: data.id })
+
     return Response.json(
-      { success: true, message: "Sukses Update Village" },
+      { success: true, message: "Sukses edit desa" },
       { status: 200 }
     );
   } catch (error) {

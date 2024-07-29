@@ -1,3 +1,4 @@
+import { createLogUser } from '@/module/user';
 import { prisma } from "@/module/_global";
 import { NextRequest } from "next/server";
 
@@ -12,6 +13,9 @@ export async function deleteUser(req: NextRequest) {
         isActive: false,
       },
     });
+
+    // create log user
+    const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus data user', table: 'user', data: update.id })
 
     return Response.json(
       { success: true, message: "Sukses Delete User" },

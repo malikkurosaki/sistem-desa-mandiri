@@ -1,4 +1,5 @@
 import { prisma } from "@/module/_global";
+import { createLogUser } from "@/module/user";
 
 export async function createVillage(req: Request) {
   try {
@@ -16,7 +17,10 @@ export async function createVillage(req: Request) {
       },
     });
 
-    return Response.json(village, { status: 201 });
+    // create log user
+    const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data desa baru', table: 'village', data: village.id })
+    
+    return Response.json({ success: true, message: 'Sukses membuat desa baru' }, { status: 201 });
   } catch (error) {
     console.error(error);
     return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
