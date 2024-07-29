@@ -31,6 +31,6 @@ export async function getAllUser(req: NextRequest) {
     return Response.json(users);
   } catch (error) {
     console.error(error);
-    return Response.json({ message: "Internal Server Error" }, { status: 500 });
+    return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
   }
 }
