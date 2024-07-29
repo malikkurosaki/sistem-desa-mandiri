@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 export async function updateAnnouncement(req: NextRequest) {
   try {
     const data = await req.json();
-    const udpate = await prisma.annoucement.update({
+    const udpate = await prisma.announcement.update({
       where: {
         id: data.id,
       },
@@ -17,9 +17,9 @@ export async function updateAnnouncement(req: NextRequest) {
       },
     });
 
-    const deleteAnnouncement = await prisma.annoucementMember.deleteMany({
+    const deleteAnnouncement = await prisma.announcementMember.deleteMany({
       where: {
-        idAnnoucement: data.id,
+        idAnnouncement: data.id,
       },
     });
 
@@ -30,7 +30,7 @@ export async function updateAnnouncement(req: NextRequest) {
       isActive: true,
     }));
 
-    const announcementMember = await prisma.annoucementMember.createMany({
+    const announcementMember = await prisma.announcementMember.createMany({
       data: dataMember,
     });
 

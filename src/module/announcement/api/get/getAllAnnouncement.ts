@@ -8,7 +8,7 @@ export async function getAllAnnouncement(req: NextRequest) {
     const villageID = searchParams.get("villageID");
     const createBy = searchParams.get("createBy");
     const divisionID = searchParams.get("divisionID");
-    const announcements = await prisma.annoucement.findMany({
+    const announcements = await prisma.announcement.findMany({
       where: {
         idVillage: String(villageID),
         createdBy: String(createBy),
@@ -21,16 +21,16 @@ export async function getAllAnnouncement(req: NextRequest) {
       },
     });
 
-    const announcementMember = await prisma.annoucementMember.findMany({
+    const announcementMember = await prisma.announcementMember.findMany({
       where: {
         idGroup: String(groupID),
         idDivision: String(divisionID),
-        idAnnoucement: {
+        idAnnouncement: {
           in: announcements.map((announcement: any) => announcement.id),
         },
       },
       select: {
-        idAnnoucement: true,
+        idAnnouncement: true,
         idGroup: true,
         idDivision: true,
       },
