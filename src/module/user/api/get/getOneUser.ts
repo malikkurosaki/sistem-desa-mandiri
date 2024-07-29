@@ -23,6 +23,6 @@ export async function getOneUser(req: NextRequest) {
     return Response.json(users);
   } catch (error) {
     console.error(error);
-    return Response.json({ message: "Internal Server Error", success: false }, { status: 500 });
+    return Response.json({ message: "Internal Server Errorr", success: false }, { status: 500 });
   }
 }
