@@ -5,7 +5,7 @@ export async function getOneAnnouncement(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     const announcementId = searchParams.get("announcementId");
-    const announcement = await prisma.annoucement.findUnique({
+    const announcement = await prisma.announcement.findUnique({
       where: {
         id: String(announcementId),
       },
@@ -15,12 +15,12 @@ export async function getOneAnnouncement(req: NextRequest) {
         desc: true,
       },
     });
-    const announcementMember = await prisma.annoucementMember.findMany({
+    const announcementMember = await prisma.announcementMember.findMany({
       where: {
-        idAnnoucement: String(announcementId),
+        idAnnouncement: String(announcementId),
       },
       select: {
-        idAnnoucement: true,
+        idAnnouncement: true,
         idGroup: true,
         idDivision: true,
       },

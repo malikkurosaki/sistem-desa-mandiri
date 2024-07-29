@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 export async function deleteAnnouncement(req: NextRequest) {
   try {
     const data = await req.json();
-    const update = await prisma.annoucement.update({
+    const update = await prisma.announcement.update({
       where: {
         id: data.id,
       },
