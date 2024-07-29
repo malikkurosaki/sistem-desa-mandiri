@@ -1,3 +1,4 @@
+import { createLogUser } from '@/module/user';
 import { prisma } from "@/module/_global";
 import { NextRequest } from "next/server";
 
@@ -21,6 +22,9 @@ export async function updateUser(req: NextRequest) {
         idUserRole: data.idUserRole,
       },
     });
+
+    // create log user
+    const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data user', table: 'user', data: data.id })
 
     return Response.json(
       { success: true, message: "Sukses Update User" },

@@ -1,3 +1,4 @@
+import { createLogUser } from '@/module/user';
 import { prisma } from "@/module/_global";
 import { NextRequest } from "next/server";
 
@@ -27,7 +28,11 @@ export async function createUser(req: NextRequest) {
       },
     });
 
-    return Response.json(users, { status: 200 });
+    // create log user
+    const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data user baru', table: 'user', data: users.id })
+
+    return Response.json({ success: true, message: 'Sukses membuat user' }, { status: 200 });
+
   } catch (error) {
     console.error(error);
     return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
