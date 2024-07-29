@@ -1,4 +1,5 @@
 import { prisma } from "@/module/_global";
+import { createLogUser } from "@/module/user";
 
 export async function deleteVillage(req: Request) {
   try {
@@ -11,8 +12,12 @@ export async function deleteVillage(req: Request) {
         isActive: false,
       },
     });
+
+    // create log user
+    const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus data desa', table: 'village', data: data.id })
+
     return Response.json(
-      { success: true, message: "Sukses Delete Village" },
+      { success: true, message: "Sukses menghapus data desa" },
       { status: 200 }
     );
   } catch (error) {

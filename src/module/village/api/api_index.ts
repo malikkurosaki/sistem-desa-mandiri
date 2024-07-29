@@ -1,5 +1,3 @@
-
-  
 import { getAllVillage } from "./get/getAllVillage";
 import { getOneVillage } from "./get/getOneVillage";
 import { createVillage } from "./post/createVillage";
