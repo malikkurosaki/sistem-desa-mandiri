@@ -19,13 +19,15 @@ export async function createAnnouncement(req: NextRequest) {
       },
     });
 
+    const dataMember = data.groups.map((group: any) => ({
+      idAnnoucement: announcement.id,
+      idGroup: group.idGroup,
+      idDivision: group.idDivision,
+      isActive: true,
+    }));
+
     const announcementMember = await prisma.annoucementMember.createMany({
-      data: data.groups.map((group: any) => ({
-        idAnnoucement: announcement.id,
-        idGroup: group.idGroup,
-        idDivision: group.idDivision,
-        isActive: true,
-      })),
+      data: dataMember,
     });
 
     return Response.json({
