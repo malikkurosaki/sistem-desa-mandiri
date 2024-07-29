@@ -164,3 +164,24 @@ Content-Type: application/json
      "id": "clz6dq88e0001b3mlyl4vjaf8"
 }
 
+
+###
+POST http://localhost:3000/api/announcement/post?path=create-announcement HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "cobaannouncement1",
+    "desc": "coba announcement",
+    "idVillage": "121212",
+    "createBy": "111",
+    "groups": [
+    {
+      "idGroup": "1",
+      "idDivision": "1"
+    },
+    {
+      "idGroup": "1",
+      "idDivision": "2"
+    }
+  ]
+}
