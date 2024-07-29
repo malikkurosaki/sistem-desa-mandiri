@@ -1,4 +1,6 @@
-export async function deleteAnnouncement(req: Request) {
+import { NextRequest } from "next/server";
+
+export async function deleteAnnouncement(req: NextRequest) {
     try {
     } catch (error) {}
   }

@@ -1,4 +1,6 @@
-export async function getAllAnnouncement(req: Request) {
+import { NextRequest } from "next/server";
+
+export async function getAllAnnouncement(req: NextRequest) {
   try {
   } catch (error) {}
 }
