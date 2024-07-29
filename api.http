@@ -170,7 +170,7 @@ POST http://localhost:3000/api/announcement/post?path=create-announcement HTTP/1
 Content-Type: application/json
 
 {
-    "title": "cobaannouncement",
+    "title": "cobaannouncement1",
     "desc": "coba announcement",
     "idVillage": "121212",
     "createBy": "111",
