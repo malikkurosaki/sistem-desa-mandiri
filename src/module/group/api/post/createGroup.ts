@@ -1,13 +1,13 @@
 import { prisma } from "@/module/_global";
 
-export async function createGroup(req: Request){
+export async function createGroup(req: Request) {
   try {
-      const data = await req.json();
-      
+    const data = await req.json();
+
 
     if (!data || !data.name) {
       return Response.json(
-        { message: "Nama grup harus diisi" },
+        { success: false, message: "Nama grup harus diisi" },
         { status: 400 }
       );
     }
@@ -27,6 +27,6 @@ export async function createGroup(req: Request){
     return Response.json(group, { status: 201 });
   } catch (error) {
     console.error(error);
-    return Response.json({ message: "Internal Server Error" }, { status: 500 });
+    return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
   }
 }

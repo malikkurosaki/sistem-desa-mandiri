@@ -19,6 +19,6 @@ export async function createVillage(req: Request) {
     return Response.json(village, { status: 201 });
   } catch (error) {
     console.error(error);
-    return Response.json({ message: "Internal Server Error" }, { status: 500 });
+    return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
   }
 }

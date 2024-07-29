@@ -8,8 +8,8 @@ export async function apiViilage(req: Request, method: Method) {
     (v) => v.path === path && v.method === method
   );
   if (!path)
-    return Response.json({ message: "page not found" }, { status: 404 });
+    return Response.json({ success: false, message: "page not found" }, { status: 404 });
   if (act) return act.bin(req);
 
-  return Response.json({ message: "404" });
+  return Response.json({ success: false, message: "404" });
 }
