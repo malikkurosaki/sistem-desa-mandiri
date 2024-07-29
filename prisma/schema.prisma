@@ -32,7 +32,7 @@ model Village {
   updatedAt   DateTime      @updatedAt
   Group       Group[]
   User        User[]
-  Annoucement Annoucement[]
+  Announcement Announcement[]
   Project     Project[]
   Division    Division[]
 }
@@ -49,7 +49,7 @@ model Group {
   User              User[]
   Project           Project[]
   Division          Division[]
-  AnnoucementMember AnnoucementMember[]
+  AnnouncementMember AnnouncementMember[]
 }
 
 model Position {
@@ -81,7 +81,7 @@ model User {
   isActive                   Boolean                      @default(true)
   createdAt                  DateTime                     @default(now())
   updatedAt                  DateTime                     @updatedAt
-  Annoucement                Annoucement[]
+  Announcement                Announcement[]
   Project                    Project[]
   ProjectMember              ProjectMember[]
   ProjectComment             ProjectComment[]
@@ -109,7 +109,7 @@ model UserLog {
   updatedAt DateTime @updatedAt
 }
 
-model Annoucement {
+model Announcement {
   id                String              @id @default(cuid())
   Village           Village             @relation(fields: [idVillage], references: [id])
   idVillage         String
@@ -120,13 +120,13 @@ model Annoucement {
   createdBy         String
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
-  AnnoucementMember AnnoucementMember[]
+  AnnouncementMember AnnouncementMember[]
 }
 
-model AnnoucementMember {
+model AnnouncementMember {
   id            String      @id @default(cuid())
-  Annoucement   Annoucement @relation(fields: [idAnnoucement], references: [id])
-  idAnnoucement String
+  Announcement   Announcement @relation(fields: [idAnnouncement], references: [id])
+  idAnnouncement String
   Group         Group       @relation(fields: [idGroup], references: [id])
   idGroup       String
   Division      Division    @relation(fields: [idDivision], references: [id])
@@ -203,7 +203,7 @@ model Division {
   createdAt                  DateTime                     @default(now())
   updatedAt                  DateTime                     @updatedAt
   DivisionMember             DivisionMember[]
-  AnnoucementMember          AnnoucementMember[]
+  AnnouncementMember          AnnouncementMember[]
   DivisionProject            DivisionProject[]
   DivisionProjectTask        DivisionProjectTask[]
   DivisionProjectMember      DivisionProjectMember[]
