@@ -1,12 +1,13 @@
 import { prisma } from "@/module/_global";
+import { NextRequest } from "next/server";
 
-export async function getOneGroup(req: Request): Promise<Response> {
+export async function getOneGroup(req: NextRequest): Promise<Response> {
   try {
-    // const groupId = req.params.id;
-    const groupId = "clz0v4kce0009e6mukfhzmyzb";
+    const searchParams = req.nextUrl.searchParams
+    const groupId = searchParams.get('groupId');
     const getOne = await prisma.group.findUnique({
       where: {
-        id: groupId,
+        id: String(groupId),
       },
       select: {
         id: true,

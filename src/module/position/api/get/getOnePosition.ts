@@ -1,11 +1,13 @@
 import { prisma } from "@/module/_global";
+import { NextRequest } from "next/server";
 
-export async function getOnePosition(req: Request) {
+export async function getOnePosition(req: NextRequest) {
   try {
-    const positionId = "2";
+    const searchParams = req.nextUrl.searchParams
+    const positionId = searchParams.get('positionId');
     const getOne = await prisma.position.findUnique({
       where: {
-        id: positionId,
+        id: String(positionId),
       },
       select: {
         id: true,

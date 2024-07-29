@@ -1,6 +1,7 @@
-import { apiPosition } from "@/module/position";
+
+import { apiUser } from "@/module/user";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
-  return apiPosition(req, "GET");
+    return apiUser(req, "GET")
 }

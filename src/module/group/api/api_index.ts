@@ -1,5 +1,5 @@
 import { getOneGroup } from "./get/getOneGroup";
-import { listGroup } from "./get/listGroup";
+import { listGroups } from "./get/listGroup";
 import { createGroup } from "./post/createGroup";
 import { deleteGroup } from "./post/deleteGroup";
 import { updateGroup } from "./post/updateGroup";
@@ -8,7 +8,7 @@ export const API_INDEX_GROUP = [
   {
     path: "list-group",
     method: "GET",
-    bin: listGroup,
+    bin: listGroups,
   },
   {
     path: "create-group",
