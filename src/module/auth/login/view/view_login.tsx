@@ -32,7 +32,11 @@ function ViewLogin() {
 
   async function onLogin() {
     if (isPhone == "")
-      return toast.error('Please fill in completely')
+      return toast.error('Silakan diisi dengan lengkap')
+
+    if (isPhone.toString().length <= 11)
+      return toast.error('Nomor telepon tidak valid')
+
     const cek = await fetch('/api/auth/login', {
       method: 'POST',
       headers: {
@@ -40,29 +44,30 @@ function ViewLogin() {
       },
       body: JSON.stringify({ phone: isPhone })
     })
-    const json = await cek.json()
-    console.log(json)
+    const cekLogin = await cek.json()
 
-    const code = Math.floor(Math.random() * 1000) + 1000
+    if (cekLogin.success) {
+      const code = Math.floor(Math.random() * 1000) + 1000
+      setLoading(true)
 
-    setLoading(true)
-    const res = await fetch(`https://wa.wibudev.com/code?nom=${json.phone}&text=${code}`).then(
-      async (res) => {
-        if (res.status == 200) {
-          setValPhone(json.phone)
-          setOTP(code)
-          setUser(json.id)
-          setVerif(true)
-          setLoading(false)
-          toast.success('OTP sent successfully')
-        } else {
-          toast.error('OTP not sent')
-          setLoading(false)
+      const res = await fetch(`https://wa.wibudev.com/code?nom=${cekLogin.phone}&text=${code}`).then(
+        async (res) => {
+          if (res.status == 200) {
+            setValPhone(cekLogin.phone)
+            setOTP(code)
+            setUser(cekLogin.id)
+            setVerif(true)
+            setLoading(false)
+            toast.success('Kode verifikasi telah dikirim')
+          } else {
+            toast.error('Internal Server Error')
+            setLoading(false)
+          }
         }
-        console.log("code", code)
-      }
-    )
-
+      )
+    } else {
+      return toast.error(cekLogin.message)
+    }
 
   }
 
@@ -87,19 +92,19 @@ function ViewLogin() {
                 radius={30}
                 leftSection={<Text>+62</Text>}
                 placeholder="XXX XXX XXX"
-                onChange={(val) => { setPhone(val.target.value) }}
+                onChange={(val) => { setPhone('62' + val.target.value) }}
               />
               <Text fz={10} mt={10} c={WARNA.biruTua}>
                 {textInfo}
               </Text>
-              <Checkbox
+              {/* <Checkbox
                 mt={20}
                 label={
                   <Text fz={10} c={WARNA.biruTua}>
                     Ingat saya
                   </Text>
                 }
-              />
+              /> */}
               <Box mt={20}>
                 <Button
                   c={"white"}
