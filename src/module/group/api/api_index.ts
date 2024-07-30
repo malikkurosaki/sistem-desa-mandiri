@@ -6,7 +6,7 @@ import { updateGroup } from "./post/updateGroup";
 
 export const API_INDEX_GROUP = [
   {
-    path: "list-group",
+    path: "get-all-group",
     method: "GET",
     bin: listGroups,
   },
