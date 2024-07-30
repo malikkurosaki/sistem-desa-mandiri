@@ -26,4 +26,14 @@ export const API_ADDRESS = {
    "apiCreateVillage": "/api/village/post?path=create-village",
    "apiUpdateVillage": "/api/village/post?path=update-village",
    "apiDeleteVillage": "/api/village/post?path=delete-village",
+
+   // Position
+   "apiGetAllPosition": "/api/position/get?path=get-all-position",
+   "apiGetOnePosition": "/api/position/get?path=get-one-position",
+   "apiCreatePosition": "/api/position/post?path=create-position",
+   "apiUpdatePosition": "/api/position/post?path=update-position",
+   "apiDeletePosition": "/api/position/post?path=delete-position",
+   
+
+
 }

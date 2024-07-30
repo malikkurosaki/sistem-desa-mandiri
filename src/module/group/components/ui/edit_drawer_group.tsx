@@ -41,11 +41,11 @@ export default function EditDrawerGroup({
         },
         body: JSON.stringify({
           id: id,
-          name : name
+          name: name
         }),
       });
       setOpenDrawerGroup(false);
-    onUpdated(true);
+      onUpdated(true);
     } catch (error) {
       console.error(error);
     }

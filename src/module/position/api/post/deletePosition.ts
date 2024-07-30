@@ -1,18 +1,21 @@
 import { prisma } from "@/module/_global";
+import { revalidatePath } from "next/cache";
 
 export async function deletePosition(req: Request) {
   try {
     const data = await req.json();
+    const active = data.isActive;
 
     const update = await prisma.position.update({
       where: {
         id: data.id,
       },
       data: {
-        isActive: false,
+        isActive: !active,
       },
     });
 
+    revalidatePath("/position");
     return Response.json(
       { success: true, message: "Sukses Delete Position" },
       { status: 200 }

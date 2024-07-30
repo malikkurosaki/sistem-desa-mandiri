@@ -1,4 +1,4 @@
-import { API_ADDRESS, LayoutDrawer, WARNA } from "@/module/_global";
+import { API_ADDRESS, LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
 import {
   ActionIcon,
   Box,
@@ -74,32 +74,9 @@ export default function ListGroupActive({ status }: { status: boolean }) {
         ? Array(6)
             .fill(null)
             .map((_, i) => (
-              <Box pt={20} key={i}>
-                <Group
-                  align="center"
-                  style={{
-                    border: `1px solid ${"#DCEED8"}`,
-                    padding: 10,
-                    borderRadius: 10,
-                    cursor: "pointer",
-                  }}
-                >
-                  <Box>
-                    <ActionIcon
-                      variant="light"
-                      bg={"#DCEED8"}
-                      size={50}
-                      radius={100}
-                      aria-label="icon"
-                    >
-                      <Skeleton height={25} width={25} />
-                    </ActionIcon>
-                  </Box>
-                  <Box>
-                    <Skeleton height={20} width={100} />
-                  </Box>
-                </Group>
-              </Box>
+              <Box key={i}>
+              <SkeletonSingle />
+            </Box>
             ))
         : isData.map((v, i) => {
             return (

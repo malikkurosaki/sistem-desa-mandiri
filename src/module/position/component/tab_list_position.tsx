@@ -3,7 +3,6 @@ import { Box, Tabs, rem } from '@mantine/core';
 import { IoCloseCircleOutline } from "react-icons/io5"
 import { IoMdCheckmarkCircleOutline } from "react-icons/io"
 import ListPositionActive from './ui/list_position_active';
-import ListPositionNonActive from './ui/list_position_nonactive';
 
 export default function TabListGroup() {
   const iconStyle = { width: rem(20), height: rem(20) };
@@ -25,11 +24,12 @@ export default function TabListGroup() {
         </Tabs.List>
 
         <Tabs.Panel value="aktif">
-          <ListPositionActive />
+          <ListPositionActive status={true} />
         </Tabs.Panel>
 
         <Tabs.Panel value="tidak-aktif">
-          <ListPositionNonActive />
+        <ListPositionActive status={false} />
+          {/* <ListPositionNonActive /> */}
         </Tabs.Panel>
       </Tabs>
     </Box>
