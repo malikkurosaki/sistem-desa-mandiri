@@ -3,7 +3,7 @@ import { unsealData } from "iron-session";
 import { cookies } from "next/headers";
 
 export async function GET() {
-  const sessionCookie = cookies().get("sessionCookie");
+  const sessionCookie = cookies().get("sessionCookieSDM");
   const userId = await unsealData(sessionCookie!.value, {
     password: pwd_key_config,
   });

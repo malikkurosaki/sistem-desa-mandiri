@@ -5,6 +5,7 @@ import { Anchor, Box, Button, Group, PinInput, Stack, Text, Title } from "@manti
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import funSetCookies from "../../api/funSetCookies";
 
 export default function ViewVerification({ phone, otp, user }: IVerification) {
   const router = useRouter()
@@ -19,10 +20,10 @@ export default function ViewVerification({ phone, otp, user }: IVerification) {
       .then(
         async (res) => {
           if (res.status == 200) {
-            toast.success('Verification code has been sent')
+            toast.success('Kode verifikasi telah dikirim')
             setOTP(code)
           } else {
-            toast.error('Error')
+            toast.error('Internal Server Error')
           }
         }
       );
@@ -31,19 +32,22 @@ export default function ViewVerification({ phone, otp, user }: IVerification) {
   async function getVerification() {
     setLoading(true)
     if (isOTP == inputOTP) {
+      const setCookies = await funSetCookies({ user: user })
+
+      if (setCookies.success) {
+        toast.success(setCookies.message)
+        if (setCookies.pertamaLogin == true)
+          return router.replace('/welcome')
+        console.log(setCookies.pertamaLogin)
+        return router.replace('/home')
+      } else {
+        toast.error(setCookies.message)
+      }
+
       setLoading(false)
-      const res = await fetch('/api/auth/set-cookies', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user: user })
-      })
-      router.push('/welcome')
-      toast.success("Verification code is correct")
-      setLoading(false)
+
     } else {
-      toast.error("Verification code is incorrect")
+      toast.error("Kode verifikasi salah")
       setLoading(false)
     }
   }
@@ -62,7 +66,7 @@ export default function ViewVerification({ phone, otp, user }: IVerification) {
                 Masukkan kode yang kami kirimkan melalui WhatsApp
               </Text>
               <Text fz={12} c={WARNA.biruTua} fw={"bold"}>
-                {phone}
+                {'+' + phone}
               </Text>
               <Box pt={30}>
                 <PinInput
@@ -89,19 +93,20 @@ export default function ViewVerification({ phone, otp, user }: IVerification) {
                   size="md"
                   radius={30}
                   fullWidth
+                  loading={isLoading}
                   onClick={() => { getVerification() }}
                 >
                   Lanjut
                 </Button>
               </Box>
-              <Group justify="center" >
+              <Group justify="center" mt={5}>
                 <Text fz={12} c={WARNA.biruTua}>
-                  Didnt receive a code ? {""}
+                  Tidak menerima kode verifikasi? {""}
                   <Anchor c={WARNA.biruTua}
                     fz={12}
                     onClick={() => { onResend() }}
                   >
-                    Resend
+                    Kirim Ulang
                   </Anchor>
                 </Text>
               </Group>
