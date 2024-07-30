@@ -38,8 +38,7 @@ export default function ViewVerification({ phone, otp, user }: IVerification) {
         toast.success(setCookies.message)
         if (setCookies.pertamaLogin == true)
           return router.replace('/welcome')
-        console.log(setCookies.pertamaLogin)
-        return router.replace('/home')
+        return window.location.href = '/home';
       } else {
         toast.error(setCookies.message)
       }

@@ -16,13 +16,18 @@ import { useState } from "react";
 export default function ViewProfile() {
    const [openModal, setOpenModal] = useState(false);
 
-   async function onLogout() {
+   async function onLogout(val: boolean) {
       try {
-         await fetch('/api/auth/logout', {
-            method: 'DELETE',
-         });
-         toast.success('Logout Success')
-         window.location.href = '/';
+         if (val) {
+            await fetch('/api/auth/logout', {
+               method: 'DELETE',
+            });
+            toast.success('Logout Success')
+            window.location.href = '/';
+         }
+
+         setOpenModal(false)
+
       } catch (error) {
          console.error(error);
       }
@@ -33,9 +38,9 @@ export default function ViewProfile() {
             <Group justify="space-between">
                <LayoutIconBack />
 
-            <ActionIcon  onClick={() => { setOpenModal(true) }} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
-               <LuLogOut size={20} color='white' />
-            </ActionIcon>
+               <ActionIcon onClick={() => { setOpenModal(true) }} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
+                  <LuLogOut size={20} color='white' />
+               </ActionIcon>
             </Group>
             <Stack
                align="center"
@@ -82,7 +87,7 @@ export default function ViewProfile() {
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin Keluar?"
-            onYes={() => onLogout()} />
+            onYes={(val) => onLogout(val)} />
       </>
    )
 }
