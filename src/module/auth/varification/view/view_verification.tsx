@@ -43,6 +43,8 @@ export default function ViewVerification({ phone, otp, user }: IVerification) {
         toast.error(setCookies.message)
       }
 
+      
+
       setLoading(false)
 
     } else {

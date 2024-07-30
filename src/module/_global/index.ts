@@ -1,6 +1,7 @@
 import { API_ADDRESS } from "./bin/api_address";
 import prisma from "./bin/prisma";
 import { pwd_key_config } from "./bin/val_global";
+import SkeletonSingle from "./components/skeleton_single";
 import { WARNA } from "./fun/WARNA";
 import LayoutDrawer from "./layout/layout_drawer";
 import LayoutIconBack from "./layout/layout_icon_back";
@@ -21,3 +22,4 @@ export { ViewFilter };
 export { prisma };
 export { pwd_key_config };
 export { API_ADDRESS };
+export {SkeletonSingle}

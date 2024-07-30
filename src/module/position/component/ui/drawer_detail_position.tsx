@@ -1,10 +1,14 @@
-import { LayoutDrawer, WARNA } from "@/module/_global"
+import { API_ADDRESS, LayoutDrawer, WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button } from "@mantine/core"
 import { useState } from "react"
+import toast from "react-hot-toast"
 import { FaPencil, FaToggleOff } from "react-icons/fa6"
 
-export default function DrawerDetailPosition({ onUpdated }: { onUpdated: (val: boolean) => void }) {
+export default function DrawerDetailPosition({ onUpdated, id, isActive, }: {
+   onUpdated: (val: boolean) => void, id: string | null,
+   isActive: boolean | null;
+}) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const [isModal, setModal] = useState(false)
 
@@ -19,6 +23,36 @@ export default function DrawerDetailPosition({ onUpdated }: { onUpdated: (val: b
       }
       setModal(false)
    }
+
+   async function nonActive(val: boolean) {
+      try {
+        if (val) {
+          const res = await fetch(API_ADDRESS.apiDeletePosition, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id,
+              isActive,
+            }),
+          });
+  
+          if (res.status == 200) {
+            onUpdated(true);
+          } else {
+            onUpdated(false);
+          }
+        }
+        setModal(false);
+      } catch (error) {
+        console.log(error);
+        setModal(false);
+        toast.error("Terjadi kesalahan");
+        onUpdated(false);
+      }
+    }
+
 
    return (
       <Box>
@@ -102,7 +136,7 @@ export default function DrawerDetailPosition({ onUpdated }: { onUpdated: (val: b
 
          <LayoutModal opened={isModal} onClose={() => setModal(false)}
             description="Apakah Anda yakin ingin mengubah status aktifasi data?"
-            onYes={(val) => { onTrue(val) }} />
+            onYes={(val) => { nonActive(val) }} />
       </Box>
    )
 }
