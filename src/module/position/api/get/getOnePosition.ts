@@ -12,6 +12,7 @@ export async function getOnePosition(req: NextRequest) {
       select: {
         id: true,
         name: true,
+        idGroup: true,
       },
     });
 

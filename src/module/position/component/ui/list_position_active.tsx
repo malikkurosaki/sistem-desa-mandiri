@@ -110,10 +110,8 @@ export default function ListPositionActive({ status }: { status: boolean }) {
       >
         <DrawerDetailPosition
           id={selectId}
-          isActive={active}
           onUpdated={() => {
             setOpenDrawer(false);
-            toast.success("Sukses! data tersimpan");
           }}
         />
       </LayoutDrawer>

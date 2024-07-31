@@ -1,16 +1,27 @@
 import { API_ADDRESS, LayoutDrawer, WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button } from "@mantine/core"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { FaPencil, FaToggleOff } from "react-icons/fa6"
 
-export default function DrawerDetailPosition({ onUpdated, id, isActive, }: {
+type dataGroup = {
+   id: string;
+   name: string;
+   idGroup: string
+};
+
+export default function DrawerDetailPosition({ onUpdated, id }: {
    onUpdated: (val: boolean) => void, id: string | null,
-   isActive: boolean | null;
 }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const [isModal, setModal] = useState(false)
+   const [data, setData] = useState<any>({
+      id: id,
+      name: "",
+      idGroup: ""
+   })
+   const [listGroup, setListGorup] = useState<dataGroup[]>([])
 
    function onCLose() {
       onUpdated(true)
@@ -23,35 +34,88 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive, }: {
       }
       setModal(false)
    }
+   async function getAllGroup() {
+      try {
+         const res = await fetch(`${API_ADDRESS.apiGetAllGroup}&villageId=121212&active=true`)
+         const data = await res.json()
+         setListGorup(data)
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   async function getOneData() {
+      try {
+         const res = await fetch(`${API_ADDRESS.apiGetOnePosition}&positionId=${id}`)
+         const data = await res.json()
+         setData(data)
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+
+   async function onSubmit() {
+      try {
+         const res = await fetch(API_ADDRESS.apiUpdatePosition, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+               id: data.id,
+               name: data.name,
+               idGroup: data.idGroup
+            }),
+         })
+
+         const respon = await res.json()
+
+         if (res.status == 200) {
+            toast.success(respon.message)
+         } else {
+            toast.error(respon.message)
+         }
+
+         onUpdated(true)
+         onCLose();
+      } catch (error) {
+         toast.error('Error');
+      }
+   }
+
+   useEffect(() => {
+      getAllGroup()
+      getOneData()
+   }, [])
 
    async function nonActive(val: boolean) {
       try {
-        if (val) {
-          const res = await fetch(API_ADDRESS.apiDeletePosition, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              id,
-              isActive,
-            }),
-          });
-  
-          if (res.status == 200) {
-            onUpdated(true);
-          } else {
-            onUpdated(false);
-          }
-        }
-        setModal(false);
+         if (val) {
+            const res = await fetch(API_ADDRESS.apiDeletePosition, {
+               method: "POST",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+               body: JSON.stringify({
+                  data
+               }),
+            });
+
+            if (res.status == 200) {
+               onUpdated(true);
+            } else {
+               onUpdated(false);
+            }
+         }
+         setModal(false);
       } catch (error) {
-        console.log(error);
-        setModal(false);
-        toast.error("Terjadi kesalahan");
-        onUpdated(false);
+         console.log(error);
+         setModal(false);
+         toast.error("Terjadi kesalahan");
+         onUpdated(false);
       }
-    }
+   }
 
 
    return (
@@ -91,10 +155,19 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive, }: {
                <Select
                   label="Grup"
                   placeholder="Pilih grup"
-                  data={['Dinas', 'Adat', 'LPD']}
                   size="md"
                   radius={10}
+                  data={
+                     listGroup
+                        ? listGroup.map((data) => ({
+                           value: data.id,
+                           label: data.name,
+                        }))
+                        : []
+                  }
+                  value={String(data.idGroup)}
                   mb={5}
+                  onChange={(val) => setData({ ...data, idGroup: val })}
                   withAsterisk
                   styles={{
                      input: {
@@ -115,6 +188,8 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive, }: {
                   }}
                   my={15}
                   size="md"
+                  value={String(data.name)}
+                  onChange={(e) => setData({ ...data, name: e.target.value })}
                   radius={10}
                   placeholder="Nama Jabatan"
                />
@@ -125,7 +200,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive, }: {
                      size="lg"
                      radius={30}
                      fullWidth
-                     onClick={onCLose}
+                     onClick={onSubmit}
                   >
                      EDIT
                   </Button>
