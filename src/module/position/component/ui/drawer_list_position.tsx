@@ -1,18 +1,71 @@
-import { WARNA, LayoutDrawer } from "@/module/_global";
+import { WARNA, LayoutDrawer, API_ADDRESS } from "@/module/_global";
 import { Box, Stack, SimpleGrid, Flex, TextInput, Button, Text, Select } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { IoAddCircle } from "react-icons/io5";
 import { RiFilter2Line } from "react-icons/ri";
+
+type dataGroup = {
+   id: string;
+   name: string;
+};
 
 export default function DrawerListPosition({ onCreated }: { onCreated: (val: boolean) => void }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const router = useRouter()
+   const [listGroup, setListGorup] = useState<dataGroup[]>([])
 
-   function onCLose() {
-      setOpenDrawerGroup(false)
-      onCreated(true)
+   const [listData, setListData] = useState({
+      name: "",
+      idGroup: "",
+   })
+
+   async function getAllGroup() {
+      try {
+         const res = await fetch(`${API_ADDRESS.apiGetAllGroup}&villageId=121212&active=true`)
+         const data = await res.json()
+         setListGorup(data)
+      } catch (error) {
+         console.error(error)
+      }
    }
+
+   useEffect(() => {
+      getAllGroup()
+   }, [])
+
+
+   async function onSubmit() {
+      try {
+        const res = await fetch(API_ADDRESS.apiCreatePosition, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: listData.name,
+            idGroup: listData.idGroup
+          })
+        })
+    
+        if (!res.ok) {
+          const errorData = await res.json();
+          if (errorData.message === "Position sudah ada") {
+            toast.error('Gagal! Position sudah ada');
+          } else {
+            toast.error('Error');
+          }
+        } else {
+          setOpenDrawerGroup(false)
+          toast.success('Sukses! data tersimpan')
+        }
+        onCreated(true)
+      } catch (error) {
+        toast.error('Error')
+      }
+    }
+
    return (
       <Box>
          <Stack pt={10}>
@@ -43,11 +96,22 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                <Select
                   label="Grup"
                   placeholder="Pilih grup"
-                  data={['Dinas', 'Adat', 'LPD']}
+                  data={
+                     listGroup
+                        ? listGroup.map((data) => ({
+                           value: data.id,
+                           label: data.name,
+                        }))
+                        : []
+                  }
                   size="md"
                   radius={10}
                   mb={5}
                   withAsterisk
+                  onChange={(val: any) => setListData({
+                     ...listData,
+                     idGroup: val
+                  })}
                   styles={{
                      input: {
                         color: WARNA.biruTua,
@@ -67,6 +131,10 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                   }}
                   my={15}
                   size="md"
+                  onChange={(event: any) => setListData({
+                     ...listData,
+                     name: event.target.value
+                   })}
                   radius={10}
                   placeholder="Nama Jabatan"
                />
@@ -77,7 +145,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      size="lg"
                      radius={30}
                      fullWidth
-                     onClick={onCLose}
+                     onClick={onSubmit}
                   >
                      MASUK
                   </Button>
