@@ -14,9 +14,9 @@ export async function getAllUser(req: NextRequest) {
       where: {
         isActive: true,
         idUserRole: String(idUserRole),
-        idPosition: idPosition,
-        idVillage: idVillage,
-        idGroup: idGroup,
+        idPosition: String(idPosition),
+        idVillage: String(idVillage),
+        idGroup: String(idGroup),
       },
       select: {
         id: true,

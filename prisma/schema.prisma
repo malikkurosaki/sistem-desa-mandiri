@@ -13,6 +13,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model AdminRole {
+  id        String   @id @default(cuid())
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Admin     Admin[]
+}
+
+model Admin {
+  id          String    @id @default(cuid())
+  AdminRole   AdminRole @relation(fields: [idAdminRole], references: [id])
+  idAdminRole String
+  name        String
+  phone       String    @unique
+  email       String?   @unique
+  gender      String    @default("M") //M= Male, F= Female
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
 model UserRole {
   id        String   @id @default(cuid())
   name      String
@@ -67,12 +89,12 @@ model User {
   id                         String                       @id @default(cuid())
   UserRole                   UserRole                     @relation(fields: [idUserRole], references: [id])
   idUserRole                 String
-  Village                    Village?                     @relation(fields: [idVillage], references: [id])
-  idVillage                  String?
-  Group                      Group?                       @relation(fields: [idGroup], references: [id])
-  idGroup                    String?
-  Position                   Position?                    @relation(fields: [idPosition], references: [id])
-  idPosition                 String?
+  Village                    Village                      @relation(fields: [idVillage], references: [id])
+  idVillage                  String
+  Group                      Group                        @relation(fields: [idGroup], references: [id])
+  idGroup                    String
+  Position                   Position                     @relation(fields: [idPosition], references: [id])
+  idPosition                 String
   nik                        String                       @unique
   name                       String
   phone                      String                       @unique
