@@ -1,4 +1,6 @@
-import { apiDivision } from "@/module/division/api/api_division";
-export async function POST(req: Request) {
+import { apiDivision } from "@/module/division_new";
+import { NextRequest } from "next/server";
+
+export async function POST(req: NextRequest) {
     return apiDivision(req, "POST")
 }

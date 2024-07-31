@@ -16,6 +16,7 @@ import ViewCreateTaskDivision from "./_division_fitur/task/view/view_create_divi
 import ViewDetailDivisionTask from "./_division_fitur/task/view/view_detail_division_task";
 import ViewDivisionTask from "./_division_fitur/task/view/view_division_task";
 import ViewUpdateProgressDivisionTask from "./_division_fitur/task/view/view_update_progress_division_task";
+import { apiDivision } from "./api/api_division";
 import CreateAdminDivision from "./components/create_admin_division";
 import CreateUsers from "./components/create_users";
 import ViewCreateAnggotaDivision from "./view/view_create_anggota_division";
@@ -55,3 +56,4 @@ export { ViewReportDivision };
 export { ViewInformationDivision };
 export { ViewEditDivision };
 export { ViewCreateAnggotaDivision };
+export { apiDivision }
