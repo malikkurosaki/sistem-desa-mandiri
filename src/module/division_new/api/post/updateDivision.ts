@@ -16,7 +16,7 @@ export default async function updateDivision(req: Request) {
 
       // belom update member nihhhh 
 
-      return Response.json({ success: true, message: "Sukses Update Position" }, { status: 200 });
+      return Response.json({ success: true, message: "Sukses Update Divisi" }, { status: 200 });
    } catch (error) {
       console.error(error);
       return Response.json({ message: "Internal Server Error", success: false }, { status: 500 });

@@ -7,6 +7,7 @@ import ViewDetailEventDivision from "./_division_fitur/calender/view/view_detail
 import ViewDivisionCalender from "./_division_fitur/calender/view/view_division_calender";
 import ViewHistoryDivisionCalender from "./_division_fitur/calender/view/view_history_division_calender";
 import ViewUpdateDivisionCalender from "./_division_fitur/calender/view/view_update_division_calender";
+import { apiDiscussion } from "./_division_fitur/discussion/api/api_discussion";
 import ViewCreateDiscussion from "./_division_fitur/discussion/view/view_create_discussion";
 import ViewDetailDiscussion from "./_division_fitur/discussion/view/view_detail_discussion";
 import ViewEditDiscussion from "./_division_fitur/discussion/view/view_edit_discussion";
@@ -57,3 +58,4 @@ export { ViewInformationDivision };
 export { ViewEditDivision };
 export { ViewCreateAnggotaDivision };
 export { apiDivision }
+export { apiDiscussion }
