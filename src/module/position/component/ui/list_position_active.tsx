@@ -6,6 +6,7 @@ import { HiMagnifyingGlass } from "react-icons/hi2";
 import DrawerDetailPosition from "./drawer_detail_position";
 import toast from "react-hot-toast";
 import _ from "lodash";
+import { useShallowEffect } from "@mantine/hooks";
 
 type dataPosition = {
   name: string;
@@ -38,7 +39,7 @@ export default function ListPositionActive({ status }: { status: boolean }) {
     }
   }
 
-  useEffect(() => {
+  useShallowEffect(() => {
     getAllPosition();
   }, [status])
 

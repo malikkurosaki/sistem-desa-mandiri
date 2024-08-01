@@ -27,7 +27,6 @@ export default function ListGroupActive({ status }: { status: boolean }) {
   const [selectId, setSelectId] = useState<string | null>(null);
   const [active, setActive] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isname, setName] = useState<string>("");
 
   const getData = async () => {
     try {
@@ -94,7 +93,6 @@ export default function ListGroupActive({ status }: { status: boolean }) {
                     setOpenDrawer(true);
                     setSelectId(v.id);
                     setActive(v.isActive);
-                    setName(v.name)
                   }}
                 >
                   <Box>
@@ -128,7 +126,6 @@ export default function ListGroupActive({ status }: { status: boolean }) {
         <EditDrawerGroup
           id={selectId}
           isActive={active}
-          isName={isname}
           onUpdated={(val) => {
             if (val) {
               toast.success("Sukses! data tersimpan");
