@@ -3,34 +3,39 @@ import { NextRequest } from "next/server";
 
 export async function getAllUser(req: NextRequest) {
   try {
-
     const searchParams = req.nextUrl.searchParams;
-    const idGroup = searchParams.get('groupID');
-    const idUserRole = searchParams.get('roleID');
-    const idPosition = searchParams.get('positionID');
-    const idVillage = searchParams.get('villageID');
+    const idGroup = "2";
+    const idVillage = "121212";
+    const active = searchParams.get("active");
 
     const users = await prisma.user.findMany({
       where: {
-        isActive: true,
-        idUserRole: String(idUserRole),
-        idPosition: idPosition,
+        isActive: active == "true" ? true : false,
         idVillage: idVillage,
         idGroup: idGroup,
       },
       select: {
         id: true,
+        isActive: true,
         nik: true,
         name: true,
         phone: true,
         email: true,
         gender: true,
+        Group: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
     return Response.json(users);
   } catch (error) {
     console.error(error);
-    return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
+    return Response.json(
+      { success: false, message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

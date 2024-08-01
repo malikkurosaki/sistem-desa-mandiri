@@ -42,11 +42,12 @@ export default function ListMember() {
             />
 
             <Tabs.Panel value="aktif">
-               <TabListMember />
+               <TabListMember status={true} />
             </Tabs.Panel>
 
             <Tabs.Panel value="tidak-aktif">
-               <TabListMember />
+               <TabListMember status={false} />
+               {/* <TabListMember /> */}
             </Tabs.Panel>
          </Tabs>
       </Box>

@@ -12,7 +12,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
 import { IoAddCircle, IoCloseCircleOutline } from "react-icons/io5";
@@ -21,16 +21,30 @@ export default function EditDrawerGroup({
   onUpdated,
   id,
   isActive,
-  isName,
 }: {
   onUpdated: (val: boolean) => void;
   id: string | null;
   isActive: boolean | null;
-  isName: string;
 }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false);
   const [isModal, setModal] = useState(false);
-  const [name, setName] = useState(isName);
+  const [name, setName] = useState("");
+
+  async function getOneGroup() {
+    try {
+      const res = await fetch(`${API_ADDRESS.apiGetOneGroup}&groupId=${id}`);
+      const data = await res.json();
+      setName(data.name);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  
+
+  useEffect(() => {
+    getOneGroup();
+  }, []);
 
   async function isUpdate() {
     try {

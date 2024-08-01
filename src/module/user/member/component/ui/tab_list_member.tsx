@@ -1,61 +1,48 @@
-import { WARNA } from "@/module/_global"
+
+import { API_ADDRESS, WARNA } from "@/module/_global"
 import { Box, Group, ActionIcon, Text } from "@mantine/core"
+import { useShallowEffect } from "@mantine/hooks"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 import { HiMiniUser } from "react-icons/hi2"
 
-const dataMember = [
-   {
-      id: 1,
-      name: 'Ali akbar',
-      desc: 'Perbekel',
-      grup: 'Dinas'
-   },
-   {
-      id: 2,
-      name: 'Fibra Marcell',
-      desc: 'Kasi Kesejahteraan',
-      grup: 'Dinas'
-   },
-   {
-      id: 3,
-      name: 'Burhan',
-      desc: 'Kasi Kesejahteraan',
-      grup: 'Dinas'
-   },
-   {
-      id: 4,
-      name: 'Chandra',
-      desc: 'Kasi Kesejahteraan',
-      grup: 'Dinas'
-   },
-   {
-      id: 5,
-      name: 'Ayu',
-      desc: 'Kasi Kesejahteraan',
-      grup: 'PKK'
-   },
-   {
-      id: 6,
-      name: 'Heriawan',
-      desc: 'Kasi Kesejahteraan',
-      grup: 'Karang Taruna'
-   },
-   {
-      id: 7,
-      name: 'Jinan',
-      desc: 'Kasi Kesejahteraan',
-      grup: 'Dinas'
-   },
-   {
-      id: 8,
-      name: 'Rizal',
-      desc: 'Kasi Kesejahteraan',
-      grup: 'LPD'
-   },
-]
+type dataMember = {
+   id: string,
+   idUserRole: string,
+   idVillage: string,
+   idGroup: string,
+   idPosition: string,
+   nik: string,
+   name: string,
+   phone: string,
+   email: string,
+   gender: string,
+   isActive: boolean
 
-export default function TabListMember() {
+}
+
+export default function TabListMember({ status }: { status: boolean }) {
    const router = useRouter()
+   const [loading, setLoading] = useState(true);
+   const [dataMember, setDataMember] = useState<dataMember[]>([])
+
+
+   async function getAllUser() {
+      try {
+         setLoading(true)
+         const res = await fetch(`${API_ADDRESS.apiGetAllUser}&active` + status)
+         const data = await res.json()
+         setDataMember(data)
+      } catch (error) {
+         console.error(error)
+      } finally {
+         setLoading(false)
+      }
+   }
+
+   useShallowEffect(() => {
+      getAllUser()
+   }, [])
 
    return (
       <>
@@ -75,7 +62,7 @@ export default function TabListMember() {
                      </Box>
                      <Box>
                         <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
-                        <Text fw={'lighter'} fz={12}>{v.grup + ' - ' + v.desc}</Text>
+                        {/* <Text fw={'lighter'} fz={12}>{v.grup + ' - ' + v.desc}</Text> */}
                      </Box>
                   </Group>
                </Box>
