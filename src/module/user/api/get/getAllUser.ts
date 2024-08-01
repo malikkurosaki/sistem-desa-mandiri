@@ -7,6 +7,8 @@ export async function getAllUser(req: NextRequest) {
     const idGroup = "2";
     const idVillage = "121212";
     const active = searchParams.get("active");
+    const idPosition = searchParams.get("idPosition");
+    const idUserRole = searchParams.get("idUserRole");
 
     const users = await prisma.user.findMany({
       where: {
