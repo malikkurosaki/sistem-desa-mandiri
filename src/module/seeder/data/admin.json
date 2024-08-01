@@ -1,0 +1,26 @@
+[
+   {
+      "id": "devAmalia",
+      "idAdminRole": "dev",
+      "name": "Amalia",
+      "phone": "628980185458",
+      "email": "amalia@bip.com",
+      "gender": "F"
+   },
+   {
+      "id": "devLukman",
+      "idAdminRole": "dev",
+      "name": "Lukman",
+      "phone": "6287701790942",
+      "email": "lukman@bip.com",
+      "gender": "M"
+   },
+   {
+      "id": "devLukman",
+      "idAdminRole": "dev",
+      "name": "Malik",
+      "phone": "6289697338821",
+      "email": "malik@bip.com",
+      "gender": "M"
+   }
+]

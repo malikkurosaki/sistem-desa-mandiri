@@ -1,10 +1,5 @@
 [
    {
-      "id": "dev",
-      "name": "Developer",
-      "desc": "-"
-   },
-   {
       "id": "supadmin",
       "name": "Super Admin",
       "desc": "-"

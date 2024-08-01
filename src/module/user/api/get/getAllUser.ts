@@ -11,8 +11,10 @@ export async function getAllUser(req: NextRequest) {
     const users = await prisma.user.findMany({
       where: {
         isActive: active == "true" ? true : false,
-        idVillage: idVillage,
-        idGroup: idGroup,
+        idUserRole: String(idUserRole),
+        idPosition: String(idPosition),
+        idVillage: String(idVillage),
+        idGroup: String(idGroup),
       },
       select: {
         id: true,

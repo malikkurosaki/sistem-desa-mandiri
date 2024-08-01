@@ -1,29 +1,14 @@
 [
    {
-      "id": "devAmalia",
-      "idUserRole": "dev",
+      "id": "supadminAmalia",
+      "idUserRole": "supadmin",
+      "idVillage": "desa1",
+      "idGroup": "group1",
+      "idPosition": "position1",
       "nik": "1111111",
       "name": "Amalia",
       "phone": "628980185458",
       "email": "amalia@bip.com",
       "gender": "F"
-   },
-   {
-      "id": "devLukman",
-      "idUserRole": "dev",
-      "nik": "2222222",
-      "name": "Lukman",
-      "phone": "6287701790942",
-      "email": "lukman@bip.com",
-      "gender": "M"
-   },
-   {
-      "id": "devMalik",
-      "idUserRole": "dev",
-      "nik": "3333333",
-      "name": "Malik",
-      "phone": "6289697338821",
-      "email": "malik@bip.com",
-      "gender": "M"
    }
 ]
