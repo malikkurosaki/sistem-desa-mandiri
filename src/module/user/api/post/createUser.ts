@@ -5,33 +5,48 @@ import { NextRequest } from "next/server";
 export async function createUser(req: NextRequest) {
   try {
     const data = await req.json();
+    const village = "desa1"
 
-    const users = await prisma.user.create({
-      data: {
+    const cek = await prisma.user.count({
+      where: {
         nik: data.nik,
-        name: data.name,
-        phone: data.phone,
         email: data.email,
-        gender: data.gender,
-        idGroup: data.idGroup,
-        idVillage: data.idVillage,
-        idPosition: data.idPosition,
-        idUserRole: data.idUserRole,
-      },
-      select: {
-        id: true,
-        nik: true,
-        name: true,
-        phone: true,
-        email: true,
-        gender: true,
+        phone: data.phone
       },
     });
 
-    // create log user
-    const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data user baru', table: 'user', data: users.id })
+    if (cek == 0) {
+      const users = await prisma.user.create({
+        data: {
+          nik: data.nik,
+          name: data.name,
+          phone: data.phone,
+          email: data.email,
+          gender: data.gender,
+          idGroup: data.idGroup,
+          idVillage: village,
+          idPosition: data.idPosition,
+          idUserRole: data.idUserRole,
+        },
+        select: {
+          id: true,
+          nik: true,
+          name: true,
+          phone: true,
+          email: true,
+          gender: true,
+        },
+      });
 
-    return Response.json({ success: true, message: 'Sukses membuat user' }, { status: 200 });
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data user baru', table: 'user', data: users.id })
+
+      return Response.json({ success: true, message: 'Sukses membuat user' }, { status: 200 });
+    } else {
+      return Response.json({ success: false, message: "User sudah ada" }, { status: 400 });
+    }
+
+
 
   } catch (error) {
     console.error(error);
