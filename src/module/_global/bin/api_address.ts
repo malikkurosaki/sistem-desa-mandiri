@@ -34,7 +34,8 @@ export const API_ADDRESS = {
    "apiCreatePosition": "/api/position/post?path=create-position",
    "apiUpdatePosition": "/api/position/post?path=update-position",
    "apiDeletePosition": "/api/position/post?path=delete-position",
-   
 
 
+   // Division
+   "apiGetAllDivision": "/api/division/get?path=get-all-division",
 }

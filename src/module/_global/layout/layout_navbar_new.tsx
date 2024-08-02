@@ -5,7 +5,7 @@ import { WARNA } from '../fun/WARNA';
 import LayoutIconBack from './layout_icon_back';
 import _ from 'lodash';
 
-export const LayoutNavbarNew = ({ back, title, menu }: { back: string, title: string, menu: React.ReactNode }) => {
+export const LayoutNavbarNew = ({ back, title, menu }: { back?: string, title: string, menu: React.ReactNode }) => {
    return (
       <Box pt={25} pl={20} pr={20} m={0} pos={'sticky'} top={0} pb={25} bg={WARNA.biruTua}
          style={{
@@ -17,7 +17,9 @@ export const LayoutNavbarNew = ({ back, title, menu }: { back: string, title: st
       >
          <Grid justify='center' align='center'>
             <Grid.Col span="auto">
-               <LayoutIconBack back={back} />
+               {
+                  back!=undefined && (<LayoutIconBack back={back} />)
+               }
             </Grid.Col>
             <Grid.Col span={8}>
                <Title c={WARNA.bgWhite} ta={'center'} order={5}>{_.startCase(title)}</Title>

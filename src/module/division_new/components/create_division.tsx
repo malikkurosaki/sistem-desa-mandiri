@@ -1,5 +1,7 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { API_ADDRESS, LayoutNavbarNew, WARNA } from "@/module/_global";
+import { TypeGroup } from "@/module/group";
+import { useHookstate } from "@hookstate/core";
 import {
     Avatar,
     Box,
@@ -12,65 +14,108 @@ import {
     Textarea,
     TextInput,
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
-const dataUser = [
-    {
-        id: 1,
-        img: "https://i.pravatar.cc/1000?img=3",
-        name: "Doni Setiawan",
-    },
-    {
-        id: 2,
-        img: "https://i.pravatar.cc/1000?img=10",
-        name: "Ilham Udin",
-    },
-    {
-        id: 3,
-        img: "https://i.pravatar.cc/1000?img=11",
-        name: "Didin Anang",
-    },
-    {
-        id: 4,
-        img: "https://i.pravatar.cc/1000?img=21",
-        name: "Angga Saputra",
-    },
-    {
-        id: 5,
-        img: "https://i.pravatar.cc/1000?img=32",
-        name: "Marcel Widianto",
-    },
-    {
-        id: 6,
-        img: "https://i.pravatar.cc/1000?img=37",
-        name: "Bagas Nusantara",
-    },
-];
+import { globalMemberDivision } from "../lib/val_division";
+import toast from "react-hot-toast";
+import { funGetUserByCookies } from "@/module/auth";
+import CreateAdminDivision from "./create_admin_division";
+import CreateUsers from "./create_users";
+import NavbarCreateUsers from "./ui/navbar_create_users";
+
 
 export default function CreateDivision() {
     const router = useRouter();
+    const [dataGroup, setDataGroup] = useState<TypeGroup>();
+    const [roleUser, setRoleUser] = useState<any>("")
+    const [isChooseAnggota, setChooseAnggota] = useState(false)
+    const [isChooseAdmin, setChooseAdmin] = useState(false)
+    const member = useHookstate(globalMemberDivision)
+    const [body, setBody] = useState<any>({
+        idGroup: "",
+        name: "",
+        desc: "",
+    });
+
+    async function loadData() {
+        const loadGroup = await fetch(API_ADDRESS.apiGetAllGroup + '&active=true');
+        const dataGroup = await loadGroup.json();
+        setDataGroup(dataGroup);
+
+        const loadUser = await funGetUserByCookies();
+        setRoleUser(loadUser.idUserRole)
+    }
+
+    function onSubmit() {
+        if (roleUser == "supadmin" && (body.idGroup == "" || body.idGroup == null)) {
+            return toast.error("Error! grup harus diisi")
+        }
+
+        if (body.name == "") {
+            return toast.error("Error! nama divisi harus diisi")
+        }
+
+        if (member.length == 0) {
+            return toast.error("Error! belum ada anggota yang terdaftar")
+        }
+
+
+
+        setChooseAdmin(true)
+
+    }
+
+    function onToChooseAnggota() {
+        if (roleUser == "supadmin" && body.idGroup == "")
+            return toast.error("Error! grup harus diisi")
+        setChooseAnggota(true)
+    }
+
+
+
+    useShallowEffect(() => {
+        loadData();
+    }, []);
+
+    if (isChooseAdmin) return <CreateAdminDivision data={body} />
+
+    if (isChooseAnggota) return <NavbarCreateUsers grup={body.idGroup} />
+
     return (
         <Box>
             <LayoutNavbarNew back="/division" title="Tambah Divisi" menu />
             <Box p={20}>
                 <Stack>
-                    <Select
-                        placeholder="Grup"
-                        label="Grup"
-                        size="md"
-                        required
-                        radius={40}
-                    />
+                    {
+                        (roleUser == "supadmin") && (
+                            <Select
+                                placeholder="Grup"
+                                label="Grup"
+                                size="md"
+                                required
+                                radius={40}
+                                data={dataGroup?.map((pro: any) => ({
+                                    value: String(pro.id),
+                                    label: pro.name
+                                }))}
+                                onChange={(val) => {
+                                    setBody({ ...body, idGroup: val })
+                                }}
+                            />
+                        )
+                    }
                     <TextInput
-                        placeholder="Judul"
-                        label="Judul"
+                        placeholder="Nama Divisi"
+                        label="Nama Divisi"
                         size="md"
                         required
                         radius={40}
+                        onChange={(val) => { setBody({ ...body, name: val.target.value }) }}
                     />
-                    <Textarea placeholder="Deskripsi" label="Deskripsi" radius={10} />
-                    <Box onClick={() => router.push("/division/create?page=anggota")}>
+                    <Textarea size="md" placeholder="Deskripsi" label="Deskripsi" radius={10} onChange={(val) => { setBody({ ...body, desc: val }) }} />
+                    <Box onClick={() => { onToChooseAnggota() }}>
                         <Group
                             justify="space-between"
                             p={10}
@@ -86,7 +131,7 @@ export default function CreateDivision() {
                     <Box pt={20}>
                         <Group justify="space-between">
                             <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-                            <Text c={WARNA.biruTua}>Total 10 Anggota</Text>
+                            <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
                         </Group>
                         <Box pt={10}>
                             <Box mb={20}>
@@ -98,7 +143,9 @@ export default function CreateDivision() {
                                     px={20}
                                     py={10}
                                 >
-                                    {dataUser.map((v, i) => {
+                                    {(member.length === 0) ? (
+                                        <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada anggota</Text>
+                                    ) : member.get().map((v: any, i: any) => {
                                         return (
                                             <Flex
                                                 justify={"space-between"}
@@ -131,7 +178,10 @@ export default function CreateDivision() {
                             size="lg"
                             radius={30}
                             fullWidth
-                            onClick={() => router.push("/division/create?page=pilih-admin")}
+                            onClick={() => {
+                                onSubmit()
+                                // router.push("/division/create?page=pilih-admin")
+                            }}
                         >
                             Simpan
                         </Button>

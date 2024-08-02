@@ -3,9 +3,9 @@ import React from 'react';
 
 function Page({ searchParams }: { searchParams: { page: string } }) {
   if (searchParams.page == "anggota")
-    return <CreateUsers />
-  if (searchParams.page == "pilih-admin")
-    return <CreateAdminDivision />
+    return <CreateUsers grup=''/>
+  // if (searchParams.page == "pilih-admin")
+  //   return <CreateAdminDivision />
   return (
     <ViewCreateDivision/>
   );

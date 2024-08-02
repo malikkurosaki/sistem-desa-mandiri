@@ -5,8 +5,8 @@ import { NextRequest } from "next/server";
 export async function getAllUser(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
-    const idGroup = "group1";
-    const idVillage = "desa1";
+    const idGroup = searchParams.get("idGroup");;
+    const idVillage = "121212";
     const active = searchParams.get("active");
 
     const users = await prisma.user.findMany({
