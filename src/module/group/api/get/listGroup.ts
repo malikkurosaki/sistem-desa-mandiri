@@ -1,11 +1,12 @@
 import { prisma } from "@/module/_global";
+import { funGetUserByCookies } from "@/module/auth";
 import { NextRequest } from "next/server";
 
 export async function listGroups(req: NextRequest): Promise<Response> {
-
   try {
+    const user = await funGetUserByCookies()
     const searchParams = req.nextUrl.searchParams
-    const villaId = "121212"
+    const villaId = user.idVillage
     const active = searchParams.get('active');
     const groups = await prisma.group.findMany({
       where: {

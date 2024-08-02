@@ -16,5 +16,5 @@ export default async function funGetUserByCookies() {
       },
    });
 
-   return { id: user?.id, name: user?.name, idVillage: user?.idVillage };
+   return  { id: user?.id, idUserRole: user?.idUserRole, name: user?.name, idVillage: user?.idVillage, idGroup: user?.idGroup, idPosition: user?.idPosition };
 }

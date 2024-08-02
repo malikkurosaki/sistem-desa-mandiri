@@ -1,10 +1,12 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { API_ADDRESS, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 import { Avatar, Box, Button, Center, Input, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { useShallowEffect } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { BsFiletypeCsv } from 'react-icons/bs';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { globalMemberDivision } from '../../lib/val_division';
 
 const dataUser = [
   {
@@ -40,9 +42,10 @@ const dataUser = [
 ];
 
 
-export default function NavbarCreateUsers() {
+export default function NavbarCreateUsers({ grup }: { grup?: string }) {
   const router = useRouter()
   const [selectedFiles, setSelectedFiles] = useState<Record<number, boolean>>({});
+  const member = useHookstate(globalMemberDivision)
 
   const handleFileClick = (index: number) => {
     setSelectedFiles((prevSelectedFiles) => ({
@@ -51,9 +54,17 @@ export default function NavbarCreateUsers() {
     }));
   };
 
+  async function loadData() {
+    const loadMember = await fetch(API_ADDRESS.apiGetAllUser + '&active=true&idGroup=' + grup);
+  }
+
+  useShallowEffect(() => {
+
+  }, []);
+
   return (
     <Box>
-      <LayoutNavbarNew back="/division/create" title="Pilih Anggota" menu />
+      <LayoutNavbarNew title="Pilih Anggota" menu />
       <Box p={20}>
         <Stack>
           <TextInput
