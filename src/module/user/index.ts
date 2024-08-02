@@ -1,3 +1,4 @@
+import { TypeUser } from './lib/type_user';
 import { apiUser } from "./api/api_user";
 import createLogUser from "./log/fun/createLogUser";
 import ViewEditProfile from "./profile/view/view_edit_profile";
@@ -7,3 +8,4 @@ export { ViewProfile };
 export { ViewEditProfile };
 export { apiUser };
 export { createLogUser };
+export type { TypeUser }

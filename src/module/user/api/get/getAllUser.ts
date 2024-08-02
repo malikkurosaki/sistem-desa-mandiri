@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 export async function getAllUser(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
-    const idGroup = "2";
+    const idGroup = searchParams.get("idGroup");;
     const idVillage = "121212";
     const active = searchParams.get("active");
     const idPosition = searchParams.get("idPosition");
