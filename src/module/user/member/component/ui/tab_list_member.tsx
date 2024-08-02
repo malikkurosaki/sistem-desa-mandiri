@@ -8,17 +8,14 @@ import { HiMiniUser } from "react-icons/hi2"
 
 type dataMember = {
    id: string,
-   idUserRole: string,
-   idVillage: string,
-   idGroup: string,
-   idPosition: string,
+   isActive: boolean
    nik: string,
    name: string,
    phone: string,
    email: string,
    gender: string,
-   isActive: boolean
-
+   group: string,
+   position: string,
 }
 
 export default function TabListMember({ status }: { status: boolean }) {
@@ -30,7 +27,7 @@ export default function TabListMember({ status }: { status: boolean }) {
    async function getAllUser() {
       try {
          setLoading(true)
-         const res = await fetch(`${API_ADDRESS.apiGetAllUser}&active` + status)
+         const res = await fetch(`${API_ADDRESS.apiGetAllUser}&active=` + status)
          const data = await res.json()
          setDataMember(data)
       } catch (error) {
@@ -42,7 +39,7 @@ export default function TabListMember({ status }: { status: boolean }) {
 
    useShallowEffect(() => {
       getAllUser()
-   }, [])
+   }, [status])
 
    return (
       <>
@@ -62,7 +59,7 @@ export default function TabListMember({ status }: { status: boolean }) {
                      </Box>
                      <Box>
                         <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
-                        {/* <Text fw={'lighter'} fz={12}>{v.grup + ' - ' + v.desc}</Text> */}
+                        <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
                      </Box>
                   </Group>
                </Box>

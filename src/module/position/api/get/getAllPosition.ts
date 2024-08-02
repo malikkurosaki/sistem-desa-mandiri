@@ -1,12 +1,22 @@
 import { prisma } from "@/module/_global";
+import { funGetUserByCookies } from "@/module/auth";
 import _, { omit } from "lodash";
 import { NextRequest } from "next/server";
 
 export async function getAllPosition(req: NextRequest) {
   try {
+
+    let grupFix
     const searchParams = req.nextUrl.searchParams
-    const groupID = "3";
+    const groupID = searchParams.get('groupId');
     const active = searchParams.get('active');
+    const user = await funGetUserByCookies()
+    console.log(groupID)
+
+    // if(user.)
+    
+
+
     const positions = await prisma.position.findMany({
       where: {
         idGroup: String(groupID),

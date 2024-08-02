@@ -1,13 +1,123 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { API_ADDRESS, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { Box, Button, Select, Stack, TextInput } from "@mantine/core";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { HiUser } from "react-icons/hi2";
 
+type dataGroup = {
+   id: string;
+   name: string;
+};
+type dataPosition = {
+   id: string;
+   name: string;
+};
+
+type dataROleUser = {
+   id: string;
+   name: string;
+}
+
 export default function CreateMember() {
+   const router = useRouter()
    const [isModal, setModal] = useState(false)
+   const [listGroup, setListGorup] = useState<dataGroup[]>([])
+   const [listPosition, setListPosition] = useState<dataPosition[]>([])
+   const [listUserRole, setListUserRole] = useState<dataROleUser[]>([])
+
+   const [listData, setListData] = useState({
+      nik: "",
+      name: "",
+      phone: "",
+      email: "",
+      gender: "",
+      idGroup: "",
+      idPosition: "",
+      idUserRole: "",
+   })
+
+
+   async function getAllGroup() {
+      try {
+         const res = await fetch(`${API_ADDRESS.apiGetAllGroup}&villageId=desa1&active=true`)
+         const data = await res.json()
+         setListGorup(data)
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   async function getAllPosition(val: any) {
+      try {
+         const res = await fetch(`${API_ADDRESS.apiGetAllPosition}&groupId=${val}&active=true`)
+         const data = await res.json()
+         setListPosition(data)
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   async function getAllUserRole() {
+      try {
+         const res = await fetch(`${API_ADDRESS.apiGetRoleUser}`)
+         const data = await res.json()
+         setListUserRole(data)
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+
+   async function changeGrup(val: any) {
+
+      console.log(val)
+      setListPosition([])
+      setListData({
+         ...listData,
+         idGroup: val,
+         idPosition: ""
+      })
+
+      getAllPosition(val)
+
+   }
+
+
+   async function onSubmit(val: boolean) {
+      try {
+         const res = await fetch(API_ADDRESS.apiCreateUser, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+               nik: listData.nik,
+               name: listData.name,
+               phone: listData.phone,
+               email: listData.email,
+               gender: listData.gender,
+               idGroup: listData.idGroup,
+               idPosition: listData.idPosition,
+               idUserRole: listData.idUserRole
+            })
+         })
+         toast.success("Sukses! Data tersimpan");
+         setModal(false)
+         router.push('/member')
+      } catch (error) {
+         toast.error('Error')
+         toast.error("Sukses! Data tersimpan");
+      }
+   }
+
+
+   useEffect(() => {
+      getAllGroup()
+      getAllUserRole()
+   }, [])
 
    function onTrue(val: boolean) {
       if (val) {
@@ -40,7 +150,17 @@ export default function CreateMember() {
                      borderColor: WARNA.biruTua,
                   },
                }}
-               data={['Dinas', 'Adat', 'LPD', 'PKK']}
+               data={
+                  listGroup
+                     ? listGroup.map((data) => ({
+                        value: data.id,
+                        label: data.name,
+                     }))
+                     : []
+               }
+               onChange={(val: any) => {
+                  changeGrup(val)
+               }}
             />
             <Select
                placeholder="Pilih Jabatan" label="Jabatan" w={"100%"} size="md" required withAsterisk radius={30}
@@ -51,7 +171,41 @@ export default function CreateMember() {
                      borderColor: WARNA.biruTua,
                   },
                }}
-               data={['Kepala', 'Sekretaris', 'Bendahara', 'Anggota']}
+               data={
+                  listPosition
+                     ? listPosition.map((data) => ({
+                        value: data.id,
+                        label: data.name,
+                     }))
+                     : []
+               }
+               onChange={(val: any) => setListData({
+                  ...listData,
+                  idPosition: val
+               })}
+               value={listData.idPosition}
+            />
+            <Select
+               placeholder="Pilih Role" label="User Role" w={"100%"} size="md" required withAsterisk radius={30}
+               styles={{
+                  input: {
+                     color: WARNA.biruTua,
+                     borderRadius: WARNA.biruTua,
+                     borderColor: WARNA.biruTua,
+                  },
+               }}
+               data={
+                  listUserRole
+                     ? listUserRole.map((data) => ({
+                        value: data.id,
+                        label: data.name,
+                     }))
+                     : []
+               }
+               onChange={(val: any) => setListData({
+                  ...listData,
+                  idUserRole: val
+               })}
             />
             <TextInput
                size="md" type="number" radius={30} placeholder="NIK" withAsterisk label="NIK" w={"100%"}
@@ -62,6 +216,10 @@ export default function CreateMember() {
                      borderColor: WARNA.biruTua,
                   },
                }}
+               onChange={(event: any) => setListData({
+                  ...listData,
+                  nik: event.target.value
+               })}
             />
             <TextInput
                size="md" type="text" radius={30} placeholder="Nama" withAsterisk label="Nama" w={"100%"}
@@ -72,6 +230,10 @@ export default function CreateMember() {
                      borderColor: WARNA.biruTua,
                   },
                }}
+               onChange={(event: any) => setListData({
+                  ...listData,
+                  name: event.target.value
+               })}
             />
             <TextInput
                size="md" type="email" radius={30} placeholder="Email" withAsterisk label="Email" w={"100%"}
@@ -82,6 +244,10 @@ export default function CreateMember() {
                      borderColor: WARNA.biruTua,
                   },
                }}
+               onChange={(event: any) => setListData({
+                  ...listData,
+                  email: event.target.value
+               })}
             />
             <TextInput
                size="md" type="number" radius={30} placeholder="+62...." withAsterisk label="Nomor Telepon" w={"100%"}
@@ -92,6 +258,10 @@ export default function CreateMember() {
                      borderColor: WARNA.biruTua,
                   },
                }}
+               onChange={(event: any) => setListData({
+                  ...listData,
+                  phone: event.target.value
+               })}
             />
             <Select
                placeholder="Pilih Gender" label="Gender" w={"100%"} size="md" required withAsterisk radius={30}
@@ -102,7 +272,14 @@ export default function CreateMember() {
                      borderColor: WARNA.biruTua,
                   },
                }}
-               data={['Laki-laki', 'Perempuan']}
+               data={[
+                  { value: 'M', label: 'Laki-laki' },
+                  { value: 'F', label: 'Perempuan' },
+               ]}
+               onChange={(val: any) => setListData({
+                  ...listData,
+                  gender: val
+               })}
             />
          </Stack>
          <Box mt={30} mx={20} pb={20}>
@@ -119,7 +296,7 @@ export default function CreateMember() {
          </Box>
          <LayoutModal opened={isModal} onClose={() => setModal(false)}
             description="Apakah Anda yakin ingin menambahkan data?"
-            onYes={(val) => { onTrue(val) }} />
+            onYes={(val) => { onSubmit(val) }} />
       </Box>
    )
 }

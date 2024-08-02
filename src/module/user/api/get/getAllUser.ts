@@ -1,4 +1,5 @@
 import { prisma } from "@/module/_global";
+import _ from "lodash";
 import { NextRequest } from "next/server";
 
 export async function getAllUser(req: NextRequest) {
@@ -7,14 +8,10 @@ export async function getAllUser(req: NextRequest) {
     const idGroup = searchParams.get("idGroup");;
     const idVillage = "121212";
     const active = searchParams.get("active");
-    const idPosition = searchParams.get("idPosition");
-    const idUserRole = searchParams.get("idUserRole");
 
     const users = await prisma.user.findMany({
       where: {
         isActive: active == "true" ? true : false,
-        idUserRole: String(idUserRole),
-        idPosition: String(idPosition),
         idVillage: String(idVillage),
         idGroup: String(idGroup),
       },
@@ -26,6 +23,11 @@ export async function getAllUser(req: NextRequest) {
         phone: true,
         email: true,
         gender: true,
+        Position: {
+          select: {
+            name: true,
+          },
+        },
         Group: {
           select: {
             name: true,
@@ -34,7 +36,14 @@ export async function getAllUser(req: NextRequest) {
       },
     });
 
-    return Response.json(users);
+    const allData = users.map((v: any) => ({
+      ..._.omit(v, ["Group", "Position"]),
+      group: v.Group.name,
+      position: v.Position.name,
+    }));
+
+    return Response.json(allData);
+
   } catch (error) {
     console.error(error);
     return Response.json(
