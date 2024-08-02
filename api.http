@@ -118,7 +118,7 @@ Content-Type: application/json
 // USERS
 
 ###
-GET http://localhost:3000/api/user/get?path=get-all-users&roleID=dev&villageID=121212&groupID=2&positionID=clz24bff70001w01in64dd9ea HTTP/1.1
+GET http://localhost:3000/api/user/get?path=get-all-users&active=true HTTP/1.1
 
 ###
 GET http://localhost:3000/api/user/get?path=get-one-users&userID=devAmalia HTTP/1.1

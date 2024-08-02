@@ -12,6 +12,7 @@ export const API_ADDRESS = {
    "apiCreateUser": "/api/user/post?path=create-users",
    "apiUpdateUser": "/api/user/post?path=update-users",
    "apiDeleteUser": "/api/user/post?path=delete-users",
+   "apiGetRoleUser": "/api/user/get?path=get-role-user",
 
    // Announcement
    "apiGetAllAnnouncement": "/api/announcement/get?path=get-all-announcement",

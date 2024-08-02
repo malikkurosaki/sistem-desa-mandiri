@@ -5,7 +5,7 @@ export async function listGroups(req: NextRequest): Promise<Response> {
 
   try {
     const searchParams = req.nextUrl.searchParams
-    const villaId = "121212"
+    const villaId = "desa1"
     const active = searchParams.get('active');
     const groups = await prisma.group.findMany({
       where: {
