@@ -1,18 +1,25 @@
 import { prisma } from "@/module/_global";
+import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import { NextRequest } from "next/server";
 
 export async function getAllUser(req: NextRequest) {
   try {
+    let fixGroup
     const searchParams = req.nextUrl.searchParams;
-    const idGroup = searchParams.get("idGroup");;
-    const idVillage = "121212";
+    const idGroup = searchParams.get("groupID");
     const active = searchParams.get("active");
+    const user = await funGetUserByCookies();
+
+    if (idGroup == null || idGroup == undefined) {
+      fixGroup = user.idGroup
+    } else {
+      fixGroup = idGroup
+    }
 
     const users = await prisma.user.findMany({
       where: {
         isActive: active == "true" ? true : false,
-        idVillage: String(idVillage),
         idGroup: String(idGroup),
       },
       select: {

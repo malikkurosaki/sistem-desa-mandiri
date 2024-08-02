@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { globalMemberDivision } from '../../lib/val_division';
+import { TypeUser } from '@/module/user';
+import { funGetUserByCookies } from '@/module/auth';
 
 const dataUser = [
   {
@@ -42,10 +44,11 @@ const dataUser = [
 ];
 
 
-export default function NavbarCreateUsers({ grup }: { grup?: string }) {
+export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, onClose: (val: any) => void }) {
   const router = useRouter()
   const [selectedFiles, setSelectedFiles] = useState<Record<number, boolean>>({});
   const member = useHookstate(globalMemberDivision)
+  const [dataMember, setDataMember] = useState<TypeUser>([])
 
   const handleFileClick = (index: number) => {
     setSelectedFiles((prevSelectedFiles) => ({
@@ -55,11 +58,14 @@ export default function NavbarCreateUsers({ grup }: { grup?: string }) {
   };
 
   async function loadData() {
-    const loadMember = await fetch(API_ADDRESS.apiGetAllUser + '&active=true&idGroup=' + grup);
+    const loadMember = await fetch(API_ADDRESS.apiGetAllUser + '&active=true&groupID=' + grup);
+    const user = await funGetUserByCookies();
+    const hasil = await loadMember.json()
+    setDataMember(hasil.filter((i: any) => i.id != user.id))
   }
 
   useShallowEffect(() => {
-
+    loadData()
   }, []);
 
   return (
@@ -86,7 +92,7 @@ export default function NavbarCreateUsers({ grup }: { grup?: string }) {
               spacing={{ base: 20, sm: "xl" }}
               verticalSpacing={{ base: "md", sm: "xl" }}
             >
-              {dataUser.map((v, index) => {
+              {dataMember.map((v, index) => {
                 const isSelected = selectedFiles[index];
                 return (
                   <Box key={index} mb={10}>
@@ -100,7 +106,7 @@ export default function NavbarCreateUsers({ grup }: { grup?: string }) {
                       onClick={() => handleFileClick(index)}
                     >
                       <Center>
-                        <Avatar src={v.img} alt="it's me" size="xl" />
+                        <Avatar src={"https://i.pravatar.cc/1000?img=37"} alt="it's me" size="xl" />
                       </Center>
                       <Text mt={20} ta="center">
                         {v.name}
@@ -119,7 +125,7 @@ export default function NavbarCreateUsers({ grup }: { grup?: string }) {
             size="lg"
             radius={30}
             fullWidth
-            onClick={() => router.push("/division/create")}
+            onClick={() => { onClose(true) }}
           >
             Simpan
           </Button>

@@ -81,7 +81,7 @@ export default function CreateDivision() {
 
     if (isChooseAdmin) return <CreateAdminDivision data={body} />
 
-    if (isChooseAnggota) return <NavbarCreateUsers grup={body.idGroup} />
+    if (isChooseAnggota) return <NavbarCreateUsers grup={body.idGroup} onClose={() => { setChooseAnggota(false) }} />
 
     return (
         <Box>
