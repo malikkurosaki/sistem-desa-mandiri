@@ -52,9 +52,14 @@ export default function CreateMember() {
 
    async function getAllPosition(val: any) {
       try {
-         const res = await fetch(`${API_ADDRESS.apiGetAllPosition}&groupId=${val}&active=true`)
-         const data = await res.json()
-         setListPosition(data)
+         if (val != null) {
+            const res = await fetch(`${API_ADDRESS.apiGetAllPosition}&groupId=${val}&active=true`)
+            const data = await res.json()
+            setListPosition(data)
+         } else {
+            setListPosition([])
+         }
+
       } catch (error) {
          console.error(error)
       }
@@ -72,8 +77,6 @@ export default function CreateMember() {
 
 
    async function changeGrup(val: any) {
-
-      console.log(val)
       setListPosition([])
       setListData({
          ...listData,
@@ -183,7 +186,7 @@ export default function CreateMember() {
                   ...listData,
                   idPosition: val
                })}
-               value={listData.idPosition}
+               value={(listData.idPosition == "") ? null : listData.idPosition}
             />
             <Select
                placeholder="Pilih Role" label="User Role" w={"100%"} size="md" required withAsterisk radius={30}

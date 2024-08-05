@@ -20,7 +20,7 @@ export async function getAllUser(req: NextRequest) {
     const users = await prisma.user.findMany({
       where: {
         isActive: active == "true" ? true : false,
-        idGroup: String(idGroup),
+        idGroup: String(fixGroup),
       },
       select: {
         id: true,

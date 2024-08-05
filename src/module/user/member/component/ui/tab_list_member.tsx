@@ -27,8 +27,9 @@ export default function TabListMember({ status }: { status: boolean }) {
    async function getAllUser() {
       try {
          setLoading(true)
-         const res = await fetch(`${API_ADDRESS.apiGetAllUser}&active=` + status)
+         const res = await fetch(API_ADDRESS.apiGetAllUser + '&active=' + status  )
          const data = await res.json()
+
          setDataMember(data)
       } catch (error) {
          console.error(error)

@@ -13,13 +13,17 @@ export async function getAllPosition(req: NextRequest) {
     const user = await funGetUserByCookies()
     console.log(groupID)
 
-    // if(user.)
+    if (groupID == null) {
+      grupFix = user.idGroup
+    } else {
+      grupFix = groupID
+    }
     
 
 
     const positions = await prisma.position.findMany({
       where: {
-        idGroup: String(groupID),
+        idGroup: String(grupFix),
         isActive: (active == "true" ? true : false),
       },
       select: {
