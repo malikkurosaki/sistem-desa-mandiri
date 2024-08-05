@@ -24,6 +24,7 @@ import { funGetUserByCookies } from "@/module/auth";
 import CreateAdminDivision from "./create_admin_division";
 import CreateUsers from "./create_users";
 import NavbarCreateUsers from "./ui/navbar_create_users";
+import NavbarAdminDivision from "./ui/navbar_admin_division";
 
 
 export default function CreateDivision() {
@@ -74,12 +75,30 @@ export default function CreateDivision() {
     }
 
 
+    function onChooseGroup(val: any) {
+        member.set([])
+        setBody({ ...body, idGroup: val })
+    }
+
+
 
     useShallowEffect(() => {
         loadData();
     }, []);
 
-    if (isChooseAdmin) return <CreateAdminDivision data={body} />
+    if (isChooseAdmin) return <NavbarAdminDivision data={body} onSuccess={(val) => {
+        if (val) {
+            member.set([])
+            setBody({
+                ...body,
+                idGroup: "",
+                name: "",
+                desc: "",
+            })
+        }
+
+        setChooseAdmin(false)
+    }} />
 
     if (isChooseAnggota) return <NavbarCreateUsers grup={body.idGroup} onClose={() => { setChooseAnggota(false) }} />
 
@@ -101,8 +120,10 @@ export default function CreateDivision() {
                                     label: pro.name
                                 }))}
                                 onChange={(val) => {
-                                    setBody({ ...body, idGroup: val })
+                                    onChooseGroup(val)
                                 }}
+
+                                value={body.idGroup}
                             />
                         )
                     }
@@ -112,9 +133,10 @@ export default function CreateDivision() {
                         size="md"
                         required
                         radius={40}
+                        value={body.name}
                         onChange={(val) => { setBody({ ...body, name: val.target.value }) }}
                     />
-                    <Textarea size="md" placeholder="Deskripsi" label="Deskripsi" radius={10} onChange={(val) => { setBody({ ...body, desc: val }) }} />
+                    <Textarea size="md" placeholder="Deskripsi" label="Deskripsi" value={body.desc} radius={10} onChange={(val) => { setBody({ ...body, desc: val.currentTarget.value }) }} />
                     <Box onClick={() => { onToChooseAnggota() }}>
                         <Group
                             justify="space-between"
@@ -124,7 +146,7 @@ export default function CreateDivision() {
                                 borderRadius: 10,
                             }}
                         >
-                            <Text>Tambah Anggota</Text>
+                            <Text>Pilih Anggota</Text>
                             <IoIosArrowDropright size={25} />
                         </Group>
                     </Box>

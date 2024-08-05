@@ -9,6 +9,7 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { globalMemberDivision } from '../../lib/val_division';
 import { TypeUser } from '@/module/user';
 import { funGetUserByCookies } from '@/module/auth';
+import toast from 'react-hot-toast';
 
 const dataUser = [
   {
@@ -46,22 +47,38 @@ const dataUser = [
 
 export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, onClose: (val: any) => void }) {
   const router = useRouter()
-  const [selectedFiles, setSelectedFiles] = useState<Record<number, boolean>>({});
   const member = useHookstate(globalMemberDivision)
+  const [selectedFiles, setSelectedFiles] = useState<any>([]);
   const [dataMember, setDataMember] = useState<TypeUser>([])
 
   const handleFileClick = (index: number) => {
-    setSelectedFiles((prevSelectedFiles) => ({
-      ...prevSelectedFiles,
-      [index]: !prevSelectedFiles[index],
-    }));
+    if (selectedFiles.some((i: any) => i.id == dataMember[index].id)) {
+      setSelectedFiles(selectedFiles.filter((i: any) => i.id != dataMember[index].id))
+    } else {
+      setSelectedFiles([...selectedFiles, dataMember[index]])
+    }
   };
+
 
   async function loadData() {
     const loadMember = await fetch(API_ADDRESS.apiGetAllUser + '&active=true&groupID=' + grup);
     const user = await funGetUserByCookies();
     const hasil = await loadMember.json()
     setDataMember(hasil.filter((i: any) => i.id != user.id))
+
+    // cek data member sebelumnya
+    if (member.length > 0) {
+      setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
+    }
+  }
+
+
+  function onSubmit() {
+    if (selectedFiles.length == 0) {
+      return toast.error("Error! silahkan pilih anggota")
+    }
+    member.set(selectedFiles)
+    onClose(true)
   }
 
   useShallowEffect(() => {
@@ -93,7 +110,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
               verticalSpacing={{ base: "md", sm: "xl" }}
             >
               {dataMember.map((v, index) => {
-                const isSelected = selectedFiles[index];
+                const isSelected = selectedFiles.some((i: any) => i.id == dataMember[index].id);
                 return (
                   <Box key={index} mb={10}>
                     <Box
@@ -125,7 +142,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
             size="lg"
             radius={30}
             fullWidth
-            onClick={() => { onClose(true) }}
+            onClick={() => { onSubmit() }}
           >
             Simpan
           </Button>
