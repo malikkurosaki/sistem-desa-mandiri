@@ -9,18 +9,19 @@ import NavbarDetailDivision from '../ui/navbar_detail_division';
 
 export default function DetailDivision() {
   return (
-    <Box>
-      <NavbarDetailDivision />
-      <Box p={20}>
-        <Stack>
-          <CarouselDivision />
-          <FeatureDetailDivision />
-          <ListTaskOnDetailDivision />
-          <ListDocumentOnDetailDivision />
-          <ListDiscussionOnDetailDivision />
-        </Stack>
-      </Box>
-    </Box>
+    <></>
+    // <Box>
+    //   <NavbarDetailDivision />
+    //   <Box p={20}>
+    //     <Stack>
+    //       <CarouselDivision />
+    //       <FeatureDetailDivision />
+    //       <ListTaskOnDetailDivision />
+    //       <ListDocumentOnDetailDivision />
+    //       <ListDiscussionOnDetailDivision />
+    //     </Stack>
+    //   </Box>
+    // </Box>
   );
 }
 

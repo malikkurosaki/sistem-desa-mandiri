@@ -38,5 +38,7 @@ export const API_ADDRESS = {
 
    // Division
    "apiGetAllDivision": "/api/division/get?path=get-all-division",
+   "apiGetOneDivision": "/api/division/get?path=get-one-division",
+   "apiGetOneDetailDivision": "/api/division/get?path=get-one-detail-division",
    "apiCreateDivision": "/api/division/post?path=create-division",
 }
