@@ -3,7 +3,7 @@ import { ViewListAnnouncement } from "@/module/announcement";
 
 function Page({ searchParams }: { searchParams: { page: string } }) {
    if (searchParams.page == 'filter')
-      return <ViewFilter />
+      return <ViewFilter linkFilter="announcement"/>
    return (
       <ViewListAnnouncement />
    )

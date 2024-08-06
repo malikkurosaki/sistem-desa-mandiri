@@ -5,7 +5,7 @@ import React from 'react';
 
 function Page({ searchParams }: { searchParams: { page: string } }) {
   if (searchParams.page == "filter")
-    return <ViewFilter />
+    return <ViewFilter  linkFilter='division'/>
   if (searchParams.page == "report")
     return <ViewCreateReport />
   return (

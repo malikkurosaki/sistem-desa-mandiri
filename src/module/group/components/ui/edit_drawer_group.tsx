@@ -12,6 +12,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
@@ -42,7 +43,7 @@ export default function EditDrawerGroup({
 
 
 
-  useEffect(() => {
+  useShallowEffect(() => {
     getOneGroup();
   }, []);
 
@@ -109,7 +110,7 @@ export default function EditDrawerGroup({
               <FaToggleOff size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Non Aktifkan</Text>
+              <Text c={WARNA.biruTua}>{isActive == false ? "Aktifkan" : "Non Aktifkan"}</Text>
             </Box>
           </Flex>
           <Flex

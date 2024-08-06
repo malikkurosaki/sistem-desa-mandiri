@@ -19,6 +19,7 @@ export async function getOneUser(req: NextRequest) {
         email: true,
         gender: true,
         idGroup: true,
+        isActive: true,
         idPosition: true,
         UserRole: {
           select: {

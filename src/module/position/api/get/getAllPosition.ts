@@ -13,13 +13,11 @@ export async function getAllPosition(req: NextRequest) {
     const user = await funGetUserByCookies()
     console.log(groupID)
 
-    if (groupID == null) {
+    if (groupID == "null") {
       grupFix = user.idGroup
     } else {
       grupFix = groupID
     }
-    
-
 
     const positions = await prisma.position.findMany({
       where: {

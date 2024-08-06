@@ -7,6 +7,7 @@ import DrawerDetailPosition from "./drawer_detail_position";
 import toast from "react-hot-toast";
 import _ from "lodash";
 import { useShallowEffect } from "@mantine/hooks";
+import { useSearchParams } from "next/navigation";
 
 type dataPosition = {
   name: string;
@@ -23,12 +24,14 @@ export default function ListPositionActive({ status }: { status: boolean }) {
   const [loading, setLoading] = useState(true);
   const [selectId, setSelectId] = useState<string | null>(null);
   const [active, setActive] = useState<boolean | null>(null)
+  const searchParams = useSearchParams()
+  const group = searchParams.get('group')
 
   async function getAllPosition() {
     try {
       setDataPosition([]);
       setLoading(true)
-      const res = await fetch(`${API_ADDRESS.apiGetAllPosition}&active=` + status);
+      const res = await fetch(`${API_ADDRESS.apiGetAllPosition}&active=${status}&groupId=${group}`);
       const data = await res.json();
       setDataPosition(data);
       setLoading(false);
@@ -41,7 +44,7 @@ export default function ListPositionActive({ status }: { status: boolean }) {
 
   useShallowEffect(() => {
     getAllPosition();
-  }, [status])
+  }, [status, group])
 
   return (
     <Box pt={20}>
@@ -111,6 +114,7 @@ export default function ListPositionActive({ status }: { status: boolean }) {
       >
         <DrawerDetailPosition
           id={selectId}
+          isActive={active}
           onUpdated={() => {
             setOpenDrawer(false);
           }}

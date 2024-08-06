@@ -50,7 +50,7 @@ export default function ListGroupActive({ status }: { status: boolean }) {
     }
   };
 
-  useEffect(() => {
+  useShallowEffect(() => {
     getData();
   }, [status]);
 

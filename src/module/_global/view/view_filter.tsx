@@ -1,43 +1,47 @@
 'use client'
 import { Box, Group, Divider, Button, Text } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa6";
 import { WARNA } from "../fun/WARNA";
 import LayoutNavbarNew from "../layout/layout_navbar_new";
 import { useRouter } from "next/navigation";
+import { API_ADDRESS } from "../bin/api_address";
+import { useShallowEffect } from "@mantine/hooks";
 
-const dataFilter = [
-   {
-      id: 1,
-      name: 'Dinas'
-   },
-   {
-      id: 2,
-      name: 'Adat'
-   },
-   {
-      id: 3,
-      name: 'LPD'
-   },
-   {
-      id: 4,
-      name: 'Karang Taruna'
-   },
-   {
-      id: 5,
-      name: 'BPD'
-   },
-   {
-      id: 6,
-      name: 'LPM'
-   },
-]
-export default function ViewFilter() {
+interface dataGroup {
+   id: string;
+   name: string;
+}
+
+export default function ViewFilter({linkFilter}: {linkFilter: string}) {
    const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+   const [checked, setChecked] = useState<dataGroup[]>([]);
+   const [searchParams, setSearchParams] = useState({ groupId: '' });
 
-   const handleFilterClick = (filterName: string) => {
-      setSelectedFilter(filterName);
+   const handleFilterClick = (id: string) => {
+     setSelectedFilter(id);
    };
+   
+   async function getAllGroupFilter() {
+     try {
+       const response = await fetch(`${API_ADDRESS.apiGetAllGroup}&active=true&groupId=${searchParams.groupId}`);
+       const data = await response.json();
+       console.log("mana data", response);
+       setChecked(data);
+     } catch (error) {
+       console.error(error);
+     }
+   }
+   
+   useEffect(() => {
+     if (selectedFilter) {
+       setSearchParams({ groupId: selectedFilter });
+     }
+   }, [selectedFilter]);
+   
+   useEffect(() => {
+     getAllGroupFilter();
+   }, [searchParams.groupId]);
 
    const router = useRouter()
 
@@ -45,18 +49,18 @@ export default function ViewFilter() {
       <Box>
          <LayoutNavbarNew back='' title='Filter' menu />
          <Box p={20}>
-            {dataFilter.map((filter) => (
+            {checked.map((filter) => (
                <Box key={filter.id}>
                   <Group
                      justify="space-between"
                      align="center"
                      mb={10}
-                     onClick={() => handleFilterClick(filter.name)}
+                     onClick={() => handleFilterClick(filter.id)}
                   >
-                     <Text fw={selectedFilter === filter.name ? 'bold' : 'normal'}>
+                     <Text fw={selectedFilter === filter.id ? 'bold' : 'normal'}>
                         {filter.name}
                      </Text>
-                     {selectedFilter === filter.name && <FaCheck size={25} />}
+                     {selectedFilter === filter.id && <FaCheck size={25} />}
                   </Group>
                   <Divider my={"sm"} />
                </Box>
@@ -66,7 +70,9 @@ export default function ViewFilter() {
                radius={100}
                size="lg"
                color={WARNA.biruTua}
-               onClick={() => { router.back() }}
+               onClick={() => {
+                  router.push(`/${linkFilter}?group=` + selectedFilter)
+               }}
             >
                Terapkan
             </Button>

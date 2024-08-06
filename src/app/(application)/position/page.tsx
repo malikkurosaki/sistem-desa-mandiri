@@ -4,7 +4,7 @@ import React from 'react';
 
 function Page({ searchParams }: { searchParams: { page: string } }) {
   if (searchParams.page == "filter")
-    return <ViewFilter />
+    return <ViewFilter  linkFilter='position'/>
 
   return (
     <ViewListPosition />

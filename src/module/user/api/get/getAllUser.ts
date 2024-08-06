@@ -7,11 +7,11 @@ export async function getAllUser(req: NextRequest) {
   try {
     let fixGroup
     const searchParams = req.nextUrl.searchParams;
-    const idGroup = searchParams.get("groupID");
+    const idGroup = searchParams.get("groupId");
     const active = searchParams.get("active");
     const user = await funGetUserByCookies();
 
-    if (idGroup == null || idGroup == undefined) {
+    if (idGroup == "null" || idGroup == undefined) {
       fixGroup = user.idGroup
     } else {
       fixGroup = idGroup

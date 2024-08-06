@@ -1,5 +1,6 @@
 import { WARNA, LayoutDrawer, API_ADDRESS } from "@/module/_global";
 import { Box, Stack, SimpleGrid, Flex, TextInput, Button, Text, Select } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -31,7 +32,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
       }
    }
 
-   useEffect(() => {
+   useShallowEffect(() => {
       getAllGroup()
    }, [])
 
