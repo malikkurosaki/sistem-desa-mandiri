@@ -52,7 +52,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push('/document')}>
+        }} onClick={() => router.push(id + '/document')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"
@@ -77,7 +77,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push('/discussion')}>
+        }} onClick={() => router.push(id + '/discussion')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"
@@ -102,7 +102,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push('/calender')}>
+        }} onClick={() => router.push(id + '/calender')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"

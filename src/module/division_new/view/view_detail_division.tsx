@@ -12,12 +12,18 @@ import { API_ADDRESS } from '@/module/_global';
 export default async function ViewDetailDivision({ id }: { id: string }) {
 
   const res = await fetch(`${process.env.URL + API_ADDRESS.apiGetOneDetailDivision}&divisionId=${id}`);
+  console.log(process.env.URL + API_ADDRESS.apiGetOneDetailDivision+"&divisionId="+id)
   const data = await res.json();
+
+  console.log('amalia', data);
 
   return (
     // <DetailDivision />
     <Box>
-      <NavbarDetailDivision title={data?.division?.name} />
+      <NavbarDetailDivision title={
+        // data?.division?.name
+        ""
+        } />
       <Box p={20}>
         <Stack>
           <CarouselDivision />
