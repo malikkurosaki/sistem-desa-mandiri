@@ -3,7 +3,7 @@ import { ViewListMember } from "@/module/user/member";
 
 function Page({ searchParams }: { searchParams: { page: string } }) {
    if (searchParams.page == "filter")
-      return <ViewFilter />
+      return <ViewFilter linkFilter="member"/>
       
    return (
       <ViewListMember />

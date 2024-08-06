@@ -1,7 +1,8 @@
 import { prisma } from "@/module/_global";
 import { revalidatePath } from "next/cache";
+import { NextRequest } from "next/server";
 
-export async function deletePosition(req: Request) {
+export async function deletePosition(req: NextRequest) {
   try {
     const data = await req.json();
     const active = data.isActive;

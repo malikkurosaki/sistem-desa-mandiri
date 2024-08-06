@@ -25,6 +25,7 @@ interface DataMember {
    gender: string
    position: string
    group: string
+   isActive: boolean | undefined
 }
 
 export default function NavbarDetailMember({ id }: IdMember) {
@@ -102,7 +103,7 @@ export default function NavbarDetailMember({ id }: IdMember) {
                </Group>
             </Box>
             <LayoutDrawer opened={isOpen} title={'Menu'} onClose={() => setOpen(false)}>
-               <DrawerDetailMember id={dataOne?.id} onDeleted={() => setOpen(false)} />
+               <DrawerDetailMember id={dataOne?.id} status={dataOne?.isActive} onDeleted={() => setOpen(false)} />
             </LayoutDrawer>
          </Box>
       </Box>

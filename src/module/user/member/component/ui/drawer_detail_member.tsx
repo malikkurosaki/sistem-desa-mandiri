@@ -2,39 +2,42 @@
 import { API_ADDRESS, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
 import { ImUserCheck } from "react-icons/im";
 
-export default function DrawerDetailMember({ onDeleted, id }: { onDeleted: (val: boolean) => void, id: string | undefined }) {
+export default function DrawerDetailMember({ onDeleted, id, status }: { onDeleted: (val: boolean) => void, id: string | undefined, status: boolean |undefined }) {
    const router = useRouter()
    const [isModal, setModal] = useState(false)
 
+
    async function nonActive(val: boolean) {
-      // try {
-      //    if (val) {
-      //       const res = await fetch(API_ADDRESS.apiDeleteUser, {
-      //          method: 'POST',
-      //          headers: {
-      //             'Content-Type': 'application/json',
-      //          },
-      //          body: JSON.stringify({ id: id}),
-      //       })
-      //       if (res.status == 200) {
-      //          onDeleted(true);
-      //       } else {
-      //          onDeleted(false);
-      //       }
-      //    }
-      //    router.push('/member')
-      //    setModal(false)
-      // } catch (error) {
-      //    console.error(error)
-      //    setModal(false);
-      //    toast.error("Terjadi kesalahan");
-      // }
+      try {
+         const res = await fetch(API_ADDRESS.apiDeleteUser, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+               id,
+               isActive: status
+            }),
+         })
+         if (res.status == 200) {
+            onDeleted(true);
+         } else {
+            onDeleted(false);
+         }
+         router.push('/member')
+         setModal(false)
+      } catch (error) {
+         console.error(error)
+         setModal(false);
+         toast.error("Terjadi kesalahan");
+      }
    }
 
    return (
@@ -53,7 +56,7 @@ export default function DrawerDetailMember({ onDeleted, id }: { onDeleted: (val:
                      <FaToggleOff size={30} color={WARNA.biruTua} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua} ta='center'>Non Aktifkan</Text>
+                     <Text c={WARNA.biruTua} ta='center'> {status === false ? "Aktifkan" : "Non Aktifkan"}</Text>
                   </Box>
                </Flex>
 

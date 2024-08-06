@@ -1,6 +1,7 @@
 import { API_ADDRESS, LayoutDrawer, WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button } from "@mantine/core"
+import { useShallowEffect } from "@mantine/hooks"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { FaPencil, FaToggleOff } from "react-icons/fa6"
@@ -11,8 +12,8 @@ type dataGroup = {
    idGroup: string
 };
 
-export default function DrawerDetailPosition({ onUpdated, id }: {
-   onUpdated: (val: boolean) => void, id: string | null,
+export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
+   onUpdated: (val: boolean) => void, id: string | null, isActive: boolean | null;
 }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const [isModal, setModal] = useState(false)
@@ -28,12 +29,6 @@ export default function DrawerDetailPosition({ onUpdated, id }: {
       setOpenDrawerGroup(false)
    }
 
-   function onTrue(val: boolean) {
-      if (val) {
-         onUpdated(true)
-      }
-      setModal(false)
-   }
    async function getAllGroup() {
       try {
          const res = await fetch(`${API_ADDRESS.apiGetAllGroup}&villageId=121212&active=true`)
@@ -65,7 +60,7 @@ export default function DrawerDetailPosition({ onUpdated, id }: {
             body: JSON.stringify({
                id: data.id,
                name: data.name,
-               idGroup: data.idGroup
+               idGroup: data.idGroup,
             }),
          })
 
@@ -84,7 +79,7 @@ export default function DrawerDetailPosition({ onUpdated, id }: {
       }
    }
 
-   useEffect(() => {
+   useShallowEffect(() => {
       getAllGroup()
       getOneData()
    }, [])
@@ -98,7 +93,8 @@ export default function DrawerDetailPosition({ onUpdated, id }: {
                   "Content-Type": "application/json",
                },
                body: JSON.stringify({
-                  data
+                  id,
+                  isActive,
                }),
             });
 
@@ -132,7 +128,7 @@ export default function DrawerDetailPosition({ onUpdated, id }: {
                      <FaToggleOff size={30} color={WARNA.biruTua} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua}>Non Aktifkan</Text>
+                     <Text c={WARNA.biruTua}>{isActive == false ? "Aktifkan" : "Non Aktifkan"}</Text>
                   </Box>
                </Flex>
 

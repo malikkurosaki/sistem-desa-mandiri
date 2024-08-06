@@ -2,7 +2,7 @@
 import { API_ADDRESS, WARNA } from "@/module/_global"
 import { Box, Group, ActionIcon, Text } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { HiMiniUser } from "react-icons/hi2"
 
@@ -22,12 +22,14 @@ export default function TabListMember({ status }: { status: boolean }) {
    const router = useRouter()
    const [loading, setLoading] = useState(true);
    const [dataMember, setDataMember] = useState<dataMember[]>([])
+   const searchParams = useSearchParams()
+   const group = searchParams.get('group')
 
 
    async function getAllUser() {
       try {
          setLoading(true)
-         const res = await fetch(API_ADDRESS.apiGetAllUser + '&active=' + status  )
+         const res = await fetch(`${API_ADDRESS.apiGetAllUser}&active=${status}&groupId=${group}`  )
          const data = await res.json()
 
          setDataMember(data)
