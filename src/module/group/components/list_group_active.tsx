@@ -71,53 +71,53 @@ export default function ListGroupActive({ status }: { status: boolean }) {
       />
       {loading
         ? Array(6)
-            .fill(null)
-            .map((_, i) => (
-              <Box key={i}>
+          .fill(null)
+          .map((_, i) => (
+            <Box key={i}>
               <SkeletonSingle />
             </Box>
-            ))
+          ))
         : isData.map((v, i) => {
-            return (
-              <Box pt={20} key={i}>
-                <Group
-                  align="center"
-                  style={{
-                    border: `1px solid ${"#DCEED8"}`,
-                    padding: 10,
-                    borderRadius: 10,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    setValChoose(v.name);
-                    setOpenDrawer(true);
-                    setSelectId(v.id);
-                    setActive(v.isActive);
-                  }}
-                >
-                  <Box>
-                    <ActionIcon
-                      variant="light"
-                      bg={"#DCEED8"}
-                      size={50}
-                      radius={100}
-                      aria-label="icon"
-                    >
-                      <HiOutlineOfficeBuilding
-                        color={WARNA.biruTua}
-                        size={25}
-                      />
-                    </ActionIcon>
-                  </Box>
-                  <Box>
-                    <Text fw={"bold"} c={WARNA.biruTua}>
-                      {v.name}
-                    </Text>
-                  </Box>
-                </Group>
-              </Box>
-            );
-          })}
+          return (
+            <Box pt={20} key={i}>
+              <Group
+                align="center"
+                style={{
+                  border: `1px solid ${"#DCEED8"}`,
+                  padding: 10,
+                  borderRadius: 10,
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setValChoose(v.name);
+                  setOpenDrawer(true);
+                  setSelectId(v.id);
+                  setActive(v.isActive);
+                }}
+              >
+                <Box>
+                  <ActionIcon
+                    variant="light"
+                    bg={"#DCEED8"}
+                    size={50}
+                    radius={100}
+                    aria-label="icon"
+                  >
+                    <HiOutlineOfficeBuilding
+                      color={WARNA.biruTua}
+                      size={25}
+                    />
+                  </ActionIcon>
+                </Box>
+                <Box>
+                  <Text fw={"bold"} c={WARNA.biruTua}>
+                    {v.name}
+                  </Text>
+                </Box>
+              </Group>
+            </Box>
+          );
+        })}
       <LayoutDrawer
         opened={openDrawer}
         onClose={() => setOpenDrawer(false)}

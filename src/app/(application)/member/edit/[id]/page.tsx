@@ -1,8 +1,8 @@
 import { ViewEditMember } from "@/module/user/member";
 
-function Page() {
+function Page({ params }: { params: { id: string } }) {
    return (
-      <ViewEditMember />
+      <ViewEditMember data={params.id}/>
    )
 }
 
