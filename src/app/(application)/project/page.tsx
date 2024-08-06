@@ -4,7 +4,7 @@ import React from 'react';
 
 function Page({ searchParams }: { searchParams: { cat: string } }) {
   if (searchParams.cat == 'filter')
-    return <ViewFilter />
+    return <ViewFilter linkFilter='project' />
   return (
     <ViewProject />
   );
