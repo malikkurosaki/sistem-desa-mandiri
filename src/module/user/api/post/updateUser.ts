@@ -1,6 +1,7 @@
 import { createLogUser } from '@/module/user';
 import { prisma } from "@/module/_global";
 import { NextRequest } from "next/server";
+import { funGetUserByCookies } from '@/module/auth';
 
 export async function updateUser(req: NextRequest) {
   try {
@@ -17,7 +18,6 @@ export async function updateUser(req: NextRequest) {
         email: data.email,
         gender: data.gender,
         idGroup: data.idGroup,
-        idVillage: data.idVillage,
         idPosition: data.idPosition,
         idUserRole: data.idUserRole,
       },

@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { API_ADDRESS, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
@@ -8,17 +8,33 @@ import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
 import { ImUserCheck } from "react-icons/im";
 
-export default function DrawerDetailMember({ onDeleted }: { onDeleted: (val: boolean) => void }) {
+export default function DrawerDetailMember({ onDeleted, id }: { onDeleted: (val: boolean) => void, id: string | undefined }) {
    const router = useRouter()
    const [isModal, setModal] = useState(false)
 
-   function onTrue(val: boolean) {
-      if (val) {
-         toast.success('Sukses! data tersimpan')
-         onDeleted(true)
-      }
-
-      setModal(false)
+   async function nonActive(val: boolean) {
+      // try {
+      //    if (val) {
+      //       const res = await fetch(API_ADDRESS.apiDeleteUser, {
+      //          method: 'POST',
+      //          headers: {
+      //             'Content-Type': 'application/json',
+      //          },
+      //          body: JSON.stringify({ id: id}),
+      //       })
+      //       if (res.status == 200) {
+      //          onDeleted(true);
+      //       } else {
+      //          onDeleted(false);
+      //       }
+      //    }
+      //    router.push('/member')
+      //    setModal(false)
+      // } catch (error) {
+      //    console.error(error)
+      //    setModal(false);
+      //    toast.error("Terjadi kesalahan");
+      // }
    }
 
    return (
@@ -44,7 +60,7 @@ export default function DrawerDetailMember({ onDeleted }: { onDeleted: (val: boo
                <Flex justify={'center'} align={'center'} direction={'column'}
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
-                     router.push('/member/edit/123')
+                     router.push(`/member/edit/${id}`)
                   }}
                >
                   <Box>
@@ -58,7 +74,7 @@ export default function DrawerDetailMember({ onDeleted }: { onDeleted: (val: boo
          </Stack>
          <LayoutModal opened={isModal} onClose={() => setModal(false)}
             description="Apakah Anda yakin ingin mengubah status aktifasi anggota?"
-            onYes={(val) => { onTrue(val) }} />
+            onYes={(val) => { nonActive(val) }} />
       </Box>
    )
 }

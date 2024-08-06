@@ -33,6 +33,7 @@ export default function TabListMember({ status }: { status: boolean }) {
          setDataMember(data)
       } catch (error) {
          console.error(error)
+         throw new Error("Error")
       } finally {
          setLoading(false)
       }

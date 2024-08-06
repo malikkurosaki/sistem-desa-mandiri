@@ -4,12 +4,11 @@ import { HiUser } from "react-icons/hi2";
 import NavbarEditMember from "../component/ui/navbar_edit_member";
 import EditMember from "../component/edit_member";
 
-export default function ViewEditMember() {
+export default function ViewEditMember({data}: {data: string}) {
    return (
       <Box>
-         {/* <NavbarEditMember /> */}
          <LayoutNavbarNew back="" title="Edit Anggota" menu={<></>} />
-         <EditMember />
+         <EditMember id={data} />
       </Box>
    )
 }
