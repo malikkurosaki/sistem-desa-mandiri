@@ -1,9 +1,9 @@
 import { ViewDetailDivision } from '@/module/division_new';
 import React from 'react';
 
-function Page() {
+function Page({ params }: { params: { id: string } }) {
   return (
-    <ViewDetailDivision />
+    <ViewDetailDivision id={params.id}/>
   );
 }
 

@@ -5,11 +5,11 @@ import { useState } from "react";
 import { HiMenu } from "react-icons/hi";
 import DrawerDetailDivision from "./drawer_detail_division";
 
-export default function NavbarDetailDivision() {
+export default function NavbarDetailDivision({ title }: { title: string }) {
    const [openDrawer, setOpenDrawer] = useState(false)
    return (
       <>
-         <LayoutNavbarNew back="" title={"Divisi kemasyarakatan"} menu={
+         <LayoutNavbarNew back="" title={title} menu={
             <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
                <HiMenu size={20} color='white' />
             </ActionIcon>

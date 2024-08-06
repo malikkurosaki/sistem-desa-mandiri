@@ -11,7 +11,7 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { LuFileSignature } from "react-icons/lu";
 import { useRouter } from 'next/navigation';
 
-export default function FeatureDetailDivision() {
+export default function FeatureDetailDivision({ id }: { id: string }) {
   const router = useRouter()
   return (
     <Box pt={10}>
@@ -21,29 +21,29 @@ export default function FeatureDetailDivision() {
         style={{
           alignItems: "center",
           alignContent: "center"
-      }}
+        }}
       >
         <Box bg={'white'} style={{
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push('/task')}>
+        }} onClick={() => router.push(id + '/task')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
-                <ActionIcon variant="filled"
-                  size={"xl"}
-                  aria-label="Gradient action icon"
-                  radius={100}
-                  color={WARNA.bgHijauMuda}
-                >
-                  <LuClipboardEdit size={25} color={WARNA.biruTua} />
-                </ActionIcon>
+              <ActionIcon variant="filled"
+                size={"xl"}
+                aria-label="Gradient action icon"
+                radius={100}
+                color={WARNA.bgHijauMuda}
+              >
+                <LuClipboardEdit size={25} color={WARNA.biruTua} />
+              </ActionIcon>
             </Grid.Col>
-            <Grid.Col span={{base: 7, md: 9}}>
+            <Grid.Col span={{ base: 7, md: 9 }}>
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Tugas</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>23 Tugas</Text>
-                  <IoIosArrowRoundForward size={20} color='gray' />
+                <IoIosArrowRoundForward size={20} color='gray' />
               </Group>
             </Grid.Col>
           </Grid>
@@ -52,23 +52,23 @@ export default function FeatureDetailDivision() {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push('/document')}>
+        }} onClick={() => router.push(id + '/document')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
-                <ActionIcon variant="filled"
-                  size={"xl"}
-                  aria-label="Gradient action icon"
-                  radius={100}
-                  color={WARNA.bgHijauMuda}
-                >
-                  <BsFileEarmarkText size={25} color={WARNA.biruTua} />
-                </ActionIcon>
+              <ActionIcon variant="filled"
+                size={"xl"}
+                aria-label="Gradient action icon"
+                radius={100}
+                color={WARNA.bgHijauMuda}
+              >
+                <BsFileEarmarkText size={25} color={WARNA.biruTua} />
+              </ActionIcon>
             </Grid.Col>
-            <Grid.Col span={{base: 7, md: 9}}>
+            <Grid.Col span={{ base: 7, md: 9 }}>
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Dokumen</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>23 Tugas</Text>
-                  <IoIosArrowRoundForward size={20} color='gray' />
+                <IoIosArrowRoundForward size={20} color='gray' />
               </Group>
             </Grid.Col>
           </Grid>
@@ -77,23 +77,23 @@ export default function FeatureDetailDivision() {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push('/discussion')}>
+        }} onClick={() => router.push(id + '/discussion')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
-                <ActionIcon variant="filled"
-                  size={"xl"}
-                  aria-label="Gradient action icon"
-                  radius={100}
-                  color={WARNA.bgHijauMuda}
-                >
-                  <GoCommentDiscussion size={25} color={WARNA.biruTua} />
-                </ActionIcon>
+              <ActionIcon variant="filled"
+                size={"xl"}
+                aria-label="Gradient action icon"
+                radius={100}
+                color={WARNA.bgHijauMuda}
+              >
+                <GoCommentDiscussion size={25} color={WARNA.biruTua} />
+              </ActionIcon>
             </Grid.Col>
-            <Grid.Col span={{base: 7, md: 9}}>
+            <Grid.Col span={{ base: 7, md: 9 }}>
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Diskusi</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>23 Tugas</Text>
-                  <IoIosArrowRoundForward size={20} color='gray' />
+                <IoIosArrowRoundForward size={20} color='gray' />
               </Group>
             </Grid.Col>
           </Grid>
@@ -102,23 +102,23 @@ export default function FeatureDetailDivision() {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push('/calender')}>
+        }} onClick={() => router.push(id + '/calender')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
-                <ActionIcon variant="filled"
-                  size={"xl"}
-                  aria-label="Gradient action icon"
-                  radius={100}
-                  color={WARNA.bgHijauMuda}
-                >
-                  <IoCalendarOutline size={25} color={WARNA.biruTua} />
-                </ActionIcon>
+              <ActionIcon variant="filled"
+                size={"xl"}
+                aria-label="Gradient action icon"
+                radius={100}
+                color={WARNA.bgHijauMuda}
+              >
+                <IoCalendarOutline size={25} color={WARNA.biruTua} />
+              </ActionIcon>
             </Grid.Col>
-            <Grid.Col span={{base: 7, md: 9}}>
+            <Grid.Col span={{ base: 7, md: 9 }}>
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Kalender</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>23 Tugas</Text>
-                  <IoIosArrowRoundForward size={20} color='gray' />
+                <IoIosArrowRoundForward size={20} color='gray' />
               </Group>
             </Grid.Col>
           </Grid>

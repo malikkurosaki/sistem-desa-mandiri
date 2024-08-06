@@ -1,26 +1,40 @@
 import { prisma } from "@/module/_global";
+import { funGetUserByCookies } from "@/module/auth";
+import _ from "lodash";
+import { revalidatePath } from "next/cache";
 
 export default async function createDivision(req: Request) {
    try {
-      const data = await req.json();
-      const insert = await prisma.division.create({
+      const sent = await req.json();
+      const user = await funGetUserByCookies();
+
+      const insertDivision = await prisma.division.create({
          data: {
-            name: data.name,
-            idVillage: data.idVillage,
-            idGroup: data.idGroup,
-            desc: data.desc,
-            createdBy: data.createdBy
+            name: sent.data.name,
+            idVillage: String(user.idVillage),
+            idGroup: sent.data.idGroup,
+            desc: sent.data.desc,
+            createdBy: String(user.id)
          },
          select: {
             id: true
          }
       })
 
+      const dataMember = sent.member.map((v: any) => ({
+         ..._.omit(v, ["isActive", "nik", "name", "phone", "email", "gender", "group", "position"]),
+         idUser: v.id,
+         idDivision: insertDivision.id,
+         isAdmin: sent.admin.some((i: any) => i == v.id)
+      }))
+
       const insertMember = await prisma.divisionMember.createMany({
-         data: data.member
+         data: dataMember
       })
 
-      return Response.json(insert, { status: 201 });
+      revalidatePath("/division");
+
+      return Response.json({ success: true, message: "Sukses menambahkan data divisi" }, { status: 201 });
 
    } catch (error) {
       console.error(error);
