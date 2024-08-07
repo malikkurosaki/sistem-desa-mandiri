@@ -12,32 +12,29 @@ import {
 } from "@mantine/core";
 import React, { useState } from "react";
 import { IoAddCircle } from "react-icons/io5";
+import { funCreateGroup } from "../lib/api_group";
+import toast from "react-hot-toast";
 
-export default function DrawerGroup({
-  onSuccess,
-}: {
-  onSuccess: (val: boolean) => void;
-}) {
+export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) => void; }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false);
   const [namaGroup, setNamaGroup] = useState("");
 
 
-  async function onCreate() {
+  async function createData() {
     try {
-      const res = await fetch(API_ADDRESS.apiCreateGroup, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: namaGroup,
-        }),
-      });
-      setOpenDrawerGroup(false);
-      onSuccess(true);
+      const response = await funCreateGroup({ name: namaGroup })
+      
+      if (response.success) {
+        toast.success(response.message);
+        setOpenDrawerGroup(false)
+        onSuccess(true)
+      } else {
+        toast.error(response.message)
+      }
+
     } catch (error) {
       console.log(error);
-      onSuccess(false);
+      toast.error("Gagal menambahkan grup, coba lagi nanti");
     }
   }
 
@@ -84,7 +81,7 @@ export default function DrawerGroup({
               size="lg"
               radius={30}
               fullWidth
-              onClick={onCreate}
+              onClick={createData}
             >
               Simpan
             </Button>

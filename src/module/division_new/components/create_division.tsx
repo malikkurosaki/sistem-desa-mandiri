@@ -1,6 +1,5 @@
 "use client";
 import { API_ADDRESS, LayoutNavbarNew, WARNA } from "@/module/_global";
-import { TypeGroup } from "@/module/group";
 import { useHookstate } from "@hookstate/core";
 import {
     Avatar,
@@ -25,11 +24,11 @@ import CreateAdminDivision from "./create_admin_division";
 import CreateUsers from "./create_users";
 import NavbarCreateUsers from "./ui/navbar_create_users";
 import NavbarAdminDivision from "./ui/navbar_admin_division";
-
+import { IDataGroup } from "@/module/group";
 
 export default function CreateDivision() {
     const router = useRouter();
-    const [dataGroup, setDataGroup] = useState<TypeGroup>();
+    const [dataGroup, setDataGroup] = useState<IDataGroup[]>([]);
     const [roleUser, setRoleUser] = useState<any>("")
     const [isChooseAnggota, setChooseAnggota] = useState(false)
     const [isChooseAdmin, setChooseAdmin] = useState(false)

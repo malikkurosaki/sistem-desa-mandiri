@@ -1,7 +1,11 @@
-import { TypeGroup } from './lib/type_group';
+import { IDataGroup, IFormGroup, IStatusGroup } from './lib/type_group';
 import { apiGroup } from "./api/api_group";
-import ViewGroup from "./view/view_group";
+import { funCreateGroup, funEditGroup, funEditStatusGroup, funGetAllGroup, funGetGroupById } from './lib/api_group';
+import NavbarGroup from './ui/navbar_group';
+import TabListGroup from './ui/tab_list_group';
 
-export { ViewGroup };
 export { apiGroup };
-export type { TypeGroup }
+export type { IDataGroup, IFormGroup, IStatusGroup }
+export { funGetAllGroup, funGetGroupById, funCreateGroup, funEditStatusGroup, funEditGroup }
+export { NavbarGroup }
+export { TabListGroup }
