@@ -1,42 +1,33 @@
 import { prisma } from "@/module/_global";
+import { funGetUserByCookies } from "@/module/auth";
+import _ from "lodash";
+import moment from "moment";
+import "moment/locale/id";
 import { NextRequest } from "next/server";
 
 export async function getAllAnnouncement(req: NextRequest) {
   try {
-    const searchParams = req.nextUrl.searchParams;
-    const groupID = searchParams.get("groupID");
-    const villageID = searchParams.get("villageID");
-    const createBy = searchParams.get("createBy");
-    const divisionID = searchParams.get("divisionID");
+    const user = await funGetUserByCookies();
+    const villageId = user.idVillage
     const announcements = await prisma.announcement.findMany({
       where: {
-        idVillage: String(villageID),
-        createdBy: String(createBy),
+        idVillage: String(villageId),
         isActive: true,
       },
       select: {
         id: true,
         title: true,
         desc: true,
+        createdAt: true,
       },
     });
 
-    const announcementMember = await prisma.announcementMember.findMany({
-      where: {
-        idGroup: String(groupID),
-        idDivision: String(divisionID),
-        idAnnouncement: {
-          in: announcements.map((announcement: any) => announcement.id),
-        },
-      },
-      select: {
-        idAnnouncement: true,
-        idGroup: true,
-        idDivision: true,
-      },
-    });
+    const allData = announcements.map((v: any) => ({
+      ..._.omit(v, ["createdAt"]),
+      createdAt: moment(v.createdAt).format("LL")
+    }))
 
-    return Response.json({ announcements, announcementMember });
+    return Response.json(allData);
   } catch (error) {
     console.error(error);
     return Response.json(

@@ -190,7 +190,10 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/api/announcement/get?path=get-all-announcement&groupID=1&villageID=121212&createBy=111&divisionID=1 HTTP/1.1
+GET http://localhost:3000/api/announcement/get?path=get-all-announcement HTTP/1.1
+
+###
+GET http://localhost:3000/api/announcement/get?path=get-all-announcement&divisionI=1 HTTP/1.1
 
 ###
 GET http://localhost:3000/api/announcement/get?path=get-one-announcement&announcementId=clz6kqzvt000eb3mle1nyz6fd HTTP/1.1
