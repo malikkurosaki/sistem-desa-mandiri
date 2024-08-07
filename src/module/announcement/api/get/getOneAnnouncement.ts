@@ -1,4 +1,5 @@
 import { prisma } from "@/module/_global";
+import _ from "lodash";
 import { NextRequest } from "next/server";
 
 export async function getOneAnnouncement(req: NextRequest) {
@@ -23,10 +24,20 @@ export async function getOneAnnouncement(req: NextRequest) {
         idAnnouncement: true,
         idGroup: true,
         idDivision: true,
+        Group: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
-    return Response.json({ announcement, announcementMember });
+    const allAnnouncementMember = announcementMember.map((v: any) => ({
+      ..._.omit(v, ["Group"]),
+      group: v.Group.name,
+    }))
+
+    return Response.json({ announcement, allAnnouncementMember });
   } catch (error) {
     console.error(error);
     return Response.json(

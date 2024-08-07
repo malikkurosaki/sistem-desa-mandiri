@@ -12,7 +12,6 @@ export async function getAllPosition(req: NextRequest) {
     const active = searchParams.get('active');
     const name = searchParams.get('name')
     const user = await funGetUserByCookies()
-    console.log(groupID)
 
     if (groupID == "null") {
       grupFix = user.idGroup

@@ -175,25 +175,24 @@ Content-Type: application/json
    
     "title": "cobaannouncement1 dsdsd",
     "desc": "coba announcement sdsdsd",
-    "idVillage": "121212",
-    "createBy": "111",
+    "idVillage": "desa1",
+    "createBy": "superAdminLukman",
     "groups": [
     {
-      "idGroup": "1",
+      "idGroup": "group1",
       "idDivision": "1"
     },
-    {
-      "idGroup": "1",
-      "idDivision": "2"
-    }
   ]
 }
 
 ###
-GET http://localhost:3000/api/announcement/get?path=get-all-announcement&groupID=1&villageID=121212&createBy=111&divisionID=1 HTTP/1.1
+GET http://localhost:3000/api/announcement/get?path=get-all-announcement HTTP/1.1
 
 ###
-GET http://localhost:3000/api/announcement/get?path=get-one-announcement&announcementId=clz6kqzvt000eb3mle1nyz6fd HTTP/1.1
+GET http://localhost:3000/api/announcement/get?path=get-all-announcement&divisionI=1 HTTP/1.1
+
+###
+GET http://localhost:3000/api/announcement/get?path=get-one-announcement&announcementId=1 HTTP/1.1
 
 ###
 POST http://localhost:3000/api/announcement/post?path=update-announcement HTTP/1.1

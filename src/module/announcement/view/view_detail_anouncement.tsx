@@ -6,7 +6,7 @@ export default function ViewDetailAnnouncement({ data }: { data: string }) {
    return (
       <Box>
          <NavbarDetailAnnouncement />
-         <DetailAnnouncement />
+         <DetailAnnouncement id={data} />
       </Box>
    )
 }
