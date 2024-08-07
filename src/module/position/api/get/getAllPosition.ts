@@ -10,6 +10,7 @@ export async function getAllPosition(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
     const groupID = searchParams.get('groupId');
     const active = searchParams.get('active');
+    const name = searchParams.get('name')
     const user = await funGetUserByCookies()
     console.log(groupID)
 
@@ -23,6 +24,10 @@ export async function getAllPosition(req: NextRequest) {
       where: {
         idGroup: String(grupFix),
         isActive: (active == "true" ? true : false),
+        name: {
+          contains: String(name),
+          mode: "insensitive"
+        }
       },
       select: {
         id: true,

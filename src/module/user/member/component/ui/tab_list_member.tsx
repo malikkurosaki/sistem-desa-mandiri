@@ -1,10 +1,10 @@
 
 import { API_ADDRESS, WARNA } from "@/module/_global"
-import { Box, Group, ActionIcon, Text } from "@mantine/core"
+import { Box, Group, ActionIcon, Text, TextInput } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { HiMiniUser } from "react-icons/hi2"
+import { HiMagnifyingGlass, HiMiniUser } from "react-icons/hi2"
 
 type dataMember = {
    id: string,
@@ -23,13 +23,14 @@ export default function TabListMember({ status }: { status: boolean }) {
    const [loading, setLoading] = useState(true);
    const [dataMember, setDataMember] = useState<dataMember[]>([])
    const searchParams = useSearchParams()
+   const [searchQuery, setSearchQuery] = useState('')
    const group = searchParams.get('group')
 
 
    async function getAllUser() {
       try {
          setLoading(true)
-         const res = await fetch(`${API_ADDRESS.apiGetAllUser}&active=${status}&groupId=${group}`  )
+         const res = await fetch(`${API_ADDRESS.apiGetAllUser}&active=${status}&groupId=${group}&name=${searchQuery}`)
          const data = await res.json()
 
          setDataMember(data)
@@ -43,32 +44,49 @@ export default function TabListMember({ status }: { status: boolean }) {
 
    useShallowEffect(() => {
       getAllUser()
-   }, [status])
+   }, [status, searchQuery])
 
    return (
       <>
-         {dataMember.map((v, i) => {
-            return (
-               <Box pt={20} key={i} onClick={() => {
-                  router.push(`/member/${v.id}`)
-               }}>
-                  <Group align='center' style={{
-                     borderBottom: `1px solid #D9D9D9`,
-                     padding: 10,
-                  }} >
-                     <Box>
-                        <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
-                           <HiMiniUser color={'white'} size={25} />
-                        </ActionIcon>
-                     </Box>
-                     <Box>
-                        <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
-                        <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
-                     </Box>
-                  </Group>
-               </Box>
-            )
-         })}
+         <Box>
+            <TextInput
+               styles={{
+                  input: {
+                     color: WARNA.biruTua,
+                     borderRadius: WARNA.biruTua,
+                     borderColor: WARNA.biruTua,
+                  },
+               }}
+               size="md"
+               radius={30}
+               leftSection={<HiMagnifyingGlass size={20} />}
+               placeholder="Pencarian"
+               onChange={(e) => setSearchQuery(e.target.value)}
+               my={10}
+            />
+            {dataMember.map((v, i) => {
+               return (
+                  <Box pt={20} key={i} onClick={() => {
+                     router.push(`/member/${v.id}`)
+                  }}>
+                     <Group align='center' style={{
+                        borderBottom: `1px solid #D9D9D9`,
+                        padding: 10,
+                     }} >
+                        <Box>
+                           <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
+                              <HiMiniUser color={'white'} size={25} />
+                           </ActionIcon>
+                        </Box>
+                        <Box>
+                           <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
+                           <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
+                        </Box>
+                     </Group>
+                  </Box>
+               )
+            })}
+         </Box>
       </>
    )
 }

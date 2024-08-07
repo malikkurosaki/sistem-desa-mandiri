@@ -26,6 +26,7 @@ export default function ListGroupActive({ status }: { status: boolean }) {
   const [isData, setData] = useState<dataGroup[]>([]);
   const [selectId, setSelectId] = useState<string | null>(null);
   const [active, setActive] = useState<boolean | null>(null);
+  const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
 
   const getData = async () => {
@@ -33,7 +34,7 @@ export default function ListGroupActive({ status }: { status: boolean }) {
       setData([]);
       setLoading(true);
       const res = await fetch(
-        `${API_ADDRESS.apiGetAllGroup}&villageId=121212&active=` + status
+        `${API_ADDRESS.apiGetAllGroup}&villageId=121212&active=${status}&name=${searchQuery}`
       );
       const data = await res.json();
       setData(data);
@@ -52,7 +53,7 @@ export default function ListGroupActive({ status }: { status: boolean }) {
 
   useShallowEffect(() => {
     getData();
-  }, [status]);
+  }, [status, searchQuery]);
 
   return (
     <Box pt={20}>
@@ -68,6 +69,7 @@ export default function ListGroupActive({ status }: { status: boolean }) {
         radius={30}
         leftSection={<HiMagnifyingGlass size={20} />}
         placeholder="Pencarian"
+        onChange={(e) => setSearchQuery(e.target.value)}
       />
       {loading
         ? Array(6)

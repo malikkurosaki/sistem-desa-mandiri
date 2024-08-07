@@ -26,21 +26,6 @@ export default function ListMember() {
                </Tabs.Tab>
             </Tabs.List>
 
-            <TextInput
-               styles={{
-                  input: {
-                     color: WARNA.biruTua,
-                     borderRadius: WARNA.biruTua,
-                     borderColor: WARNA.biruTua,
-                  },
-               }}
-               size="md"
-               radius={30}
-               leftSection={<HiMagnifyingGlass size={20} />}
-               placeholder="Pencarian" 
-               my={10}
-            />
-
             <Tabs.Panel value="aktif">
                <TabListMember status={true} />
             </Tabs.Panel>

@@ -8,10 +8,15 @@ export async function listGroups(req: NextRequest): Promise<Response> {
     const searchParams = req.nextUrl.searchParams
     const villaId = user.idVillage
     const active = searchParams.get('active');
+    const name = searchParams.get('name');
     const groups = await prisma.group.findMany({
       where: {
         isActive: (active == "true" ? true : false),
         idVillage: String(villaId),
+        name: {
+          contains: String(name),
+          mode: "insensitive"
+        }
       },
       select: {
         id: true,
