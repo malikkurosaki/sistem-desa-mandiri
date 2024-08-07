@@ -24,6 +24,7 @@ export default function ListPositionActive({ status }: { status: boolean }) {
   const [loading, setLoading] = useState(true);
   const [selectId, setSelectId] = useState<string | null>(null);
   const [active, setActive] = useState<boolean | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
   const searchParams = useSearchParams()
   const group = searchParams.get('group')
 
@@ -31,7 +32,7 @@ export default function ListPositionActive({ status }: { status: boolean }) {
     try {
       setDataPosition([]);
       setLoading(true)
-      const res = await fetch(`${API_ADDRESS.apiGetAllPosition}&active=${status}&groupId=${group}`);
+      const res = await fetch(`${API_ADDRESS.apiGetAllPosition}&active=${status}&groupId=${group}&name=${searchQuery}`);
       const data = await res.json();
       setDataPosition(data);
       setLoading(false);
@@ -44,7 +45,7 @@ export default function ListPositionActive({ status }: { status: boolean }) {
 
   useShallowEffect(() => {
     getAllPosition();
-  }, [status, group])
+  }, [status, group, searchQuery])
 
   return (
     <Box pt={20}>
@@ -60,6 +61,7 @@ export default function ListPositionActive({ status }: { status: boolean }) {
         radius={30}
         leftSection={<HiMagnifyingGlass size={20} />}
         placeholder="Pencarian"
+        onChange={(e) => setSearchQuery(e.target.value)}
       />
       {loading ? Array(6).fill(null).map((_, i) => (
         <Box key={i}>
