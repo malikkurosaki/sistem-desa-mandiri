@@ -10,49 +10,46 @@ import {
 import React, { useEffect, useState } from "react";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { HiMagnifyingGlass } from "react-icons/hi2";
-import EditDrawerGroup from "./ui/edit_drawer_group";
+import EditDrawerGroup from "./edit_drawer_group";
 import toast from "react-hot-toast";
 import { useShallowEffect } from "@mantine/hooks";
+import { funGetAllGroup } from "../lib/api_group";
+import { IDataGroup } from "../lib/type_group";
 
-type dataGroup = {
-  id: string;
-  name: string;
-  isActive: boolean;
-};
 
 export default function ListGroupActive({ status }: { status: boolean }) {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [valChoose, setValChoose] = useState("");
-  const [isData, setData] = useState<dataGroup[]>([]);
+  const [isData, setData] = useState<IDataGroup[]>([]);
   const [selectId, setSelectId] = useState<string | null>(null);
   const [active, setActive] = useState<boolean | null>(null);
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
 
-  const getData = async () => {
+  const fetchData = async () => {
     try {
       setData([]);
       setLoading(true);
-      const res = await fetch(
-        `${API_ADDRESS.apiGetAllGroup}&villageId=121212&active=${status}&name=${searchQuery}`
-      );
-      const data = await res.json();
-      setData(data);
+
+      const response = await funGetAllGroup('?active=' + status + '&search=' + searchQuery)
+
+      if (response.success) {
+        setData(response?.data)
+      } else {
+        toast.error(response.message);
+      }
+
       setLoading(false);
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(error);
-        toast.error("Terjadi kesalahan");
-      } else {
-        console.error("Error tidak diketahui");
-      }
+      toast.error("Gagal mendapatkan grup, coba lagi nanti");
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   useShallowEffect(() => {
-    getData();
+    fetchData();
   }, [status, searchQuery]);
 
   return (
@@ -120,6 +117,7 @@ export default function ListGroupActive({ status }: { status: boolean }) {
             </Box>
           );
         })}
+
       <LayoutDrawer
         opened={openDrawer}
         onClose={() => setOpenDrawer(false)}
@@ -131,7 +129,7 @@ export default function ListGroupActive({ status }: { status: boolean }) {
           onUpdated={(val) => {
             if (val) {
               toast.success("Sukses! data tersimpan");
-              getData();
+              // fetchData();
             }
             setOpenDrawer(false);
           }}

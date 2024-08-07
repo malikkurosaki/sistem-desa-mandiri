@@ -39,7 +39,6 @@ export default function TabListGroup() {
         </Tabs.Panel>
 
         <Tabs.Panel value="tidak-aktif">
-          {/* <ListGroupNonActive /> */}
           <ListGroupActive status={false} />
         </Tabs.Panel>
       </Tabs>
