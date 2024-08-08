@@ -1,16 +1,11 @@
 import { API_ADDRESS, LayoutDrawer, WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
+import { funGetAllGroup, IDataGroup } from "@/module/group"
 import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { FaPencil, FaToggleOff } from "react-icons/fa6"
-
-type dataGroup = {
-   id: string;
-   name: string;
-   idGroup: string
-};
 
 export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    onUpdated: (val: boolean) => void, id: string | null, isActive: boolean | null;
@@ -22,7 +17,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
       name: "",
       idGroup: ""
    })
-   const [listGroup, setListGorup] = useState<dataGroup[]>([])
+   const [listGroup, setListGorup] = useState<IDataGroup[]>([])
 
    function onCLose() {
       onUpdated(true)
@@ -31,11 +26,15 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
    async function getAllGroup() {
       try {
-         const res = await fetch(`${API_ADDRESS.apiGetAllGroup}&villageId=121212&active=true`)
-         const data = await res.json()
-         setListGorup(data)
+         const response = await funGetAllGroup('?active=true')
+         if (response.success) {
+            setListGorup(response.data);
+         } else {
+            toast.error(response.message);
+         }
       } catch (error) {
          console.error(error)
+         toast.error("Gagal mendapatkan grup, coba lagi nanti");
       }
    }
 

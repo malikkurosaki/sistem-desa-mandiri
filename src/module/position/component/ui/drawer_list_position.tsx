@@ -1,4 +1,5 @@
 import { WARNA, LayoutDrawer, API_ADDRESS } from "@/module/_global";
+import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { Box, Stack, SimpleGrid, Flex, TextInput, Button, Text, Select } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
@@ -7,15 +8,11 @@ import toast from "react-hot-toast";
 import { IoAddCircle } from "react-icons/io5";
 import { RiFilter2Line } from "react-icons/ri";
 
-type dataGroup = {
-   id: string;
-   name: string;
-};
 
 export default function DrawerListPosition({ onCreated }: { onCreated: (val: boolean) => void }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const router = useRouter()
-   const [listGroup, setListGorup] = useState<dataGroup[]>([])
+   const [listGroup, setListGorup] = useState<IDataGroup[]>([])
 
    const [listData, setListData] = useState({
       name: "",
@@ -24,11 +21,15 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
 
    async function getAllGroup() {
       try {
-         const res = await fetch(`${API_ADDRESS.apiGetAllGroup}&villageId=121212&active=true`)
-         const data = await res.json()
-         setListGorup(data)
+         const response = await funGetAllGroup('?active=true')
+         if (response.success) {
+            setListGorup(response.data);
+         } else {
+            toast.error(response.message);
+         }
       } catch (error) {
          console.error(error)
+         toast.error("Gagal mendapatkan grup, coba lagi nanti");
       }
    }
 
@@ -39,33 +40,33 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
 
    async function onSubmit() {
       try {
-        const res = await fetch(API_ADDRESS.apiCreatePosition, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            name: listData.name,
-            idGroup: listData.idGroup
-          })
-        })
-    
-        if (!res.ok) {
-          const errorData = await res.json();
-          if (errorData.message === "Position sudah ada") {
-            toast.error('Gagal! Position sudah ada');
-          } else {
-            toast.error('Error');
-          }
-        } else {
-          setOpenDrawerGroup(false)
-          toast.success('Sukses! data tersimpan')
-        }
-        onCreated(true)
+         const res = await fetch(API_ADDRESS.apiCreatePosition, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+               name: listData.name,
+               idGroup: listData.idGroup
+            })
+         })
+
+         if (!res.ok) {
+            const errorData = await res.json();
+            if (errorData.message === "Position sudah ada") {
+               toast.error('Gagal! Position sudah ada');
+            } else {
+               toast.error('Error');
+            }
+         } else {
+            setOpenDrawerGroup(false)
+            toast.success('Sukses! data tersimpan')
+         }
+         onCreated(true)
       } catch (error) {
-        toast.error('Error')
+         toast.error('Error')
       }
-    }
+   }
 
    return (
       <Box>
@@ -135,7 +136,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                   onChange={(event: any) => setListData({
                      ...listData,
                      name: event.target.value
-                   })}
+                  })}
                   radius={10}
                   placeholder="Nama Jabatan"
                />

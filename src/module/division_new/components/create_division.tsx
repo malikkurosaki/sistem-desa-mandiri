@@ -24,7 +24,7 @@ import CreateAdminDivision from "./create_admin_division";
 import CreateUsers from "./create_users";
 import NavbarCreateUsers from "./ui/navbar_create_users";
 import NavbarAdminDivision from "./ui/navbar_admin_division";
-import { IDataGroup } from "@/module/group";
+import { funGetAllGroup, IDataGroup } from "@/module/group";
 
 export default function CreateDivision() {
     const router = useRouter();
@@ -40,9 +40,12 @@ export default function CreateDivision() {
     });
 
     async function loadData() {
-        const loadGroup = await fetch(API_ADDRESS.apiGetAllGroup + '&active=true');
-        const dataGroup = await loadGroup.json();
-        setDataGroup(dataGroup);
+        const loadGroup = await funGetAllGroup('?active=true')
+        if (loadGroup.success) {
+            setDataGroup(loadGroup.data);
+        } else {
+            toast.error(loadGroup.message);
+        }
 
         const loadUser = await funGetUserByCookies();
         setRoleUser(loadUser.idUserRole)

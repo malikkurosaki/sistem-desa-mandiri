@@ -5,42 +5,41 @@ import { FaCheck } from "react-icons/fa6";
 import { WARNA } from "../fun/WARNA";
 import LayoutNavbarNew from "../layout/layout_navbar_new";
 import { useRouter } from "next/navigation";
-import { API_ADDRESS } from "../bin/api_address";
+import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { useShallowEffect } from "@mantine/hooks";
+import toast from "react-hot-toast";
 
-interface dataGroup {
-   id: string;
-   name: string;
-}
-
-export default function ViewFilter({linkFilter}: {linkFilter: string}) {
+export default function ViewFilter({ linkFilter }: { linkFilter: string }) {
    const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-   const [checked, setChecked] = useState<dataGroup[]>([]);
+   const [checked, setChecked] = useState<IDataGroup[]>([]);
    const [searchParams, setSearchParams] = useState({ groupId: '' });
 
    const handleFilterClick = (id: string) => {
-     setSelectedFilter(id);
+      setSelectedFilter(id);
    };
-   
+
    async function getAllGroupFilter() {
-     try {
-       const response = await fetch(`${API_ADDRESS.apiGetAllGroup}&active=true&groupId=${searchParams.groupId}`);
-       const data = await response.json();
-       console.log("mana data", response);
-       setChecked(data);
-     } catch (error) {
-       console.error(error);
-     }
+      try {
+         const response = await funGetAllGroup('?active=true')
+         if (response.success) {
+            setChecked(response.data);
+         } else {
+            toast.error(response.message);
+         }
+      } catch (error) {
+         console.error(error);
+         toast.error("Gagal mendapatkan grup, coba lagi nanti");
+      }
    }
-   
+
    useEffect(() => {
-     if (selectedFilter) {
-       setSearchParams({ groupId: selectedFilter });
-     }
+      if (selectedFilter) {
+         setSearchParams({ groupId: selectedFilter });
+      }
    }, [selectedFilter]);
-   
-   useEffect(() => {
-     getAllGroupFilter();
+
+   useShallowEffect(() => {
+      getAllGroupFilter();
    }, [searchParams.groupId]);
 
    const router = useRouter()

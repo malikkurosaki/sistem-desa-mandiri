@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
 import { IoAddCircle, IoCloseCircleOutline } from "react-icons/io5";
-import { funEditGroup, funEditStatusGroup } from "../lib/api_group";
+import { funEditGroup, funEditStatusGroup, funGetGroupById } from "../lib/api_group";
 
 export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdated: (val: boolean) => void; id: string; isActive: boolean; }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false);
@@ -27,11 +27,17 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
 
   async function getOneGroup() {
     try {
-      const res = await fetch(`${API_ADDRESS.apiGetOneGroup}&groupId=${id}`);
-      const data = await res.json();
-      setName(data.name);
+      const res = await funGetGroupById(id);
+      console.log("amalia", res)
+      if (res.success) {
+        setName(res.data.name);
+      } else {
+        toast.error(res.message);
+      }
+
     } catch (error) {
       console.error(error);
+      toast.error("Gagal mendapatkan grup, coba lagi nanti");
     }
   }
 

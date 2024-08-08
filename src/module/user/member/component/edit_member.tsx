@@ -1,6 +1,7 @@
 'use client'
 import { API_ADDRESS, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { Box, Button, Select, Stack, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
@@ -20,10 +21,7 @@ type dataMember = {
    idUserRole: string;
 }
 
-type dataGroup = {
-   id: string;
-   name: string;
-};
+
 type dataPosition = {
    id: string;
    name: string;
@@ -37,7 +35,7 @@ type dataROleUser = {
 export default function EditMember({ id }: { id: string | undefined }) {
    const [isModal, setModal] = useState(false)
    const router = useRouter()
-   const [listGroup, setListGorup] = useState<dataGroup[]>([])
+   const [listGroup, setListGorup] = useState<IDataGroup[]>([])
    const [listPosition, setListPosition] = useState<dataPosition[]>([])
    const [listUserRole, setListUserRole] = useState<dataROleUser[]>([])
    const [data, setData] = useState<dataMember>({
@@ -55,11 +53,15 @@ export default function EditMember({ id }: { id: string | undefined }) {
 
    async function getAllGroup() {
       try {
-         const res = await fetch(`${API_ADDRESS.apiGetAllGroup}&villageId=desa1&active=true`)
-         const data = await res.json()
-         setListGorup(data)
+         const response = await funGetAllGroup('?active=true')
+         if (response.success) {
+            setListGorup(response.data);
+         } else {
+            toast.error(response.message);
+         }
       } catch (error) {
          console.error(error)
+         toast.error("Gagal mendapatkan grup, coba lagi nanti");
       }
    }
 
