@@ -14,7 +14,7 @@ export async function listGroups(req: NextRequest): Promise<Response> {
         isActive: (active == "true" ? true : false),
         idVillage: String(villaId),
         name: {
-          contains: String(name),
+          contains: (name == undefined || name == null) ? "" : name,
           mode: "insensitive"
         }
       },

@@ -23,7 +23,7 @@ export async function getAllUser(req: NextRequest) {
         isActive: active == "true" ? true : false,
         idGroup: String(fixGroup),
         name: {
-          contains: String(name),
+          contains: (name == undefined || name == null) ? "" : name,
           mode: "insensitive",
         }
       },

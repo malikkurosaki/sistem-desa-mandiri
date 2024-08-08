@@ -1,12 +1,12 @@
 import { prisma } from '@/module/_global';
 import { NextRequest } from "next/server";
 
+export const dynamic = 'force-dynamic'
 export default async function getOneDetailDivision(req: NextRequest) {
    try {
       const searchParams = req.nextUrl.searchParams
       const id = searchParams.get('divisionId');
 
-      console.log('aaaaa',id)
       const division = await prisma.division.findUnique({
          where: {
             id: String(id),
@@ -65,8 +65,8 @@ export default async function getOneDetailDivision(req: NextRequest) {
 
       const allData = {
          // division: division,
-         division:{name:id},
-         jumlah:{
+         division: { name: name },
+         jumlah: {
             tugas: 1,
             dokumen: dokumen,
             diskusi: diskusi,
