@@ -17,19 +17,13 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
 import { IoAddCircle, IoCloseCircleOutline } from "react-icons/io5";
+import { funEditGroup, funEditStatusGroup } from "../lib/api_group";
 
-export default function EditDrawerGroup({
-  onUpdated,
-  id,
-  isActive,
-}: {
-  onUpdated: (val: boolean) => void;
-  id: string | null;
-  isActive: boolean | null;
-}) {
+export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdated: (val: boolean) => void; id: string; isActive: boolean; }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false);
   const [isModal, setModal] = useState(false);
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function getOneGroup() {
     try {
@@ -49,49 +43,40 @@ export default function EditDrawerGroup({
 
   async function isUpdate() {
     try {
-      const res = await fetch(API_ADDRESS.apiUpdateGroup, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: id,
-          name: name
-        }),
-      });
-      setOpenDrawerGroup(false);
-      onUpdated(true);
+      setLoading(true)
+      const res = await funEditGroup(id, { name });
+      if (res.success) {
+        toast.success(res.message);
+        setOpenDrawerGroup(false);
+        onUpdated(true);
+      } else {
+        toast.error(res.message)
+      }
     } catch (error) {
       console.error(error);
+      toast.error("Edit grup gagal, coba lagi nanti");
+    } finally {
+      setLoading(false);
     }
   }
 
   async function nonActive(val: boolean) {
     try {
       if (val) {
-        const res = await fetch(API_ADDRESS.apiDeleteGroup, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id,
-            isActive,
-          }),
-        });
-
-        if (res.status == 200) {
+        const res = await funEditStatusGroup(id, { isActive: isActive });
+        if (res.success) {
+          toast.success(res.message);
+          setOpenDrawerGroup(false);
           onUpdated(true);
         } else {
-          onUpdated(false);
+          toast.error(res.message)
         }
       }
       setModal(false);
     } catch (error) {
-      console.log(error);
       setModal(false);
-      toast.error("Terjadi kesalahan");
-      onUpdated(false);
+      console.error(error);
+      toast.error("Edit grup gagal, coba lagi nanti");
     }
   }
 
@@ -157,6 +142,7 @@ export default function EditDrawerGroup({
               radius={30}
               fullWidth
               onClick={isUpdate}
+              loading={loading}
             >
               Simpan
             </Button>

@@ -3,13 +3,18 @@ import { Box, Tabs, rem } from "@mantine/core";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import ListGroupActive from "./list_group_active";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function TabListGroup() {
   const iconStyle = { width: rem(20), height: rem(20) };
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const status = searchParams.get('active')
+
 
   return (
     <Box p={20}>
-      <Tabs variant="pills" color="#FF9861" radius="xl" defaultValue="aktif">
+      <Tabs variant="pills" color="#FF9861" radius="xl" defaultValue={(status == "false") ? "false" : "true"}>
         <Tabs.List
           bg={"white"}
           style={{
@@ -19,28 +24,23 @@ export default function TabListGroup() {
           }}
         >
           <Tabs.Tab
-            value="aktif"
+            value="true"
             w={"45%"}
             leftSection={<IoMdCheckmarkCircleOutline style={iconStyle} />}
+            onClick={() => { router.push("/group?active=true") }}
           >
             Aktif
           </Tabs.Tab>
           <Tabs.Tab
-            value="tidak-aktif"
+            value="false"
             w={"53%"}
             leftSection={<IoCloseCircleOutline style={iconStyle} />}
+            onClick={() => { router.push("/group?active=false") }}
           >
             Tidak Aktif
           </Tabs.Tab>
         </Tabs.List>
-
-        <Tabs.Panel value="aktif">
-          <ListGroupActive status={true} />
-        </Tabs.Panel>
-
-        <Tabs.Panel value="tidak-aktif">
-          <ListGroupActive status={false} />
-        </Tabs.Panel>
+        <ListGroupActive />
       </Tabs>
     </Box>
   );

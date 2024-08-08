@@ -23,7 +23,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
   async function createData() {
     try {
       const response = await funCreateGroup({ name: namaGroup })
-      
+
       if (response.success) {
         toast.success(response.message);
         setOpenDrawerGroup(false)

@@ -36,6 +36,9 @@ export const funEditStatusGroup = async (path: string, data: IStatusGroup) => {
 };
 
 export const funEditGroup = async (path: string, data: IFormGroup) => {
+   if (data.name.length < 3)
+      return { success: false, message: 'Minimal 3 karakter' }
+
    const response = await fetch(`/api/group/${path}`, {
       method: "PUT",
       headers: {
