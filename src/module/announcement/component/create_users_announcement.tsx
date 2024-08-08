@@ -105,9 +105,8 @@ export default function CreateUsersAnnouncement() {
             </Group>
             <Divider/>
             {item.divisions.map((division) => (
-              <Box>
+              <Box key={division}>
                 <Text
-                  key={division}
                   onClick={() => handleCheck(item.group, division)}
                   style={{
                     cursor: 'pointer',
