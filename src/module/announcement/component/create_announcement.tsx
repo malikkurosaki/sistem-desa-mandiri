@@ -2,6 +2,7 @@
 import { WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { Box, Button, Group, Stack, Text, Textarea, TextInput } from "@mantine/core";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiOutlineChevronRight } from "react-icons/hi2";
@@ -9,6 +10,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 export default function CreateAnnouncement() {
    const [isOpen, setOpen] = useState(false)
+   const router = useRouter()
 
    function onTrue(val: boolean) {
       if (val) {
@@ -52,7 +54,9 @@ export default function CreateAnnouncement() {
                   border: `1px solid ${WARNA.biruTua}`,
                   padding: 10,
                   borderRadius: 10
-               }}>
+               }}
+                  onClick={() => router.push("/announcement/create-user")}
+               >
                   <Text size="sm">
                      Tambah Anggota
                   </Text>

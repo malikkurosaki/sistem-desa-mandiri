@@ -24,7 +24,7 @@ export async function getAllPosition(req: NextRequest) {
         idGroup: String(grupFix),
         isActive: (active == "true" ? true : false),
         name: {
-          contains: String(name),
+          contains: (name == undefined || name == null) ? "" : name,
           mode: "insensitive"
         }
       },
