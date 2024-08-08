@@ -187,6 +187,8 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3000/api/announcement/get?path=get-all-announcement HTTP/1.1
+###
+GET http://localhost:3000/api/announcement/get?path=get-user-announcement HTTP/1.1
 
 ###
 GET http://localhost:3000/api/announcement/get?path=get-all-announcement&divisionI=1 HTTP/1.1
