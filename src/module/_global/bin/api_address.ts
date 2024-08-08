@@ -17,6 +17,7 @@ export const API_ADDRESS = {
    // Announcement
    "apiGetAllAnnouncement": "/api/announcement/get?path=get-all-announcement",
    "apiGetOneAnnouncement": "/api/announcement/get?path=get-one-announcement",
+   "apiGetUserAnnouncement": "/api/announcement/get?path=get-user-announcement",
    "apiCreateAnnouncement": "/api/announcement/post?path=create-announcement",
    "apiUpdateAnnouncement": "/api/announcement/post?path=update-announcement",
    "apiDeleteAnnouncement": "/api/announcement/post?path=delete-announcement",
