@@ -15,16 +15,20 @@ import toast from "react-hot-toast";
 import { useShallowEffect } from "@mantine/hooks";
 import { funGetAllGroup } from "../lib/api_group";
 import { IDataGroup } from "../lib/type_group";
+import { useSearchParams } from "next/navigation";
 
 
-export default function ListGroupActive({ status }: { status: boolean }) {
+export default function ListGroupActive() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [valChoose, setValChoose] = useState("");
   const [isData, setData] = useState<IDataGroup[]>([]);
-  const [selectId, setSelectId] = useState<string | null>(null);
-  const [active, setActive] = useState<boolean | null>(null);
+  const [selectId, setSelectId] = useState<string>("");
+  const [active, setActive] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams()
+  const status = searchParams.get('active')
+  
 
   const fetchData = async () => {
     try {
@@ -128,8 +132,7 @@ export default function ListGroupActive({ status }: { status: boolean }) {
           isActive={active}
           onUpdated={(val) => {
             if (val) {
-              toast.success("Sukses! data tersimpan");
-              // fetchData();
+              fetchData();
             }
             setOpenDrawer(false);
           }}
