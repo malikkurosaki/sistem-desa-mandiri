@@ -1,5 +1,5 @@
 import React from 'react';
-import NavbarCreateUsers from './ui/navbar_create_users';
+import NavbarCreateUsers from './navbar_create_users';
 
 export default function CreateUsers({ grup }: { grup: string }) {
   return (

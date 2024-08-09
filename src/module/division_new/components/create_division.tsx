@@ -22,9 +22,9 @@ import toast from "react-hot-toast";
 import { funGetUserByCookies } from "@/module/auth";
 import CreateAdminDivision from "./create_admin_division";
 import CreateUsers from "./create_users";
-import NavbarCreateUsers from "./ui/navbar_create_users";
-import NavbarAdminDivision from "./ui/navbar_admin_division";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
+import NavbarAdminDivision from "./navbar_admin_division";
+import NavbarCreateUsers from "./navbar_create_users";
 
 export default function CreateDivision() {
     const router = useRouter();
@@ -87,6 +87,8 @@ export default function CreateDivision() {
     useShallowEffect(() => {
         loadData();
     }, []);
+
+    
 
     if (isChooseAdmin) return <NavbarAdminDivision data={body} onSuccess={(val) => {
         if (val) {
@@ -204,7 +206,6 @@ export default function CreateDivision() {
                             fullWidth
                             onClick={() => {
                                 onSubmit()
-                                // router.push("/division/create?page=pilih-admin")
                             }}
                         >
                             Simpan

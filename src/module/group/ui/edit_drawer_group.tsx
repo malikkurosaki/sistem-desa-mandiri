@@ -28,7 +28,6 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
   async function getOneGroup() {
     try {
       const res = await funGetGroupById(id);
-      console.log("amalia", res)
       if (res.success) {
         setName(res.data.name);
       } else {
