@@ -5,7 +5,7 @@ import React from 'react';
 import { HiMagnifyingGlass, HiMiniUser } from 'react-icons/hi2';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import TabListMember from './ui/tab_list_member';
+import TabListMember from './tab_list_member';
 
 export default function ListMember() {
    const iconStyle = { width: rem(20), height: rem(20) };

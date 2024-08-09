@@ -1,6 +1,6 @@
 import { Box } from "@mantine/core";
-import NavbarListMember from "../component/ui/navbar_list_member";
-import ListMember from "../component/list_member";
+import NavbarListMember from "./navbar_list_member";
+import ListMember from "./list_member";
 
 export default function ViewListMember() {
    return (
