@@ -1,16 +1,13 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { Box, Button, Group, Stack, Text, Textarea, TextInput } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { Box, Button, Stack, Textarea, TextInput } from "@mantine/core";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiOutlineChevronRight } from "react-icons/hi2";
-import { IoIosArrowForward } from "react-icons/io";
 
-export default function CreateAnnouncement() {
+export default function EditAnnouncement() {
    const [isOpen, setOpen] = useState(false)
-   const router = useRouter()
 
    function onTrue(val: boolean) {
       if (val) {
@@ -18,14 +15,18 @@ export default function CreateAnnouncement() {
       }
       setOpen(false)
    }
-
    return (
-      <Box>
+      <>
+         <LayoutNavbarNew back="" title="Edit Pengumuman" menu={<></>} />
          <Stack
-            p={20}
+            align="center"
+            justify="center"
+            gap="xs"
+            pt={30}
+            px={20}
          >
             <TextInput
-               size="md" type="text" radius={10} placeholder="Judul Pengumuman" withAsterisk label="Judul" w={"100%"}
+               size="md" type="text" radius={30} placeholder="Judul Pengumuman" withAsterisk label="Judul" w={"100%"}
                styles={{
                   input: {
                      color: WARNA.biruTua,
@@ -36,7 +37,7 @@ export default function CreateAnnouncement() {
             />
             <Textarea
                size="md"
-               radius={10}
+               radius={20}
                w={"100%"}
                label="Pengumuman"
                withAsterisk
@@ -49,20 +50,10 @@ export default function CreateAnnouncement() {
                   },
                }}
             />
-            <Box pt={10}>
-               <Group justify="space-between" style={{
-                  border: `1px solid ${WARNA.biruTua}`,
-                  padding: 10,
-                  borderRadius: 10
-               }}
-                  onClick={() => router.push("/announcement/create-user")}
-               >
-                  <Text size="sm">
-                     Tambah Anggota
-                  </Text>
-                  <IoIosArrowForward />
-               </Group>
-            </Box>
+
+            <Button rightSection={<HiOutlineChevronRight size={14} />} variant="default" fullWidth radius={30} size="md" mt={10}>
+               Pilih Anggota
+            </Button>
          </Stack>
          <Box mt={30} mx={20}>
             <Button
@@ -77,9 +68,8 @@ export default function CreateAnnouncement() {
             </Button>
          </Box>
          <LayoutModal opened={isOpen} onClose={() => setOpen(false)}
-            description="Apakah Anda yakin ingin menambahkan data?"
+            description="Apakah Anda yakin ingin mengubah data?"
             onYes={(val) => { onTrue(val) }} />
-      </Box>
-
+      </>
    )
 }

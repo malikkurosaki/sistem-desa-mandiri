@@ -6,9 +6,11 @@ import { useShallowEffect } from "@mantine/hooks"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { FaPencil, FaToggleOff } from "react-icons/fa6"
+import { funEditPosition, funEditStatusPosition, funGetOnePosition } from "../lib/api_position"
+import { IDataPosition } from "../lib/type_position"
 
 export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
-   onUpdated: (val: boolean) => void, id: string | null, isActive: boolean | null;
+   onUpdated: (val: boolean) => void, id: string, isActive: boolean;
 }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const [isModal, setModal] = useState(false)
@@ -17,7 +19,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
       name: "",
       idGroup: ""
    })
-   const [listGroup, setListGorup] = useState<IDataGroup[]>([])
+   const [listGroup, setListGorup] = useState<IDataPosition[]>([])
 
    function onCLose() {
       onUpdated(true)
@@ -40,41 +42,38 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
    async function getOneData() {
       try {
-         const res = await fetch(`${API_ADDRESS.apiGetOnePosition}&positionId=${id}`)
-         const data = await res.json()
-         setData(data)
+         const res = await funGetOnePosition(id)
+         if (res.success) {
+            setData(res.data)
+         } else {
+            toast.error(res.message)
+         }
       } catch (error) {
          console.error(error)
+         toast.error("Gagal mendapatkan jabatan, coba lagi nanti");
       }
    }
 
 
    async function onSubmit() {
       try {
-         const res = await fetch(API_ADDRESS.apiUpdatePosition, {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-               id: data.id,
-               name: data.name,
-               idGroup: data.idGroup,
-            }),
+         const res = await funEditPosition(id, {
+            name: data.name,
+            idGroup: data.idGroup
          })
 
-         const respon = await res.json()
-
-         if (res.status == 200) {
-            toast.success(respon.message)
+         if (res.success) {
+            toast.success(res.message);
+            onUpdated(true);
+            onCLose();
          } else {
-            toast.error(respon.message)
+            onUpdated(false);
+            toast.error(res.message)
          }
 
-         onUpdated(true)
-         onCLose();
       } catch (error) {
          toast.error('Error');
+         toast.error("Edit jabatan gagal, coba lagi nanti");
       }
    }
 
@@ -86,28 +85,20 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    async function nonActive(val: boolean) {
       try {
          if (val) {
-            const res = await fetch(API_ADDRESS.apiDeletePosition, {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify({
-                  id,
-                  isActive,
-               }),
-            });
-
-            if (res.status == 200) {
+            const res = await funEditStatusPosition(id, { isActive: isActive })
+            if (res.success) {
+               toast.success(res.message);
                onUpdated(true);
             } else {
                onUpdated(false);
+               toast.error(res.message)
             }
          }
          setModal(false);
       } catch (error) {
          console.log(error);
          setModal(false);
-         toast.error("Terjadi kesalahan");
+         toast.error("Edit jabatan gagal, coba lagi nanti");
          onUpdated(false);
       }
    }

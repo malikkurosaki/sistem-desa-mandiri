@@ -5,37 +5,28 @@ import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { BsCardText } from "react-icons/bs";
 import { TfiAnnouncement } from "react-icons/tfi";
+import { IRootAllAnnouncement } from "../lib/type_announcement";
+import { funGetAnnouncementById } from "../lib/api_announcement";
+import toast from "react-hot-toast";
 
-export interface RootAll {
-   announcement: Announcement
-   allAnnouncementMember: AllAnnouncementMember[]
-}
 
-export interface Announcement {
-   id: string
-   title: string
-   desc: string
-}
-
-export interface AllAnnouncementMember {
-   idAnnouncement: string
-   idGroup: string
-   idDivision: string
-   group: string
-}
 
 
 export default function DetailAnnouncement({ id }: { id: string }) {
-   const [isData, setIsData] = useState<RootAll>()
+   const [isData, setIsData] = useState<IRootAllAnnouncement>()
 
    async function fetchOneAnnouncement() {
       try {
-         const res = await fetch(`${API_ADDRESS.apiGetOneAnnouncement}&announcementId=${id}`)
-         const data = await res.json()
-         setIsData(data)
+         const res = await funGetAnnouncementById(id)
+         if (res.success) {
+            setIsData(res)
+         } else {
+            toast.error(res.message)
+         }
+
       } catch (error) {
          console.error(error)
-         throw new Error("Error")
+        toast.error("Gagal mendapatkan announcement, coba lagi nanti")
       }
    }
 
