@@ -8,35 +8,31 @@ import toast from "react-hot-toast";
 import _ from "lodash";
 import { useShallowEffect } from "@mantine/hooks";
 import { useSearchParams } from "next/navigation";
+import { funGetAllPosition } from "../lib/api_position";
+import { IDataPosition } from "../lib/type_position";
 
-type dataPosition = {
-  name: string;
-  idGroup: string;
-  group: string;
-  id: string;
-  isActive: boolean
-};
 
-export default function ListPositionActive({ status }: { status: boolean }) {
+export default function ListPositionActive() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [isData, setData] = useState("");
-  const [isDataPosition, setDataPosition] = useState<dataPosition[]>([]);
+  const [isDataPosition, setDataPosition] = useState<IDataPosition[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectId, setSelectId] = useState<string | null>(null);
-  const [active, setActive] = useState<boolean | null>(null)
+  const [selectId, setSelectId] = useState<string>('');
+  const [active, setActive] = useState<boolean>(false)
   const [searchQuery, setSearchQuery] = useState('')
   const searchParams = useSearchParams()
   const group = searchParams.get('group')
+  const status = searchParams.get('active')
 
   async function getAllPosition() {
     try {
       setDataPosition([]);
       setLoading(true)
-      const res = await fetch(`${API_ADDRESS.apiGetAllPosition}&active=${status}&groupId=${group}&name=${searchQuery}`);
-      const data = await res.json();
-      setDataPosition(data);
+       const res = await funGetAllPosition('?active=' + status + '&group=' + group + '&search=' + searchQuery)
+      setDataPosition(res.data);
       setLoading(false);
     } catch (error) {
+      toast.error("Gagal mendapatkan position, coba lagi nanti");
       console.error(error);
     } finally {
       setLoading(false);

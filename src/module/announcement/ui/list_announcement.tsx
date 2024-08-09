@@ -6,32 +6,35 @@ import { TfiAnnouncement } from "react-icons/tfi";
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { useRouter } from 'next/navigation';
 import { useShallowEffect } from '@mantine/hooks';
+import { IListDataAnnouncement } from '../lib/type_announcement';
+import { funGetAllAnnouncement } from '../lib/api_announcement';
+import toast from 'react-hot-toast';
 
-type dataAnnouncement = {
-   id: string,
-   title: string,
-   desc: string,
-   createdAt: string
-}
 
 export default function ListAnnouncement() {
-   const [isData, setIsData] = useState<dataAnnouncement[]>([])
+   const [isData, setIsData] = useState<IListDataAnnouncement[]>([])
+   const [searchQuery, setSearchQuery] = useState('')
    const router = useRouter()
 
-   async function fetchGetAllAnnouncement() {
+   const fetchData = async () => {
       try {
-         const res = await fetch(`${API_ADDRESS.apiGetAllAnnouncement}`)
-         const data = await res.json()
-         setIsData(data)
+         const response = await funGetAllAnnouncement('?search=' + searchQuery)
+
+         if (response.success) {
+            setIsData(response?.data)
+         } else {
+            toast.error(response.message);
+         }
+
       } catch (error) {
-         console.error(error)
-         throw new Error("Error")
+         toast.error("Gagal mendapatkan announcement, coba lagi nanti");
+         console.error(error);
       }
    }
 
    useShallowEffect(() => {
-      fetchGetAllAnnouncement()
-   }, [])
+      fetchData()
+   }, [searchQuery])
 
    return (
       <Box p={20}>
@@ -47,7 +50,8 @@ export default function ListAnnouncement() {
             radius={30}
             leftSection={<HiMagnifyingGlass size={20} />}
             placeholder="Pencarian"
-         />
+            onChange={(e) => setSearchQuery(e.target.value)}
+            />
          {isData.map((v, i) => {
             return (
                <Box key={i} mt={15}>

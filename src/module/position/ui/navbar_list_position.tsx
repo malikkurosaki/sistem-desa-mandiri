@@ -20,7 +20,6 @@ export default function NavbarListPosition() {
          <LayoutDrawer opened={isOpen} title={'Menu'} onClose={() => setOpen(false)}>
             <DrawerListPosition onCreated={() => {
                setOpen(false)
-               // toast.success('Sukses! data tersimpan')
             }} />
          </LayoutDrawer>
       </>

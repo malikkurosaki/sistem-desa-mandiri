@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { IoAddCircle } from "react-icons/io5";
 import { RiFilter2Line } from "react-icons/ri";
+import { funCreatePosition } from "../lib/api_position";
 
 
 export default function DrawerListPosition({ onCreated }: { onCreated: (val: boolean) => void }) {
@@ -40,29 +41,42 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
 
    async function onSubmit() {
       try {
-         const res = await fetch(API_ADDRESS.apiCreatePosition, {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-               name: listData.name,
-               idGroup: listData.idGroup
-            })
+         // const res = await fetch(API_ADDRESS.apiCreatePosition, {
+         //    method: 'POST',
+         //    headers: {
+         //       'Content-Type': 'application/json'
+         //    },
+         //    body: JSON.stringify({
+         //       name: listData.name,
+         //       idGroup: listData.idGroup
+         //    })
+         // })
+
+         // if (!res.ok) {
+         //    const errorData = await res.json();
+         //    if (errorData.message === "Position sudah ada") {
+         //       toast.error('Gagal! Position sudah ada');
+         //    } else {
+         //       toast.error('Error');
+         //    }
+         // } else {
+         //    setOpenDrawerGroup(false)
+         //    toast.success('Sukses! data tersimpan')
+         // }
+         // onCreated(true)
+         const res = await funCreatePosition({
+            name: listData.name,
+            idGroup: listData.idGroup
          })
 
-         if (!res.ok) {
-            const errorData = await res.json();
-            if (errorData.message === "Position sudah ada") {
-               toast.error('Gagal! Position sudah ada');
-            } else {
-               toast.error('Error');
-            }
-         } else {
+         if (res.success) {
             setOpenDrawerGroup(false)
-            toast.success('Sukses! data tersimpan')
+            toast.success(res.message)
+            onCreated(true)
+         } else {
+            toast.error(res.message)
          }
-         onCreated(true)
+         
       } catch (error) {
          toast.error('Error')
       }
