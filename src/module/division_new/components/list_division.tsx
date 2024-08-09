@@ -8,37 +8,50 @@ import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiMiniUserGroup, HiOutli
 import { MdAccountCircle } from 'react-icons/md';
 import DrawerDivision from './drawer_division';
 import { useShallowEffect } from '@mantine/hooks';
+import { IDataDivison } from '../lib/type_division';
+import { funGetAllDivision } from '../lib/api_division';
+import toast from 'react-hot-toast';
 
-type TypeDivision = {
-  id: string
-  name: string
-  idGroup: string
-  idVillage: string
-  desc: string
-  isActive: boolean
-}[]
-
-export default function NavbarDivision() {
+export default function ListDivision() {
   const [isList, setIsList] = useState(false)
   const router = useRouter()
   const [openDrawer, setOpenDrawer] = useState(false)
-  const [data, setData] = useState<TypeDivision>()
+  const [data, setData] = useState<IDataDivison[]>([])
   const [jumlah, setJumlah] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const handleList = () => {
     setIsList(!isList)
   }
 
-  async function loadData() {
-    const response = await fetch(API_ADDRESS.apiGetAllDivision)
-    const data = await response.json()
-    setData(data)
-    setJumlah(data.length)
+  const fetchData = async (search: string) => {
+    try {
+      setData([]);
+      const response = await funGetAllDivision('?search=' + search)
+
+      if (response.success) {
+        setData(response.data)
+        setJumlah(response.data.length)
+      } else {
+        toast.error(response.message);
+      }
+
+    } catch (error) {
+      toast.error("Gagal mendapatkan divisi, coba lagi nanti");
+      console.error(error);
+    }
+  };
+
+  function searchDivision(search: string) {
+    setSearchQuery(search)
+    fetchData(search)
   }
 
   useShallowEffect(() => {
-    loadData()
-  }, [])
+    fetchData(searchQuery)
+  }, [searchQuery])
+
+
 
   return (
     <Box>
@@ -61,6 +74,8 @@ export default function NavbarDivision() {
               radius={30}
               leftSection={<HiMagnifyingGlass size={20} />}
               placeholder="Pencarian"
+              value={searchQuery}
+              onChange={(val) => { searchDivision(val.target.value) }}
             />
           </Grid.Col>
           <Grid.Col span={'auto'}>
@@ -131,7 +146,7 @@ export default function NavbarDivision() {
                           <Avatar>
                             <MdAccountCircle size={32} color={WARNA.biruTua} />
                           </Avatar>
-                          <Avatar>+5</Avatar>
+                          <Avatar>+{v.jumlah_member - 1}</Avatar>
                         </Avatar.Group>
                       </Group>
                     </Box>

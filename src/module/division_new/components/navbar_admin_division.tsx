@@ -5,12 +5,15 @@ import { Avatar, Box, Button, Checkbox, Divider, Flex, Group, Stack, Text, TextI
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { globalMemberDivision } from '../../lib/val_division';
 import toast from 'react-hot-toast';
+import { globalMemberDivision } from '../lib/val_division';
+import { funCreateDivision } from '../lib/api_division';
+import { IFormMemberDivision } from '../lib/type_division';
 
 export default function NavbarAdminDivision({ data, onSuccess }: { data: any, onSuccess: (val: any) => void }) {
   const router = useRouter()
   const member = useHookstate(globalMemberDivision)
+  const memberValue = member.get() as IFormMemberDivision[]
   const [value, setValue] = useState<string[]>([]);
 
   async function onSubmit() {
@@ -19,31 +22,50 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
     }
 
     try {
-      const res = await fetch(API_ADDRESS.apiCreateDivision, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          data: data,
-          member: member.get(),
-          admin: value
-        })
-      })
+      const response = await funCreateDivision({ data: data, member: memberValue, admin: value })
 
-      const errorData = await res.json();
-
-      if (res.status == 201) {
-        toast.success('Sukses! data tersimpan')
+      if (response.success) {
+        toast.success(response.message);
         onSuccess(true)
       } else {
-        toast.error(errorData.message);
+        toast.error(response.message)
         onSuccess(false)
       }
+
     } catch (error) {
-      toast.error('Error')
+      console.log(error);
       onSuccess(false)
+      toast.error("Gagal menambahkan grup, coba lagi nanti");
     }
+
+
+
+    // try {
+    //   const res = await fetch(API_ADDRESS.apiCreateDivision, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({
+    //       data: data,
+    //       member: member.get(),
+    //       admin: value
+    //     })
+    //   })
+
+    //   const errorData = await res.json();
+
+    //   if (res.status == 201) {
+    //     toast.success('Sukses! data tersimpan')
+    //     onSuccess(true)
+    //   } else {
+    //     toast.error(errorData.message);
+    //     onSuccess(false)
+    //   }
+    // } catch (error) {
+    //   toast.error('Error')
+    //   onSuccess(false)
+    // }
   }
 
   return (
@@ -83,7 +105,7 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
                           </Text>
                         </Box>
                       </Group>
-                      <Checkbox value={v.id} />
+                      <Checkbox value={v.idUser} />
                     </Flex>
                     <Divider my={20} />
                   </Box>

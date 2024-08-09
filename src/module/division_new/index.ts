@@ -1,3 +1,4 @@
+import { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison } from './lib/type_division';
 import CreateUserDivisionCalender from "./_division_fitur/calender/components/create_user_division_calender";
 import UlangiEvent from "./_division_fitur/calender/components/ulangi_event";
 import UpdateUlangiEvent from "./_division_fitur/calender/components/update_calander/update_ulangi_event";
@@ -21,20 +22,22 @@ import { apiDivision } from "./api/api_division";
 import CreateAdminDivision from "./components/create_admin_division";
 import CreateUsers from "./components/create_users";
 import ViewCreateAnggotaDivision from "./view/view_create_anggota_division";
-import ViewCreateDivision from "./view/view_create_division";
 import ViewCreateReport from "./view/view_create_report";
-import ViewDetailDivision from "./view/view_detail_division";
-import ViewDivision from "./view/view_division";
 import ViewEditDivision from "./view/view_edit_division";
 import ViewInformationDivision from "./view/view_Information_division";
 import ViewReportDivision from "./view/view_report_division";
+import ListDivision from './components/list_division';
+import CreateDivision from './components/create_division';
+import NavbarDetailDivision from './components/navbar_detail_division';
+import CarouselDivision from './components/carousel_division';
+import FeatureDetailDivision from './components/feature_detail_division';
+import ListTaskOnDetailDivision from './components/list_task';
+import ListDocumentOnDetailDivision from './components/list_document';
+import ListDiscussionOnDetailDivision from './components/list_discussion';
 
-export { ViewDivision };
-export { ViewCreateDivision };
 export { CreateUsers };
 export { CreateAdminDivision };
 export { ViewCreateReport };
-export { ViewDetailDivision };
 export { ViewDivisionTask };
 export { ViewDetailDivisionTask };
 export { ViewUpdateProgressDivisionTask };
@@ -59,3 +62,12 @@ export { ViewEditDivision };
 export { ViewCreateAnggotaDivision };
 export { apiDivision }
 export { apiDiscussion }
+export type { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison }
+export { ListDivision }
+export { CreateDivision }
+export { NavbarDetailDivision }
+export { CarouselDivision }
+export { FeatureDetailDivision }
+export { ListTaskOnDetailDivision }
+export { ListDocumentOnDetailDivision }
+export { ListDiscussionOnDetailDivision }

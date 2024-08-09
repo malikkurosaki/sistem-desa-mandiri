@@ -1,7 +1,7 @@
 "use client"
 import { WARNA } from '@/module/_global';
 import { ActionIcon, Box, Center, Grid, Group, SimpleGrid, Text } from '@mantine/core';
-import React from 'react';
+import React, { useState } from 'react';
 import { HiMiniUserGroup } from 'react-icons/hi2';
 import { IoIosArrowRoundForward } from 'react-icons/io';
 import { LuClipboardEdit } from "react-icons/lu";
@@ -9,10 +9,36 @@ import { GoCommentDiscussion } from "react-icons/go";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { IoCalendarOutline } from "react-icons/io5";
 import { LuFileSignature } from "react-icons/lu";
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { funGetDetailDivisionById } from '../lib/api_division';
+import toast from 'react-hot-toast';
+import { useShallowEffect } from '@mantine/hooks';
+import { IDataJumlahDetailDivision } from '../lib/type_division';
 
-export default function FeatureDetailDivision({ id }: { id: string }) {
+export default function FeatureDetailDivision() {
+  const param = useParams<{ id: string }>()
   const router = useRouter()
+  const [feature, setFeature] = useState<IDataJumlahDetailDivision>()
+
+  async function fetchData() {
+    try {
+      const res = await funGetDetailDivisionById(param.id, 'jumlah');
+      if (res.success) {
+        setFeature(res.data)
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan divisi, coba lagi nanti");
+    }
+  }
+
+  useShallowEffect(() => {
+    fetchData()
+  }, [param.id])
+
+
   return (
     <Box pt={10}>
       <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Features</Text>
@@ -27,7 +53,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push(id + '/task')}>
+        }} onClick={() => router.push(param.id + '/task')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"
@@ -42,7 +68,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
             <Grid.Col span={{ base: 7, md: 9 }}>
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Tugas</Text>
               <Group justify='space-between' align='center'>
-                <Text fz={10} c={"gray"}>23 Tugas</Text>
+                <Text fz={10} c={"gray"}>{feature?.tugas} Tugas</Text>
                 <IoIosArrowRoundForward size={20} color='gray' />
               </Group>
             </Grid.Col>
@@ -52,7 +78,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push(id + '/document')}>
+        }} onClick={() => router.push(param.id + '/document')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"
@@ -67,7 +93,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
             <Grid.Col span={{ base: 7, md: 9 }}>
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Dokumen</Text>
               <Group justify='space-between' align='center'>
-                <Text fz={10} c={"gray"}>23 Tugas</Text>
+                <Text fz={10} c={"gray"}>{feature?.dokumen} File</Text>
                 <IoIosArrowRoundForward size={20} color='gray' />
               </Group>
             </Grid.Col>
@@ -77,7 +103,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push(id + '/discussion')}>
+        }} onClick={() => router.push(param.id + '/discussion')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"
@@ -92,7 +118,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
             <Grid.Col span={{ base: 7, md: 9 }}>
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Diskusi</Text>
               <Group justify='space-between' align='center'>
-                <Text fz={10} c={"gray"}>23 Tugas</Text>
+                <Text fz={10} c={"gray"}>{feature?.diskusi} Diskusi</Text>
                 <IoIosArrowRoundForward size={20} color='gray' />
               </Group>
             </Grid.Col>
@@ -102,7 +128,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push(id + '/calender')}>
+        }} onClick={() => router.push(param.id + '/calender')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"
@@ -117,7 +143,7 @@ export default function FeatureDetailDivision({ id }: { id: string }) {
             <Grid.Col span={{ base: 7, md: 9 }}>
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Kalender</Text>
               <Group justify='space-between' align='center'>
-                <Text fz={10} c={"gray"}>23 Tugas</Text>
+                <Text fz={10} c={"gray"}>{feature?.kalender} Acara</Text>
                 <IoIosArrowRoundForward size={20} color='gray' />
               </Group>
             </Grid.Col>

@@ -6,43 +6,10 @@ import { useShallowEffect } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { globalMemberDivision } from '../../lib/val_division';
 import { TypeUser } from '@/module/user';
 import { funGetUserByCookies } from '@/module/auth';
 import toast from 'react-hot-toast';
-
-const dataUser = [
-  {
-    id: 1,
-    img: "https://i.pravatar.cc/1000?img=3",
-    name: "Doni Setiawan",
-  },
-  {
-    id: 2,
-    img: "https://i.pravatar.cc/1000?img=10",
-    name: "Ilham Udin",
-  },
-  {
-    id: 3,
-    img: "https://i.pravatar.cc/1000?img=11",
-    name: "Didin Anang",
-  },
-  {
-    id: 4,
-    img: "https://i.pravatar.cc/1000?img=21",
-    name: "Angga Saputra",
-  },
-  {
-    id: 5,
-    img: "https://i.pravatar.cc/1000?img=32",
-    name: "Marcel Widianto",
-  },
-  {
-    id: 6,
-    img: "https://i.pravatar.cc/1000?img=37",
-    name: "Bagas Nusantara",
-  },
-];
+import { globalMemberDivision } from '../lib/val_division';
 
 
 export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, onClose: (val: any) => void }) {
@@ -55,7 +22,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
     if (selectedFiles.some((i: any) => i.id == dataMember[index].id)) {
       setSelectedFiles(selectedFiles.filter((i: any) => i.id != dataMember[index].id))
     } else {
-      setSelectedFiles([...selectedFiles, dataMember[index]])
+      setSelectedFiles([...selectedFiles, {idUser: dataMember[index].id, name: dataMember[index].name}])
     }
   };
 
@@ -110,7 +77,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
               verticalSpacing={{ base: "md", sm: "xl" }}
             >
               {dataMember.map((v, index) => {
-                const isSelected = selectedFiles.some((i: any) => i.id == dataMember[index].id);
+                const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id);
                 return (
                   <Box key={index} mb={10}>
                     <Box
