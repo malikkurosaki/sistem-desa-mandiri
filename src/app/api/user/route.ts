@@ -54,8 +54,9 @@ export async function GET(request: Request) {
         });
 
         const allData = users.map((v: any) => ({
-            ..._.omit(v, ["Group"]),
-            group: v.Group.name
+            ..._.omit(v, ["Group", "Position" ]),
+          group: v.Group.name,
+          position: v.Position.name
         }))
 
         return NextResponse.json({ success: true, message: "Berhasil member", data: allData, }, { status: 200 });

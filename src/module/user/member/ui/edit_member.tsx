@@ -2,43 +2,24 @@
 import { API_ADDRESS, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
+import { funGetAllPosition } from "@/module/position/lib/api_position";
 import { Box, Button, Select, Stack, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiUser } from "react-icons/hi2";
-
-type dataMember = {
-   id: string;
-   nik: string;
-   name: string;
-   phone: string;
-   email: string;
-   gender: string;
-   idGroup: string;
-   idPosition: string;
-   idUserRole: string;
-}
+import { IDataPositionMember, IDataROleMember, IEditDataMember, IFormMember } from "../lib/type_member";
+import { funEditMember, funGetOneMember, funGetRoleUser } from "../lib/api_member";
 
 
-type dataPosition = {
-   id: string;
-   name: string;
-};
-
-type dataROleUser = {
-   id: string;
-   name: string;
-}
-
-export default function EditMember({ id }: { id: string | undefined }) {
+export default function EditMember({ id }: { id: string}) {
    const [isModal, setModal] = useState(false)
    const router = useRouter()
    const [listGroup, setListGorup] = useState<IDataGroup[]>([])
-   const [listPosition, setListPosition] = useState<dataPosition[]>([])
-   const [listUserRole, setListUserRole] = useState<dataROleUser[]>([])
-   const [data, setData] = useState<dataMember>({
+   const [listPosition, setListPosition] = useState<IDataPositionMember[]>([])
+   const [listUserRole, setListUserRole] = useState<IDataROleMember[]>([])
+   const [data, setData] = useState<IEditDataMember>({
       id: "",
       nik: "",
       name: "",
@@ -49,7 +30,6 @@ export default function EditMember({ id }: { id: string | undefined }) {
       idPosition: "",
       idUserRole: "",
    })
-   const [listData, setListData] = useState<dataMember>()
 
    async function getAllGroup() {
       try {
@@ -67,10 +47,9 @@ export default function EditMember({ id }: { id: string | undefined }) {
 
    async function getOneData() {
       try {
-         const res = await fetch(`${API_ADDRESS.apiGetOneUser}&userID=${id}`)
-         const data = await res.json()
-         setData(data)
-         getAllPosition(data?.idGroup)
+         const res =  await funGetOneMember(id)
+         setData(res.data)
+         getAllPosition(res.data?.idGroup)
       } catch (error) {
          console.error(error)
       }
@@ -78,9 +57,10 @@ export default function EditMember({ id }: { id: string | undefined }) {
 
    async function getAllPosition(val: any) {
       try {
-         const res = await fetch(`${API_ADDRESS.apiGetAllPosition}&groupId=${val}&active=true`)
-         const data = await res.json()
-         setListPosition(data)
+         const res = await funGetAllPosition(
+            "?active=true" + "&group=" + `${val}`
+          );
+          setListPosition(res.data);
 
       } catch (error) {
          console.error(error)
@@ -89,9 +69,8 @@ export default function EditMember({ id }: { id: string | undefined }) {
 
    async function getAllUserRole() {
       try {
-         const res = await fetch(`${API_ADDRESS.apiGetRoleUser}`)
-         const data = await res.json()
-         setListUserRole(data)
+         const res = await funGetRoleUser();
+         setListUserRole(res.data)
       } catch (error) {
          console.error(error)
       }
@@ -116,32 +95,22 @@ export default function EditMember({ id }: { id: string | undefined }) {
 
    async function onSubmit(val: boolean) {
       try {
-         const res = await fetch(API_ADDRESS.apiUpdateUser, {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-               id: data.id,
-               nik: data.nik,
-               name: data.name,
-               phone: data.phone,
-               email: data.email,
-               gender: data.gender,
-               idGroup: data.idGroup,
-               idPosition: data.idPosition,
-               idUserRole: data.idUserRole
-            }),
+
+         const res = await funEditMember(id,{
+            id: data.id,
+            nik: data.nik,
+            name: data.name,
+            phone: data.phone,
+            email: data.email,
+            gender: data.gender,
+            idGroup: data.idGroup,
+            idPosition: data.idPosition,
+            idUserRole: data.idUserRole
          })
 
-         const respon = await res.json()
+         toast.success(res.message)
+         router.push(`/member?active=true`)
 
-         if (res.status == 200) {
-            toast.success(respon.message)
-         } else {
-            toast.error(respon.message)
-         }
-         router.push('/member')
       } catch (error) {
          toast.error('Error');
       }
