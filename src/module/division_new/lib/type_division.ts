@@ -48,3 +48,11 @@ export interface IDataDiscussionOnDetailDivision {
    date: string,
    user: string
 }
+
+export interface IDataMemberDivision {
+   id: string,
+   idUser: string,
+   isAdmin: string,
+   isLeader: string,
+   name: string
+}

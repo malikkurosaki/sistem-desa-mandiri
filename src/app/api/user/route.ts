@@ -7,7 +7,6 @@ import { NextResponse } from "next/server";
 // GET ALL MEMBER / USER
 export async function GET(request: Request) {
     try {
-
         let fixGroup
         const { searchParams } = new URL(request.url);
         const name = searchParams.get('search')
@@ -22,6 +21,7 @@ export async function GET(request: Request) {
           } else {
             fixGroup = idGroup
           }
+
 
         const users = await prisma.user.findMany({
             where: {

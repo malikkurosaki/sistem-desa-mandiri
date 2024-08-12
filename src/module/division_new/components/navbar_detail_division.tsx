@@ -18,7 +18,7 @@ export default function NavbarDetailDivision() {
       try {
          const res = await funGetDivisionById(param.id);
          if (res.success) {
-            setName(res.data.name);
+            setName(res.data.division.name);
          } else {
             toast.error(res.message);
          }

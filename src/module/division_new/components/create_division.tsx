@@ -20,8 +20,6 @@ import { IoIosArrowDropright } from "react-icons/io";
 import { globalMemberDivision } from "../lib/val_division";
 import toast from "react-hot-toast";
 import { funGetUserByCookies } from "@/module/auth";
-import CreateAdminDivision from "./create_admin_division";
-import CreateUsers from "./create_users";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import NavbarAdminDivision from "./navbar_admin_division";
 import NavbarCreateUsers from "./navbar_create_users";
