@@ -1,4 +1,4 @@
-import { IFormFixDivision } from "./type_division";
+import { IFormFixDivision, IFormMemberDivision } from "./type_division";
 
 export const funGetAllDivision = async (path?: string) => {
    const response = await fetch(`/api/division${(path) ? path : ''}`, { next: { tags: ['division'] } });
@@ -25,3 +25,26 @@ export const funCreateDivision = async (data: IFormFixDivision) => {
    });
    return await response.json().catch(() => null);
 }
+
+export const funDeleteMemberDivision = async (path: string, data: { id: string }) => {
+   const response = await fetch(`/api/division/${path}/detail`, {
+      method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+}
+
+
+export const funEditStatusAdminDivision = async (path: string, data: { id: string, isAdmin: boolean }) => {
+   const response = await fetch(`/api/division/${path}/detail`, {
+      method: "PUT",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};

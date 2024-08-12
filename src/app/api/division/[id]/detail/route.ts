@@ -155,3 +155,104 @@ export async function GET(request: Request, context: { params: { id: string } })
       return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
+
+
+
+
+// MENGELUARKAN ANGGOTA DARI DIVISI
+export async function DELETE(request: Request, context: { params: { id: string } }) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const idDivision = context.params.id;
+      const { id } = (await request.json());
+
+      const data = await prisma.division.count({
+         where: {
+            id: idDivision,
+            isActive: true
+         },
+      });
+
+      if (data == 0) {
+         return NextResponse.json(
+            {
+               success: false,
+               message: "Hapus anggota divisi gagal, data tidak ditemukan",
+            },
+            { status: 404 }
+         );
+      }
+
+      const update = await prisma.divisionMember.delete({
+         where: {
+            id: id,
+         },
+      });
+
+      return NextResponse.json(
+         {
+            success: true,
+            message: "Anggota divisi berhasil dihapus",
+         },
+         { status: 200 }
+      );
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+   }
+}
+
+
+// MENGGANTIS STATUS ADMIN DIVISI
+export async function PUT(request: Request, context: { params: { id: string } }) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const idDivision = context.params.id;
+      const { id, isAdmin } = (await request.json());
+
+      const data = await prisma.division.count({
+         where: {
+            id: idDivision,
+            isActive: true
+         },
+      });
+
+      if (data == 0) {
+         return NextResponse.json(
+            {
+               success: false,
+               message: "Perubahan status admin gagal, data tidak ditemukan",
+            },
+            { status: 404 }
+         );
+      }
+
+      const update = await prisma.divisionMember.update({
+         where: {
+            id: id,
+         },
+         data: {
+            isAdmin: !isAdmin
+         }
+      });
+
+      return NextResponse.json(
+         {
+            success: true,
+            message: "Status admin berhasil diupdate",
+         },
+         { status: 200 }
+      );
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+   }
+}
