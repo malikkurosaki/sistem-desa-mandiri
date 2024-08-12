@@ -1,8 +1,11 @@
-import { ViewEditDivision } from "@/module/division_new"
+import { EditDivision } from "@/module/division_new"
+import { Box } from "@mantine/core"
 
-function Page() {
+function Page({ params }: { params: { id: string } }) {
    return (
-      <ViewEditDivision/>
+      <Box>
+         <EditDivision />
+      </Box>
    )
 }
 

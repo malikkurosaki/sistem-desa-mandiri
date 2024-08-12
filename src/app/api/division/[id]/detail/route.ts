@@ -207,7 +207,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
 }
 
 
-// MENGGANTIS STATUS ADMIN DIVISI
+// MENGGANTI STATUS ADMIN DIVISI
 export async function PUT(request: Request, context: { params: { id: string } }) {
    try {
       const user = await funGetUserByCookies()
@@ -256,3 +256,53 @@ export async function PUT(request: Request, context: { params: { id: string } })
       return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
+
+
+// TAMBAH ANGGOTA DIVISI
+export async function POST(request: Request, context: { params: { id: string } }) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const member = await request.json();
+      const idDivision = context.params.id;
+
+      console.log("amalia", member)
+
+
+      const data = await prisma.division.count({
+         where: {
+            id: idDivision,
+            isActive: true
+         },
+      });
+
+      if (data == 0) {
+         return NextResponse.json(
+            {
+               success: false,
+               message: "Tambah anggota divisi gagal, data tidak ditemukan",
+            },
+            { status: 404 }
+         );
+      }
+
+
+      const dataMember = member.map((v: any) => ({
+         ..._.omit(v, ["name"]),
+         idUser: v.idUser,
+         idDivision: idDivision,
+      }))
+
+      const insertMember = await prisma.divisionMember.createMany({
+         data: dataMember
+      })
+
+      return NextResponse.json({ success: true, message: "Berhasil menambahkan anggota divisi" }, { status: 200 });
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ success: false, message: "Gagal menambahkan anggota divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+   }
+};

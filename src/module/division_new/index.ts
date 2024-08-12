@@ -22,7 +22,6 @@ import { apiDivision } from "./api/api_division";
 import CreateAdminDivision from "./components/create_admin_division";
 import CreateUsers from "./components/create_users";
 import ViewCreateReport from "./view/view_create_report";
-import ViewEditDivision from "./view/view_edit_division";
 import ViewReportDivision from "./view/view_report_division";
 import ListDivision from './components/list_division';
 import CreateDivision from './components/create_division';
@@ -34,6 +33,7 @@ import ListDocumentOnDetailDivision from './components/list_document';
 import ListDiscussionOnDetailDivision from './components/list_discussion';
 import InformationDivision from './components/information_division';
 import CreateAnggotaDivision from './components/create_anggota_division';
+import EditDivision from './components/edit_division';
 
 export { CreateUsers };
 export { CreateAdminDivision };
@@ -57,7 +57,6 @@ export { ViewDetailDiscussion };
 export { ViewEditDiscussion };
 export { ViewDocumentDivision };
 export { ViewReportDivision };
-export { ViewEditDivision };
 export { apiDivision }
 export { apiDiscussion }
 export type { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison, IDataMemberDivision }
@@ -71,3 +70,4 @@ export { ListDocumentOnDetailDivision }
 export { ListDiscussionOnDetailDivision }
 export { InformationDivision }
 export { CreateAnggotaDivision }
+export { EditDivision }

@@ -13,6 +13,8 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { globalMemberDivision } from '../lib/val_division';
 import { useShallowEffect } from '@mantine/hooks';
 import { funGetAllmember } from '@/module/user/member/lib/api_member';
+import { IDataMemberDivision } from '../lib/type_division';
+import { funAddDivisionMember, funGetDivisionById } from '../lib/api_division';
 
 const dataUser = [
   {
@@ -51,46 +53,63 @@ export default function CreateAnggotaDivision() {
   const router = useRouter()
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
   const [dataMember, setDataMember] = useState<TypeUser>([])
+  const [memberDb, setMemberDb] = useState<IDataMemberDivision[]>([])
+  const [group, setGroup] = useState("")
   const [isOpen, setOpen] = useState(false)
   const param = useParams<{ id: string }>()
-  const member = useHookstate(globalMemberDivision)
 
   const handleFileClick = (index: number) => {
-    if (selectedFiles.some((i: any) => i.id == dataMember[index].id)) {
-      setSelectedFiles(selectedFiles.filter((i: any) => i.id != dataMember[index].id))
+    if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
+      setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != dataMember[index].id))
     } else {
       setSelectedFiles([...selectedFiles, { idUser: dataMember[index].id, name: dataMember[index].name }])
     }
   };
 
-  function onTrue(val: boolean) {
-    if (val) {
-      toast.success("Sukses! Data tersimpan");
-    }
-    setOpen(false)
-    router.push("/division/info/1")
-  }
 
-  async function loadData() {
-    console.log("masuk")
-    const res = await funGetAllmember('?active=true&group=group1');
+  async function loadMember(group: string, search: string) {
+    const res = await funGetAllmember('?active=true&group=' + group + '&search=' + search);
     const user = await funGetUserByCookies();
 
-    console.log(res)
-    // if(res.success){
-    //   setDataMember(res.data.filter((i: any) => i.id != user.id))
-    // }else{
-    //   toast.error(res.message)
-    // }
-    
-    // cek data member sebelumnya
-    if (member.length > 0) {
-      setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
+    if (res.success) {
+      setDataMember(res.data.filter((i: any) => i.id != user.id))
+    } else {
+      toast.error(res.message)
     }
   }
 
+  async function loadFirst() {
+    const respon = await funGetDivisionById(param.id);
+    if (respon.success) {
+      setMemberDb(respon.data.member)
+      setGroup(respon.data.division.idGroup)
+      loadMember(respon.data.division.idGroup, "")
+    } else {
+      toast.error(respon.message);
+    }
+  }
+
+  async function addMember() {
+    try {
+      const res = await funAddDivisionMember(param.id, selectedFiles)
+      if (res.success) {
+        toast.success(res.message)
+        router.push("/division/info/" + param.id)
+      } else {
+        toast.error(res.message)
+      }
+      setOpen(false)
+    } catch (error) {
+      setOpen(false)
+      console.log(error);
+      toast.error("Gagal menambahkan anggota divisi, coba lagi nanti");
+
+    }
+  }
+
+
   useShallowEffect(() => {
-    loadData()
+    loadFirst()
   }, []);
 
   return (
@@ -112,17 +131,22 @@ export default function CreateAnggotaDivision() {
             radius={30}
             leftSection={<HiMagnifyingGlass size={20} />}
             placeholder="Pencarian"
+            onChange={(e: any) => loadMember(group, e.target.value)}
           />
         </Stack>
         <Box mt={20}>
-          {dataUser.map((v, index) => {
-            const isSelected = selectedFiles[index];
+          {dataMember.map((v: any, index: any) => {
+            const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id)
+            const found = memberDb.some((i: any) => i.idUser == v.id)
             return (
-              <Box my={10} key={index} onClick={() => handleFileClick(index)}>
+              <Box my={10} key={index} onClick={() => (!found) ? handleFileClick(index) : null}>
                 <Group justify='space-between' align='center'>
                   <Group>
-                    <Avatar src={v.img} alt="it's me" size="lg" />
-                    <Text>{v.name}</Text>
+                    <Avatar src={"v.img"} alt="it's me" size="lg" />
+                    <Stack align="flex-start" justify="flex-start">
+                      <Text>{v.name}</Text>
+                      <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
+                    </Stack>
                   </Group>
                   {isSelected ? <FaCheck /> : null}
                 </Group>
@@ -147,8 +171,14 @@ export default function CreateAnggotaDivision() {
         </Box>
       </Box>
       <LayoutModal opened={isOpen} onClose={() => setOpen(false)}
-        description="Apakah Anda yakin ingin menambahkan data?"
-        onYes={(val) => { onTrue(val) }} />
+        description="Apakah Anda yakin ingin menambahkan anggota divisi?"
+        onYes={(val) => {
+          if (val) {
+            addMember()
+          } else {
+            setOpen(false)
+          }
+        }} />
     </Box>
   );
 }
