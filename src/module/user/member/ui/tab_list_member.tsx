@@ -5,35 +5,25 @@ import { useShallowEffect } from "@mantine/hooks"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { HiMagnifyingGlass, HiMiniUser } from "react-icons/hi2"
+import { IListMember } from "../lib/type_member"
+import { funGetAllmember } from "../lib/api_member"
 
-type dataMember = {
-   id: string,
-   isActive: boolean
-   nik: string,
-   name: string,
-   phone: string,
-   email: string,
-   gender: string,
-   group: string,
-   position: string,
-}
 
-export default function TabListMember({ status }: { status: boolean }) {
+export default function TabListMember() {
    const router = useRouter()
    const [loading, setLoading] = useState(true);
-   const [dataMember, setDataMember] = useState<dataMember[]>([])
+   const [dataMember, setDataMember] = useState<IListMember[]>([])
    const searchParams = useSearchParams()
    const [searchQuery, setSearchQuery] = useState('')
    const group = searchParams.get('group')
+   const status = searchParams.get('active')
 
 
    async function getAllUser() {
       try {
          setLoading(true)
-         const res = await fetch(`${API_ADDRESS.apiGetAllUser}&active=${status}&groupId=${group}&name=${searchQuery}`)
-         const data = await res.json()
-
-         setDataMember(data)
+         const res = await funGetAllmember('?active=' + status + '&group=' + group + '&search=' + searchQuery)
+         setDataMember(res.data)
       } catch (error) {
          console.error(error)
          throw new Error("Error")

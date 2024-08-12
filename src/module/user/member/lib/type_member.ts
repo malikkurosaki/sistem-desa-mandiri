@@ -1,13 +1,13 @@
 export interface IListMember {
     id: string,
-    isActive: boolean
-    nik: string,
     name: string,
-    phone: string,
+    nik: string,
     email: string,
+    phone: string,
     gender: string,
-    group: string,
     position: string,
+    group: string,
+    isActive: boolean
 }
 
 export interface IFormMember  {
@@ -46,4 +46,8 @@ export interface IEditDataMember  {
  export interface IDataROleMember  {
     id: string;
     name: string;
+ }
+
+export interface IMember{
+   id: string
  }

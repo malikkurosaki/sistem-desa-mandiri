@@ -11,26 +11,16 @@ import { MdEmail } from "react-icons/md";
 import { IoMaleFemale } from "react-icons/io5";
 import { useShallowEffect } from "@mantine/hooks";
 import Link from "next/link";
+import { funGetOneMember } from "../lib/api_member";
+import toast from "react-hot-toast";
+import { IListMember, IMember } from "../lib/type_member";
 
-interface IdMember {
-   id: string
-}
 
-interface DataMember {
-   id: string
-   name: string
-   nik: string
-   email: string
-   phone: string
-   gender: string
-   position: string
-   group: string
-   isActive: boolean | undefined
-}
-
-export default function NavbarDetailMember({ id }: IdMember) {
+export default function NavbarDetailMember({ id }: IMember) {
    const [isOpen, setOpen] = useState(false)
-   const [dataOne, setDataOne] = useState<DataMember>()
+   const [dataOne, setDataOne] = useState<IListMember>()
+   const [selectId, setSelectId] = useState<string>('');
+   const [active, setActive] = useState<boolean>(false)
 
    useShallowEffect(() => {
       featchGetOne()
@@ -39,11 +29,17 @@ export default function NavbarDetailMember({ id }: IdMember) {
 
    async function featchGetOne() {
       try {
-         const response = await fetch(API_ADDRESS.apiGetOneUser + `&userID=${id}`)
-         const data = await response.json()
-         setDataOne(data)
+         const respose = await funGetOneMember(id)
+         if (respose.success) {
+            setDataOne(respose.data)
+            setActive(respose.data?.isActive)
+            setSelectId(respose.data?.id)
+         } else {
+            toast.error(respose.message)
+         }
       } catch (error) {
          console.error(error)
+         toast.error("Gagal mendapatkan detail user, coba lagi nanti");
       }
    }
 
@@ -103,7 +99,7 @@ export default function NavbarDetailMember({ id }: IdMember) {
                </Group>
             </Box>
             <LayoutDrawer opened={isOpen} title={'Menu'} onClose={() => setOpen(false)}>
-               <DrawerDetailMember id={dataOne?.id} status={dataOne?.isActive} onDeleted={() => setOpen(false)} />
+               <DrawerDetailMember id={selectId} status={active} onDeleted={() => setOpen(false)} />
             </LayoutDrawer>
          </Box>
       </Box>

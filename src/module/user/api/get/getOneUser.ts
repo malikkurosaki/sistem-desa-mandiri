@@ -50,7 +50,6 @@ export async function getOneUser(req: NextRequest) {
     const result = { ...userData, group, position, idUserRole };
 
     const omitData = _.omit(result, ["Group", "Position", "UserRole"])
-    console.log(omitData)
     return Response.json(omitData);
   } catch (error) {
     console.error(error);

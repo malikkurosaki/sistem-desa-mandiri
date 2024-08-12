@@ -61,7 +61,7 @@ export async function GET(request: Request, context: { params: { id: string } })
             {
                 success: true,
                 message: "Berhasil mendapatkan anggota",
-                omitData,
+                data: omitData,
             },
             { status: 200 }
         );

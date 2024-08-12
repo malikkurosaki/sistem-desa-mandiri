@@ -1,9 +1,11 @@
-import ViewCreateMember from "./ui/view_create_member";
-import ViewDetailMember from "./ui/view_detail_member";
-import ViewEditMember from "./ui/view_edit_member";
-import ViewListMember from "./ui/view_list_member";
+import CreateMember from "./ui/create_member";
+import EditMember from "./ui/edit_member";
+import ListMember from "./ui/list_member";
+import NavbarDetailMember from "./ui/navbar_detail_member";
+import NavbarListMember from "./ui/navbar_list_member";
 
-export { ViewListMember }
-export { ViewCreateMember }
-export { ViewDetailMember }
-export { ViewEditMember }
+export { NavbarListMember }
+export { ListMember }
+export { CreateMember }
+export { NavbarDetailMember }
+export {EditMember}

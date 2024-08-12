@@ -29,7 +29,6 @@ export async function createAnnouncement(req: NextRequest) {
     const announcementMember = await prisma.announcementMember.createMany({
       data: dataMember,
     });
-    console.log(announcementMember)
 
     return Response.json({
       announcement: announcement,

@@ -37,7 +37,6 @@ export async function getOneAnnouncement(req: NextRequest) {
       group: v.Group.name,
     }))
 
-    console.log(allAnnouncementMember)
 
     return Response.json({ announcement, allAnnouncementMember });
   } catch (error) {
