@@ -15,7 +15,7 @@ interface CheckedState {
   [key: string]: string[];
 }
 
-export default function CreateUsersAnnouncement() {
+export default function CreateUsersAnnouncement({ onClose}: { onClose: (val: any) => void }) {
   const [checked, setChecked] = useState<CheckedState>({});
   const [selectAll, setSelectAll] = useState(false);
   const [isData, setIsData] = useState<GroupData[]>([])
@@ -69,11 +69,17 @@ export default function CreateUsersAnnouncement() {
   const handleSubmit = () => {
     const selectedGroups: GroupData[] = [];
     Object.keys(checked).forEach((groupId) => {
-      if (checked[groupId]) {
-        selectedGroups.push();
+      const group = isData.find((item) => item.id === groupId);
+      if (group) {
+        selectedGroups.push({
+          id: group.id,
+          name: group.name,
+          Division: group.Division.filter((division) => checked[groupId].includes(division.id)),
+        });
       }
     });
     memberGroup.set(selectedGroups);
+    onClose(true);
   };
 
   useShallowEffect(() => {
