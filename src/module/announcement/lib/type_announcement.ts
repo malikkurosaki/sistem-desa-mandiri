@@ -22,3 +22,12 @@ export interface IRootAllAnnouncement {
     idDivision: string
     group: string
  }
+
+ export interface GroupData {
+   id: string;
+   name: string;
+   Division: {
+     id: string;
+     name: string;
+   }[];
+ }

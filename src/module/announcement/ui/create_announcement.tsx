@@ -1,7 +1,10 @@
 'use client'
 import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { globalMemberDivision } from "@/module/division_new/lib/val_division";
+import { useHookstate } from "@hookstate/core";
 import { Box, Button, Group, Stack, Text, Textarea, TextInput } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -10,7 +13,9 @@ import { IoIosArrowForward } from "react-icons/io";
 
 export default function CreateAnnouncement() {
    const [isOpen, setOpen] = useState(false)
+   const member = useHookstate(globalMemberDivision)
    const router = useRouter()
+   const [selectedFiles, setSelectedFiles] = useState<any>([]);
 
    function onTrue(val: boolean) {
       if (val) {
@@ -19,8 +24,19 @@ export default function CreateAnnouncement() {
       setOpen(false)
    }
 
+   async function loadData() {
+      setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
+   }
+
+   useShallowEffect(() => {
+      loadData()
+   },[])
+
    return (
       <Box>
+         <pre>
+            {JSON.stringify(selectedFiles)}
+         </pre>
           <LayoutNavbarNew back="" title="Tambah Pengumuman" menu={<></>} />
          <Stack
             p={20}

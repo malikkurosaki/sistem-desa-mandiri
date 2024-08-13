@@ -49,3 +49,7 @@ export const funEditGroup = async (path: string, data: IFormGroup) => {
    return await response.json().catch(() => null);
 };
 
+export const funGetGroupDivision = async (path?: string) => {
+   const response = await fetch(`/api/group/get-division${(path) ? path : ''}`, { next: { tags: ['group'] } });
+   return await response.json().catch(() => null);
+}

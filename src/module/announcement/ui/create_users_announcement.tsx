@@ -1,24 +1,15 @@
-"use client"
+"use client";
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { funGetGroupDivision } from '@/module/group/lib/api_group';
 import { Box, Button, Divider, Flex, Group, Stack, Text } from '@mantine/core';
+import { useShallowEffect } from '@mantine/hooks';
 import React, { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
+import { GroupData } from '../lib/type_announcement';
+import { useHookstate } from '@hookstate/core';
+import { globalMemberAnnouncement } from '../lib/val_announcement';
 
-interface GroupData {
-  group: string;
-  divisions: string[];
-}
 
-const groupData: GroupData[] = [
-  {
-    group: "Group 1",
-    divisions: ["Division 1", "Division 2", "Division 3"]
-  },
-  {
-    group: "Group 2",
-    divisions: ["Division 4", "Division 5"]
-  }
-];
 
 interface CheckedState {
   [key: string]: string[];
@@ -27,28 +18,30 @@ interface CheckedState {
 export default function CreateUsersAnnouncement() {
   const [checked, setChecked] = useState<CheckedState>({});
   const [selectAll, setSelectAll] = useState(false);
+  const [isData, setIsData] = useState<GroupData[]>([])
+  const memberGroup = useHookstate(globalMemberAnnouncement)
 
-  const handleCheck = (group: string, division: string) => {
+  const handleCheck = (groupId: string, divisionId: string) => {
     const newChecked = { ...checked };
-    if (newChecked[group]) {
-      if (newChecked[group].includes(division)) {
-        newChecked[group] = newChecked[group].filter(item => item !== division);
+    if (newChecked[groupId]) {
+      if (newChecked[groupId].includes(divisionId)) {
+        newChecked[groupId] = newChecked[groupId].filter(item => item !== divisionId);
       } else {
-        newChecked[group].push(division);
+        newChecked[groupId].push(divisionId);
       }
     } else {
-      newChecked[group] = [division];
+      newChecked[groupId] = [divisionId];
     }
     setChecked(newChecked);
     console.log(newChecked)
   };
 
-  const handleGroupCheck = (group: string) => {
+  const handleGroupCheck = (groupId: string) => {
     const newChecked = { ...checked };
-    if (newChecked[group]) {
-      delete newChecked[group];
+    if (newChecked[groupId]) {
+      delete newChecked[groupId];
     } else {
-      newChecked[group] = groupData.find(item => item.group === group)?.divisions || [];
+      newChecked[groupId] = isData.find(item => item.id === groupId)?.Division.map(item => item.id) || [];
     }
     setChecked(newChecked);
     console.log(newChecked)
@@ -58,8 +51,8 @@ export default function CreateUsersAnnouncement() {
     setSelectAll(!selectAll);
     if (!selectAll) {
       const newChecked: CheckedState = {};
-      groupData.forEach(item => {
-        newChecked[item.group] = item.divisions;
+      isData.forEach(item => {
+        newChecked[item.id] = item.Division.map(division => division.id);
       });
       setChecked(newChecked);
       console.log(newChecked)
@@ -67,6 +60,25 @@ export default function CreateUsersAnnouncement() {
       setChecked({});
     }
   };
+
+  async function getData() {
+    const response = await funGetGroupDivision()
+    console.log(response)
+    setIsData(response.data)
+  }
+  const handleSubmit = () => {
+    const selectedGroups: GroupData[] = [];
+    Object.keys(checked).forEach((groupId) => {
+      if (checked[groupId]) {
+        selectedGroups.push();
+      }
+    });
+    memberGroup.set(selectedGroups);
+  };
+
+  useShallowEffect(() => {
+    getData()
+  }, [])
 
   return (
     <div>
@@ -85,42 +97,52 @@ export default function CreateUsersAnnouncement() {
             Pilih Semua
           </Text>
         </Group>
-        {groupData.map((item) => (
-          <Stack mb={30} key={item.group}>
-            <Group onClick={() => handleGroupCheck(item.group)} justify='space-between' align='center'>
+        {isData.map((item) => (
+          <Stack mb={30} key={item.id}>
+            <Group onClick={() => handleGroupCheck(item.id)} justify='space-between' align='center'>
               <Text
                 style={{
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                 }}
-                fw={checked[item.group] && checked[item.group].length === item.divisions.length ? 'bold' : 'normal'}
+                fw={checked[item.id] && checked[item.id].length === item.Division.length ? 'bold' : 'normal'}
               >
-                {item.group}
+                {item.name}
               </Text>
               <Text
               >
-                {checked[item.group] && checked[item.group].length === item.divisions.length ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+                {checked[item.id] && checked[item.id].length === item.Division.length ? <FaCheck style={{ marginRight: 10 }} /> : ""}
               </Text>
             </Group>
-            <Divider/>
-            {item.divisions.map((division) => (
-              <Box key={division}>
-                <Text
-                  onClick={() => handleCheck(item.group, division)}
-                  style={{
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    paddingLeft: 20,
-                  }}
-                >
-                  {checked[item.group] && checked[item.group].includes(division) ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-                  {division}
-                </Text>
+            <Divider />
+            {item.Division.map((division) => (
+              <Box key={division.id}>
+                <Group onClick={() => handleCheck(item.id, division.id)} justify='space-between' align='center'>
+                  <Text
+                    style={{
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      paddingLeft: 20,
+                    }}
+                  >
+                    {division.name}
+                  </Text>
+                  <Text
+                    style={{
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      paddingLeft: 20,
+                    }}
+                  >
+                    {checked[item.id] && checked[item.id].includes(division.id) ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+                  </Text>
+                </Group>
                 <Box pt={15}>
-                <Divider />
-                  </Box>
+                  <Divider />
+                </Box>
               </Box>
 
             ))}
@@ -131,11 +153,12 @@ export default function CreateUsersAnnouncement() {
           <Button
             color="white"
             bg={WARNA.biruTua}
+
             size="lg"
             radius={30}
             fullWidth
             onClick={() => {
-              ""
+              handleSubmit()
             }}
           >
             Simpan

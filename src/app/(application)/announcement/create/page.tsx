@@ -1,9 +1,9 @@
+import { CreateAnnouncement } from "@/module/announcement";
 
 
 function Page() {
    return (
-      ""
-      // <ViewCreateAnnouncement />
+      <CreateAnnouncement />
    )
 }
 
