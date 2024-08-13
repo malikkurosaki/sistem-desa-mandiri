@@ -225,3 +225,25 @@ Content-Type: application/json
 {
     "id": "clz6naf9s000ib3mlf5aujk92"
 }
+
+
+###
+POST http://localhost:3000/api/announcement HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "cobaannouncement1 dsdsd",
+    "desc": "coba announcement sdsdsd",
+    "groups": [
+        {
+        "id": "group1",
+        "name": "Dinas",
+            "Division": [
+                {
+                    "id": "1",
+                    "name": "sasasasa"
+                }
+            ]
+        }
+  ]
+}
