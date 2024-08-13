@@ -18,7 +18,6 @@ import ViewCreateTaskDivision from "./_division_fitur/task/view/view_create_divi
 import ViewDetailDivisionTask from "./_division_fitur/task/view/view_detail_division_task";
 import ViewDivisionTask from "./_division_fitur/task/view/view_division_task";
 import ViewUpdateProgressDivisionTask from "./_division_fitur/task/view/view_update_progress_division_task";
-import { apiDivision } from "./api/api_division";
 import CreateAdminDivision from "./ui/create_admin_division";
 import CreateUsers from "./ui/create_users";
 import ListDivision from './ui/list_division';
@@ -55,7 +54,6 @@ export { ViewCreateDiscussion };
 export { ViewDetailDiscussion };
 export { ViewEditDiscussion };
 export { ViewDocumentDivision };
-export { apiDivision }
 export { apiDiscussion }
 export type { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison, IDataMemberDivision }
 export { ListDivision }

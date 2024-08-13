@@ -35,37 +35,8 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
     } catch (error) {
       console.log(error);
       onSuccess(false)
-      toast.error("Gagal menambahkan grup, coba lagi nanti");
+      toast.error("Gagal menambahkan divisi, coba lagi nanti");
     }
-
-
-
-    // try {
-    //   const res = await fetch(API_ADDRESS.apiCreateDivision, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({
-    //       data: data,
-    //       member: member.get(),
-    //       admin: value
-    //     })
-    //   })
-
-    //   const errorData = await res.json();
-
-    //   if (res.status == 201) {
-    //     toast.success('Sukses! data tersimpan')
-    //     onSuccess(true)
-    //   } else {
-    //     toast.error(errorData.message);
-    //     onSuccess(false)
-    //   }
-    // } catch (error) {
-    //   toast.error('Error')
-    //   onSuccess(false)
-    // }
   }
 
   return (
