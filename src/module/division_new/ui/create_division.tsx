@@ -1,5 +1,5 @@
 "use client";
-import { API_ADDRESS, LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
 import {
     Avatar,

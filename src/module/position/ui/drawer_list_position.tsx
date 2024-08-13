@@ -1,4 +1,4 @@
-import { WARNA, LayoutDrawer, API_ADDRESS } from "@/module/_global";
+import { WARNA, LayoutDrawer } from "@/module/_global";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { Box, Stack, SimpleGrid, Flex, TextInput, Button, Text, Select } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -30,7 +30,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
          }
       } catch (error) {
          console.error(error)
-         toast.error("Gagal mendapatkan grup, coba lagi nanti");
+         toast.error("Gagal mendapatkan jabatan, coba lagi nanti");
       }
    }
 
@@ -41,29 +41,6 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
 
    async function onSubmit() {
       try {
-         // const res = await fetch(API_ADDRESS.apiCreatePosition, {
-         //    method: 'POST',
-         //    headers: {
-         //       'Content-Type': 'application/json'
-         //    },
-         //    body: JSON.stringify({
-         //       name: listData.name,
-         //       idGroup: listData.idGroup
-         //    })
-         // })
-
-         // if (!res.ok) {
-         //    const errorData = await res.json();
-         //    if (errorData.message === "Position sudah ada") {
-         //       toast.error('Gagal! Position sudah ada');
-         //    } else {
-         //       toast.error('Error');
-         //    }
-         // } else {
-         //    setOpenDrawerGroup(false)
-         //    toast.success('Sukses! data tersimpan')
-         // }
-         // onCreated(true)
          const res = await funCreatePosition({
             name: listData.name,
             idGroup: listData.idGroup
@@ -76,7 +53,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
          } else {
             toast.error(res.message)
          }
-         
+
       } catch (error) {
          toast.error('Error')
       }

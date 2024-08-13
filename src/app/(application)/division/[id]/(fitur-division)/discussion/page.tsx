@@ -1,9 +1,12 @@
-import { ViewListDiscussion } from '@/module/division_new';
+import { ListDiscussion, NavbarListDiscussion } from '@/module/discussion';
 import React from 'react';
 
 function Page() {
   return (
-    <ViewListDiscussion />
+    <div>
+      <NavbarListDiscussion />
+      <ListDiscussion />
+    </div>
   );
 }
 

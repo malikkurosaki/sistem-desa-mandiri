@@ -1,8 +1,12 @@
-import { ViewCreateDiscussion } from "@/module/division_new";
+import { LayoutNavbarNew } from "@/module/_global";
+import { FormCreateDiscussion } from "@/module/discussion";
 
 function Page() {
    return (
-      <ViewCreateDiscussion />
+      <>
+         <LayoutNavbarNew back="" title="Tambah Diskusi" menu={<></>} />
+         <FormCreateDiscussion />
+      </>
    )
 }
 

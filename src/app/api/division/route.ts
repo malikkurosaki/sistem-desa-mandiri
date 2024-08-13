@@ -19,7 +19,7 @@ export async function GET(request: Request) {
       const idGroup = searchParams.get("group");
       const name = searchParams.get('search');
 
-      if (idGroup == null || idGroup == undefined) {
+      if (idGroup == "null" || idGroup == undefined) {
          grup = user.idGroup
       } else {
          grup = idGroup
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
             idVillage: String(villaId),
             idGroup: grup,
             name: {
-               contains: (name == undefined || name == null) ? "" : name,
+               contains: (name == undefined || name == "null") ? "" : name,
                mode: "insensitive"
             }
          },

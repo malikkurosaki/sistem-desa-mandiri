@@ -1,5 +1,4 @@
 "use client"
-import { API_ADDRESS } from "@/module/_global";
 import { Box, Flex, Grid, Group, Spoiler, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
