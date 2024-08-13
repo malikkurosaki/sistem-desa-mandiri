@@ -49,14 +49,14 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     try {
-        // const user = await funGetUserByCookies();
-        // if (user.id == undefined) {
-        //     return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
-        // }
+        const user = await funGetUserByCookies();
+        if (user.id == undefined) {
+            return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+        }
 
         const { title, desc, createBy, groups } = (await request.json());
-        const villaId = "desa1"
-        const roleId = "superAdminLukman"
+        const villaId = user.idVillage
+        const roleId = user.idUserRole
 
         const data = await prisma.announcement.create({
             data: {
@@ -74,21 +74,17 @@ export async function POST(request: Request) {
         });
 
         const dataMember = groups.map((group: any) => ({
-            idAnnoucement: data.id,
-            idGroup: group.id,
-            idDivision: group.Division.map((division: any) => ({
-                id: division.id,
-                name: division.name,
-            })),
+            idAnnouncement: data.id,
+            idGroup: group.idGroup,
+            idDivision: group.idDivision,
             isActive: true,
         }));
-        
-        console.log("test data", dataMember)
-        // await prisma.announcementMember.createMany({
-        //     data: dataMember
-        // })
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan pengumuman"}, { status: 200 });
+        const announcementMember = await prisma.announcementMember.createMany({
+            data: dataMember,
+        });
+
+        return NextResponse.json({data, groups: announcementMember, success: true, message: "Berhasil mendapatkan pengumuman"}, { status: 200 });
 
     } catch (error) {
         console.error(error);

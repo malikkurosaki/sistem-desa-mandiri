@@ -232,18 +232,21 @@ POST http://localhost:3000/api/announcement HTTP/1.1
 Content-Type: application/json
 
 {
-    "title": "cobaannouncement1 dsdsd",
-    "desc": "coba announcement sdsdsd",
-    "groups": [
-        {
-        "id": "group1",
-        "name": "Dinas",
-            "Division": [
-                {
-                    "id": "1",
-                    "name": "sasasasa"
-                }
-            ]
-        }
-  ]
+    "title": "test",
+    "desc": "test",
+    "groups": 
+   [
+      {
+        "idAnnouncement": "1",
+        "idGroup": "group1",
+        "idDivision": "1",
+        "isActive": true
+      },
+      {
+         "idAnnouncement": "1",
+         "idGroup": "group1",
+         "idDivision": "clzknx2xy0001bt0wygcwjfph",
+         "isActive": true
+      }
+    ]
 }
