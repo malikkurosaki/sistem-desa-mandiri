@@ -1,7 +1,7 @@
 'use client'
 import { API_ADDRESS, LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Text, TextInput, Title } from '@mantine/core';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiMiniUserGroup, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
@@ -19,6 +19,8 @@ export default function ListDivision() {
   const [data, setData] = useState<IDataDivison[]>([])
   const [jumlah, setJumlah] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
+  const searchParams = useSearchParams()
+  const group = searchParams.get('group')
 
   const handleList = () => {
     setIsList(!isList)
@@ -27,7 +29,7 @@ export default function ListDivision() {
   const fetchData = async (search: string) => {
     try {
       setData([]);
-      const response = await funGetAllDivision('?search=' + search)
+      const response = await funGetAllDivision('?search=' + search + '&group=' + group)
 
       if (response.success) {
         setData(response.data)
