@@ -1,6 +1,5 @@
 "use client"
 import { Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Text, TextInput } from "@mantine/core";
-import NavbarDetailDiscussion from "../component/navbar_detail_discussion";
 import { WARNA } from "@/module/_global";
 import { GrChatOption } from "react-icons/gr";
 import { LuSendHorizonal } from "react-icons/lu";
@@ -52,7 +51,7 @@ export default function ViewDetailDiscussion() {
 
    return (
       <>
-         <NavbarDetailDiscussion />
+         {/* <NavbarDetailDiscussion /> */}
          <Box p={20}>
             <Flex
                justify={"space-between"}

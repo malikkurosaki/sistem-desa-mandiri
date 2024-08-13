@@ -8,11 +8,8 @@ import ViewDetailEventDivision from "./_division_fitur/calender/view/view_detail
 import ViewDivisionCalender from "./_division_fitur/calender/view/view_division_calender";
 import ViewHistoryDivisionCalender from "./_division_fitur/calender/view/view_history_division_calender";
 import ViewUpdateDivisionCalender from "./_division_fitur/calender/view/view_update_division_calender";
-import { apiDiscussion } from "./_division_fitur/discussion/api/api_discussion";
-import ViewCreateDiscussion from "./_division_fitur/discussion/view/view_create_discussion";
 import ViewDetailDiscussion from "./_division_fitur/discussion/view/view_detail_discussion";
 import ViewEditDiscussion from "./_division_fitur/discussion/view/view_edit_discussion";
-import ViewListDiscussion from "./_division_fitur/discussion/view/view_list_discussion";
 import ViewDocumentDivision from "./_division_fitur/document/view/view_document_division";
 import ViewCreateTaskDivision from "./_division_fitur/task/view/view_create_division_task";
 import ViewDetailDivisionTask from "./_division_fitur/task/view/view_detail_division_task";
@@ -49,12 +46,9 @@ export { ViewDetailEventDivision };
 export { ViewUpdateDivisionCalender };
 export { UpdateUserDivisionCalender };
 export { UpdateUlangiEvent };
-export { ViewListDiscussion };
-export { ViewCreateDiscussion };
 export { ViewDetailDiscussion };
 export { ViewEditDiscussion };
 export { ViewDocumentDivision };
-export { apiDiscussion }
 export type { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison, IDataMemberDivision }
 export { ListDivision }
 export { CreateDivision }
