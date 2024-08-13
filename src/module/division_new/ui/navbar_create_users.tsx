@@ -19,8 +19,8 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
   const [dataMember, setDataMember] = useState<TypeUser>([])
 
   const handleFileClick = (index: number) => {
-    if (selectedFiles.some((i: any) => i.id == dataMember[index].id)) {
-      setSelectedFiles(selectedFiles.filter((i: any) => i.id != dataMember[index].id))
+    if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
+      setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != dataMember[index].id))
     } else {
       setSelectedFiles([...selectedFiles, { idUser: dataMember[index].id, name: dataMember[index].name }])
     }

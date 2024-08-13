@@ -35,7 +35,7 @@ export default function NavbarDetailDivision() {
 
    return (
       <>
-         <LayoutNavbarNew back="" title={name} menu={
+         <LayoutNavbarNew back="/division" title={name} menu={
             <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
                <HiMenu size={20} color='white' />
             </ActionIcon>

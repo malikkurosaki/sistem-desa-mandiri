@@ -97,7 +97,7 @@ export default function InformationDivision() {
 
   return (
     <Box>
-      <LayoutNavbarNew back={""} title={name}
+      <LayoutNavbarNew back={"/division/" + param.id} title={name}
         menu={
           <ActionIcon variant="light" onClick={() => {
             router.push('/division/edit/' + param.id)
