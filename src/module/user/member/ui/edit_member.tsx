@@ -1,5 +1,5 @@
 'use client'
-import { API_ADDRESS, WARNA } from "@/module/_global";
+import { WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { funGetAllPosition } from "@/module/position/lib/api_position";
@@ -13,7 +13,7 @@ import { IDataPositionMember, IDataROleMember, IEditDataMember, IFormMember } fr
 import { funEditMember, funGetOneMember, funGetRoleUser } from "../lib/api_member";
 
 
-export default function EditMember({ id }: { id: string}) {
+export default function EditMember({ id }: { id: string }) {
    const [isModal, setModal] = useState(false)
    const router = useRouter()
    const [listGroup, setListGorup] = useState<IDataGroup[]>([])
@@ -47,7 +47,7 @@ export default function EditMember({ id }: { id: string}) {
 
    async function getOneData() {
       try {
-         const res =  await funGetOneMember(id)
+         const res = await funGetOneMember(id)
          setData(res.data)
          getAllPosition(res.data?.idGroup)
       } catch (error) {
@@ -59,8 +59,8 @@ export default function EditMember({ id }: { id: string}) {
       try {
          const res = await funGetAllPosition(
             "?active=true" + "&group=" + `${val}`
-          );
-          setListPosition(res.data);
+         );
+         setListPosition(res.data);
 
       } catch (error) {
          console.error(error)
@@ -96,7 +96,7 @@ export default function EditMember({ id }: { id: string}) {
    async function onSubmit(val: boolean) {
       try {
 
-         const res = await funEditMember(id,{
+         const res = await funEditMember(id, {
             id: data.id,
             nik: data.nik,
             name: data.name,

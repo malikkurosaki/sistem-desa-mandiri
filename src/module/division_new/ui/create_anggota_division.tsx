@@ -1,53 +1,18 @@
 "use client"
-import { API_ADDRESS, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { funGetUserByCookies } from '@/module/auth';
-import { TypeUser } from '@/module/user';
-import { useHookstate } from '@hookstate/core';
+import { funGetAllmember, TypeUser } from '@/module/user';
 import { Avatar, Box, Button, Divider, Group, Stack, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaCheck } from 'react-icons/fa6';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { globalMemberDivision } from '../lib/val_division';
 import { useShallowEffect } from '@mantine/hooks';
-import { funGetAllmember } from '@/module/user/member/lib/api_member';
 import { IDataMemberDivision } from '../lib/type_division';
 import { funAddDivisionMember, funGetDivisionById } from '../lib/api_division';
 
-const dataUser = [
-  {
-    id: 1,
-    img: "https://i.pravatar.cc/1000?img=3",
-    name: "Doni Setiawan",
-  },
-  {
-    id: 2,
-    img: "https://i.pravatar.cc/1000?img=10",
-    name: "Ilham Udin",
-  },
-  {
-    id: 3,
-    img: "https://i.pravatar.cc/1000?img=11",
-    name: "Didin Anang",
-  },
-  {
-    id: 4,
-    img: "https://i.pravatar.cc/1000?img=21",
-    name: "Angga Saputra",
-  },
-  {
-    id: 5,
-    img: "https://i.pravatar.cc/1000?img=32",
-    name: "Marcel Widianto",
-  },
-  {
-    id: 6,
-    img: "https://i.pravatar.cc/1000?img=37",
-    name: "Bagas Nusantara",
-  },
-];
 
 export default function CreateAnggotaDivision() {
   const router = useRouter()

@@ -1,4 +1,3 @@
-import { API_ADDRESS } from "./bin/api_address";
 import prisma from "./bin/prisma";
 import { pwd_key_config } from "./bin/val_global";
 import SkeletonSingle from "./components/skeleton_single";
@@ -21,5 +20,4 @@ export { LayoutNavbarNew };
 export { ViewFilter };
 export { prisma };
 export { pwd_key_config };
-export { API_ADDRESS };
 export {SkeletonSingle}

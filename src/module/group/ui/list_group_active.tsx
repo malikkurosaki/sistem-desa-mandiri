@@ -1,4 +1,4 @@
-import { API_ADDRESS, LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
+import { LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
 import {
   ActionIcon,
   Box,

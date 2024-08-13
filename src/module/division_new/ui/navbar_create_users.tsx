@@ -1,12 +1,12 @@
 "use client"
-import { API_ADDRESS, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { Avatar, Box, Button, Center, Input, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { TypeUser } from '@/module/user';
+import { funGetAllmember, TypeUser } from '@/module/user';
 import { funGetUserByCookies } from '@/module/auth';
 import toast from 'react-hot-toast';
 import { globalMemberDivision } from '../lib/val_division';
@@ -22,21 +22,26 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
     if (selectedFiles.some((i: any) => i.id == dataMember[index].id)) {
       setSelectedFiles(selectedFiles.filter((i: any) => i.id != dataMember[index].id))
     } else {
-      setSelectedFiles([...selectedFiles, {idUser: dataMember[index].id, name: dataMember[index].name}])
+      setSelectedFiles([...selectedFiles, { idUser: dataMember[index].id, name: dataMember[index].name }])
     }
   };
 
 
-  async function loadData() {
-    const loadMember = await fetch(API_ADDRESS.apiGetAllUser + '&active=true&groupID=' + grup);
+  async function loadData(search: string) {
+    const res = await funGetAllmember('?active=true&group=' + grup + '&search=' + search);
     const user = await funGetUserByCookies();
-    const hasil = await loadMember.json()
-    setDataMember(hasil.filter((i: any) => i.id != user.id))
 
-    // cek data member sebelumnya
-    if (member.length > 0) {
-      setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
+    if (res.success) {
+      setDataMember(res.data.filter((i: any) => i.id != user.id))
+
+      // cek data member sebelumnya
+      if (member.length > 0) {
+        setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
+      }
+    } else {
+      toast.error(res.message)
     }
+
   }
 
 
@@ -49,7 +54,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
   }
 
   useShallowEffect(() => {
-    loadData()
+    loadData("")
   }, []);
 
   return (
@@ -69,6 +74,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
             radius={30}
             leftSection={<HiMagnifyingGlass size={20} />}
             placeholder="Pencarian"
+            onChange={(e) => loadData(e.target.value)}
           />
           <Box pt={10}>
             <SimpleGrid

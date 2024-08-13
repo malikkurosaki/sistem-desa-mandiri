@@ -1,5 +1,5 @@
 "use client";
-import { API_ADDRESS, WARNA } from "@/module/_global";
+import { WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -28,7 +28,7 @@ export default function DrawerDetailMember({
         isActive: status,
       });
 
-       if (res.success) {
+      if (res.success) {
         toast.success(res.message);
         onDeleted(true);
       } else {
