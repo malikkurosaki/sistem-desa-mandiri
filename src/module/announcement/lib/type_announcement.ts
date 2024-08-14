@@ -6,8 +6,8 @@ export interface IListDataAnnouncement {
 }
 
 export interface IRootAllAnnouncement {
-   announcement: IAnnouncement
-   allAnnouncementMember: IAllAnnouncementMember[]
+   data: IAnnouncement
+   member: IAllAnnouncementMember
 }
 
 export interface IAnnouncement {
@@ -17,10 +17,12 @@ export interface IAnnouncement {
 }
 
 export interface IAllAnnouncementMember {
-   idAnnouncement: string
-   idGroup: string
-   idDivision: string
-   group: string
+   group: {
+      idGroup: string
+      idDivision: string
+      group: string
+      division: string
+   }[]
 }
 
 export interface GroupData {
@@ -32,10 +34,26 @@ export interface GroupData {
    }[];
 }
 
+export interface GroupDataEditAnnouncement {
+   id: string;
+   name: string;
+   Division: {
+      idGroup: string;
+      idDivision: string;
+      group: string;
+      division: string;
+   }[];
+}
+
 export interface ICreateData {
    title: string
    desc: string
+}
 
+export interface IFormCreateAnnouncement {
+   title: string
+   desc: string
+   groups: GroupData[]
 }
 
 export interface IGroupData {
