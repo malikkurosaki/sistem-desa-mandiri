@@ -15,6 +15,22 @@ export async function GET(request: Request, context: { params: { id: string } })
         }
         const { id } = context.params
 
+        const cek = await prisma.divisionDisscussion.count({
+            where: {
+                id: id
+            }
+        })
+
+        if (cek == 0) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Gagal mendapatkan diskusi, data tidak ditemukan",
+                },
+                { status: 404 }
+            );
+        }
+
         const data = await prisma.divisionDisscussion.findUnique({
             where: {
                 id: id
@@ -66,11 +82,11 @@ export async function GET(request: Request, context: { params: { id: string } })
             totalComments: comments.length,
         };
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: response }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan diskusi", data: response }, { status: 200 });
 
     } catch (error) {
         console.log(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -100,7 +116,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
         });
 
         if (data == 0) {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan discussion, data tidak ditemukan" }, { status: 404 });
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan diskusi, data tidak ditemukan" }, { status: 404 });
         }
 
         const result = await prisma.divisionDisscussion.update({
@@ -111,11 +127,11 @@ export async function DELETE(request: Request, context: { params: { id: string }
                 status: newStatus
             }
         });
-        return NextResponse.json({ success: true, message: "Berhasil Update discussion" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mengedit diskusi" }, { status: 200 });
 
     } catch (error) {
         console.log(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan discussion, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengedit diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -127,6 +143,18 @@ export async function PUT(request: Request, context: { params: { id: string } })
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
         const { id } = context.params
+
+        const cek = await prisma.divisionDisscussion.count({
+            where: {
+                id: id
+            },
+        });
+
+        if (cek == 0) {
+            return NextResponse.json({ success: false, message: "Gagal menghapus diskusi, data tidak ditemukan" }, { status: 404 });
+        }
+
+
         const data = await prisma.divisionDisscussion.update({
             where: {
                 id: id
@@ -135,10 +163,10 @@ export async function PUT(request: Request, context: { params: { id: string } })
                 isActive: false
             }
         });
-        return NextResponse.json({ success: true, message: "Berhasil Delete discussion" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil menghapus diskusi" }, { status: 200 });
     } catch (error) {
         console.log(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan discussion, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal menghapus diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -160,7 +188,7 @@ export async function POST(request: Request, context: { params: { id: string } }
         });
 
         if (data == 0) {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan discussion, data tidak ditemukan" }, { status: 404 });
+            return NextResponse.json({ success: false, message: "Gagal mengedit diskusi, data tidak ditemukan" }, { status: 404 });
         }
 
         const update = await prisma.divisionDisscussion.update({
@@ -171,10 +199,10 @@ export async function POST(request: Request, context: { params: { id: string } }
                 desc: desc
             }
         });
-        return NextResponse.json({ success: true, message: "Berhasil Edit discussion" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mengedit diskusi" }, { status: 200 });
 
     } catch (error) {
         console.log(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan discussion, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengedit diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

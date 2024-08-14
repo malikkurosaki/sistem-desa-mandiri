@@ -25,6 +25,17 @@ export async function GET(request: Request) {
             grupFix = groupID
         }
 
+        const cek = await prisma.group.count({
+            where: {
+                id: String(grupFix),
+                isActive: true
+            }
+        })
+
+        if (cek == 0) {
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan jabatan, data tidak ditemukan", }, { status: 404 });
+        }
+
         const positions = await prisma.position.findMany({
             where: {
                 idGroup: String(grupFix),
@@ -91,16 +102,16 @@ export async function POST(request: Request) {
             revalidatePath('/position?active=true', 'page')
             revalidateTag('position')
 
-            return NextResponse.json({ success: true, message: "Berhasil menambahkan position", positions, }, { status: 200 });
+            return NextResponse.json({ success: true, message: "Berhasil menambahkan jabatan", positions, }, { status: 200 });
         } else {
             return NextResponse.json(
-                { success: false, message: "Position sudah ada" },
+                { success: false, message: "Jabatan sudah ada" },
                 { status: 400 }
             );
         }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal menambahkan position, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal menambahkan jabatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
