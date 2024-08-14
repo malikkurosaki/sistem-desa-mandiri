@@ -50,4 +50,4 @@ export interface IEditDataMember  {
 
 export interface IMember{
    id: string
- }
+}

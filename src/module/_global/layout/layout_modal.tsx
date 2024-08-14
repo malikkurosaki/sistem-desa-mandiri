@@ -1,6 +1,7 @@
-import { Box, Button, Flex, Modal, Text } from '@mantine/core';
+import { Box, Button, Flex, Group, Modal, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import { BsQuestionCircleFill } from 'react-icons/bs';
+import { WARNA } from '../fun/WARNA';
 
 export default function LayoutModal({ opened, onClose, description, onYes }: { opened: boolean, onClose: () => void, description: string, onYes: (val: boolean) => void }) {
   const [isValModal, setValModal] = useState(opened)
@@ -17,10 +18,10 @@ export default function LayoutModal({ opened, onClose, description, onYes }: { o
       <Flex justify={"center"} align={"center"} direction={"column"}>
         <BsQuestionCircleFill size={100} color="red" />
         <Text mt={30} ta={"center"} fw={"bold"} fz={18}>{description}</Text>
-        <Box mt={30} w={'100%'}>
-          <Button mb={20} fullWidth size="lg" radius={'xl'} bg={'#4754F0'} onClick={() => onYes(true)}>YA</Button>
-          <Button fullWidth size="lg" radius={'xl'} bg={'#DCE1FE'} c={'#4754F0'} onClick={() => onYes(false)}>TIDAK</Button>
-        </Box>
+        <Group mt={30} w={'100%'} justify='center'>
+          <Button w={"47%"} size="lg" radius={'xl'} bg={'#DCE1FE'} c={'#4754F0'} onClick={() => onYes(false)}>TIDAK</Button>
+          <Button w={"47%"} size="lg" radius={'xl'} bg={WARNA.biruTua} onClick={() => onYes(true)}>YA</Button>
+        </Group>
       </Flex>
     </Modal>
   );

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { HiMenu } from "react-icons/hi";
 import DrawerDetailDiscussion from "./drawer_detail_discussion";
 
-export default function NavbarDetailDiscussion() {
+export default function NavbarDetailDiscussion({id, status, idDivision}: {id: string, status: number, idDivision:string}) {
    const [openDrawer, setOpenDrawer] = useState(false)
    return (
       <>
@@ -16,7 +16,7 @@ export default function NavbarDetailDiscussion() {
                </ActionIcon>}
          />
          <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
-            <DrawerDetailDiscussion onSuccess={(val) => setOpenDrawer(false)} />
+            <DrawerDetailDiscussion onSuccess={(val) => setOpenDrawer(false)} id={id} status={status} idDivision={idDivision} />
          </LayoutDrawer>
       </>
    );

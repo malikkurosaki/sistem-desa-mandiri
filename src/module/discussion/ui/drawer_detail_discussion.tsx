@@ -4,28 +4,62 @@ import { Box, Stack, SimpleGrid, Flex, Text } from "@mantine/core";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { BsTrash3 } from "react-icons/bs";
-import { FaPencil } from "react-icons/fa6";
+import { FaCheck, FaPencil } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
+import { funDeleteDiscussion, funEditStatusDiscussion } from "../lib/api_discussion";
+import { useParams, useRouter } from "next/navigation";
 
-export default function DrawerDetailDiscussion({ onSuccess }: { onSuccess: (val: boolean) => void }) {
+export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivision }: { onSuccess: (val: boolean) => void, id: string, status: number, idDivision: string }) {
    const [isValModal, setValModal] = useState(false)
    const [isValModalStatus, setValModalStatus] = useState(false)
+   const router = useRouter()
+   const param = useParams<{ id: string, detail: string }>()
 
-   function onTrue(val: boolean) {
-      if (val) {
-         onSuccess(true)
-         toast.success("Sukses! Data terhapus");
+
+   async function fetchStatusDiscussion(val: boolean) {
+      try {
+         if (val) {
+            const response = await funEditStatusDiscussion(id, { status: status })
+
+            if (response.success) {
+               toast.success(response.message)
+               setValModalStatus(false)
+            } else {
+               toast.error(response.message)
+            }
+         }
+         setValModalStatus(false)
+      } catch (error) {
+         console.log(error);
+         setValModalStatus(false)
+         toast.error("Gagal menambahkan diskusi, coba lagi nanti");
+      } finally {
+         setValModalStatus(false)
       }
-      setValModal(false)
    }
 
-   function onTrueStatus(val: boolean) {
-      if (val) {
-         onSuccess(true)
-         toast.success("Sukses! Data terupdate");
+   async function fetchDeleteDiscussion(val: boolean) {
+      try {
+         if (val) {
+            const response = await funDeleteDiscussion(id)
+            if (response.success) {
+               toast.success(response.message)
+               setValModal(false)
+               router.push(`/division/${param.id}/discussion`)
+            } else {
+               toast.error(response.message)
+            }
+         }
+         setValModal(false)
+      } catch (error) {
+         console.log(error);
+         setValModal(false)
+         toast.error("Gagal hapus diskusi, coba lagi nanti");
+      } finally {
+         setValModal(false)
       }
-      setValModalStatus(false)
    }
+
 
    return (
       <Box>
@@ -42,7 +76,7 @@ export default function DrawerDetailDiscussion({ onSuccess }: { onSuccess: (val:
                   </Box>
                </Flex>
 
-               <Flex onClick={() => window.location.href = "/discussion/edit/2"} justify={'center'} align={'center'} direction={'column'} >
+               <Flex onClick={() => window.location.href = `/division/${param.id}/discussion/update/${param.detail}`} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
                      <FaPencil size={30} color={WARNA.biruTua} />
                   </Box>
@@ -51,12 +85,28 @@ export default function DrawerDetailDiscussion({ onSuccess }: { onSuccess: (val:
                   </Box>
                </Flex>
 
-               <Flex onClick={() => setValModalStatus(true)} justify={'center'} align={'center'} direction={'column'} >
+               <Flex onClick={() => setValModalStatus(true)}  >
                   <Box>
-                     <MdClose size={30} color={WARNA.biruTua} />
-                  </Box>
-                  <Box>
-                     <Text c={WARNA.biruTua}>Tutup Diskusi</Text>
+                     {status === 1 ? (
+                        <>
+                           <Flex justify={'center'} align={'center'} direction={'column'}>
+                              <Box>
+                                 <MdClose size={30} color={WARNA.biruTua} />
+                              </Box>
+                              <Text style={{ color: WARNA.biruTua }}>Tutup Diskusi</Text>
+                           </Flex>
+                        </>
+                     ) : (
+                        <>
+                           <Flex justify={'center'} align={'center'} direction={'column'}>
+
+                              <Box>
+                                 <FaCheck size={30} color={WARNA.biruTua} />
+                              </Box>
+                              <Text style={{ color: WARNA.biruTua }}>Buka Diskusi</Text>
+                           </Flex>
+                        </>
+                     )}
                   </Box>
                </Flex>
             </SimpleGrid>
@@ -64,12 +114,12 @@ export default function DrawerDetailDiscussion({ onSuccess }: { onSuccess: (val:
 
          <LayoutModal opened={isValModal} onClose={() => setValModal(false)}
             description="Apakah Anda yakin ingin menghapus diskusi ini?"
-            onYes={(val) => { onTrue(val) }} />
+            onYes={(val) => { fetchDeleteDiscussion(val) }} />
 
 
          <LayoutModal opened={isValModalStatus} onClose={() => setValModalStatus(false)}
             description="Apakah Anda yakin ingin mengubah status diskusi ini?"
-            onYes={(val) => { onTrueStatus(val) }} />
+            onYes={(val) => { fetchStatusDiscussion(val) }} />
       </Box>
    )
 }
