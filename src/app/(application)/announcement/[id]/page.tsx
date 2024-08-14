@@ -1,8 +1,12 @@
-import { ViewDetailAnnouncement } from "@/module/announcement";
+import { DetailAnnouncement, NavbarDetailAnnouncement } from "@/module/announcement";
+import { Box } from "@mantine/core";
 
 function Page({ params }: { params: { id: string } }) {
    return (
-      <ViewDetailAnnouncement data={params.id} />
+      <Box>
+         <NavbarDetailAnnouncement />
+         <DetailAnnouncement id={params.id} />
+      </Box>
    )
 }
 

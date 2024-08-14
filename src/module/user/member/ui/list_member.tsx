@@ -13,6 +13,7 @@ export default function ListMember() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const status = searchParams.get("active");
+  const group = searchParams.get("group");
 
   return (
     <Box p={20}>
@@ -35,7 +36,7 @@ export default function ListMember() {
             w={"45%"}
             leftSection={<IoMdCheckmarkCircleOutline style={iconStyle} />}
             onClick={() => {
-              router.push("/member?active=true");
+              router.push("/member?active=true&group=" + group);
             }}
           >
             Aktif
@@ -45,7 +46,7 @@ export default function ListMember() {
             w={"53%"}
             leftSection={<IoCloseCircleOutline style={iconStyle} />}
             onClick={() => {
-              router.push("/member?active=false");
+              router.push("/member?active=false&group=" + group);
             }}
           >
             Tidak Aktif

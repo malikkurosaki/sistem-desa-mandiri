@@ -1,20 +1,31 @@
 import { WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { Box, Flex, SimpleGrid, Stack, Text, } from '@mantine/core';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaPencil, FaTrash } from 'react-icons/fa6';
+import { funDeleteAnnouncement } from '../lib/api_announcement';
 
 export default function DrawerDetailAnnouncement({ onDeleted }: { onDeleted: (val: boolean) => void }) {
    const router = useRouter()
    const [isOpen, setOpen] = useState(false)
+   const param = useParams<{ id: string }>()
 
-   function onTrue(val: boolean) {
+   async function onTrue(val: boolean) {
       if (val) {
-         toast.success('Sukses! Data terhapus')
-         onDeleted(true)
+         const response = await funDeleteAnnouncement(param.id)
+         if (response.success) {
+            toast.success(response.message)
+            onDeleted(true)
+         } else {
+            toast.error(response.message)
+            onDeleted(false)
+         }
+      } else {
+         onDeleted(false)
       }
+
       setOpen(false)
    }
    return (
@@ -33,7 +44,7 @@ export default function DrawerDetailAnnouncement({ onDeleted }: { onDeleted: (va
                </Flex>
 
                <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => {
-                  router.push('edit/123')
+                  router.push('edit/' + param.id)
                }} style={{ cursor: 'pointer' }}>
                   <Box>
                      <FaPencil size={30} color={WARNA.biruTua} />

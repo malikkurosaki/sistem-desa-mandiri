@@ -8,6 +8,8 @@ import { FaCheck } from 'react-icons/fa';
 import { GroupData } from '../lib/type_announcement';
 import { useHookstate } from '@hookstate/core';
 import { globalMemberAnnouncement } from '../lib/val_announcement';
+import { FaMinus } from 'react-icons/fa6';
+import toast from 'react-hot-toast';
 
 
 
@@ -15,7 +17,7 @@ interface CheckedState {
   [key: string]: string[];
 }
 
-export default function CreateUsersAnnouncement({ onClose}: { onClose: (val: any) => void }) {
+export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: any) => void }) {
   const [checked, setChecked] = useState<CheckedState>({});
   const [selectAll, setSelectAll] = useState(false);
   const [isData, setIsData] = useState<GroupData[]>([])
@@ -26,6 +28,9 @@ export default function CreateUsersAnnouncement({ onClose}: { onClose: (val: any
     if (newChecked[groupId]) {
       if (newChecked[groupId].includes(divisionId)) {
         newChecked[groupId] = newChecked[groupId].filter(item => item !== divisionId);
+        if (newChecked[groupId].length === 0) {
+          delete newChecked[groupId];
+        }
       } else {
         newChecked[groupId].push(divisionId);
       }
@@ -33,18 +38,20 @@ export default function CreateUsersAnnouncement({ onClose}: { onClose: (val: any
       newChecked[groupId] = [divisionId];
     }
     setChecked(newChecked);
-    console.log(newChecked)
   };
+
 
   const handleGroupCheck = (groupId: string) => {
     const newChecked = { ...checked };
     if (newChecked[groupId]) {
       delete newChecked[groupId];
     } else {
+      if (isData.find(item => item.id === groupId)?.Division.length == 0) {
+        return toast.error("Tidak ada divisi pada grup ini")
+      }
       newChecked[groupId] = isData.find(item => item.id === groupId)?.Division.map(item => item.id) || [];
     }
     setChecked(newChecked);
-    console.log(newChecked)
   };
 
   const handleSelectAll = () => {
@@ -52,10 +59,11 @@ export default function CreateUsersAnnouncement({ onClose}: { onClose: (val: any
     if (!selectAll) {
       const newChecked: CheckedState = {};
       isData.forEach(item => {
-        newChecked[item.id] = item.Division.map(division => division.id);
+        if (item.Division.length > 0) {
+          newChecked[item.id] = item.Division.map(division => division.id);
+        }
       });
       setChecked(newChecked);
-      console.log(newChecked)
     } else {
       setChecked({});
     }
@@ -63,9 +71,18 @@ export default function CreateUsersAnnouncement({ onClose}: { onClose: (val: any
 
   async function getData() {
     const response = await funGetGroupDivision()
-    console.log(response)
     setIsData(response.data)
+
+    if (memberGroup.length > 0) {
+      const formatArray = memberGroup.get().reduce((result: any, obj: any) => {
+        result[obj.id] = obj.Division.map((item: any) => item.id);
+        return result;
+      }, {})
+
+      setChecked(formatArray)
+    }
   }
+
   const handleSubmit = () => {
     const selectedGroups: GroupData[] = [];
     Object.keys(checked).forEach((groupId) => {
@@ -78,6 +95,7 @@ export default function CreateUsersAnnouncement({ onClose}: { onClose: (val: any
         });
       }
     });
+
     memberGroup.set(selectedGroups);
     onClose(true);
   };
@@ -88,7 +106,7 @@ export default function CreateUsersAnnouncement({ onClose}: { onClose: (val: any
 
   return (
     <div>
-      <LayoutNavbarNew back="" title="Tambah Anggota" menu={<></>} />
+      <LayoutNavbarNew back="" title="Tambah Divisi Penerima Pengumuman" menu={<></>} />
       <Box p={20}>
         <Group justify='flex-end' mb={20}>
           <Text
@@ -118,7 +136,8 @@ export default function CreateUsersAnnouncement({ onClose}: { onClose: (val: any
               </Text>
               <Text
               >
-                {checked[item.id] && checked[item.id].length === item.Division.length ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+                {checked[item.id] && checked[item.id].length === item.Division.length ? <FaCheck style={{ marginRight: 10 }} />
+                  : (checked[item.id] && checked[item.id].length > 0 && checked[item.id].length < item.Division.length) ? <FaMinus style={{ marginRight: 10 }} /> : ""}
               </Text>
             </Group>
             <Divider />
