@@ -202,7 +202,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
       );
    } catch (error) {
       console.log(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -253,7 +253,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
       );
    } catch (error) {
       console.log(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mengubah status admin divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
 

@@ -13,6 +13,22 @@ export async function POST(request: Request, context: { params: { id: string } }
         const { id } = context.params
         const { comment } = (await request.json());
 
+        const cek = await prisma.divisionDisscussion.count({
+            where: {
+                id: id
+            }
+        })
+
+        if (cek == 0) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Tambah komentar gagal, data tidak ditemukan",
+                },
+                { status: 404 }
+            );
+        }
+
         const data = await prisma.divisionDisscussionComment.create({
             data: {
                 comment: comment,
@@ -21,10 +37,10 @@ export async function POST(request: Request, context: { params: { id: string } }
             }
         })
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan diskusi", data: data, }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil menambah komentar", data: data, }, { status: 200 });
 
     } catch (error) {
         console.log(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal menambah komentar, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

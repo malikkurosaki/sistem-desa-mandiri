@@ -64,7 +64,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Gagal delete jabatan, data tidak ditemukan",
+                    message: "Gagal mengubah status jabatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -81,12 +81,12 @@ export async function DELETE(request: Request, context: { params: { id: string }
         });
 
         return NextResponse.json(
-            { success: true, message: "Sukses Delete Position" },
+            { success: true, message: "Berhasil mengubah status jabatan" },
             { status: 200 }
         );
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan position, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengubah status jabatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -116,16 +116,16 @@ export async function PUT(request: Request, context: { params: { id: string } })
                     idGroup: data.idGroup,
                 },
             });
-            return NextResponse.json({ success: true, message: "Berhasil edit position", positions, }, { status: 200 });
+            return NextResponse.json({ success: true, message: "Berhasil mengedit jabatan", positions, }, { status: 200 });
         } else {
             return NextResponse.json(
-                { success: false, message: "Position sudah ada" },
+                { success: false, message: "Jabatan sudah ada" },
                 { status: 400 }
             );
         }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan jabatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengedit jabatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

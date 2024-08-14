@@ -16,6 +16,22 @@ export async function GET(request: Request, context: { params: { id: string } })
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
 
+        const data = await prisma.announcement.count({
+            where: {
+                id: id,
+            },
+        });
+
+        if (data == 0) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Gagal mendapatkan pengumuman, data tidak ditemukan",
+                },
+                { status: 404 }
+            );
+        } 
+
         const announcement = await prisma.announcement.findUnique({
             where: {
                 id: id,
@@ -60,7 +76,7 @@ export async function GET(request: Request, context: { params: { id: string } })
         return NextResponse.json(
             {
                 success: true,
-                message: "Berhasil mendapatkan announcement",
+                message: "Berhasil mendapatkan pengumuman",
                 data: announcement,
                 member: fixMember
             },
@@ -71,7 +87,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan announcement, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan pengumuman, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -148,7 +164,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Hapus pengumuman gagal, data tidak ditemukan",
+                    message: "Edit pengumuman gagal, data tidak ditemukan",
                 },
                 { status: 404 }
             );
