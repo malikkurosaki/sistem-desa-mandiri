@@ -1,8 +1,9 @@
-import { ViewDetailDiscussion } from "@/module/division_new"
+import { DetailDiscussion } from "@/module/discussion"
 
-function Page() {
+
+function Page({ params }: { params: { detail: string } }) {
    return (
-      <ViewDetailDiscussion />
+      <DetailDiscussion id={params.detail} />
    )
 }
 

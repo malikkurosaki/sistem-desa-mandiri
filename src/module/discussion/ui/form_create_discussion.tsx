@@ -4,9 +4,15 @@ import LayoutModal from "@/module/_global/layout/layout_modal";
 import { Avatar, Box, Button, Center, Grid, Group, Text, Textarea } from "@mantine/core";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { funCreateDiscussion } from "../lib/api_discussion";
 
-export default function FormCreateDiscussion() {
+export default function FormCreateDiscussion({id}: {id: string}) {
    const [isValModal, setValModal] = useState(false)
+   const [isData, setData] = useState({
+      desc: "",
+      idDivision: id
+   })
+
 
    function onTrue(val: boolean) {
       if (val) {
@@ -14,6 +20,29 @@ export default function FormCreateDiscussion() {
       }
       setValModal(false)
    }
+
+   async function createDiscussion(val: boolean) {
+      try {
+         const response = await funCreateDiscussion({
+            desc: isData.desc,
+            idDivision: id
+         })
+
+         if (response.success) {
+            toast.success(response.message)
+            onTrue(true)
+         } else {
+            toast.error(response.message)
+         }
+      } catch (error) {
+         console.log(error);
+         toast.error("Gagal menambahkan diskusi, coba lagi nanti");
+      } finally {
+         setValModal(false)
+      }
+   }
+
+
 
    return (
       <Box>
@@ -30,6 +59,7 @@ export default function FormCreateDiscussion() {
                            backgroundColor: 'transparent',
                         }
                      }}
+                     onChange={(e) => setData({ ...isData, desc: e.target.value })}
                   />
                </Box>
             </Group>
@@ -50,7 +80,7 @@ export default function FormCreateDiscussion() {
          <LayoutModal opened={isValModal} onClose={() => setValModal(false)}
             description="Apakah Anda yakin ingin
         menambah data?"
-            onYes={(val) => { onTrue(val) }} />
+            onYes={(val) => { createDiscussion(val) }} />
       </Box>
    )
 }  

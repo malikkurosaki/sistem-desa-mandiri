@@ -55,6 +55,8 @@ export async function GET(request: Request) {
          jumlah_member: v.DivisionMember.length
       }))
 
+      console.log(allData)
+
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: allData, }, { status: 200 });
 
    } catch (error) {

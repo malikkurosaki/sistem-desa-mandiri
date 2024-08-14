@@ -1,11 +1,11 @@
 import { ListDiscussion, NavbarListDiscussion } from '@/module/discussion';
 import React from 'react';
 
-function Page() {
+function Page({ params }: { params: { id: string } }) {
   return (
     <div>
       <NavbarListDiscussion />
-      <ListDiscussion />
+      <ListDiscussion id={params.id} />
     </div>
   );
 }
