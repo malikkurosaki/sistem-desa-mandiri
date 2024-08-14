@@ -1,7 +1,9 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
+import moment from "moment";
 import { NextResponse } from "next/server";
+import "moment/locale/id";
 
 
 // GET ALL DISCUSSION DIVISION ACTIVE = TRUE
@@ -14,7 +16,7 @@ export async function GET(request: Request) {
 
       const { searchParams } = new URL(request.url);
       const idDivision = searchParams.get("division");
-      const title = searchParams.get('search');
+      const name = searchParams.get('search');
 
 
       if (idDivision != "null" && idDivision != null && idDivision != undefined) {
@@ -33,9 +35,11 @@ export async function GET(request: Request) {
             where: {
                isActive: true,
                idDivision: idDivision,
-               title: {
-                  contains: (title == undefined || title == "null") ? "" : title,
-                  mode: "insensitive"
+               User: {
+                  name: {
+                     contains: (name == undefined || name == "null") ? "" : name,
+                     mode: "insensitive"
+                  }
                }
             },
             orderBy: {
@@ -63,9 +67,10 @@ export async function GET(request: Request) {
 
 
          const fixData = data.map((v: any) => ({
-            ..._.omit(v, ["User", "DivisionDisscussionComment"]),
+            ..._.omit(v, ["User", "DivisionDisscussionComment", "createdAt"]),
             user_name: v.User.name,
-            total_komentar: v.DivisionDisscussionComment.length
+            total_komentar: v.DivisionDisscussionComment.length,
+            createdAt: moment(v.createdAt).format("LL")
          }))
 
          return NextResponse.json({ success: true, message: "Berhasil mendapatkan diskusi", data: fixData, }, { status: 200 });

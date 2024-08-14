@@ -3,6 +3,10 @@ import { Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Text, TextInput
 import { WARNA } from "@/module/_global";
 import { GrChatOption } from "react-icons/gr";
 import { LuSendHorizonal } from "react-icons/lu";
+import NavbarDetailDiscussion from "@/module/discussion/ui/navbar_detail_discussion";
+import { useState } from "react";
+import { funGetAllDiscussion, funGetDiscussionById } from "../lib/api_discussion";
+import { useShallowEffect } from "@mantine/hooks";
 
 const dataAnggota = [
    {
@@ -47,11 +51,27 @@ const dataAnggota = [
    },
 ];
 
-export default function ViewDetailDiscussion() {
+export default function DetailDiscussion({ id }: { id: string }) {
+
+  const [isData, setData] = useState([])
+
+  const getData = async () => {
+     try {
+        const response = await funGetDiscussionById(id)
+        setData(response.data)
+     } catch (error) {
+        console.log(error)
+     }
+  }
+
+  useShallowEffect(() => {
+     getData()
+  }, [])
 
    return (
       <>
-         {/* <NavbarDetailDiscussion /> */}
+       <NavbarDetailDiscussion />
+       <pre>{JSON.stringify(isData, null, 1)}</pre>
          <Box p={20}>
             <Flex
                justify={"space-between"}
@@ -134,3 +154,4 @@ export default function ViewDetailDiscussion() {
       </>
    )
 }
+

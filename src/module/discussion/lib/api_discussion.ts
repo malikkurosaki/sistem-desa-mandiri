@@ -18,3 +18,9 @@ export const funCreateDiscussion = async (data: IFormDiscussion) => {
    });
    return await response.json().catch(() => null);
 }
+
+
+export const funGetDiscussionById = async (path: string) => {
+   const response = await fetch(`/api/discussion/${path}`);
+   return await response.json().catch(() => null);
+}

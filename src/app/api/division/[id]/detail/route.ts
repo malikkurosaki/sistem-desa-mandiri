@@ -269,8 +269,6 @@ export async function POST(request: Request, context: { params: { id: string } }
       const member = await request.json();
       const idDivision = context.params.id;
 
-      console.log("amalia", member)
-
 
       const data = await prisma.division.count({
          where: {
