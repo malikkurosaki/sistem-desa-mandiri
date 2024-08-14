@@ -1,8 +1,14 @@
-import { ViewEditDiscussion } from "@/module/division_new";
+import { LayoutNavbarNew } from "@/module/_global";
+import { FormEditDiscussion } from "@/module/discussion";
+import { Box } from "@mantine/core";
 
 function Page() {
    return (
-      <ViewEditDiscussion />
+      <Box>
+         <LayoutNavbarNew back="" title="Edit Diskusi" menu={<></>} />
+         <FormEditDiscussion />
+      </Box>
+
    )
 }
 

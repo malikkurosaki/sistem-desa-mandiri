@@ -1,7 +1,7 @@
 'use client'
 import { WARNA } from "@/module/_global";
 import { Avatar, Badge, Box, Divider, Flex, Group, Text, TextInput } from "@mantine/core";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { GrChatOption } from "react-icons/gr";
 import { HiMagnifyingGlass } from "react-icons/hi2";
@@ -12,6 +12,7 @@ import { IDataDiscussion } from "../lib/type_discussion";
 export default function ListDiscussion({ id }: { id: string }) {
    const [isData, setData] = useState<IDataDiscussion[]>([])
    const [searchQuery, setSearchQuery] = useState('')
+   const param = useParams<{ id: string }>()
 
    const getData = async () => {
       try {
@@ -48,7 +49,7 @@ export default function ListDiscussion({ id }: { id: string }) {
             return (
                <Box key={i} pl={10} pr={10}
                   onClick={() => {
-                     router.push(`/division/${v.id}/discussion/${v.id}`)
+                     router.push(`/division/${param.id}/discussion/${v.id}`)
                   }}
                >
                   <Flex
@@ -62,10 +63,10 @@ export default function ListDiscussion({ id }: { id: string }) {
                            <Text c={WARNA.biruTua} fw={"bold"}>
                               {v.user_name}
                            </Text>
-                           <Badge color={(v.status) ? "green" : "red"} size="sm">{(v.status) ? "BUKA" : "TUTUP"}</Badge>
+                           <Badge color={v.status === 1 ? "green" : "red"} size="sm">{v.status === 1 ? "BUKA" : "TUTUP"}</Badge>
                         </Box>
                      </Group>
-                     <Text c={"grey"}>{v.createdAt}</Text>
+                     <Text c={"grey"} fz={13}>{v.createdAt}</Text>
                   </Flex>
                   <Box mt={10}>{v.desc}</Box>
                   <Group justify="space-between" mt={20} c={'#8C8C8C'}>

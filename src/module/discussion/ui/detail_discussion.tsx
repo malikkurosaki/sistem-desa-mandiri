@@ -1,77 +1,59 @@
 "use client"
-import { Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Text, TextInput } from "@mantine/core";
 import { WARNA } from "@/module/_global";
 import { GrChatOption } from "react-icons/gr";
 import { LuSendHorizonal } from "react-icons/lu";
 import NavbarDetailDiscussion from "@/module/discussion/ui/navbar_detail_discussion";
 import { useState } from "react";
-import { funGetAllDiscussion, funGetDiscussionById } from "../lib/api_discussion";
+import { funCreateComent, funGetAllDiscussion, funGetDiscussionById } from "../lib/api_discussion";
 import { useShallowEffect } from "@mantine/hooks";
+import { IDetailDiscussion } from "../lib/type_discussion";
+import moment from "moment";
+import "moment/locale/id";
+import { useParams } from "next/navigation";
+import toast from "react-hot-toast";
 
-const dataAnggota = [
-   {
-      id: 1,
-      name: "Iqbal Ramadan",
-      image: "https://i.pravatar.cc/1000?img=5",
-      status: true,
-      jumlah: 16,
-      desc: 'is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. '
-   },
-   {
-      id: 2,
-      name: "Doni Setiawan",
-      image: "https://i.pravatar.cc/1000?img=10",
-      status: true,
-      jumlah: 26,
-      desc: 'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'
-   },
-   {
-      id: 3,
-      name: "Rangga Agung",
-      image: "https://i.pravatar.cc/1000?img=51",
-      status: false,
-      jumlah: 11,
-      desc: 'It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
-   },
-   {
-      id: 4,
-      name: "Ramadan Sananta",
-      image: "https://i.pravatar.cc/1000?img=15",
-      status: false,
-      jumlah: 30,
-      desc: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. '
-   },
-   {
-      id: 5,
-      name: "Imam Baronis",
-      image: "https://i.pravatar.cc/1000?img=22",
-      status: false,
-      jumlah: 29,
-      desc: 'Contrary to popular belief, Lorem Ipsum is not simply random text'
-   },
-];
+export default function DetailDiscussion({ id, idDivision }: { id: string, idDivision: string }) {
+   const [isData, setData] = useState<IDetailDiscussion>()
+   const [isComent, setIsComent] = useState("")
+   const param = useParams<{ id: string, detail: string }>()
 
-export default function DetailDiscussion({ id }: { id: string }) {
+   const getData = async () => {
+      try {
+         const response = await funGetDiscussionById(id)
+         setData(response.data)
+      } catch (error) {
+         console.log(error)
+      }
+   }
 
-  const [isData, setData] = useState([])
+   useShallowEffect(() => {
+      getData()
+   }, [])
 
-  const getData = async () => {
-     try {
-        const response = await funGetDiscussionById(id)
-        setData(response.data)
-     } catch (error) {
-        console.log(error)
-     }
-  }
+   const sendComent = async () => {
+      try {
+         const response = await funCreateComent(id, {
+            comment: isComent,
+            idDiscussion: param.detail
+         })
 
-  useShallowEffect(() => {
-     getData()
-  }, [])
+         if (response.success) {
+            setIsComent("")
+            getData()
+         } else {
+            toast.error(response.message)
+         }
+      } catch (error) {
+         console.log(error)
+      }
+   }
+
+
 
    return (
       <>
-       <NavbarDetailDiscussion />
-       <pre>{JSON.stringify(isData, null, 1)}</pre>
+         <NavbarDetailDiscussion id={id} status={Number(isData?.status)} idDivision={idDivision} />
          <Box p={20}>
             <Flex
                justify={"space-between"}
@@ -82,23 +64,25 @@ export default function DetailDiscussion({ id }: { id: string }) {
                   <Avatar src={'https://i.pravatar.cc/1000?img=5'} alt="it's me" size="lg" />
                   <Box>
                      <Text c={WARNA.biruTua} fw={"bold"}>
-                        Fibra Marcell
+                        {isData?.username}
                      </Text>
-                     <Badge color={"green"} size="sm">BUKA</Badge>
+                     <Badge color={isData?.status === 1 ? "green" : "red"} size="sm">{isData?.status === 1 ? "BUKA" : "TUTUP"}</Badge>
                   </Box>
                </Group>
-               <Text c={"grey"}>1 Jam</Text>
+               <Text c={"grey"} fz={13}>{isData?.createdAt}</Text>
             </Flex>
-            <Box mt={10}>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged</Box>
+            <Box mt={10}>
+               <Text fw={"bold"}>{isData?.desc}</Text>
+            </Box>
             <Group justify="space-between" mt={20} c={'#8C8C8C'}>
                <Group gap={5} align="center">
                   <GrChatOption size={18} />
-                  <Text fz={13}>10 Komentar</Text>
+                  <Text fz={13}>{isData?.totalComments} Komentar</Text>
                </Group >
             </Group>
 
             <Box p={10}>
-               {dataAnggota.map((v, i) => {
+               {isData?.DivisionDisscussionComment.map((v, i) => {
                   return (
                      <Box key={i} p={10}>
                         <Flex
@@ -106,16 +90,16 @@ export default function DetailDiscussion({ id }: { id: string }) {
                            align={"center"}
                         >
                            <Group>
-                              <Avatar src={v.image} alt="it's me" size="md" />
+                              <Avatar alt="it's me" size="md" />
                               <Box>
                                  <Text c={WARNA.biruTua} fw={"bold"} fz={15}>
-                                    {v.name}
+                                    {v.username}
                                  </Text>
                               </Box>
                            </Group>
-                           <Text c={"grey"}>1 Jam</Text>
+                           <Text c={"grey"} fz={13}>{moment(v.createdAt).format("LL")}</Text>
                         </Flex>
-                        <Box mt={10}>{v.desc}</Box>
+                        <Box mt={10}>{v.comment}</Box>
                         <Box mt={20}>
                            <Divider size={"xs"} />
                         </Box>
@@ -141,11 +125,18 @@ export default function DetailDiscussion({ id }: { id: string }) {
                         }}
                         size="md"
                         placeholder="Kirim Komentar"
+                        disabled={isData?.status === 2}
+                        onChange={(e) => setIsComent(e.target.value)}
+                        value={isComent}
                      />
                   </Grid.Col>
                   <Grid.Col span={2}>
                      <Center>
-                        <LuSendHorizonal size={30} />
+                        <ActionIcon
+                           onClick={sendComent}
+                           variant="subtle" aria-label="submit" disabled={isData?.status === 2}>
+                           <LuSendHorizonal size={30} />
+                        </ActionIcon>
                      </Center>
                   </Grid.Col>
                </Grid>
