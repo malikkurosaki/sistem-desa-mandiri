@@ -1,8 +1,11 @@
 import { WARNA } from '@/module/_global';
 import { Box, Divider, Group, Indicator, Text } from '@mantine/core';
 import { DatePicker, DatePickerProps } from '@mantine/dates';
-import { useRouter } from 'next/navigation';
-import React from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { funGetAllCalender } from '../lib/api_calender';
+import { useShallowEffect } from '@mantine/hooks';
+import { IDataCalender } from '../lib/type_calender';
 
 const HariIni = [
   {
@@ -38,7 +41,24 @@ const Besok = [
 ]
 
 export default function DateEventDivision() {
+  const[isData, setData] = useState<IDataCalender[]>([])
   const router = useRouter()
+  const param = useParams<{ id: string }>()
+
+  const getData = async () => {
+    try {
+      const response = await funGetAllCalender('?division=' + param.id)
+      setData(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useShallowEffect(() => {
+    getData()
+  }, [])
+
+
   const dayRenderer: DatePickerProps['renderDay'] = (date) => {
     const day = date.getDate();
     return (
@@ -49,6 +69,7 @@ export default function DateEventDivision() {
   };
   return (
     <Box>
+      <pre>{JSON.stringify(isData, null, 1)}</pre>
       <Group
         justify="center"
         bg={"white"}

@@ -116,7 +116,7 @@ export default function ListDiscussionOnDetailDivision() {
                   <GoDiscussionClosed size={25} />
                   <Box w={{ base: 230, md: 400 }}>
                     <Text fw={"bold"} truncate="end">
-                      {v.title}
+                      {v.desc}
                     </Text>
                   </Box>
                 </Group>

@@ -126,6 +126,7 @@ export async function GET(request: Request, context: { params: { id: string } })
             select: {
                id: true,
                title: true,
+               desc: true,
                createdAt: true,
                User: {
                   select: {

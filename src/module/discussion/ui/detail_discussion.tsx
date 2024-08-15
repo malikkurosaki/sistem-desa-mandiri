@@ -38,6 +38,9 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
 
    const sendComent = async () => {
       try {
+         if (isComent.trim() == "") {
+            return toast.error("Masukkan Komentar Anda")
+         }
          const response = await funCreateComent(id, {
             comment: isComent,
             idDiscussion: param.detail
