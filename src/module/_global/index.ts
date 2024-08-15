@@ -1,5 +1,7 @@
 import prisma from "./bin/prisma";
 import { pwd_key_config } from "./bin/val_global";
+import SkeletonDetailDiscussionComment from "./components/skeleton_detail_discussion_comment";
+import SkeletonDetailDiscussionMember from "./components/skeleton_detail_discussion_member";
 import SkeletonSingle from "./components/skeleton_single";
 import { WARNA } from "./fun/WARNA";
 import LayoutDrawer from "./layout/layout_drawer";
@@ -20,4 +22,6 @@ export { LayoutNavbarNew };
 export { ViewFilter };
 export { prisma };
 export { pwd_key_config };
-export {SkeletonSingle}
+export { SkeletonSingle }
+export { SkeletonDetailDiscussionComment }
+export { SkeletonDetailDiscussionMember }
