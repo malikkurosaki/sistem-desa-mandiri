@@ -9,6 +9,12 @@ import { FaCheck } from 'react-icons/fa6';
 import { TbCopy } from 'react-icons/tb';
 import { HiMenu } from 'react-icons/hi';
 import DrawerDetailEvent from './drawer_detail_event';
+import { useParams } from 'next/navigation';
+import { funGetOneCalender } from '../lib/api_calender';
+import { useShallowEffect } from '@mantine/hooks';
+import moment from "moment";
+import "moment/locale/id";
+import { IDataDetailByIdCalender, IDataDetailByIdMember } from '../lib/type_calender';
 const dataAnggota = [
   {
     id: 1,
@@ -44,6 +50,27 @@ const dataAnggota = [
 
 export default function DetailEventDivision() {
   const [openDrawer, setOpenDrawer] = useState(false)
+  const param = useParams<{ id: string, detail: string }>()
+  const [isDataCalender, setDataCalender] = useState<IDataDetailByIdCalender>()
+  const [isDataAnggota, setDataAnggota] = useState<IDataDetailByIdMember[]>([])
+  const [isLengthMember, setLengthMember] = useState()
+
+
+  const getData = async () => {
+    try {
+      const response = await funGetOneCalender(param.detail)
+      setDataCalender(response.data.calender)
+      setDataAnggota(response.data.member)
+      setLengthMember(response.data.total)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useShallowEffect(() => {
+    getData()
+  }, [])
+
   return (
     <Box>
       <LayoutNavbarNew back="" title="Detail Event"
@@ -59,25 +86,32 @@ export default function DetailEventDivision() {
           <Stack ml={10}>
             <Group mb={10} gap={30}>
               <BsCalendar2Event size={25} color={WARNA.biruTua} />
-              <Text>Pembahasan mengenai Darmasaba</Text>
+              <Text>{isDataCalender?.title}</Text>
             </Group>
             <Group mb={10} gap={30}>
               <BsCalendarDate size={25} color={WARNA.biruTua} />
-              <Text>Senin, 24 Juni 2024</Text>
+              <Text>{moment(isDataCalender?.dateStart).format('LL')}</Text>
             </Group>
             <Group mb={10} gap={30}>
               <LuClock size={25} color={WARNA.biruTua} />
-              <Text>10:00  | 11:00 </Text>
+              <Text>{moment(isDataCalender?.timeStart).format('LT')}  | {moment(isDataCalender?.timeEnd).format('LT')} </Text>
             </Group>
             <Group mb={10} gap={30}>
               <BsCalendarDate size={25} color={WARNA.biruTua} />
-              <Text>Acara 1 Kali</Text>
+              <Text>
+                {isDataCalender?.repeatEventTyper.toString() === '1' ? 'Acara 1 Kali' :
+                  isDataCalender?.repeatEventTyper.toString() === '2' ? 'Hari Kerja (senin - jumat)' :
+                    isDataCalender?.repeatEventTyper.toString() === '3' ? 'Minggu' :
+                      isDataCalender?.repeatEventTyper.toString() === '4' ? 'Bulanan' :
+                        isDataCalender?.repeatEventTyper.toString() === '5' ? 'Tahunan' :
+                          ''}
+              </Text>
             </Group>
             <Group mb={10} gap={30}>
               <LuLink size={25} color={WARNA.biruTua} />
               <Group justify='space-between'>
-                <Text>http://Linkmeet.com</Text>
-                <CopyButton value="http://Linkmeet.com" timeout={2000}>
+                <Text>{isDataCalender?.linkMeet}</Text>
+                <CopyButton value={String(isDataCalender?.linkMeet)} timeout={2000}>
                   {({ copied, copy }) => (
                     <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
                       <ActionIcon color={copied ? 'teal' : WARNA.biruTua} variant="subtle" onClick={copy}>
@@ -94,11 +128,15 @@ export default function DetailEventDivision() {
             </Group>
             <Group gap={30}>
               <MdOutlineFormatListBulleted size={25} color={WARNA.biruTua} />
-              <Text>Dimohon agar tepat waktu</Text>
+              <Text>{isDataCalender?.desc}</Text>
             </Group>
           </Stack>
         </Box>
         <Box pt={20}>
+          <Group justify='space-between'>
+            <Text fw={"bold"}>Total Anggota</Text>
+            <Text>{isLengthMember} Anggota</Text>
+          </Group>
           <Box mb={20}>
             <Box
               style={{
@@ -108,7 +146,7 @@ export default function DetailEventDivision() {
               px={20}
               pt={20}
             >
-              {dataAnggota.map((v, i) => {
+              {isDataAnggota.map((v, i) => {
                 return (
                   <Flex
                     justify={"space-between"}
@@ -117,7 +155,7 @@ export default function DetailEventDivision() {
                     key={i}
                   >
                     <Group>
-                      <Avatar src={v.image} alt="it's me" size="lg" />
+                      <Avatar src={""} alt="it's me" size="lg" />
                       <Box>
                         <Text c={WARNA.biruTua} fw={"bold"}>
                           {v.name}
@@ -127,9 +165,6 @@ export default function DetailEventDivision() {
                         </Text>
                       </Box>
                     </Group>
-                    <Text c={WARNA.biruTua} fw={"bold"}>
-                      Anggota
-                    </Text>
                   </Flex>
                 );
               })}
@@ -138,7 +173,7 @@ export default function DetailEventDivision() {
         </Box>
       </Box>
       <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
-       <DrawerDetailEvent/>
+        <DrawerDetailEvent />
       </LayoutDrawer>
     </Box>
   );
