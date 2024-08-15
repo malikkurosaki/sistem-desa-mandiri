@@ -1,9 +1,13 @@
 import { WARNA } from "@/module/_global";
 import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Progress, Text, TextInput, Title } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from "react-icons/hi2";
 import { MdAccountCircle } from "react-icons/md";
+import { IDataTask } from "../lib/type_task";
+import { funGetAllTask } from "../lib/api_task";
+import toast from "react-hot-toast";
+import { useShallowEffect } from "@mantine/hooks";
 
 
 const dataProject = [
@@ -51,13 +55,46 @@ const dataProject = [
    },
 ]
 
-export default function ListDivisionTask({ status }: { status: string }) {
+export default function ListDivisionTask() {
    const [isList, setIsList] = useState(false)
    const router = useRouter()
+   const [isData, setData] = useState<IDataTask[]>([])
+   const param = useParams<{ id: string }>()
+   const searchParams = useSearchParams()
+   const status = searchParams.get('status')
+   const [searchQuery, setSearchQuery] = useState('')
+   const [loading, setLoading] = useState(true);
 
    const handleList = () => {
       setIsList(!isList)
    }
+
+   const fetchData = async () => {
+      try {
+         setData([]);
+         setLoading(true);
+
+         const response = await funGetAllTask('?division=' + param.id + '&status=' + status + '&search=' + searchQuery)
+
+         if (response.success) {
+            setData(response?.data)
+         } else {
+            toast.error(response.message);
+         }
+
+         setLoading(false);
+      } catch (error) {
+         toast.error("Gagal mendapatkan tugas divisi, coba lagi nanti");
+         console.error(error);
+      } finally {
+         setLoading(false);
+      }
+   };
+
+
+   useShallowEffect(() => {
+      fetchData();
+   }, [status, searchQuery]);
 
    return (
       <Box py={20}>
@@ -91,12 +128,12 @@ export default function ListDivisionTask({ status }: { status: string }) {
             <Box bg={"#DCEED8"} p={10} style={{ borderRadius: 10 }}>
                <Text fw={'bold'} c={WARNA.biruTua}>Total Proyek</Text>
                <Flex justify={'center'} align={'center'} h={'100%'}>
-                  <Text fz={40} fw={'bold'} c={WARNA.biruTua}>35</Text>
+                  <Text fz={40} fw={'bold'} c={WARNA.biruTua}>{isData.length}</Text>
                </Flex>
             </Box>
             {isList ? (
                <Box pt={20}>
-                  {dataProject.map((v, i) => {
+                  {isData.map((v, i) => {
                      return (
                         <Box key={i}>
                            <Group justify="space-between" mb={10} onClick={() => router.push(`/task/${v.id}`)}>
@@ -118,9 +155,6 @@ export default function ListDivisionTask({ status }: { status: string }) {
                                  </Center>
                                  <Text>{v.title}</Text>
                               </Group>
-                              {/* <Box>
-                                 <RiCircleFill size={12} color={v.color} />
-                              </Box> */}
                            </Group>
                            <Divider my="sm" />
                         </Box>
@@ -129,7 +163,7 @@ export default function ListDivisionTask({ status }: { status: string }) {
                </Box>
             ) : (
                <Box pt={20}>
-                  {dataProject.map((v, i) => {
+                  {isData.map((v: any, i: any) => {
                      return (
                         <Box key={i} mb={20}>
                            <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/task/${v.id}`)}>
@@ -146,7 +180,7 @@ export default function ListDivisionTask({ status }: { status: string }) {
                                        <Progress.Label>{(status == 'segera') ? 0 : (status == 'dikerjakan') ? 42 : (status == 'selesai') ? 100 : 0}%</Progress.Label>
                                     </Progress.Section>
                                  </Progress.Root>
-                                 <Text my={10}>{v.description}</Text>
+                                 <Text my={10}>{v.desc}</Text>
                                  <Group align='center' pt={10} justify='space-between'>
                                     <Badge color={'dark'}>{status}</Badge>
                                     <Avatar.Group>

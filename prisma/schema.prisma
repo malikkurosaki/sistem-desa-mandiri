@@ -273,7 +273,7 @@ model DivisionProjectTask {
   DivisionProject DivisionProject @relation(fields: [idProject], references: [id])
   idProject       String
   title           String
-  desc            String          @db.Text
+  desc            String?         @db.Text
   status          Int             @default(0) // 0 = todo, 1 = done
   dateStart       DateTime        @db.Date
   dateEnd         DateTime        @db.Date
