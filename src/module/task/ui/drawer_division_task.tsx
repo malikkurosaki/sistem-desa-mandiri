@@ -9,7 +9,7 @@ export default function DrawerDivisionTask() {
             <SimpleGrid
                cols={{ base: 3, sm: 3, lg: 3 }}
             >
-               <Flex onClick={() => window.location.href = "/task/create"} justify={'center'} align={'center'} direction={'column'} >
+               <Flex onClick={() => window.location.href = "task/create"} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
                      <IoAddCircle size={30} color={WARNA.biruTua} />
                   </Box>

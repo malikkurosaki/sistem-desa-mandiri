@@ -1,16 +1,11 @@
-import { ViewCreateTaskDivision } from "@/module/division_new";
-import { ViewDateEndTask, CreateUsersProject, ViewFileSave } from "@/module/project";
+import { CreateTask, FileSave } from "@/module/task";
 
 function Page({ searchParams }: { searchParams: any }) {
-   if (searchParams.page == "task")
-      return <ViewDateEndTask kategori="task"/>;
-   if (searchParams.page == "create-users")
-      return <CreateUsersProject kategori="task"/>
-   if (searchParams.page == "file-save")
-      return <ViewFileSave kategori="task"/>
 
-   return <ViewCreateTaskDivision searchParams={searchParams} />
+   if (searchParams.page == "file-save")
+      return <FileSave kategori="task" />
+
+   return <CreateTask />
 }
 
 export default Page
-// onClick={() => router.push('/document?page=list-document')}

@@ -67,9 +67,6 @@ export async function GET(request: Request) {
          member: v.DivisionProjectMember.length
       }))
 
-      console.log('amalia', formatData)
-
-
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data, }, { status: 200 });
 
    } catch (error) {
