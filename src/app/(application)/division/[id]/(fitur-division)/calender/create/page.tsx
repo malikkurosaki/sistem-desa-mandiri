@@ -1,3 +1,4 @@
+import { CreateCalenderDivisionCaleder, NavbarCreateDivisionCalender } from '@/module/calender';
 import { CreateUserDivisionCalender, UlangiEvent, ViewCreateDivisionCalender } from '@/module/division_new';
 import React from 'react';
 
@@ -9,7 +10,7 @@ function Page({ searchParams }: { searchParams: any }) {
 
   
   return (
-    <ViewCreateDivisionCalender />
+    <CreateCalenderDivisionCaleder />
   );
 }
 

@@ -7,43 +7,11 @@ import { funGetAllCalender } from '../lib/api_calender';
 import { useShallowEffect } from '@mantine/hooks';
 import { IDataCalender } from '../lib/type_calender';
 
-const HariIni = [
-  {
-    id: 1,
-    title: 'Pembahasan Mengenai Darmasaba',
-    jamAwal: "10.00",
-    jamAkhir: "11.00",
-    dibuat: "Jhon"
-  },
-  {
-    id: 2,
-    title: 'Pembahasan Mengenai Darmasaba',
-    jamAwal: "11.00",
-    jamAkhir: "12.00",
-    dibuat: "Jhon"
-  },
-]
-const Besok = [
-  {
-    id: 1,
-    title: 'Pembahasan Mengenai Darmasaba',
-    jamAwal: "10.00",
-    jamAkhir: "11.00",
-    dibuat: "Jhon"
-  },
-  {
-    id: 2,
-    title: 'Pembahasan Mengenai Darmasaba',
-    jamAwal: "11.00",
-    jamAkhir: "12.00",
-    dibuat: "Jhon"
-  },
-]
 
 export default function DateEventDivision() {
   const[isData, setData] = useState<IDataCalender[]>([])
   const router = useRouter()
-  const param = useParams<{ id: string }>()
+  const param = useParams<{ id: string, detail: string }>()
 
   const getData = async () => {
     try {
@@ -69,7 +37,6 @@ export default function DateEventDivision() {
   };
   return (
     <Box>
-      <pre>{JSON.stringify(isData, null, 1)}</pre>
       <Group
         justify="center"
         bg={"white"}
@@ -80,41 +47,20 @@ export default function DateEventDivision() {
       </Group>
       <Box>
         <Text mb={10} mt={20}  fw={"bold"}>Hari Ini</Text>
-        {HariIni.map((event, index) => {
+        {isData.map((event, index) => {
           const bgColor = ['#D8D8F1', '#FED6C5'][index % 2]
           const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
           return (
             <Box key={event.id} mt={10}>
-              <Box onClick={() => router.push("/calender?page=detail-event")} bg={bgColor} pl={15} p={10} style={{
+              <Box onClick={() => router.push(`/division/${param.id}/calender/${event.id}`)} bg={bgColor} pl={15} p={10} style={{
                 borderRadius: 10
               }} h={113}>
                 <Group>
                   <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
                   <Box>
-                    <Text>{event.jamAwal} - {event.jamAkhir}</Text>
+                    <Text>{event.timeStart} - {event.timeEnd}</Text>
                     <Text fw={"bold"}>{event.title}</Text>
-                    <Text>Dibuat oleh : {event.dibuat}</Text>
-                  </Box>
-                </Group>
-              </Box>
-            </Box>
-          )
-        })}
-        <Text mb={10} mt={20}  fw={"bold"}>16 Juli 2024</Text>
-        {Besok.map((event, index) => {
-          const bgColor = ['#D8D8F1', '#FED6C5'][index % 2]
-          const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
-          return (
-            <Box key={event.id} mt={10}>
-              <Box onClick={() => router.push("/calender?page=detail-event")}  bg={bgColor} pl={15} p={10} style={{
-                borderRadius: 10
-              }} h={113}>
-                <Group>
-                  <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
-                  <Box>
-                    <Text>{event.jamAwal} - {event.jamAkhir}</Text>
-                    <Text fw={"bold"}>{event.title}</Text>
-                    <Text>Dibuat oleh : {event.dibuat}</Text>
+                    <Text>Dibuat oleh : {event.user_name}</Text>
                   </Box>
                 </Group>
               </Box>

@@ -117,6 +117,7 @@ model User {
   DivisionDisscussionComment DivisionDisscussionComment[]
   DivisionDocumentFolderFile DivisionDocumentFolderFile[]
   DivisionCalendar           DivisionCalendar[]
+  DivisionCalendarMember     DivisionCalendarMember[]
 }
 
 model UserLog {
@@ -371,18 +372,20 @@ model DivisionCalendar {
   idDivision               String
   title                    String
   desc                     String                     @db.Text
+  linkMeet                 String?                    @db.Text
   dateStart                DateTime                   @db.Date
-  dateEnd                  DateTime                   @db.Date
+  dateEnd                  DateTime?                  @db.Date
   timeStart                DateTime                   @db.Time()
   timeEnd                  DateTime                   @db.Time()
-  repeatEventTyper         String
-  reminderInterval         String
+  repeatEventTyper         String // 1 = Acara 1 Kali, 2 = hari Kerja (senin - jumat), 3 = Minggu, 4 = Bulanan, 5 = Tahunan
+  reminderInterval         String?
   status                   Int                        @default(0)
   isActive                 Boolean                    @default(true)
   User                     User                       @relation(fields: [createdBy], references: [id])
   createdBy                String
   createdAt                DateTime                   @default(now())
   DivisionCalendarReminder DivisionCalendarReminder[]
+  DivisionCalendarMember   DivisionCalendarMember[]
 }
 
 model DivisionCalendarReminder {
@@ -396,6 +399,17 @@ model DivisionCalendarReminder {
   timeStart        DateTime         @db.Time()
   timeEnd          DateTime         @db.Time()
   status           Int              @default(0)
+  isActive         Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+model DivisionCalendarMember {
+  id               String           @id @default(cuid())
+  DivisionCalendar DivisionCalendar @relation(fields: [idCalendar], references: [id])
+  idCalendar       String
+  User             User             @relation(fields: [idUser], references: [id])
+  idUser           String
   isActive         Boolean          @default(true)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
