@@ -18,10 +18,10 @@ export default function NavbarDivisionCalender() {
         }
       />
       <Box p={20}>
-        <DateEventDivision/>
+        <DateEventDivision />
       </Box>
       <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
-        <DawerDivisionCalender/>
+        <DawerDivisionCalender />
       </LayoutDrawer>
     </div>
   );

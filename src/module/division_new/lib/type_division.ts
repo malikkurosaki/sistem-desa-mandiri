@@ -44,6 +44,7 @@ export interface IDataKalenderOnDetailDivision {
 
 export interface IDataDiscussionOnDetailDivision {
    id: string,
+   desc: string,
    title: string,
    date: string,
    user: string
