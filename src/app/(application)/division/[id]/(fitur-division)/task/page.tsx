@@ -1,9 +1,12 @@
-import { ViewDivisionTask } from '@/module/division_new';
+import { NavbarDivisionTask, TabsDivisionTask } from '@/module/task';
 import React from 'react';
 
 function Page() {
   return (
-    <ViewDivisionTask />
+    <div>
+      <NavbarDivisionTask />
+      <TabsDivisionTask />
+    </div>
   );
 }
 

@@ -26,7 +26,6 @@ export const funGetDiscussionById = async (path: string) => {
 }
 
 export const funEditStatusDiscussion = async (path: string, data: IStatusDiscussion) => {
-   console.log('masuk sini')
    const response = await fetch(`/api/discussion/${path}`, {
       method: "DELETE",
       headers: {
