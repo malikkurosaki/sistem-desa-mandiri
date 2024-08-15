@@ -9,7 +9,6 @@ import ViewDivisionCalender from "./_division_fitur/calender/view/view_division_
 import ViewHistoryDivisionCalender from "./_division_fitur/calender/view/view_history_division_calender";
 import ViewUpdateDivisionCalender from "./_division_fitur/calender/view/view_update_division_calender";
 import ViewDocumentDivision from "./_division_fitur/document/view/view_document_division";
-import ViewCreateTaskDivision from "./_division_fitur/task/view/view_create_division_task";
 import ViewDetailDivisionTask from "./_division_fitur/task/view/view_detail_division_task";
 import ViewUpdateProgressDivisionTask from "./_division_fitur/task/view/view_update_progress_division_task";
 import CreateAdminDivision from "./ui/create_admin_division";
@@ -27,6 +26,7 @@ import CreateAnggotaDivision from './ui/create_anggota_division';
 import EditDivision from './ui/edit_division';
 import CreateReport from './ui/create_report';
 import ReportDivisionId from './ui/report_division_id';
+import { funGetDivisionById } from './lib/api_division';
 
 export { CreateUsers };
 export { CreateAdminDivision };
@@ -34,7 +34,6 @@ export { ViewDetailDivisionTask };
 export { ViewUpdateProgressDivisionTask };
 export { ViewDivisionCalender };
 export { ViewCreateDivisionCalender };
-export { ViewCreateTaskDivision };
 export { UlangiEvent };
 export { CreateUserDivisionCalender };
 export { ViewHistoryDivisionCalender };
@@ -57,3 +56,4 @@ export { CreateAnggotaDivision }
 export { EditDivision }
 export { CreateReport }
 export { ReportDivisionId }
+export { funGetDivisionById }
