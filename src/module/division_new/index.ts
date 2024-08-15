@@ -11,7 +11,6 @@ import ViewUpdateDivisionCalender from "./_division_fitur/calender/view/view_upd
 import ViewDocumentDivision from "./_division_fitur/document/view/view_document_division";
 import ViewCreateTaskDivision from "./_division_fitur/task/view/view_create_division_task";
 import ViewDetailDivisionTask from "./_division_fitur/task/view/view_detail_division_task";
-import ViewDivisionTask from "./_division_fitur/task/view/view_division_task";
 import ViewUpdateProgressDivisionTask from "./_division_fitur/task/view/view_update_progress_division_task";
 import CreateAdminDivision from "./ui/create_admin_division";
 import CreateUsers from "./ui/create_users";
@@ -31,7 +30,6 @@ import ReportDivisionId from './ui/report_division_id';
 
 export { CreateUsers };
 export { CreateAdminDivision };
-export { ViewDivisionTask };
 export { ViewDetailDivisionTask };
 export { ViewUpdateProgressDivisionTask };
 export { ViewDivisionCalender };
