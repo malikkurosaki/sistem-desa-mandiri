@@ -18,3 +18,17 @@ export interface IFormDateTask {
    dateEnd: Date,
    title: string
 }
+
+
+export interface IFormTaskDivision {
+   idDivision: string
+   title: string
+   task: IFormDateTask[] | []
+   member: IFormMemberTask[] | []
+   file: FormData[] | []
+}
+
+export interface IListFileTask {
+   name: string,
+   extension: string
+}

@@ -166,7 +166,7 @@ export default function ListDivisionTask() {
                   {isData.map((v: any, i: any) => {
                      return (
                         <Box key={i} mb={20}>
-                           <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/task/${v.id}`)}>
+                           <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`task/${v.id}`)}>
                               <Card.Section>
                                  <Box h={120} bg={WARNA.biruTua}>
                                     <Flex justify={'center'} align={'center'} h={"100%"}>
@@ -176,18 +176,17 @@ export default function ListDivisionTask() {
                               </Card.Section>
                               <Box pt={10}>
                                  <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
-                                    <Progress.Section value={(status == 'segera') ? 0 : (status == 'dikerjakan') ? 42 : (status == 'selesai') ? 100 : 0} color="yellow" striped >
-                                       <Progress.Label>{(status == 'segera') ? 0 : (status == 'dikerjakan') ? 42 : (status == 'selesai') ? 100 : 0}%</Progress.Label>
+                                    <Progress.Section value={v.status} color="yellow" striped >
+                                       <Progress.Label>{v.status}%</Progress.Label>
                                     </Progress.Section>
                                  </Progress.Root>
                                  <Text my={10}>{v.desc}</Text>
                                  <Group align='center' pt={10} justify='space-between'>
-                                    <Badge color={'dark'}>{status}</Badge>
                                     <Avatar.Group>
                                        <Avatar>
                                           <MdAccountCircle size={32} color={WARNA.biruTua} />
                                        </Avatar>
-                                       <Avatar>+5</Avatar>
+                                       <Avatar>+{v.member-1}</Avatar>
                                     </Avatar.Group>
                                  </Group>
                               </Box>

@@ -1,8 +1,8 @@
 "use client";
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Avatar, Box, Button, Center, Flex, Group, Input, Stack, Text } from "@mantine/core";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { Avatar, Box, Button, Center, Flex, Group, Input, SimpleGrid, Stack, Text } from "@mantine/core";
+import { useParams, useRouter } from "next/navigation";
+import React, { useRef, useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
 import { BsFiletypeCsv } from "react-icons/bs";
 import CreateUsersProject from "./create_users_project";
@@ -11,21 +11,72 @@ import ResultsFile from "./results_file";
 import { useHookstate } from "@hookstate/core";
 import { globalMemberTask } from "../lib/val_task";
 import ViewDateEndTask from "./create_date_end_task";
-import { IFormDateTask } from "../lib/type_task";
+import { IFormDateTask, IFormMemberTask, IListFileTask } from "../lib/type_task";
+import { Dropzone } from '@mantine/dropzone';
+import toast from "react-hot-toast";
+import _ from "lodash";
+import { FaTrash } from "react-icons/fa6";
+import LayoutModal from "@/module/_global/layout/layout_modal";
+import { funCreateTask } from "../lib/api_task";
 
 export default function CreateTask() {
-  const router = useRouter();
+  const router = useRouter()
+  const param = useParams<{ id: string }>()
   const [openDrawer, setOpenDrawer] = useState(false)
+  const [openDrawerFile, setOpenDrawerFile] = useState(false)
+  const [openDrawerTask, setOpenDrawerTask] = useState(false)
   const [openMember, setOpenMember] = useState(false)
   const [openTugas, setOpenTugas] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
   const member = useHookstate(globalMemberTask)
+  const memberValue = member.get() as IFormMemberTask[]
   const [dataTask, setDataTask] = useState<IFormDateTask[]>([])
+  const openRef = useRef<() => void>(null)
+  const [fileForm, setFileForm] = useState<FormData[]>([])
+  const [listFile, setListFile] = useState<IListFileTask[]>([])
+  const [indexDelFile, setIndexDelFile] = useState<number>(0)
+  const [indexDelTask, setIndexDelTask] = useState<number>(0)
+  const [title, setTitle] = useState("")
+
+  function deleteFile(index: number) {
+    setListFile([...listFile.filter((val, i) => i !== index)])
+    setFileForm([...fileForm.filter((val, i) => i !== index)])
+    setOpenDrawerFile(false)
+  }
+
+  function deleteTask(index: number) {
+    setDataTask([...dataTask.filter((val, i) => i !== index)])
+    setOpenDrawerTask(false)
+  }
+
+
+  async function onSubmit() {
+    try {
+      console.log("kirim",fileForm)
+      const response = await funCreateTask({ idDivision: param.id, title, task: dataTask, file: fileForm, member: memberValue })
+
+      if (response.success) {
+        toast.success(response.message)
+        setTitle("")
+        member.set([])
+        setFileForm([])
+        setListFile([])
+        setDataTask([])
+      } else {
+        toast.error(response.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error("Gagal menambahkan tugas divisi, coba lagi nanti");
+    }
+  }
 
 
   if (openTugas) return <ViewDateEndTask onClose={(val) => {
     setDataTask([...dataTask, val])
     setOpenTugas(false)
   }} />;
+
   if (openMember) return <CreateUsersProject onClose={() => setOpenMember(false)} />
 
 
@@ -43,6 +94,8 @@ export default function CreateTask() {
             }}
             placeholder="Nama Proyek"
             size="md"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <Box onClick={() => { setOpenTugas(true) }}>
             <Group
@@ -90,7 +143,10 @@ export default function CreateTask() {
             {
               dataTask.map((v, i) => {
                 return (
-                  <Box key={i}>
+                  <Box key={i} onClick={() => {
+                    setIndexDelTask(i)
+                    setOpenDrawerTask(true)
+                  }}>
                     <ResultsDateAndTask dateStart={v.dateStart} dateEnd={v.dateEnd} title={v.title} />
                   </Box>
                 )
@@ -99,7 +155,31 @@ export default function CreateTask() {
           </Box>
         }
 
-        {/* <ResultsFile /> */}
+        {
+          listFile.length > 0 &&
+          <Box pt={20}>
+            <Text fw={'bold'} c={WARNA.biruTua}>File</Text>
+            <Box bg={"white"} style={{
+              borderRadius: 10,
+              border: `1px solid ${"#D6D8F6"}`,
+              padding: 20
+            }}>
+              {
+                listFile.map((v, i) => {
+                  return (
+                    <Box key={i} onClick={() => {
+                      setIndexDelFile(i)
+                      setOpenDrawerFile(true)
+                    }}>
+                      <ResultsFile name={v.name} extension={v.extension} />
+                    </Box>
+                  )
+                })
+              }
+            </Box>
+          </Box>
+        }
+
 
         {
           member.length > 0 &&
@@ -148,7 +228,7 @@ export default function CreateTask() {
 
 
         <Box mt="xl">
-          <Button color="white" bg={WARNA.biruTua} size="lg" radius={30} fullWidth onClick={() => router.push('/task')}>
+          <Button color="white" bg={WARNA.biruTua} size="lg" radius={30} fullWidth onClick={() => setOpenModal(true)}>
             Simpan
           </Button>
         </Box>
@@ -156,30 +236,49 @@ export default function CreateTask() {
 
 
 
+      {/* Drawer pilih file */}
       <LayoutDrawer
         opened={openDrawer}
         onClose={() => setOpenDrawer(false)}
         title={"Pilih File"}
       >
         <Flex justify={"space-around"}>
-          <Box onClick={() => ""}>
-            <Box
-              bg={"#DCEED8"}
-              style={{
-                border: `1px solid ${"#D6D8F6"}`,
-                padding: 20,
-                borderRadius: 10,
-              }}
-            >
-              <Center>
-                <BsFiletypeCsv size={40} />
-              </Center>
+          <Dropzone
+            openRef={openRef}
+            onDrop={async (files) => {
+              if (!files || _.isEmpty(files))
+                return toast.error('Tidak ada file yang dipilih')
+              const fd = new FormData();
+              fd.append("file", files[0]);
+              setFileForm([...fileForm, fd])
+              setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
+            }}
+            activateOnClick={false}
+            maxSize={3 * 1024 ** 2}
+            accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+            onReject={(files) => {
+              return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+            }}
+          >
+            <Box onClick={() => openRef.current?.()}>
+              <Box
+                bg={"#DCEED8"}
+                style={{
+                  border: `1px solid ${"#D6D8F6"}`,
+                  padding: 20,
+                  borderRadius: 10,
+                }}
+              >
+                <Center>
+                  <BsFiletypeCsv size={40} />
+                </Center>
+              </Box>
+              <Text mt={10} ta={"center"}>
+                Pilih file
+              </Text>
+              <Text ta={"center"}>diperangkat</Text>
             </Box>
-            <Text mt={10} ta={"center"}>
-              Pilih file
-            </Text>
-            <Text ta={"center"}>diperangkat</Text>
-          </Box>
+          </Dropzone>
           <Box onClick={() => router.push("/task/create?page=file-save")}>
             <Box
               bg={"#DCEED8"}
@@ -200,6 +299,61 @@ export default function CreateTask() {
           </Box>
         </Flex>
       </LayoutDrawer>
+
+
+
+      {/* Drawer hapus file */}
+      <LayoutDrawer
+        opened={openDrawerFile}
+        onClose={() => setOpenDrawerFile(false)}
+        title={""}
+      >
+        <Stack pt={10}>
+          <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
+            <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteFile(indexDelFile)}>
+              <Box>
+                <FaTrash size={30} color={WARNA.biruTua} />
+              </Box>
+              <Box>
+                <Text c={WARNA.biruTua} ta='center'>Hapus File</Text>
+              </Box>
+            </Flex>
+          </SimpleGrid>
+        </Stack>
+      </LayoutDrawer>
+
+
+      {/* Drawer hapus tugas */}
+      <LayoutDrawer
+        opened={openDrawerTask}
+        onClose={() => setOpenDrawerTask(false)}
+        title={""}
+      >
+        <Stack pt={10}>
+          <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
+            <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteTask(indexDelTask)}>
+              <Box>
+                <FaTrash size={30} color={WARNA.biruTua} />
+              </Box>
+              <Box>
+                <Text c={WARNA.biruTua} ta='center'>Hapus Tugas</Text>
+              </Box>
+            </Flex>
+          </SimpleGrid>
+        </Stack>
+      </LayoutDrawer>
+
+
+
+
+      <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+        description="Apakah Anda yakin ingin menambahkan data?"
+        onYes={(val) => {
+          if (val) {
+            onSubmit()
+          }
+          setOpenModal(false)
+        }} />
     </Box >
   );
 }
