@@ -40,7 +40,6 @@ export default function DrawerDetailEvent() {
   return (
     <Box>
       <Stack pt={10}>
-        {JSON.stringify(param)}
         <SimpleGrid
           cols={{ base: 3, sm: 3, lg: 3 }}
         >

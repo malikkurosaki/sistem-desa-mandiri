@@ -15,38 +15,6 @@ import { useShallowEffect } from '@mantine/hooks';
 import moment from "moment";
 import "moment/locale/id";
 import { IDataDetailByIdCalender, IDataDetailByIdMember } from '../lib/type_calender';
-const dataAnggota = [
-  {
-    id: 1,
-    name: "Iqbal Ramadan",
-    image: "https://i.pravatar.cc/1000?img=5",
-    email: "iqbal.ramadan@gmail.com",
-  },
-  {
-    id: 2,
-    name: "Doni Setiawan",
-    image: "https://i.pravatar.cc/1000?img=10",
-    email: "doni.setiawan@gmail.com",
-  },
-  {
-    id: 3,
-    name: "Rangga Agung",
-    image: "https://i.pravatar.cc/1000?img=51",
-    email: "rangga.agung@gmail.com",
-  },
-  {
-    id: 4,
-    name: "Ramadan Sananta",
-    image: "https://i.pravatar.cc/1000?img=15",
-    email: "ramadan@gmail.com",
-  },
-  {
-    id: 5,
-    name: "Imam Baroni",
-    image: "https://i.pravatar.cc/1000?img=22",
-    email: "imam.baroni@gmail.com",
-  },
-];
 
 export default function DetailEventDivision() {
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -94,7 +62,7 @@ export default function DetailEventDivision() {
             </Group>
             <Group mb={10} gap={30}>
               <LuClock size={25} color={WARNA.biruTua} />
-              <Text>{moment(isDataCalender?.timeStart).format('LT')}  | {moment(isDataCalender?.timeEnd).format('LT')} </Text>
+              <Text>{moment.utc(isDataCalender?.timeStart).format('HH:mm')}  | {moment.utc(isDataCalender?.timeEnd).format('HH:mm')} </Text>
             </Group>
             <Group mb={10} gap={30}>
               <BsCalendarDate size={25} color={WARNA.biruTua} />

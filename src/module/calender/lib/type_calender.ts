@@ -48,3 +48,7 @@ export interface IFormMemberCalender {
         name: string
     }[]
 }
+
+export interface IFormUlangiEvent {
+    id: string
+}
