@@ -49,14 +49,17 @@ export async function GET(request: Request) {
                             name: true
                         }
                     }
+                },
+                orderBy: {
+                    createdAt: 'desc'
                 }
             });
 
             const allOmit = data.map((v: any) => ({
                 ..._.omit(v, ["User"]),
                 user_name: v.User.name,
-                timeStart: moment(v.timeStart).format('LT'),
-                timeEnd: moment(v.timeEnd).format('LT')
+                timeStart: moment.utc(v.timeStart).format('HH:mm'),
+                timeEnd: moment.utc(v.timeEnd).format('HH:mm')
             }))
 
 
