@@ -1,7 +1,12 @@
 import ViewDateEndTask from "./ui/create_date_end_task";
 import CreateTask from "./ui/create_task";
 import CreateUsersProject from "./ui/create_users_project";
+import ListAnggotaDetailTask from "./ui/detail_list_anggota_task";
+import ListFileDetailTask from "./ui/detail_list_file_task";
+import ListTugasDetailTask from "./ui/detail_list_tugas_task";
+import ProgressDetailTask from "./ui/detail_progress_task";
 import FileSave from "./ui/file_save";
+import NavbarDetailDivisionTask from "./ui/navbar_detail_division_task";
 import NavbarDivisionTask from "./ui/navbar_division_task";
 import TabsDivisionTask from "./ui/tabs_division_task";
 
@@ -11,3 +16,8 @@ export { CreateTask }
 export { ViewDateEndTask }
 export { CreateUsersProject }
 export { FileSave }
+export { NavbarDetailDivisionTask }
+export { ListTugasDetailTask }
+export { ProgressDetailTask }
+export { ListFileDetailTask }
+export { ListAnggotaDetailTask }

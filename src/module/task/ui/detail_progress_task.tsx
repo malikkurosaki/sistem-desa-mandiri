@@ -1,9 +1,37 @@
 'use client'
 import { WARNA } from "@/module/_global";
 import { Box, Grid, ActionIcon, Progress, Text } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
+import toast from "react-hot-toast";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
+import { funGetTaskDivisionById } from "../lib/api_task";
+import { useState } from "react";
 
 export default function ProgressDetailTask() {
+   const [valProgress, setValProgress] = useState(0)
+   const [valLastUpdate, setValLastUpdate] = useState('')
+   const param = useParams<{ id: string, detail: string }>()
+   async function getOneData() {
+      try {
+         const res = await funGetTaskDivisionById(param.detail, 'progress');
+         if (res.success) {
+            setValProgress(res.data.progress);
+            setValLastUpdate(res.data.lastUpdate);
+         } else {
+            toast.error(res.message);
+         }
+
+      } catch (error) {
+         console.error(error);
+         toast.error("Gagal mendapatkan progress tugas divisi, coba lagi nanti");
+      }
+   }
+
+   useShallowEffect(() => {
+      getOneData();
+   }, [param.detail])
+
    return (
       <Box mt={10}>
          <Box
@@ -27,7 +55,7 @@ export default function ProgressDetailTask() {
                </Grid.Col>
                <Grid.Col span={9}>
                   <Box>
-                     <Text>Kemajuan Proyek 60%</Text>
+                     <Text>Kemajuan Proyek {valProgress}%</Text>
                      <Progress
                         style={{
                            border: `1px solid ${"#BDBDBD"}`,
@@ -36,9 +64,9 @@ export default function ProgressDetailTask() {
                         color="#FCAA4B"
                         radius="md"
                         size="xl"
-                        value={60}
+                        value={valProgress}
                      />
-                     <Text>18 Juni 2024</Text>
+                     <Text>{valLastUpdate}</Text>
                   </Box>
                </Grid.Col>
             </Grid>

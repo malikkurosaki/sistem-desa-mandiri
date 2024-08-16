@@ -136,7 +136,7 @@ export default function ListDivisionTask() {
                   {isData.map((v, i) => {
                      return (
                         <Box key={i}>
-                           <Group justify="space-between" mb={10} onClick={() => router.push(`/task/${v.id}`)}>
+                           <Group justify="space-between" mb={10} onClick={() => router.push(`task/${v.id}`)}>
                               <Group>
                                  <Center>
                                     <ActionIcon

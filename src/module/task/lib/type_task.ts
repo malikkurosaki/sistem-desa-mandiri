@@ -32,3 +32,24 @@ export interface IListFileTask {
    name: string,
    extension: string
 }
+
+
+export interface IDataListTaskDivision {
+   id: string
+   title: string
+   dateStart: string
+   dateEnd: string
+   status: number
+}
+
+export interface IDataMemberTaskDivision {
+   id: string
+   name: string
+   email: string
+}
+
+export interface IDataFileTaskDivision {
+   id: string
+   name: string
+   extension: string
+}
