@@ -93,3 +93,50 @@ export async function GET(request: Request, context: { params: { id: string } })
     }
 }
 
+// DELETE CALENDER BY ID
+export async function DELETE(request: Request, context: { params: { id: string } }) {
+    try {
+        const user = await funGetUserByCookies()
+        if (user.id == undefined) {
+            return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+        }
+
+        const { id } = context.params
+
+        const cek = await prisma.divisionCalendar.count({
+            where: {
+                id: id
+            }
+        })
+
+        if (cek == 0) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Gagal menghapus calender, data tidak ditemukan",
+                },
+                { status: 404 }
+            );
+        }
+
+        const data = await prisma.divisionCalendar.update({
+            where: {
+                id: id
+            },
+            data: {
+                isActive: false
+            }
+        });
+
+        return NextResponse.json({ success: true, message: "Berhasil menghapus calender", data }, { status: 200 });
+
+    } catch (error) {
+        return NextResponse.json(
+            {
+                success: false,
+                message: "Gagal menghapus calender, coba lagi nanti",
+            },
+            { status: 500 }
+        );
+    }
+}
