@@ -28,3 +28,23 @@ export interface IDataDetailByIdMember {
     name: string
     email: string
 }
+
+export interface IFormCreateCalender {
+    idDivision: string
+    title: string
+    dateStart: String
+    timeStart: string
+    timeEnd: string
+    linkMeet: string
+    repeatEventTyper: string
+    desc: string,
+    member: IFormMemberCalender[]
+}
+
+export interface IFormMemberCalender {
+    idCalender: string
+    idUser: {
+        id: string
+        name: string
+    }[]
+}
