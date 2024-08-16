@@ -19,3 +19,8 @@ export const funCreateTask = async (data: IFormTaskDivision) => {
    });
    return await response.json().catch(() => null);
 };
+
+export const funGetTaskDivisionById = async (path: string, kategori: string) => {
+   const response = await fetch(`/api/task/${path}?cat=${kategori}`);
+   return await response.json().catch(() => null);
+}
