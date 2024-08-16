@@ -298,18 +298,18 @@ model DivisionProjectMember {
 }
 
 model DivisionProjectFile {
-  id              String          @id @default(cuid())
-  Division        Division        @relation(fields: [idDivision], references: [id])
-  idDivision      String
-  DivisionProject DivisionProject @relation(fields: [idProject], references: [id])
-  idProject       String
-  name            String
-  extension       String
-  isActive        Boolean         @default(true)
-  User            User            @relation(fields: [createdBy], references: [id])
-  createdBy       String
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  id                    String                @id @default(cuid())
+  Division              Division              @relation(fields: [idDivision], references: [id])
+  idDivision            String
+  DivisionProject       DivisionProject       @relation(fields: [idProject], references: [id])
+  idProject             String
+  ContainerFileDivision ContainerFileDivision @relation(fields: [idFile], references: [id])
+  idFile                String
+  isActive              Boolean               @default(true)
+  User                  User                  @relation(fields: [createdBy], references: [id])
+  createdBy             String
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
 }
 
 model DivisionDisscussion {
@@ -423,4 +423,14 @@ model ContainerImage {
   isActive   Boolean  @default(true)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model ContainerFileDivision {
+  id                  String                @id @default(cuid())
+  name                String
+  extension           String
+  isActive            Boolean               @default(true)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  DivisionProjectFile DivisionProjectFile[]
 }

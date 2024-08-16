@@ -3,6 +3,7 @@ import { pwd_key_config } from "./bin/val_global";
 import SkeletonDetailDiscussionComment from "./components/skeleton_detail_discussion_comment";
 import SkeletonDetailDiscussionMember from "./components/skeleton_detail_discussion_member";
 import SkeletonSingle from "./components/skeleton_single";
+import { funUploadFile } from "./fun/upload-file";
 import { WARNA } from "./fun/WARNA";
 import LayoutDrawer from "./layout/layout_drawer";
 import LayoutIconBack from "./layout/layout_icon_back";
@@ -25,3 +26,4 @@ export { pwd_key_config };
 export { SkeletonSingle }
 export { SkeletonDetailDiscussionComment }
 export { SkeletonDetailDiscussionMember }
+export { funUploadFile }
