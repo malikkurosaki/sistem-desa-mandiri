@@ -41,7 +41,7 @@ export default function NavbarDetailDivisionTask() {
             size="lg"
             radius="lg"
             aria-label="Settings"
-            onClick={() => router.push("/task/update/1")}
+            onClick={() => router.push("update/clzwclyjc00072sqq4sbr5iz4")}
          >
             <LuClipboardEdit size={20} color="white" />
          </ActionIcon>

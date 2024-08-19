@@ -6,12 +6,16 @@ import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
 import { funGetTaskDivisionById } from "../lib/api_task";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { globalRefreshTask } from "../lib/val_task";
+import { useHookstate } from "@hookstate/core";
 
 export default function ProgressDetailTask() {
    const [valProgress, setValProgress] = useState(0)
    const [valLastUpdate, setValLastUpdate] = useState('')
    const param = useParams<{ id: string, detail: string }>()
+   const refresh = useHookstate(globalRefreshTask)
+
    async function getOneData() {
       try {
          const res = await funGetTaskDivisionById(param.detail, 'progress');
@@ -27,6 +31,19 @@ export default function ProgressDetailTask() {
          toast.error("Gagal mendapatkan progress tugas divisi, coba lagi nanti");
       }
    }
+
+   function onRefresh() {
+      if (refresh.get()) {
+         getOneData()
+         refresh.set(false)
+      }
+   }
+
+   
+
+   useEffect(() => {
+      onRefresh()
+   }, [refresh.get()])
 
    useShallowEffect(() => {
       getOneData();
@@ -66,7 +83,7 @@ export default function ProgressDetailTask() {
                         size="xl"
                         value={valProgress}
                      />
-                     <Text>{valLastUpdate}</Text>
+                     {/* <Text c={"dimmed"}>Update terakhir : {valLastUpdate}</Text> */}
                   </Box>
                </Grid.Col>
             </Grid>
