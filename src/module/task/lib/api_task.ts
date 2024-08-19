@@ -88,3 +88,28 @@ export const funAddMemberTask = async (path: string, data: IFormAddMemberTask) =
    });
    return await response.json().catch(() => null);
 };
+
+
+export const funCancelTask = async (path: string, data: { reason: string }) => {
+   const response = await fetch(`/api/task/${path}`, {
+      method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};
+
+
+
+export const funEditTask = async (path: string, data: { title: string }) => {
+   const response = await fetch(`/api/task/${path}`, {
+      method: "PUT",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};

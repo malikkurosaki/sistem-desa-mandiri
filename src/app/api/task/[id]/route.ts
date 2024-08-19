@@ -188,3 +188,103 @@ export async function POST(request: Request, context: { params: { id: string } }
    }
 }
 
+
+
+// PEMBATALAN TASK DIVISI
+export async function DELETE(request: Request, context: { params: { id: string } }) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const { id } = context.params;
+      const { reason } = (await request.json());
+      const data = await prisma.divisionProject.count({
+         where: {
+            id: id,
+         },
+      });
+
+      if (data == 0) {
+         return NextResponse.json(
+            {
+               success: false,
+               message: "Pembatalan tugas gagal, data tugas tidak ditemukan",
+            },
+            { status: 404 }
+         );
+      }
+
+      const update = await prisma.divisionProject.update({
+         where: {
+            id
+         },
+         data: {
+            reason: reason,
+            status: 3
+         }
+      });
+
+      return NextResponse.json(
+         {
+            success: true,
+            message: "Tugas berhasil dibatalkan",
+         },
+         { status: 200 }
+      );
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ success: false, message: "Gagal membatalkan tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+   }
+}
+
+
+// EDIT TASK DIVISI
+export async function PUT(request: Request, context: { params: { id: string } }) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const { id } = context.params;
+      const { title } = (await request.json());
+      const data = await prisma.divisionProject.count({
+         where: {
+            id: id,
+         },
+      });
+
+      if (data == 0) {
+         return NextResponse.json(
+            {
+               success: false,
+               message: "Tugas gagal diedit, data tugas tidak ditemukan",
+            },
+            { status: 404 }
+         );
+      }
+
+      const update = await prisma.divisionProject.update({
+         where: {
+            id
+         },
+         data: {
+            title
+         }
+      });
+
+      return NextResponse.json(
+         {
+            success: true,
+            message: "Tugas berhasil diedit",
+         },
+         { status: 200 }
+      );
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ success: false, message: "Gagal mengedit tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+   }
+}
+

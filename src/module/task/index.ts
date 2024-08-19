@@ -1,5 +1,6 @@
 import AddDetailTask from "./ui/add_detail_task";
 import AddMemberDetailTask from "./ui/add_member_detail_task";
+import CancelTask from "./ui/cancel_task";
 import ViewDateEndTask from "./ui/create_date_end_task";
 import CreateTask from "./ui/create_task";
 import CreateUsersProject from "./ui/create_users_project";
@@ -8,6 +9,7 @@ import ListFileDetailTask from "./ui/detail_list_file_task";
 import ListTugasDetailTask from "./ui/detail_list_tugas_task";
 import ProgressDetailTask from "./ui/detail_progress_task";
 import EditDetailTask from "./ui/edit_detail_task";
+import EditTask from "./ui/edit_task";
 import FileSave from "./ui/file_save";
 import NavbarDetailDivisionTask from "./ui/navbar_detail_division_task";
 import NavbarDivisionTask from "./ui/navbar_division_task";
@@ -27,3 +29,5 @@ export { ListAnggotaDetailTask }
 export { EditDetailTask }
 export { AddDetailTask }
 export { AddMemberDetailTask }
+export { CancelTask }
+export { EditTask }
