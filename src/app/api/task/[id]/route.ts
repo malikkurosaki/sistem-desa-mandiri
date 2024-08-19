@@ -36,7 +36,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                isActive: true,
                idProject: String(id)
             },
-            orderBy:{
+            orderBy: {
                updatedAt: 'desc'
             }
          })
@@ -61,6 +61,9 @@ export async function GET(request: Request, context: { params: { id: string } })
                status: true,
                dateStart: true,
                dateEnd: true,
+            },
+            orderBy: {
+               status: 'desc'
             }
          })
 

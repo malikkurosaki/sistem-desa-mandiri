@@ -5,6 +5,7 @@ import ListAnggotaDetailTask from "./ui/detail_list_anggota_task";
 import ListFileDetailTask from "./ui/detail_list_file_task";
 import ListTugasDetailTask from "./ui/detail_list_tugas_task";
 import ProgressDetailTask from "./ui/detail_progress_task";
+import EditDetailTask from "./ui/edit_detail_task";
 import FileSave from "./ui/file_save";
 import NavbarDetailDivisionTask from "./ui/navbar_detail_division_task";
 import NavbarDivisionTask from "./ui/navbar_division_task";
@@ -21,3 +22,4 @@ export { ListTugasDetailTask }
 export { ProgressDetailTask }
 export { ListFileDetailTask }
 export { ListAnggotaDetailTask }
+export { EditDetailTask }

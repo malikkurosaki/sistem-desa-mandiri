@@ -1,6 +1,7 @@
 import { funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _, { ceil } from "lodash";
+import moment from "moment";
 import { NextResponse } from "next/server";
 
 
@@ -115,8 +116,8 @@ export async function POST(request: Request) {
             idDivision: idDivision,
             idProject: data.id,
             title: v.title,
-            dateStart: new Date(v.dateStart),
-            dateEnd: new Date(v.dateEnd),
+            dateStart: new Date(moment(v.dateStart).format('YYYY-MM-DD')),
+            dateEnd: new Date(moment(v.dateEnd).format('YYYY-MM-DD')),
          }))
 
          const insertTask = await prisma.divisionProjectTask.createMany({
@@ -139,7 +140,6 @@ export async function POST(request: Request) {
 
       let fileFix: any[] = []
 
-      console.log("amalia",file)
 
       if (file.length > 0) {
          file.map((v: any, index: any) => {
@@ -158,7 +158,6 @@ export async function POST(request: Request) {
             fileFix.push(dataFile)
          })
 
-         console.log(fileFix)
          const insertFile = await prisma.divisionProjectFile.createMany({
             data: fileFix
          })
@@ -170,6 +169,6 @@ export async function POST(request: Request) {
 
    } catch (error) {
       console.log(error);
-      return NextResponse.json({ success: false, message: "Gagal membuat tugas divisiii, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal membuat tugas divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
