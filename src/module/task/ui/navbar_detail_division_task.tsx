@@ -8,7 +8,8 @@ import { funGetTaskDivisionById } from "../lib/api_task";
 import { useShallowEffect } from "@mantine/hooks";
 import { HiMenu } from "react-icons/hi";
 import { IoAddCircle } from "react-icons/io5";
-import { RiFilter2Line } from "react-icons/ri";
+import { FaPencil, FaUsers } from "react-icons/fa6";
+import { MdCancel } from "react-icons/md";
 
 export default function NavbarDetailDivisionTask() {
    const router = useRouter()
@@ -45,7 +46,7 @@ export default function NavbarDetailDivisionTask() {
                size="lg"
                radius="lg"
                aria-label="Settings"
-               onClick={() => { }}
+               onClick={() => { setOpen(true) }}
             >
                <HiMenu size={20} color="white" />
             </ActionIcon>
@@ -63,14 +64,14 @@ export default function NavbarDetailDivisionTask() {
                            cursor: 'pointer'
                         }}
                         onClick={() => {
-                           router.push('/announcement/create')
+                           router.push(param.detail + '/add-task')
                         }}
                      >
                         <Box>
                            <IoAddCircle size={30} color={WARNA.biruTua} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua} ta='center'>Tambah Pengumuman</Text>
+                           <Text c={WARNA.biruTua} ta='center'>Tambah Tugas</Text>
                         </Box>
                      </Flex>
 
@@ -79,20 +80,49 @@ export default function NavbarDetailDivisionTask() {
                            cursor: 'pointer'
                         }}
                         onClick={() => {
-                           router.push('/announcement?page=filter')
+                           router.push(param.detail + '/add-member')
                         }}
                      >
                         <Box>
-                           <RiFilter2Line size={30} color={WARNA.biruTua} />
+                           <FaUsers size={30} color={WARNA.biruTua} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua} ta='center'>Filter</Text>
+                           <Text c={WARNA.biruTua} ta='center'>Tambah anggota</Text>
+                        </Box>
+                     </Flex>
+
+                     <Flex justify={'center'} align={'center'} direction={'column'}
+                        style={{
+                           cursor: 'pointer'
+                        }}
+                        onClick={() => { router.push(param.detail + '/cancel') }}
+                     >
+                        <Box>
+                           <MdCancel size={30} color={WARNA.biruTua} />
+                        </Box>
+                        <Box>
+                           <Text c={WARNA.biruTua} ta='center'>Batal</Text>
+                        </Box>
+                     </Flex>
+
+                     <Flex justify={'center'} align={'center'} direction={'column'}
+                        style={{
+                           cursor: 'pointer'
+                        }}
+                        onClick={() => { router.push(param.detail + '/edit') }}
+                     >
+                        <Box>
+                           <FaPencil size={30} color={WARNA.biruTua} />
+                        </Box>
+                        <Box>
+                           <Text c={WARNA.biruTua} ta='center'>Edit</Text>
                         </Box>
                      </Flex>
                   </SimpleGrid>
                </Stack>
             </Box>
          </LayoutDrawer>
+
       </>
    )
 }

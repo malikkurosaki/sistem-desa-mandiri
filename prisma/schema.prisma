@@ -257,7 +257,8 @@ model DivisionProject {
   Division              Division                @relation(fields: [idDivision], references: [id])
   idDivision            String
   title                 String
-  desc                  String                  @db.Text
+  desc                  String?                 @db.Text
+  reason                String?                 @db.Text
   status                Int                     @default(0) // 0 = pending, 1 = ongoing, 2 = done, 3 = cancelled
   isActive              Boolean                 @default(true)
   createdAt             DateTime                @default(now())

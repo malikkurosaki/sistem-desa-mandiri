@@ -19,6 +19,19 @@ export interface IFormDateTask {
    title: string
 }
 
+export interface IFormAddDetailTask {
+   dateStart: Date,
+   dateEnd: Date,
+   title: string
+   idDivision: string
+}
+
+
+export interface IFormAddMemberTask {
+   idDivision: string
+   member: IFormMemberTask[] | []
+}
+
 
 export interface IFormTaskDivision {
    idDivision: string
@@ -44,6 +57,7 @@ export interface IDataListTaskDivision {
 
 export interface IDataMemberTaskDivision {
    id: string
+   idUser: string
    name: string
    email: string
 }

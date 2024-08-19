@@ -52,7 +52,6 @@ export default function CreateTask() {
 
   async function onSubmit() {
     try {
-      console.log("kirim",fileForm)
       const response = await funCreateTask({ idDivision: param.id, title, task: dataTask, file: fileForm, member: memberValue })
 
       if (response.success) {

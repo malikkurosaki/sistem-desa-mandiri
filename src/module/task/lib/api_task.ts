@@ -1,4 +1,4 @@
-import { IFormDateTask, IFormTaskDivision } from "./type_task";
+import { IFormAddDetailTask, IFormAddMemberTask, IFormDateTask, IFormTaskDivision } from "./type_task";
 
 export const funGetAllTask = async (path?: string) => {
    const response = await fetch(`/api/task${(path) ? path : ''}`, { next: { tags: ['task'] } });
@@ -58,6 +58,54 @@ export const funGetDetailTask = async (path: string) => {
 export const funEditDetailTask = async (path: string, data: IFormDateTask) => {
    const response = await fetch(`/api/task/detail/${path}`, {
       method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};
+
+
+export const funCreateDetailTask = async (path: string, data: IFormAddDetailTask) => {
+   const response = await fetch(`/api/task/${path}`, {
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};
+
+export const funAddMemberTask = async (path: string, data: IFormAddMemberTask) => {
+   const response = await fetch(`/api/task/${path}/member`, {
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};
+
+
+export const funCancelTask = async (path: string, data: { reason: string }) => {
+   const response = await fetch(`/api/task/${path}`, {
+      method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};
+
+
+
+export const funEditTask = async (path: string, data: { title: string }) => {
+   const response = await fetch(`/api/task/${path}`, {
+      method: "PUT",
       headers: {
          "Content-Type": "application/json",
       },
