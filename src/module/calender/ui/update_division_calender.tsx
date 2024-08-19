@@ -14,6 +14,7 @@ import moment from 'moment';
 import "moment/locale/id";
 import { useHookstate } from '@hookstate/core';
 import { globalCalender } from '../lib/val_calender';
+import UpdateListUsers from './update_list_users';
 
 export default function UpdateDivisionCalender() {
   const [isModal, setModal] = useState(false)
@@ -21,15 +22,13 @@ export default function UpdateDivisionCalender() {
   const memberUser = useHookstate(globalCalender)
   const memberValue = memberUser.get() as IFormMemberCalender[]
   const [isDataCalender, setDataCalender] = useState<IDetailByIdCalender>()
-  const [isDataAnggota, setDataAnggota] = useState<IEditMemberCalender[]>([])
-  const [isLengthMember, setLengthMember] = useState()
+  const [openMember, setOpenMember] = useState(false)
 
   const fetchGetOne = async () => {
     try {
       const response = await funGetOneCalender(param.detail)
       setDataCalender(response.data.calender)
-      setDataAnggota(response.data.member)
-      setLengthMember(response.data.member.length)
+      memberUser.set(response.data.member)
     } catch (error) {
       console.log(error)
     }
@@ -39,12 +38,6 @@ export default function UpdateDivisionCalender() {
     fetchGetOne()
   }, [])
 
-  function onTrue(val: boolean) {
-    if (val) {
-      toast.success("Sukses! Data tersimpan");
-    }
-    setModal(false)
-  }
   const [value, setValue] = useState<Date | null>(null);
   const router = useRouter()
 
@@ -59,12 +52,13 @@ export default function UpdateDivisionCalender() {
           linkMeet: isDataCalender?.linkMeet,
           repeatEventTyper: isDataCalender?.repeatEventTyper,
           desc: isDataCalender?.desc,
-          member: isDataAnggota
+          member: memberValue
         })
 
         if (response.success) {
           setModal(false)
           router.push(`/division/${param.id}/calender`)
+          toast.success(response.message)
         } else {
           toast.error(response.message)
         }
@@ -77,21 +71,9 @@ export default function UpdateDivisionCalender() {
     } finally {
       setModal(false)
     }
-    if (val) {
-      console.log(
-        {
-          title: isDataCalender?.title,
-          dateStart: isDataCalender?.dateStart,
-          timeStart: isDataCalender?.timeStart,
-          timeEnd: isDataCalender?.timeEnd,
-          linkMeet: isDataCalender?.linkMeet,
-          repeatEventTyper: isDataCalender?.repeatEventTyper,
-          desc: isDataCalender?.desc,
-          member: isDataAnggota
-        }
-      )
-    }
   }
+
+  if (openMember) return <UpdateListUsers onClose={() => setOpenMember(false)} />
 
   return (
     <Box>
@@ -108,7 +90,7 @@ export default function UpdateDivisionCalender() {
             size="md"
             placeholder="Event Nama"
             label="Event Nama"
-            value={isDataCalender?.title}
+            defaultValue={isDataCalender?.title}
             onChange={
               (event) => {
                 setDataCalender({
@@ -153,7 +135,8 @@ export default function UpdateDivisionCalender() {
               }}
               size="md"
               label="Waktu Awal"
-              value={isDataCalender?.timeStart}
+              // value={isDataCalender?.timeStart}
+              defaultValue={isDataCalender?.timeStart}
               onChange={
                 (event) => {
                   setDataCalender({
@@ -172,7 +155,8 @@ export default function UpdateDivisionCalender() {
               }}
               size="md"
               label="Waktu Akhir"
-              value={isDataCalender?.timeEnd}
+              // value={isDataCalender?.timeEnd}
+              defaultValue={isDataCalender?.timeEnd}
               onChange={
                 (event) => {
                   setDataCalender({
@@ -193,7 +177,8 @@ export default function UpdateDivisionCalender() {
             size="md"
             placeholder="Link Meet"
             label="Link Meet"
-            value={isDataCalender?.linkMeet}
+            // value={isDataCalender?.linkMeet}
+            defaultValue={isDataCalender?.linkMeet}
             onChange={
               (event) => {
                 setDataCalender({
@@ -221,6 +206,7 @@ export default function UpdateDivisionCalender() {
               { value: '5', label: 'Tahunan' },
             ]}
             value={isDataCalender?.repeatEventTyper}
+            defaultValue={isDataCalender?.repeatEventTyper}
             onChange={
               (val: any) => {
                 setDataCalender({
@@ -230,7 +216,7 @@ export default function UpdateDivisionCalender() {
               }
             }
           />
-          <Box mt={5} onClick={() => router.push('/calender/update?page=update-user-calender')}>
+          <Box mt={5} onClick={() => setOpenMember(true)}>
             <Group
               justify="space-between"
               p={10}
@@ -250,7 +236,8 @@ export default function UpdateDivisionCalender() {
             },
           }}
             size="md" placeholder='Deskripsi' label="Deskripsi"
-            value={isDataCalender?.desc}
+          // value={isDataCalender?.desc}
+            defaultValue={isDataCalender?.desc}
             onChange={
               (event) => {
                 setDataCalender({
@@ -263,7 +250,7 @@ export default function UpdateDivisionCalender() {
           <Box pt={30}>
             <Group justify="space-between">
               <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-              <Text c={WARNA.biruTua}>Total {isLengthMember} Anggota</Text>
+              <Text c={WARNA.biruTua}>Total {memberUser.length} Anggota</Text>
             </Group>
             <Box pt={10}>
               <Box mb={20}>
@@ -275,7 +262,7 @@ export default function UpdateDivisionCalender() {
                   px={20}
                   py={10}
                 >
-                  {isDataAnggota.map((v: any, i: any) => {
+                  {memberUser.get().map((v: any, i: any) => {
                     return (
                       <Flex
                         justify={"space-between"}

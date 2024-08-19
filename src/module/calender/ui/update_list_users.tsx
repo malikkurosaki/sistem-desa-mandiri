@@ -1,9 +1,15 @@
 "use client"
-import { WARNA } from '@/module/_global';
-import { Avatar, Box, Button, Center, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
-import { useRouter } from 'next/navigation';
+import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { funGetDivisionById, IDataMemberDivision } from '@/module/division_new';
+import { useHookstate } from '@hookstate/core';
+import { Avatar, Box, Button, Center, Divider, Flex, Group, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { globalCalender } from '../lib/val_calender';
+import toast from 'react-hot-toast';
+import { useShallowEffect } from '@mantine/hooks';
+import { FaCheck } from 'react-icons/fa6';
 
 const dataUser = [
   {
@@ -38,77 +44,132 @@ const dataUser = [
   },
 ];
 
-export default function UpdateListUsers() {
+export default function UpdateListUsers({ onClose }: { onClose: (val: any) => void }) {
   const router = useRouter()
-  const [selectedFiles, setSelectedFiles] = useState<Record<number, boolean>>({});
+  const param = useParams<{ id: string }>()
+  const [selectedFiles, setSelectedFiles] = useState<any>([])
+  const [isData, setData] = useState<IDataMemberDivision[]>([])
+  const member = useHookstate(globalCalender)
+  const [selectAll, setSelectAll] = useState(false)
+
+  async function getData() {
+    try {
+      const response = await funGetDivisionById(param.id)
+      if (response.success) {
+        setData(response.data.member)
+        if (member.length > 0) {
+          setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
+        }
+      } else {
+        toast.error(response.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error("Gagal mendapatkan anggota, coba lagi nanti");
+    }
+  }
+
+
+  useShallowEffect(() => {
+    getData()
+  }, []);
 
   const handleFileClick = (index: number) => {
-    setSelectedFiles((prevSelectedFiles) => ({
-      ...prevSelectedFiles,
-      [index]: !prevSelectedFiles[index],
-    }));
+    if (selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
+      setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != isData[index].idUser))
+    } else {
+      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name }])
+    }
   };
+
+
+
+  const handleSelectAll = () => {
+    setSelectAll(!selectAll);
+    if (!selectAll) {
+      for (let index = 0; index < isData.length; index++) {
+        if (!selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
+          const newArr = {
+            idUser: isData[index].idUser, name: isData[index].name
+          }
+          setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
+        }
+
+      }
+    } else {
+      setSelectedFiles([]);
+    }
+  };
+
+
+  function onSubmit() {
+    if (selectedFiles.length == 0) {
+      return toast.error("Error! silahkan pilih anggota")
+    }
+    member.set(selectedFiles)
+    onClose(true)
+  }
+
   return (
     <Box>
-      <Stack>
-        <TextInput
-          styles={{
-            input: {
-              color: WARNA.biruTua,
-              borderRadius: '#A3A3A3',
-              borderColor: '#A3A3A3',
-            },
-          }}
-          size="md"
-          radius={30}
-          leftSection={<HiMagnifyingGlass size={20} />}
-          placeholder="Pencarian"
-        />
-        <Box pt={10}>
-          <SimpleGrid
-            cols={{ base: 2, sm: 2, lg: 2 }}
-            spacing={{ base: 20, sm: "xl" }}
-            verticalSpacing={{ base: "md", sm: "xl" }}
-          >
-            {dataUser.map((v, index) => {
-              const isSelected = selectedFiles[index];
-              return (
-                <Box key={index} mb={10}>
-                  <Box
-                    bg={isSelected ? WARNA.bgHijauMuda : "white"}
-                    style={{
-                      border: `1px solid ${WARNA.biruTua}`,
-                      borderRadius: 20,
-                    }}
-                    py={10}
-                    onClick={() => handleFileClick(index)}
-                  >
-                    <Center>
-                      <Avatar src={v.img} alt="it's me" size="xl" />
-                    </Center>
-                    <Text mt={20} ta="center">
-                      {v.name}
-                    </Text>
-                  </Box>
-                </Box>
-              );
-            })}
-          </SimpleGrid>
-        </Box>
-      </Stack>
-      <Box mt="xl">
+    <LayoutNavbarNew
+      // back=""
+      title="Pilih Anggota"
+      menu
+    />
+    <Box p={20}>
+      <Group justify="space-between" mt={20} onClick={handleSelectAll}>
+        <Text c={WARNA.biruTua} fw={"bold"}>
+          Pilih Semua Anggota
+        </Text>
+        {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+      </Group>
+      <Box mt={15}>
+        {isData.map((v, i) => {
+          const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
+          return (
+            <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
+              <Flex justify={"space-between"} align={"center"}>
+                <Group>
+                  <Avatar src={"v.image"} alt="it's me" size="lg" />
+                  <Text style={{
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}>
+                    {v.name}
+                  </Text>
+                </Group>
+                <Text
+                  style={{
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    paddingLeft: 20,
+                  }}
+                >
+                  {isSelected ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+                </Text>
+              </Flex>
+              <Divider my={"md"} />
+            </Box>
+          );
+        })}
+      </Box>
+      <Box mt={"xl"}>
         <Button
-          color="white"
+          c={"white"}
           bg={WARNA.biruTua}
           size="lg"
           radius={30}
           fullWidth
-          onClick={() => router.push("/calender/update")}
+          onClick={() => {onSubmit()}}
         >
           Simpan
         </Button>
       </Box>
     </Box>
+  </Box>
   );
 }
 

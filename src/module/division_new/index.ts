@@ -2,7 +2,6 @@ import { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison, IDa
 import CreateUserDivisionCalender from "./_division_fitur/calender/components/create_user_division_calender";
 import UlangiEvent from "./_division_fitur/calender/components/ulangi_event";
 import UpdateUlangiEvent from "./_division_fitur/calender/components/update_calander/update_ulangi_event";
-import UpdateUserDivisionCalender from "../calender/ui/update_user_division_calender";
 import ViewCreateDivisionCalender from "./_division_fitur/calender/view/view_create_division_calender";
 import ViewDetailEventDivision from "./_division_fitur/calender/view/view_detail_event_division";
 import ViewDivisionCalender from "./_division_fitur/calender/view/view_division_calender";
@@ -35,7 +34,6 @@ export { CreateUserDivisionCalender };
 export { ViewHistoryDivisionCalender };
 export { ViewDetailEventDivision };
 export { ViewUpdateDivisionCalender };
-export { UpdateUserDivisionCalender };
 export { UpdateUlangiEvent };
 export { ViewDocumentDivision };
 export type { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison, IDataMemberDivision }
