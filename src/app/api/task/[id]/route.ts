@@ -108,6 +108,7 @@ export async function GET(request: Request, context: { params: { id: string } })
             },
             select: {
                id: true,
+               idUser: true,
                User: {
                   select: {
                      name: true,
@@ -186,3 +187,4 @@ export async function POST(request: Request, context: { params: { id: string } }
       return NextResponse.json({ success: false, message: "Gagal mengedit detail tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
+

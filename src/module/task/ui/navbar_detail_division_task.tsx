@@ -9,6 +9,7 @@ import { useShallowEffect } from "@mantine/hooks";
 import { HiMenu } from "react-icons/hi";
 import { IoAddCircle } from "react-icons/io5";
 import { RiFilter2Line } from "react-icons/ri";
+import { FaUsers } from "react-icons/fa6";
 
 export default function NavbarDetailDivisionTask() {
    const router = useRouter()
@@ -63,7 +64,7 @@ export default function NavbarDetailDivisionTask() {
                            cursor: 'pointer'
                         }}
                         onClick={() => {
-                           router.push(param.detail + '/create-task')
+                           router.push(param.detail + '/add-task')
                         }}
                      >
                         <Box>
@@ -79,14 +80,14 @@ export default function NavbarDetailDivisionTask() {
                            cursor: 'pointer'
                         }}
                         onClick={() => {
-                           router.push('/announcement?page=filter')
+                           router.push(param.detail + '/add-member')
                         }}
                      >
                         <Box>
-                           <RiFilter2Line size={30} color={WARNA.biruTua} />
+                           <FaUsers size={30} color={WARNA.biruTua} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua} ta='center'>Filter</Text>
+                           <Text c={WARNA.biruTua} ta='center'>Tambah anggota</Text>
                         </Box>
                      </Flex>
                   </SimpleGrid>
