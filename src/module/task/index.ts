@@ -1,3 +1,4 @@
+import AddDetailTask from "./ui/add_detail_task";
 import ViewDateEndTask from "./ui/create_date_end_task";
 import CreateTask from "./ui/create_task";
 import CreateUsersProject from "./ui/create_users_project";
@@ -23,3 +24,4 @@ export { ProgressDetailTask }
 export { ListFileDetailTask }
 export { ListAnggotaDetailTask }
 export { EditDetailTask }
+export { AddDetailTask }

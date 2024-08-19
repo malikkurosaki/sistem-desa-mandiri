@@ -45,7 +45,7 @@ export default function NavbarDetailDivisionTask() {
                size="lg"
                radius="lg"
                aria-label="Settings"
-               onClick={() => { }}
+               onClick={() => { setOpen(true) }}
             >
                <HiMenu size={20} color="white" />
             </ActionIcon>
@@ -63,14 +63,14 @@ export default function NavbarDetailDivisionTask() {
                            cursor: 'pointer'
                         }}
                         onClick={() => {
-                           router.push('/announcement/create')
+                           router.push(param.detail + '/create-task')
                         }}
                      >
                         <Box>
                            <IoAddCircle size={30} color={WARNA.biruTua} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua} ta='center'>Tambah Pengumuman</Text>
+                           <Text c={WARNA.biruTua} ta='center'>Tambah Tugas</Text>
                         </Box>
                      </Flex>
 

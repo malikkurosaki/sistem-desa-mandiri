@@ -135,3 +135,54 @@ export async function GET(request: Request, context: { params: { id: string } })
       return NextResponse.json({ success: false, message: "Gagal mendapatkan tugas divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
+
+
+// CREATE NEW DETAIL TASK DIVISI
+export async function POST(request: Request, context: { params: { id: string } }) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const { id } = context.params;
+      const { title, dateStart, dateEnd, idDivision } = (await request.json());
+      const data = await prisma.divisionProject.count({
+         where: {
+            id: id,
+         },
+      });
+
+      if (data == 0) {
+         return NextResponse.json(
+            {
+               success: false,
+               message: "Tambah detail tugas gagal, data tugas tidak ditemukan",
+            },
+            { status: 404 }
+         );
+      }
+
+      const create = await prisma.divisionProjectTask.create({
+         data: {
+            idProject: id,
+            idDivision,
+            title,
+            dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
+            dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
+         },
+      });
+
+      return NextResponse.json(
+         {
+            success: true,
+            message: "Detail tugas berhasil ditambahkan",
+            data,
+         },
+         { status: 200 }
+      );
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ success: false, message: "Gagal mengedit detail tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+   }
+}
