@@ -52,3 +52,33 @@ export interface IFormMemberCalender {
 export interface IFormUlangiEvent {
     id: string
 }
+
+export interface IEditCalender {
+    title?: string
+    dateStart?: String
+    timeStart?: string
+    timeEnd?: string
+    linkMeet?: string
+    repeatEventTyper?: string
+    desc?: string,
+    member?: IEditMemberCalender[]
+}
+
+export interface IEditMemberCalender {
+    idUser: {
+        id: string
+        name: string
+    }[]
+}
+
+
+export interface IDetailByIdCalender {
+    title?: string
+    desc?: string
+    timeStart?: string
+    dateStart?: string
+    timeEnd?: string
+    createdAt?: string
+    linkMeet?: string
+    repeatEventTyper?: string
+}

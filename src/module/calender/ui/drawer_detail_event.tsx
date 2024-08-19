@@ -51,7 +51,7 @@ export default function DrawerDetailEvent() {
               <Text ta={"center"} c={WARNA.biruTua}>Hapus</Text>
             </Box>
           </Flex>
-          <Flex onClick={() => router.push('/calender/update')} justify={'center'} align={'center'} direction={'column'} >
+          <Flex onClick={() => router.push(`/division/${param.id}/calender/update/${param.detail}`)} justify={'center'} align={'center'} direction={'column'} >
             <Box>
               <MdEdit size={30} color={WARNA.biruTua} />
             </Box>
