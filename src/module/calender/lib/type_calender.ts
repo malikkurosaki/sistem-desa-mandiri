@@ -11,6 +11,16 @@ export interface IDataCalender {
     user_name: string
 }
 
+export interface IHistoryCalender {
+    dateStart: string;
+    data: {
+        id: number;
+        title: string;
+        timeEnd: string;
+        timeStart: string;
+    }[];
+}[];
+
 export interface IDataDetailByIdCalender {
     id: string
     title: string
@@ -61,7 +71,7 @@ export interface IEditCalender {
     linkMeet?: string
     repeatEventTyper?: string
     desc?: string,
-    member?: IEditMemberCalender[]
+    member?: IFormMemberCalender[]
 }
 
 export interface IEditMemberCalender {

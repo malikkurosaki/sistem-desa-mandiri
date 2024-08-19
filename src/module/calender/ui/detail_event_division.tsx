@@ -62,7 +62,7 @@ export default function DetailEventDivision() {
             </Group>
             <Group mb={10} gap={30}>
               <LuClock size={25} color={WARNA.biruTua} />
-              <Text>{moment.utc(isDataCalender?.timeStart).format('HH:mm')}  | {moment.utc(isDataCalender?.timeEnd).format('HH:mm')} </Text>
+              <Text>{isDataCalender?.timeStart}  | {isDataCalender?.timeEnd} </Text>
             </Group>
             <Group mb={10} gap={30}>
               <BsCalendarDate size={25} color={WARNA.biruTua} />

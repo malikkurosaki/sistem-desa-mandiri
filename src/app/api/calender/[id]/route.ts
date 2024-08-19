@@ -151,13 +151,15 @@ export async function DELETE(request: Request, context: { params: { id: string }
 // EDIT CALENDER BY ID
 export async function PUT(request: Request, context: { params: { id: string } }) {
     try {
+
+        console.log('amalai')
         const user = await funGetUserByCookies()
         if (user.id == undefined) {
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
 
         const { id } = context.params
-
+        const userId = user.id
         const { title, desc, timeStart, dateStart, timeEnd, linkMeet, repeatEventTyper, member } = await request.json()
 
         const cek = await prisma.divisionCalendar.count({
@@ -165,6 +167,8 @@ export async function PUT(request: Request, context: { params: { id: string } })
                 id: id
             }
         })
+
+        console.log(id, title, desc, timeStart, dateStart, timeEnd, linkMeet, repeatEventTyper, member)
 
         if (cek == 0) {
             return NextResponse.json(
@@ -176,6 +180,11 @@ export async function PUT(request: Request, context: { params: { id: string } })
             );
         }
 
+        const y = new Date('1970-01-01 ' + timeStart)
+        const x = new Date('1970-01-01 ' + timeEnd)
+        const timeStartFix = new Date(y.getTime() - (y.getTimezoneOffset() * 60000)).toISOString()
+        const timeEndFix = new Date(x.getTime() - (x.getTimezoneOffset() * 60000)).toISOString()
+        const statusCalender = 0
         const data = await prisma.divisionCalendar.update({
             where: {
                 id: id
@@ -183,15 +192,17 @@ export async function PUT(request: Request, context: { params: { id: string } })
             data: {
                 title: title,
                 desc: desc,
-                timeStart: timeStart,
-                dateStart: dateStart,
-                timeEnd: timeEnd,
+                createdBy: String(userId),
+                timeStart: timeStartFix,
+                dateStart: new Date(dateStart),
+                timeEnd: timeEndFix,
                 linkMeet: linkMeet,
-                repeatEventTyper: repeatEventTyper
+                repeatEventTyper: repeatEventTyper,
+                status: statusCalender
             }
         });
 
-        await prisma.divisionCalendarMember.deleteMany({
+       const del =  await prisma.divisionCalendarMember.deleteMany({
             where: {
                 idCalendar: id
             }
@@ -206,6 +217,8 @@ export async function PUT(request: Request, context: { params: { id: string } })
         const insertMember = await prisma.divisionCalendarMember.createMany({
             data: omitMember
         });
+
+        console.log(omitMember)
 
 
         return NextResponse.json({ success: true, message: "Berhasil mengedit calender" }, { status: 200 });

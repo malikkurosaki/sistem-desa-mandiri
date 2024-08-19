@@ -1,9 +1,9 @@
-import { ViewHistoryDivisionCalender } from '@/module/division_new';
+import { HistoryDivisionCalender } from '@/module/calender';
 import React from 'react';
 
 function Page() {
   return (
-    <ViewHistoryDivisionCalender />
+    <HistoryDivisionCalender />
   );
 }
 
