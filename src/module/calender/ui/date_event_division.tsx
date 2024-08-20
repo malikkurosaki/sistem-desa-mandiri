@@ -26,7 +26,6 @@ export default function DateEventDivision() {
 
   function change(val: Date) {
     const a: any = moment(new Date(val)).format('YYYY-MM-DD')
-    console.log(val, a)
     setDate(a)
     getData(a)
   }
@@ -58,27 +57,33 @@ export default function DateEventDivision() {
         />
       </Group>
       <Box>
-        <Text mb={10} mt={20} fw={"bold"}>Hari Ini</Text>
-        {isData.map((event, index) => {
-          const bgColor = ['#D8D8F1', '#FED6C5'][index % 2]
-          const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
-          return (
-            <Box key={event.id} mt={10}>
-              <Box onClick={() => router.push(`/division/${param.id}/calender/${event.id}`)} bg={bgColor} pl={15} p={10} style={{
-                borderRadius: 10
-              }} h={113}>
-                <Group>
-                  <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
-                  <Box>
-                    <Text>{event.timeStart} - {event.timeEnd}</Text>
-                    <Text fw={"bold"}>{event.title}</Text>
-                    <Text>Dibuat oleh : {event.user_name}</Text>
-                  </Box>
-                </Group>
+        <Text mb={10} mt={20} fw={"bold"}>
+          Event
+        </Text>
+        {isData.length > 0 ? (
+          isData.map((event, index) => {
+            const bgColor = ['#D8D8F1', '#FED6C5'][index % 2]
+            const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
+            return (
+              <Box key={event.id} mt={10}>
+                <Box onClick={() => router.push(`/division/${param.id}/calender/${event.id}`)} bg={bgColor} pl={15} p={10} style={{
+                  borderRadius: 10
+                }} h={113}>
+                  <Group>
+                    <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
+                    <Box>
+                      <Text>{event.timeStart} - {event.timeEnd}</Text>
+                      <Text fw={"bold"}>{event.title}</Text>
+                      <Text>Dibuat oleh : {event.user_name}</Text>
+                    </Box>
+                  </Group>
+                </Box>
               </Box>
-            </Box>
-          )
-        })}
+            )
+          })
+        ) : (
+          <Text c={WARNA.biruTua}>Tidak ada event</Text>
+        )}
       </Box>
     </Box>
   );
