@@ -68,7 +68,7 @@ export default function ListTugasDetailTask() {
 
    async function onUpdateStatus(val: number) {
       try {
-         const res = await funUpdateStatusDetailTask(idData, { status: val });
+         const res = await funUpdateStatusDetailTask(idData, { status: val, idProject: param.detail });
          if (res.success) {
             toast.success(res.message);
             refresh.set(true)

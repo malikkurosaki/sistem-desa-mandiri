@@ -176,8 +176,8 @@ export default function ListDivisionTask() {
                               </Card.Section>
                               <Box pt={10}>
                                  <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
-                                    <Progress.Section value={v.status} color="yellow" striped >
-                                       <Progress.Label>{v.status}%</Progress.Label>
+                                    <Progress.Section value={v.progress} color="yellow" striped >
+                                       <Progress.Label>{v.progress}%</Progress.Label>
                                     </Progress.Section>
                                  </Progress.Root>
                                  <Text my={10}>{v.desc}</Text>

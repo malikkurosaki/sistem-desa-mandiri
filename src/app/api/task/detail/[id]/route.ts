@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
 
@@ -62,7 +63,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
       }
 
       const { id } = context.params;
-      const { status } = (await request.json());
+      const { status, idProject } = (await request.json());
       const data = await prisma.divisionProjectTask.count({
          where: {
             id: id,
@@ -87,6 +88,34 @@ export async function PUT(request: Request, context: { params: { id: string } })
             status: status,
          },
       });
+
+      // const cek progress 
+      const dataTask = await prisma.divisionProjectTask.findMany({
+         where: {
+            isActive: true,
+            idProject: idProject
+         }
+      })
+
+      const semua = dataTask.length
+      const selesai = _.filter(dataTask, { status: 1 }).length
+      const progress = Math.ceil((selesai / semua) * 100)
+      let statusProject = 1
+
+      if (progress == 100) {
+         statusProject = 2
+      } else if (progress == 0) {
+         statusProject = 0
+      }
+
+      const updProject = await prisma.divisionProject.update({
+         where: {
+            id: idProject
+         },
+         data: {
+            status: statusProject
+         }
+      })
 
       return NextResponse.json(
          {

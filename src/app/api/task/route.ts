@@ -49,7 +49,8 @@ export async function GET(request: Request) {
                   isActive: true
                },
                select: {
-                  title: true
+                  title: true,
+                  status: true
                }
             },
             DivisionProjectMember: {
@@ -65,7 +66,7 @@ export async function GET(request: Request) {
 
       const formatData = data.map((v: any) => ({
          ..._.omit(v, ["DivisionProjectTask", "DivisionProjectMember"]),
-         progress: ceil(v.DivisionProjectTask.filter((i: any) => i.status === 1).length / v.DivisionProjectTask.length),
+         progress: ceil((v.DivisionProjectTask.filter((i: any) => i.status == 1).length*100) / v.DivisionProjectTask.length),
          member: v.DivisionProjectMember.length
       }))
 

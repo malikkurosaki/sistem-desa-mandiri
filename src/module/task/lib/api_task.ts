@@ -37,7 +37,7 @@ export const funDeleteDetailTask = async (path: string) => {
 };
 
 
-export const funUpdateStatusDetailTask = async (path: string, data: { status: number }) => {
+export const funUpdateStatusDetailTask = async (path: string, data: { status: number, idProject: string }) => {
    const response = await fetch(`/api/task/detail/${path}`, {
       method: "PUT",
       headers: {
