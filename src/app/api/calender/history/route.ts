@@ -15,6 +15,7 @@ export async function GET(request: Request) {
 
         const { searchParams } = new URL(request.url);
         const idDivision = searchParams.get("division");
+        const name = searchParams.get('search');
 
         if (idDivision != "null" && idDivision != null && idDivision != undefined) {
             const cekDivision = await prisma.division.count({
@@ -32,6 +33,10 @@ export async function GET(request: Request) {
                 where: {
                     isActive: true,
                     idDivision: idDivision,
+                    title: {
+                        contains: (name == undefined || name == "null") ? "" : name,
+                        mode: "insensitive"
+                    }
                 },
                 select: {
                     id: true,
@@ -54,21 +59,28 @@ export async function GET(request: Request) {
             });
 
             const allOmit = data.map((v: any) => ({
-                ..._.omit(v, ["title", "timeStart", "timeEnd", "id", ]),
+                ..._.omit(v, [""]),
                 dateStart: v.dateStart,
-                data: [
-                    {
-                        id: v.id,
-                        title: v.title,
-                        timeEnd: moment.utc(v.timeEnd).format('HH:mm'),
-                        timeStart: moment.utc(v.timeStart).format('HH:mm')
-                    }
-                ]
             }))
 
-            
+            // groupBy untuk dateStart
+            const groupByDateStart = _.groupBy(allOmit, 'dateStart');
 
-            return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender", data: allOmit }, { status: 200 });
+            const result = Object.keys(groupByDateStart).map(key => {
+                const obj = groupByDateStart[key];
+                const data = obj.map((v: any) => ({
+                    id: v.id,
+                    title: v.title,
+                    timeEnd: moment.utc(v.timeEnd).format('HH:mm'),
+                    timeStart: moment.utc(v.timeStart).format('HH:mm')
+                }))
+                return {
+                    dateStart: key,
+                    data: data
+                }
+            })
+
+            return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender", data: result }, { status: 200 });
 
         } else {
             return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, data tidak ditemukan" }, { status: 404 });

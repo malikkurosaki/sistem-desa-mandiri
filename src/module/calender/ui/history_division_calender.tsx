@@ -58,10 +58,11 @@ export default function HistoryDivisionCalender() {
   const [isData, setData] = useState<IHistoryCalender[]>([])
   const router = useRouter()
   const param = useParams<{ id: string, detail: string }>()
+  const [searchQuery, setSearchQuery] = useState('')
 
   const getData = async () => {
     try {
-      const response = await funGetHostory('?division=' + param.id)
+      const response = await funGetHostory('?division=' + param.id + '&search=' + searchQuery)
       setData(response.data)
     } catch (error) {
       console.log(error)
@@ -70,11 +71,10 @@ export default function HistoryDivisionCalender() {
 
   useShallowEffect(() => {
     getData()
-  }, [])
+  }, [searchQuery])
   return (
     <Box>
-      <LayoutNavbarNew back="/calender" title="History kalender" menu />
-      <pre>{JSON.stringify(isData, null, 1)}</pre>
+      <LayoutNavbarNew back="/calender" title="Riwayat kalender" menu />
       <Box p={20}>
         <TextInput
           styles={{
@@ -88,10 +88,13 @@ export default function HistoryDivisionCalender() {
           radius={30}
           leftSection={<HiMagnifyingGlass size={20} />}
           placeholder="Pencarian"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
         <Box mt={30}>
           <Box bg={"#DBE9D8"} style={{
-            borderRadius: 10
+            borderRadius: 10,
+            padding: 20
           }}>
             {isData.map((v, i) => {
               return (
