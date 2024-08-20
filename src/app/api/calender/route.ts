@@ -16,6 +16,8 @@ export async function GET(request: Request) {
 
         const { searchParams } = new URL(request.url);
         const idDivision = searchParams.get("division");
+        const isDate = searchParams.get("date")
+
 
         if (idDivision != "null" && idDivision != null && idDivision != undefined) {
             const cekDivision = await prisma.division.count({
@@ -33,6 +35,7 @@ export async function GET(request: Request) {
                 where: {
                     isActive: true,
                     idDivision: idDivision,
+                    dateStart:  new Date(String(isDate))
                 },
                 select: {
                     id: true,

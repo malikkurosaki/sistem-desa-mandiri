@@ -4,26 +4,36 @@ import { DatePicker, DatePickerProps } from '@mantine/dates';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { funGetAllCalender } from '../lib/api_calender';
-import { useShallowEffect } from '@mantine/hooks';
+import { useSetState, useShallowEffect } from '@mantine/hooks';
 import { IDataCalender } from '../lib/type_calender';
+import moment from 'moment';
 
 
 export default function DateEventDivision() {
-  const[isData, setData] = useState<IDataCalender[]>([])
+  const [isData, setData] = useState<IDataCalender[]>([])
   const router = useRouter()
   const param = useParams<{ id: string, detail: string }>()
+  const [isDate, setDate] = useSetState<any>(moment().format('YYYY-MM-DD'))
 
-  const getData = async () => {
+  const getData = async (tgl: any) => {
     try {
-      const response = await funGetAllCalender('?division=' + param.id)
+      const response = await funGetAllCalender('?division=' + param.id + '&date=' + tgl)
       setData(response.data)
     } catch (error) {
       console.log(error)
     }
   }
 
+  function change(val: Date) {
+    const a: any = moment(new Date(val)).format('YYYY-MM-DD')
+    console.log(val, a)
+    setDate(a)
+    getData(a)
+  }
+
+
   useShallowEffect(() => {
-    getData()
+    getData(isDate)
   }, [])
 
 
@@ -43,10 +53,12 @@ export default function DateEventDivision() {
         py={20}
         style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
       >
-        <DatePicker size='md' defaultValue={new Date()} renderDay={dayRenderer} />
+        <DatePicker size='md' defaultValue={new Date()} renderDay={dayRenderer}
+          onChange={(val: any) => { change(val) }}
+        />
       </Group>
       <Box>
-        <Text mb={10} mt={20}  fw={"bold"}>Hari Ini</Text>
+        <Text mb={10} mt={20} fw={"bold"}>Hari Ini</Text>
         {isData.map((event, index) => {
           const bgColor = ['#D8D8F1', '#FED6C5'][index % 2]
           const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
