@@ -4,11 +4,11 @@ import { ActionIcon, Box, Button, Checkbox, Divider, Flex, Grid, Group, Modal, S
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { FcDocument, FcFolder, FcImageFile } from 'react-icons/fc';
-import { BsDownload } from 'react-icons/bs';
+import { BsDownload, BsListCheck } from 'react-icons/bs';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { CgRename } from "react-icons/cg";
 import { LuShare2 } from 'react-icons/lu';
-import { MdOutlineMoreHoriz } from 'react-icons/md';
+import { MdClose, MdOutlineMoreHoriz } from 'react-icons/md';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import toast from 'react-hot-toast';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -16,13 +16,13 @@ import DrawerMenuDocumentDivision from './drawer_menu_document_division';
 import DrawerMore from './drawer_more';
 import { funGetDivisionById } from '@/module/division_new';
 import { useShallowEffect } from '@mantine/hooks';
-import { funGetAllDocument } from '../lib/api_document';
+import { funGetAllDocument, funRenameDocument } from '../lib/api_document';
 import { IDataDocument } from '../lib/type_document';
 import { useHookstate } from '@hookstate/core';
 import { globalRefreshDocument } from '../lib/val_document';
+import { RiListCheck } from 'react-icons/ri';
 
 export default function NavbarDocumentDivision() {
-  const [isChecked, setIsChecked] = useState(false);
   const router = useRouter()
   const param = useParams<{ id: string }>()
   const [name, setName] = useState('')
@@ -35,10 +35,69 @@ export default function NavbarDocumentDivision() {
   const path = searchParams.get('path')
   const [dataDocument, setDataDocument] = useState<IDataDocument[]>([])
   const refresh = useHookstate(globalRefreshDocument)
+  const [selectedFiles, setSelectedFiles] = useState<any>([])
+  const [selectAll, setSelectAll] = useState(false)
+  const [dariSelectAll, setDariSelectAll] = useState(false)
+  const [bodyRename, setBodyRename] = useState({
+    id: '',
+    name: '',
+    path: '',
+    idDivision: param.id,
+    extension: ''
+  })
 
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+  const handleCheckboxChange = (index: number) => {
+    setDariSelectAll(false)
+    if (selectedFiles.some((i: any) => i.id == dataDocument[index].id)) {
+      setSelectedFiles(selectedFiles.filter((i: any) => i.id != dataDocument[index].id))
+    } else {
+      setSelectedFiles([
+        ...selectedFiles,
+        {
+          id: dataDocument[index].id,
+          name: dataDocument[index].name,
+          path: dataDocument[index].path,
+          extension: dataDocument[index].extension
+        }
+      ])
+    }
+
   };
+
+  function cek() {
+    if (selectedFiles.length == dataDocument.length) {
+      setSelectAll(true)
+    } else {
+      setSelectAll(false)
+    }
+  }
+
+  const handleSelectAll = () => {
+    if (!selectAll) {
+      setDariSelectAll(false)
+      for (let index = 0; index < dataDocument.length; index++) {
+        if (!selectedFiles.some((i: any) => i.id == dataDocument[index].id)) {
+          const newArr = {
+            id: dataDocument[index].id,
+            name: dataDocument[index].name,
+            path: dataDocument[index].path,
+            extension: dataDocument[index].extension
+          }
+          setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
+        }
+      }
+    } else {
+      setDariSelectAll(true)
+      setSelectedFiles([]);
+    }
+
+  };
+
+  const handleBatal = () => {
+    setSelectedFiles([])
+    setSelectAll(false)
+    setDariSelectAll(false)
+  }
 
 
   function onTrue(val: boolean) {
@@ -47,10 +106,22 @@ export default function NavbarDocumentDivision() {
     }
     setIsDelete(false)
   }
-  function onEdit(val: boolean) {
-    if (val) {
-      toast.success("Sukses! Edit Data");
+  async function onRenameSubmit() {
+    try {
+      const res = await funRenameDocument(bodyRename)
+      if (res.success) {
+        getOneData()
+
+      } else {
+        toast.error(res.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error("Gagal mengganti nama item, coba lagi nanti")
     }
+
+    setSelectedFiles([])
+    setDariSelectAll(false)
     setRename(false)
   }
 
@@ -82,20 +153,47 @@ export default function NavbarDocumentDivision() {
   }
 
   useShallowEffect(() => {
+    cek()
+  }, [selectedFiles])
+
+  useShallowEffect(() => {
     getOneData()
     resetRefresh()
   }, [param.id, path, refresh.get()])
 
+
+  function onChooseRename() {
+    setBodyRename({
+      ...bodyRename,
+      id: selectedFiles[0].id,
+      name: selectedFiles[0].name,
+      path: selectedFiles[0].path,
+      extension: selectedFiles[0].extension,
+
+    })
+    setRename(true)
+  }
+
   return (
     <Box>
-      {isChecked && (
+      {(selectedFiles.length > 0 || dariSelectAll) && (
         <>
           <Box h={90} w={{ base: "100%", md: "38.2%" }} bg={WARNA.biruTua} pos={'fixed'} top={0} style={{
             zIndex: 999,
           }}>
             <Flex justify={'space-between'} ml={30} mr={30} align={'center'} h={"100%"}>
-              <Text c={'white'}>Dibatalkan</Text>
-              <Text c={'white'}>Pilih Semua</Text>
+              <ActionIcon variant="transparent" aria-label="Settings" onClick={() => handleBatal()}>
+                <MdClose size={25} color='white' />
+              </ActionIcon>
+              <Text fz={15} c={'white'}>{(selectedFiles.length > 0) ? selectedFiles.length + " item terpilih" : "Pilih Item"}</Text>
+              <ActionIcon variant="transparent" aria-label="Settings" onClick={() => handleSelectAll()}>
+                {
+                  (selectAll) ?
+                    <RiListCheck size={25} color='white' /> :
+                    <BsListCheck size={25} color='white' />
+                }
+
+              </ActionIcon>
             </Flex>
           </Box>
           <Box h={70} w={{ base: "100%", md: "38.2%" }} bg={WARNA.biruTua} pos={'fixed'} bottom={0} style={{
@@ -104,24 +202,28 @@ export default function NavbarDocumentDivision() {
             <Flex justify={"center"} align={"center"} h={"100%"} w={"100%"}>
               <SimpleGrid cols={{ base: 5, sm: 5, lg: 5 }}>
                 <Flex justify={'center'} align={'center'} direction={'column'}>
-                  <BsDownload size={20} color='white' />
-                  <Text fz={12} c={'white'}>Unduh</Text>
+                  <BsDownload size={20} color={(selectedFiles.length > 0) ? 'white' : 'grey'} />
+                  <Text fz={12} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Unduh</Text>
                 </Flex>
                 <Flex onClick={() => setIsDelete(true)} justify={'center'} align={'center'} direction={'column'}>
-                  <AiOutlineDelete size={20} color='white' />
-                  <Text fz={12} c={'white'}>Hapus</Text>
+                  <AiOutlineDelete size={20} color={(selectedFiles.length > 0) ? 'white' : 'grey'} />
+                  <Text fz={12} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Hapus</Text>
                 </Flex>
-                <Flex onClick={() => setRename(true)} justify={'center'} align={'center'} direction={'column'}>
-                  <CgRename size={20} color='white' />
-                  <Text fz={12} c={'white'}>Ganti Name</Text>
+                <Flex onClick={() => {
+                  if (selectedFiles.length == 1) {
+                    onChooseRename()
+                  }
+                }} justify={'center'} align={'center'} direction={'column'}>
+                  <CgRename size={20} color={(selectedFiles.length == 1) ? 'white' : 'grey'} />
+                  <Text fz={12} c={(selectedFiles.length == 1) ? 'white' : 'grey'}>Ganti Nama</Text>
                 </Flex>
                 <Flex onClick={() => setShare(true)} justify={'center'} align={'center'} direction={'column'}>
-                  <LuShare2 size={20} color='white' />
-                  <Text fz={12} c={'white'}>Bagikan</Text>
+                  <LuShare2 size={20} color={(selectedFiles.length > 0) ? 'white' : 'grey'} />
+                  <Text fz={12} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Bagikan</Text>
                 </Flex>
                 <Flex onClick={() => setMore(true)} justify={'center'} align={'center'} direction={'column'}>
-                  <MdOutlineMoreHoriz size={20} color='white' />
-                  <Text fz={12} c={'white'}>Lainnya</Text>
+                  <MdOutlineMoreHoriz size={20} color={(selectedFiles.length > 0) ? 'white' : 'grey'} />
+                  <Text fz={12} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Lainnya</Text>
                 </Flex>
               </SimpleGrid>
             </Flex>
@@ -139,6 +241,7 @@ export default function NavbarDocumentDivision() {
       <Box>
         <Box p={20} pb={60}>
           {dataDocument.map((v, i) => {
+            const isSelected = selectedFiles.some((i: any) => i?.id == v.id);
             return (
               <Box key={i}>
                 <Box mt={10} mb={10}>
@@ -171,8 +274,8 @@ export default function NavbarDocumentDivision() {
                           color="teal"
                           radius="lg"
                           size="md"
-                          checked={isChecked}
-                          onChange={handleCheckboxChange}
+                          checked={isSelected}
+                          onChange={() => handleCheckboxChange(i)}
                         />
                       </Group>
                     </Grid.Col>
@@ -195,6 +298,8 @@ export default function NavbarDocumentDivision() {
       <LayoutModal opened={isDelete} onClose={() => setIsDelete(false)}
         description="Apakah Anda yakin ingin menghapus data?"
         onYes={(val) => { onTrue(val) }} />
+
+
       <Modal styles={{
         body: {
           borderRadius: 20
@@ -205,7 +310,7 @@ export default function NavbarDocumentDivision() {
         }
       }} opened={rename} onClose={() => setRename(false)} centered withCloseButton={false}>
         <Box p={20}>
-          <Text ta={"center"} fw={"bold"}>Edit Folder</Text>
+          <Text ta={"center"} fw={"bold"}>Ganti Nama Item</Text>
           <Box mt={20} mb={20}>
             <TextInput
               styles={{
@@ -217,7 +322,9 @@ export default function NavbarDocumentDivision() {
               }}
               size="md"
               radius={10}
-              placeholder="Buat Folder Baru"
+              placeholder="Nama item"
+              value={bodyRename.name}
+              onChange={(e) => setBodyRename({ ...bodyRename, name: e.target.value })}
             />
           </Box>
           <Grid mt={40}>
@@ -225,11 +332,14 @@ export default function NavbarDocumentDivision() {
               <Button variant="subtle" fullWidth color='#969494' onClick={() => setRename(false)}>Batalkan</Button>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Button variant="subtle" fullWidth color={WARNA.biruTua} onClick={(val) => onEdit(true)}>Edit</Button>
+              <Button variant="subtle" fullWidth color={WARNA.biruTua} onClick={(val) => onRenameSubmit()}>Simpan</Button>
             </Grid.Col>
           </Grid>
         </Box>
       </Modal>
+
+
+
       <LayoutDrawer opened={share} title={'Bagikan'} onClose={() => setShare(false)} size='lg'>
         <Box pt={10}>
           <Select

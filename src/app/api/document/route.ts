@@ -107,6 +107,22 @@ export async function POST(request: Request) {
          }
       }
 
+      const nameFile = await prisma.divisionDocumentFolderFile.count({
+         where: {
+            name,
+            idDivision,
+            path,
+            extension: "folder",
+            category: "FOLDER",
+            isActive: true
+         }
+      })
+
+
+      if (nameFile > 0) {
+         return NextResponse.json({ success: false, message: "Gagal membuat folder baru, folder sudah ada" }, { status: 400 });
+      }
+
       const data = await prisma.divisionDocumentFolderFile.create({
          data: {
             name,
@@ -122,5 +138,61 @@ export async function POST(request: Request) {
    } catch (error) {
       console.log(error);
       return NextResponse.json({ success: false, message: "Gagal membuat folder, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+   }
+};
+
+
+export async function PUT(request: Request) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const { name, id, path, idDivision, extension } = (await request.json());
+      const cekFile = await prisma.divisionDocumentFolderFile.count({
+         where: {
+            id: id,
+            isActive: true
+         }
+      })
+
+      if (cekFile == 0) {
+         return NextResponse.json({ success: false, message: "Gagal mendapatkan item, data tidak ditemukan" }, { status: 404 });
+      }
+
+      const nameFile = await prisma.divisionDocumentFolderFile.count({
+         where: {
+            name,
+            idDivision,
+            path,
+            extension,
+            isActive: true,
+            NOT: {
+               id: id
+            },
+         }
+      })
+
+
+      if (nameFile > 0) {
+         return NextResponse.json({ success: false, message: "Gagal mengubah nama item, item sudah ada" }, { status: 400 });
+      }
+
+      const update = await prisma.divisionDocumentFolderFile.update({
+         where: {
+            id: id
+         },
+         data: {
+            name,
+         }
+      })
+
+
+
+      return NextResponse.json({ success: true, message: "Berhasil mengubah nama item" }, { status: 200 });
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ success: false, message: "Gagal mengubah nama item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
