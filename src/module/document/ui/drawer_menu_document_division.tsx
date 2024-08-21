@@ -29,17 +29,17 @@ export default function DrawerMenuDocumentDivision() {
   async function onCreateFolder() {
     try {
       const res = await funCreateFolder(bodyFolder)
-      if (res.success) {
-        refresh.set(true)
-        setOpenModal(false)
-        setOpenDrawerDocument(false)
-      } else {
-        toast.error(res.message);
+      if (!res.success) {
+        toast.error(res.message)
       }
     } catch (error) {
       console.error(error);
       toast.error("Gagal membuat folder baru, coba lagi nanti");
     }
+
+    refresh.set(true)
+    setOpenModal(false)
+    setOpenDrawerDocument(false)
   }
 
   return (

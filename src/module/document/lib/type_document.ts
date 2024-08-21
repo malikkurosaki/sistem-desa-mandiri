@@ -15,3 +15,12 @@ export interface IFormFolder {
    path: string;
    idDivision: string
 }
+
+
+export interface IFormEditItem {
+   id: string
+   name: string
+   path: string
+   idDivision: string
+   extension: string
+}

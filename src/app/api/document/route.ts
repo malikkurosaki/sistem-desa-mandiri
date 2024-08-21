@@ -29,6 +29,21 @@ export async function GET(request: Request) {
          return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, data tidak ditemukan" }, { status: 404 });
       }
 
+      if (path != "home" && path != "null" && path != "undefined" && path != "") {
+         const cekPath = await prisma.divisionDocumentFolderFile.count({
+            where: {
+               isActive: true,
+               id: String(path)
+            }
+         })
+
+         if (cekPath == 0) {
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan item, data tidak ditemukan" }, { status: 404 });
+         }
+      }
+
+
+
 
       const data = await prisma.divisionDocumentFolderFile.findMany({
          where: {
@@ -63,11 +78,11 @@ export async function GET(request: Request) {
       }))
 
 
-      return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: allData, }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: allData, }, { status: 200 });
 
    } catch (error) {
       console.log(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -107,6 +122,22 @@ export async function POST(request: Request) {
          }
       }
 
+      const nameFile = await prisma.divisionDocumentFolderFile.count({
+         where: {
+            name,
+            idDivision,
+            path,
+            extension: "folder",
+            category: "FOLDER",
+            isActive: true
+         }
+      })
+
+
+      if (nameFile > 0) {
+         return NextResponse.json({ success: false, message: "Gagal membuat folder baru, folder sudah ada" }, { status: 400 });
+      }
+
       const data = await prisma.divisionDocumentFolderFile.create({
          data: {
             name,
@@ -122,5 +153,93 @@ export async function POST(request: Request) {
    } catch (error) {
       console.log(error);
       return NextResponse.json({ success: false, message: "Gagal membuat folder, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+   }
+};
+
+
+// RENAME ITEM
+export async function PUT(request: Request) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const { name, id, path, idDivision, extension } = (await request.json());
+      const cekFile = await prisma.divisionDocumentFolderFile.count({
+         where: {
+            id: id,
+            isActive: true
+         }
+      })
+
+      if (cekFile == 0) {
+         return NextResponse.json({ success: false, message: "Gagal mendapatkan item, data tidak ditemukan" }, { status: 404 });
+      }
+
+      const nameFile = await prisma.divisionDocumentFolderFile.count({
+         where: {
+            name,
+            idDivision,
+            path,
+            extension,
+            isActive: true,
+            NOT: {
+               id: id
+            },
+         }
+      })
+
+
+      if (nameFile > 0) {
+         return NextResponse.json({ success: false, message: "Gagal mengubah nama item, item sudah ada" }, { status: 400 });
+      }
+
+      const update = await prisma.divisionDocumentFolderFile.update({
+         where: {
+            id: id
+         },
+         data: {
+            name,
+         }
+      })
+
+
+
+      return NextResponse.json({ success: true, message: "Berhasil mengubah nama item" }, { status: 200 });
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ success: false, message: "Gagal mengubah nama item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+   }
+};
+
+
+// DELETE ITEM
+export async function DELETE(request: Request) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const data = await request.json()
+
+      for (let i = 0; i < data.length; i++) {
+         const id = data[i].id;
+         const cekFile = await prisma.divisionDocumentFolderFile.update({
+            where: {
+               id: id
+            },
+            data: {
+               isActive: false
+            }
+         })
+      }
+
+
+      return NextResponse.json({ success: true, message: "Berhasil menghapus item" }, { status: 200 });
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ success: false, message: "Gagal menghapus item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
