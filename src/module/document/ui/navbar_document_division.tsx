@@ -159,7 +159,7 @@ export default function NavbarDocumentDivision() {
 
     } catch (error) {
       console.error(error);
-      toast.error("Gagal mendapatkan divisi, coba lagi nanti");
+      toast.error("Gagal mendapatkan item, coba lagi nanti");
     }
   }
 

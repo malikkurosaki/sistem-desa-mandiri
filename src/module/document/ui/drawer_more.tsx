@@ -32,9 +32,14 @@ export default function DrawerMore() {
           </Flex>
         </SimpleGrid>
       </Stack>
+
+
       <LayoutDrawer opened={isCut} onClose={() => setIsCut(false)} title={'Pilih Lokasi Pemindahan'} size="lg">
         <DrawerCutDocuments />
       </LayoutDrawer>
+
+
+      
       <LayoutDrawer opened={isCopy} onClose={() => setIsCopy(false)} title={'Pilih Lokasi Salin'} size="lg">
         <DrawerCopyDocuments />
       </LayoutDrawer>
