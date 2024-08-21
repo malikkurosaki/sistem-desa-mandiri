@@ -168,7 +168,8 @@ model Project {
   idGroup        String
   name           String
   status         Int              @default(0) // 0 = pending, 1 = ongoing, 2 = done, 3 = cancelled
-  desc           String           @db.Text
+  desc           String?          @db.Text
+  reason         String?          @db.Text
   isActive       Boolean          @default(true)
   User           User             @relation(fields: [createdBy], references: [id])
   createdBy      String
@@ -177,6 +178,7 @@ model Project {
   ProjectMember  ProjectMember[]
   ProjectFile    ProjectFile[]
   ProjectComment ProjectComment[]
+  ProjectTask    ProjectTask[]
 }
 
 model ProjectMember {
@@ -197,6 +199,20 @@ model ProjectFile {
   idProject String
   name      String
   extension String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProjectTask {
+  id        String   @id @default(cuid())
+  Project   Project  @relation(fields: [idProject], references: [id])
+  idProject String
+  name      String
+  desc      String?
+  status    Int      @default(0) // 0 = pending, 1 = ongoing
+  dateStart DateTime @db.Date
+  dateEnd   DateTime @db.Date
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

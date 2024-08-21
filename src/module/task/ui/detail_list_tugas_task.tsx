@@ -103,65 +103,68 @@ export default function ListTugasDetailTask() {
                   isData.length === 0 ? <Text>Tidak ada tugas</Text> :
                      isData.map((item, index) => {
                         return (
-                           <Grid key={index} style={{ borderBottom: "1px solid #D6D8F6" }} pb={10} mb={10}
-                              onClick={() => {
-                                 setIdData(item.id)
-                                 setStatusData(item.status)
-                                 setOpenDrawer(true)
-                              }}
-                           >
-                              <Grid.Col span={"auto"}>
-                                 <Center>
-                                    <Checkbox color="teal" size="md" checked={(item.status === 1) ? true : false} disabled />
-                                 </Center>
-                              </Grid.Col>
-                              <Grid.Col span={10}>
-                                 <Box
-                                    style={{
-                                       borderRadius: 10,
-                                       border: `1px solid ${"#D6D8F6"}`,
-                                       padding: 10,
-                                    }}
-                                 >
-                                    <Group>
-                                       <AiOutlineFileSync size={25} />
-                                       <Text>{item.title}</Text>
-                                    </Group>
-                                 </Box>
-                                 <Box>
-                                    <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
-                                       <Box>
-                                          <Text>Tanggal Mulai</Text>
-                                          <Group
-                                             justify="center"
-                                             bg={"white"}
-                                             h={45}
-                                             style={{
-                                                borderRadius: 10,
-                                                border: `1px solid ${"#D6D8F6"}`,
-                                             }}
-                                          >
-                                             <Text>{item.dateStart}</Text>
-                                          </Group>
-                                       </Box>
-                                       <Box>
-                                          <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
-                                          <Group
-                                             justify="center"
-                                             bg={"white"}
-                                             h={45}
-                                             style={{
-                                                borderRadius: 10,
-                                                border: `1px solid ${"#D6D8F6"}`,
-                                             }}
-                                          >
-                                             <Text>{item.dateEnd}</Text>
-                                          </Group>
-                                       </Box>
-                                    </SimpleGrid>
-                                 </Box>
-                              </Grid.Col>
-                           </Grid>
+                           <Box key={index}>
+                              <Grid
+                                 onClick={() => {
+                                    setIdData(item.id)
+                                    setStatusData(item.status)
+                                    setOpenDrawer(true)
+                                 }}
+                              >
+                                 <Grid.Col span={"auto"}>
+                                    <Center>
+                                       <Checkbox color="teal" size="md" checked={(item.status === 1) ? true : false} disabled />
+                                    </Center>
+                                 </Grid.Col>
+                                 <Grid.Col span={10}>
+                                    <Box
+                                       style={{
+                                          borderRadius: 10,
+                                          border: `1px solid ${"#D6D8F6"}`,
+                                          padding: 10,
+                                       }}
+                                    >
+                                       <Group>
+                                          <AiOutlineFileSync size={25} />
+                                          <Text>{item.title}</Text>
+                                       </Group>
+                                    </Box>
+                                    <Box>
+                                       <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
+                                          <Box>
+                                             <Text>Tanggal Mulai</Text>
+                                             <Group
+                                                justify="center"
+                                                bg={"white"}
+                                                h={45}
+                                                style={{
+                                                   borderRadius: 10,
+                                                   border: `1px solid ${"#D6D8F6"}`,
+                                                }}
+                                             >
+                                                <Text>{item.dateStart}</Text>
+                                             </Group>
+                                          </Box>
+                                          <Box>
+                                             <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+                                             <Group
+                                                justify="center"
+                                                bg={"white"}
+                                                h={45}
+                                                style={{
+                                                   borderRadius: 10,
+                                                   border: `1px solid ${"#D6D8F6"}`,
+                                                }}
+                                             >
+                                                <Text>{item.dateEnd}</Text>
+                                             </Group>
+                                          </Box>
+                                       </SimpleGrid>
+                                    </Box>
+                                 </Grid.Col>
+                              </Grid>
+                              <Divider my={"lg"} />
+                           </Box>
                         )
                      })
             }
