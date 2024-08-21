@@ -16,7 +16,7 @@ import DrawerMenuDocumentDivision from './drawer_menu_document_division';
 import DrawerMore from './drawer_more';
 import { funGetDivisionById } from '@/module/division_new';
 import { useShallowEffect } from '@mantine/hooks';
-import { funGetAllDocument, funRenameDocument } from '../lib/api_document';
+import { funDeleteDocument, funGetAllDocument, funRenameDocument } from '../lib/api_document';
 import { IDataDocument } from '../lib/type_document';
 import { useHookstate } from '@hookstate/core';
 import { globalRefreshDocument } from '../lib/val_document';
@@ -100,12 +100,28 @@ export default function NavbarDocumentDivision() {
   }
 
 
-  function onTrue(val: boolean) {
+  async function onConfirmDelete(val: boolean) {
     if (val) {
-      toast.success("Sukses! Data dihapus");
+      try {
+        const respon = await funDeleteDocument(selectedFiles)
+        if (respon.success) {
+          getOneData()
+        } else {
+          toast.error(respon.message)
+        }
+      } catch (error) {
+        console.log(error)
+        toast.error("Gagal menghapus item, coba lagi nanti")
+      }
+
+      handleBatal()
     }
+
     setIsDelete(false)
   }
+
+
+
   async function onRenameSubmit() {
     try {
       const res = await funRenameDocument(bodyRename)
@@ -238,6 +254,8 @@ export default function NavbarDocumentDivision() {
           </ActionIcon>
         }
       />
+
+
       <Box>
         <Box p={20} pb={60}>
           {dataDocument.map((v, i) => {
@@ -295,11 +313,18 @@ export default function NavbarDocumentDivision() {
       </LayoutDrawer>
 
 
+
+      {/* MODAL KONFIRMASI DELETE */}
       <LayoutModal opened={isDelete} onClose={() => setIsDelete(false)}
-        description="Apakah Anda yakin ingin menghapus data?"
-        onYes={(val) => { onTrue(val) }} />
+        description="Apakah Anda yakin ingin menghapus item?"
+        onYes={(val) => {
+          onConfirmDelete(val)
+        }} />
 
 
+
+
+      {/* MODAL RENAME */}
       <Modal styles={{
         body: {
           borderRadius: 20

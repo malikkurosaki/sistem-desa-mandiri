@@ -33,3 +33,14 @@ export const funRenameDocument = async (data: IFormEditItem) => {
    });
    return await response.json().catch(() => null);
 };
+
+export const funDeleteDocument = async (data: []) => {
+   const response = await fetch("/api/document", {
+      method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};
