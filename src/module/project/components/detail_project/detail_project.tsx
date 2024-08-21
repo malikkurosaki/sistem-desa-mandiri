@@ -109,7 +109,6 @@ export default function DetailProject() {
                     size="xl"
                     value={60}
                   />
-                  <Text>18 Juni 2024</Text>
                 </Box>
               </Grid.Col>
             </Grid>

@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
 import { MdAccountCircle } from 'react-icons/md';
-import { RiCircleFill } from "react-icons/ri";
-import { useRouter } from 'next/navigation';
+import { RiCircleFill, RiProgress3Line } from "react-icons/ri";
+import { useRouter, useSearchParams } from 'next/navigation';
 import { TbClockPause } from 'react-icons/tb';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { IoCloseCircleOutline } from 'react-icons/io5';
@@ -15,45 +15,10 @@ import MenuDrawerProject from './menu_drawer_project';
 
 export default function TabProject() {
   const [openDrawer, setOpenDrawer] = useState(false)
-
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const status = searchParams.get('status')
   const iconStyle = { width: rem(20), height: rem(20) };
-
-  const tabsData = [
-    {
-      value: 'segera',
-      label: 'Proyek Proses',
-      mobileLabel: 'Proses',
-      icon: <TbClockPause style={iconStyle} />,
-    },
-    {
-      value: 'selesai',
-      label: 'Proyek Selesai',
-      mobileLabel: 'Selesai',
-      icon: <IoIosCheckmarkCircleOutline style={iconStyle} />,
-    },
-    {
-      value: 'batal',
-      label: 'Proyek Batal',
-      mobileLabel: ' Batal',
-      icon: <IoCloseCircleOutline style={iconStyle} />,
-    },
-  ];
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 495) {
-        setIsMobile(true);
-      } else {
-        setIsMobile(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   return (
     <Box>
@@ -63,36 +28,41 @@ export default function TabProject() {
         </ActionIcon>} />
 
       <Box p={20}>
-        <Tabs variant="pills" radius="xl" defaultValue="segera">
+        <Tabs variant="pills" radius="xl" defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}>
           <Tabs.List grow justify='center'>
-            {tabsData.map((tab) => (
-              <Tabs.Tab
-                key={tab.value}
-                value={tab.value}
-                color={WARNA.biruTua}
-                leftSection={tab.icon}
-              >
-                {isMobile ? tab.mobileLabel : tab.label}
-              </Tabs.Tab>
-            ))}
+            <Tabs.Tab value="0" w={"23%"}
+              leftSection={<TbClockPause style={iconStyle} />}
+              onClick={() => { router.push("?status=0") }}
+              color={WARNA.biruTua}
+            >
+              Segera
+            </Tabs.Tab>
+            <Tabs.Tab value="1" w={"28%"}
+              leftSection={<RiProgress3Line style={iconStyle} />}
+              onClick={() => { router.push("?status=1") }}
+              color={WARNA.biruTua}
+            >
+              Dikerjakan
+            </Tabs.Tab>
+            <Tabs.Tab value="2" w={"23%"}
+              leftSection={<IoIosCheckmarkCircleOutline style={iconStyle} />}
+              onClick={() => { router.push("?status=2") }}
+              color={WARNA.biruTua}>
+              Selesai
+            </Tabs.Tab>
+            <Tabs.Tab value="3" w={"20%"}
+              leftSection={<IoCloseCircleOutline style={iconStyle} />}
+              onClick={() => { router.push("?status=3") }}
+              color={WARNA.biruTua}>
+              Batal
+            </Tabs.Tab>
           </Tabs.List>
-
-          <Tabs.Panel value="segera">
-            <ListProject/>
-          </Tabs.Panel>
-
-          <Tabs.Panel value="selesai">
-            <ListProject/>
-          </Tabs.Panel>
-
-          <Tabs.Panel value="batal">
-            <ListProject/>
-          </Tabs.Panel>
+          <ListProject />
         </Tabs>
       </Box>
 
       <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
-        <MenuDrawerProject/>
+        <MenuDrawerProject />
       </LayoutDrawer>
     </Box>
   );

@@ -9,6 +9,12 @@ import DetailCreateUserProject from "./components/detail_project/detail_create_u
 import DetailDateEndTask from "./components/detail_project/detail_date_end_task";
 import DetailFileSave from "./components/detail_project/detail_file_save";
 import FileUploadProgres from "./components/detail_project/file_upload_progres";
+import TabProject from "./ui/tab_project";
+import NavbarDetailProject from "./ui/navbar_detail_project";
+import ProgressDetailProject from "./ui/progress_detail_project";
+import ListTugasDetailProject from "./ui/list_tugas_detail_project";
+import ListFileDetailProject from "./ui/list_file_detail_project";
+import LiatAnggotaDetailProject from "./ui/liat_anggota_detail_project";
 
 export { ViewProject }
 export { ViewCreateProject }
@@ -21,3 +27,9 @@ export { DetailCreateUserProject }
 export { DetailDateEndTask }
 export { DetailFileSave }
 export { FileUploadProgres }
+export { TabProject }
+export { NavbarDetailProject }
+export { ProgressDetailProject }
+export { ListTugasDetailProject }
+export { ListFileDetailProject }
+export { LiatAnggotaDetailProject }

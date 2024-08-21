@@ -167,6 +167,7 @@ model Project {
   Group          Group            @relation(fields: [idGroup], references: [id])
   idGroup        String
   name           String
+  status         Int              @default(0) // 0 = pending, 1 = ongoing, 2 = done, 3 = cancelled
   desc           String           @db.Text
   isActive       Boolean          @default(true)
   User           User             @relation(fields: [createdBy], references: [id])
