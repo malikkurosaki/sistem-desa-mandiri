@@ -122,7 +122,6 @@ export default function NavbarDetailDivisionTask() {
                </Stack>
             </Box>
          </LayoutDrawer>
-
       </>
    )
 }

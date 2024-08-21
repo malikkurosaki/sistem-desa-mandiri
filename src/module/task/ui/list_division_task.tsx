@@ -9,52 +9,6 @@ import { funGetAllTask } from "../lib/api_task";
 import toast from "react-hot-toast";
 import { useShallowEffect } from "@mantine/hooks";
 
-
-const dataProject = [
-   {
-      id: 1,
-      title: 'Project 1',
-      description: 'Tempat berkumpul semua anggota / staff perbekal darmasaba',
-      status: 'PROJECT SELESAI',
-      color: '#387529'
-   },
-   {
-      id: 2,
-      title: 'Project 2',
-      description: 'Tempat berkumpul semua anggota / staff perbekal darmasaba',
-      status: 'PROJECT SELESAI',
-      color: '#387529'
-   },
-   {
-      id: 3,
-      title: 'Project 3',
-      description: 'Tempat berkumpul semua anggota / staff perbekal darmasaba',
-      status: 'PROJECT SELESAI',
-      color: '#387529'
-   },
-   {
-      id: 4,
-      title: 'Project 4',
-      description: 'Tempat berkumpul semua anggota / staff perbekal darmasaba',
-      status: 'PROSES',
-      color: '#C5771A'
-   },
-   {
-      id: 5,
-      title: 'Project5',
-      description: 'Tempat berkumpul semua anggota / staff perbekal darmasaba',
-      status: 'PROSES',
-      color: '#C5771A'
-   },
-   {
-      id: 6,
-      title: 'Project 6',
-      description: 'Tempat berkumpul semua anggota / staff perbekal darmasaba',
-      status: 'PROSES',
-      color: '#C5771A'
-   },
-]
-
 export default function ListDivisionTask() {
    const [isList, setIsList] = useState(false)
    const router = useRouter()
