@@ -1,47 +1,46 @@
 'use client'
 import { WARNA } from '@/module/_global';
 import { Avatar, Box, Flex, Group, Text } from '@mantine/core';
-import React from 'react';
+import React, { useState } from 'react';
+import { funGetOneProjectById } from '../lib/api_project';
+import toast from 'react-hot-toast';
+import { useParams } from 'next/navigation';
+import { useShallowEffect } from '@mantine/hooks';
+import { IDataMemberProject } from '../lib/type_project';
 
-const dataTugas = [
-  {
-    id: 1,
-    name: "Iqbal Ramadan",
-    image: "https://i.pravatar.cc/1000?img=5",
-    email: "iqbal.ramadan@gmail.com",
-  },
-  {
-    id: 2,
-    name: "Doni Setiawan",
-    image: "https://i.pravatar.cc/1000?img=10",
-    email: "doni.setiawan@gmail.com",
-  },
-  {
-    id: 3,
-    name: "Rangga Agung",
-    image: "https://i.pravatar.cc/1000?img=51",
-    email: "rangga.agung@gmail.com",
-  },
-  {
-    id: 4,
-    name: "Ramadan Sananta",
-    image: "https://i.pravatar.cc/1000?img=15",
-    email: "ramadan@gmail.com",
-  },
-  {
-    id: 5,
-    name: "Imam Baroni",
-    image: "https://i.pravatar.cc/1000?img=22",
-    email: "imam.baroni@gmail.com",
-  },
-];
 
 export default function LiatAnggotaDetailProject() {
+  const [isData, setData] = useState<IDataMemberProject[]>([])
+  const param = useParams<{ id: string }>()
+  const [loading, setLoading] = useState(true)
+
+  async function getOneData() {
+    try {
+      setLoading(true)
+      const res = await funGetOneProjectById(param.id, 'member');
+      if (res.success) {
+        setData(res.data)
+      } else {
+        toast.error(res.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan member proyek, coba lagi nanti");
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useShallowEffect(() => {
+    getOneData();
+  }, [param.id])
+
   return (
     <Box pt={20}>
       <Group justify="space-between">
         <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-        <Text c={WARNA.biruTua}>Total 10 Anggota</Text>
+        <Text c={WARNA.biruTua}>Total {isData.length} Anggota</Text>
       </Group>
       <Box pt={10}>
         <Box mb={20}>
@@ -53,34 +52,38 @@ export default function LiatAnggotaDetailProject() {
             px={20}
             py={10}
           >
-            <Text c={WARNA.biruTua} fw={"bold"}>
-              Divisi Kerohanian
-            </Text>
-            {dataTugas.map((v, i) => {
-              return (
-                <Flex
-                  justify={"space-between"}
-                  align={"center"}
-                  mt={20}
-                  key={i}
-                >
-                  <Group>
-                    <Avatar src={v.image} alt="it's me" size="lg" />
-                    <Box>
-                      <Text c={WARNA.biruTua} fw={"bold"}>
-                        {v.name}
-                      </Text>
-                      <Text c={"#5A687D"} fz={14}>
-                        {v.email}
-                      </Text>
-                    </Box>
-                  </Group>
-                  <Text c={WARNA.biruTua} fw={"bold"}>
-                    Anggota
-                  </Text>
-                </Flex>
-              );
-            })}
+            {
+              loading ? <Text>loading</Text> :
+                isData.length === 0 ? <Text>Tidak ada anggota</Text> :
+                  isData.map((v, i) => {
+                    return (
+                      <Flex
+                        justify={"space-between"}
+                        align={"center"}
+                        mt={20}
+                        key={i}
+                        onClick={() => {
+                          // setDataChoose({ id: v.idUser, name: v.name })
+                          // setOpenDrawer(true)
+                        }}
+                      >
+                        <Group>
+                          <Avatar src={""} alt="it's me" size="lg" />
+                          <Box>
+                            <Text c={WARNA.biruTua} fw={"bold"}>
+                              {v.name}
+                            </Text>
+                            <Text c={"#5A687D"} fz={14}>
+                              {v.email}
+                            </Text>
+                          </Box>
+                        </Group>
+                        <Text c={WARNA.biruTua} fw={"bold"}>
+                          Anggota
+                        </Text>
+                      </Flex>
+                    );
+                  })}
           </Box>
         </Box>
       </Box>
