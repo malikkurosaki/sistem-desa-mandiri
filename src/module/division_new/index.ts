@@ -7,7 +7,6 @@ import ViewDetailEventDivision from "./_division_fitur/calender/view/view_detail
 import ViewDivisionCalender from "./_division_fitur/calender/view/view_division_calender";
 import ViewHistoryDivisionCalender from "./_division_fitur/calender/view/view_history_division_calender";
 import ViewUpdateDivisionCalender from "./_division_fitur/calender/view/view_update_division_calender";
-import ViewDocumentDivision from "./_division_fitur/document/view/view_document_division";
 import CreateAdminDivision from "./ui/create_admin_division";
 import CreateUsers from "./ui/create_users";
 import ListDivision from './ui/list_division';
@@ -35,7 +34,6 @@ export { ViewHistoryDivisionCalender };
 export { ViewDetailEventDivision };
 export { ViewUpdateDivisionCalender };
 export { UpdateUlangiEvent };
-export { ViewDocumentDivision };
 export type { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison, IDataMemberDivision }
 export { ListDivision }
 export { CreateDivision }

@@ -3,8 +3,6 @@ import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Button, Checkbox, Divider, Flex, Grid, Group, Modal, Select, SimpleGrid, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
-import DrawerMenuDocumentDivision from './drawer_menu_document_division';
-import ListDocumentsDivision from '../list_documents_division';
 import { FcDocument, FcFolder, FcImageFile } from 'react-icons/fc';
 import { BsDownload } from 'react-icons/bs';
 import { AiOutlineDelete } from 'react-icons/ai';
@@ -13,73 +11,35 @@ import { LuShare2 } from 'react-icons/lu';
 import { MdOutlineMoreHoriz } from 'react-icons/md';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import toast from 'react-hot-toast';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import DrawerMenuDocumentDivision from './drawer_menu_document_division';
 import DrawerMore from './drawer_more';
-import { useRouter } from 'next/navigation';
-
-const dataDocuments = [
-  {
-    id: 1,
-    name: 'Administrasi',
-    date: '18/06/2024 14.00 PM',
-    icon: <FcFolder size={60} />
-  },
-  {
-    id: 2,
-    name: 'Administrasi',
-    date: '18/06/2024 14.00 PM',
-    icon: <FcFolder size={60} />
-  },
-  {
-    id: 3,
-    name: 'Administrasi',
-    date: '18/06/2024 14.00 PM',
-    icon: <FcFolder size={60} />
-  },
-  {
-    id: 3,
-    name: 'Berkas Kerja',
-    date: '18/06/2024 14.00 PM',
-    icon: <FcDocument size={60} />
-  },
-  {
-    id: 3,
-    name: 'Berkas Kerja',
-    date: '18/06/2024 14.00 PM',
-    icon: <FcDocument size={60} />
-  },
-  {
-    id: 3,
-    name: 'Image Kegiatan',
-    date: '18/06/2024 14.00 PM',
-    icon: <FcImageFile size={60} />
-  },
-  {
-    id: 3,
-    name: 'Image Pelaksanaan',
-    date: '18/06/2024 14.00 PM',
-    icon: <FcImageFile size={60} />
-  },
-  {
-    id: 3,
-    name: 'Image Pelaksanaan',
-    date: '18/06/2024 14.00 PM',
-    icon: <FcImageFile size={60} />
-  },
-]
+import { funGetDivisionById } from '@/module/division_new';
+import { useShallowEffect } from '@mantine/hooks';
+import { funGetAllDocument } from '../lib/api_document';
+import { IDataDocument } from '../lib/type_document';
+import { useHookstate } from '@hookstate/core';
+import { globalRefreshDocument } from '../lib/val_document';
 
 export default function NavbarDocumentDivision() {
   const [isChecked, setIsChecked] = useState(false);
   const router = useRouter()
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
+  const param = useParams<{ id: string }>()
+  const [name, setName] = useState('')
   const [isOpen, setOpen] = useState(false)
-
   const [isDelete, setIsDelete] = useState(false)
   const [rename, setRename] = useState(false)
   const [share, setShare] = useState(false)
   const [more, setMore] = useState(false)
+  const searchParams = useSearchParams()
+  const path = searchParams.get('path')
+  const [dataDocument, setDataDocument] = useState<IDataDocument[]>([])
+  const refresh = useHookstate(globalRefreshDocument)
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
 
   function onTrue(val: boolean) {
     if (val) {
@@ -93,6 +53,38 @@ export default function NavbarDocumentDivision() {
     }
     setRename(false)
   }
+
+  async function getOneData() {
+    try {
+      const respon = await funGetAllDocument("?division=" + param.id + "&path=" + path);
+      if (respon.success) {
+        setDataDocument(respon.data);
+      } else {
+        toast.error(respon.message);
+      }
+
+      const res = await funGetDivisionById(param.id);
+      if (res.success) {
+        setName(res.data.division.name);
+      } else {
+        toast.error(res.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan divisi, coba lagi nanti");
+    }
+  }
+
+  function resetRefresh() {
+    refresh.set(false)
+    setOpen(false)
+  }
+
+  useShallowEffect(() => {
+    getOneData()
+    resetRefresh()
+  }, [param.id, path, refresh.get()])
 
   return (
     <Box>
@@ -136,7 +128,8 @@ export default function NavbarDocumentDivision() {
           </Box>
         </>
       )}
-      <LayoutNavbarNew back='' title='Divisi kerohanian'
+
+      <LayoutNavbarNew back='' title={name}
         menu={
           <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
             <HiMenu size={20} color='white' />
@@ -145,19 +138,30 @@ export default function NavbarDocumentDivision() {
       />
       <Box>
         <Box p={20} pb={60}>
-          {dataDocuments.map((v, i) => {
+          {dataDocument.map((v, i) => {
             return (
               <Box key={i}>
                 <Box mt={10} mb={10}>
                   <Grid align='center' >
-                    <Grid.Col span={10} onClick={() => router.push('/document?page=list-document')}>
+                    <Grid.Col span={10}
+                      onClick={() => {
+                        if (v.category == "FOLDER")
+                          router.push('?path=' + v.id)
+                      }}
+                    >
                       <Group gap={20}>
                         <Box>
-                          {v.icon}
+                          {
+                            (v.category == "FOLDER") ?
+                              <FcFolder size={60} /> :
+                              (v.extension == "pdf" || v.extension == "csv") ?
+                                <FcDocument size={60} /> :
+                                <FcImageFile size={60} />
+                          }
                         </Box>
                         <Flex direction={'column'}>
-                          <Text>{v.name}</Text>
-                          <Text fz={10}>{v.date}</Text>
+                          <Text>{(v.category == "FOLDER") ? v.name : v.name + '.' + v.extension}</Text>
+                          <Text fz={10}>{v.updatedAt}</Text>
                         </Flex>
                       </Group>
                     </Grid.Col>
@@ -180,9 +184,14 @@ export default function NavbarDocumentDivision() {
           })}
         </Box>
       </Box>
+
+
+
       <LayoutDrawer opened={isOpen} title={'Menu'} onClose={() => setOpen(false)}>
         <DrawerMenuDocumentDivision />
       </LayoutDrawer>
+
+
       <LayoutModal opened={isDelete} onClose={() => setIsDelete(false)}
         description="Apakah Anda yakin ingin menghapus data?"
         onYes={(val) => { onTrue(val) }} />

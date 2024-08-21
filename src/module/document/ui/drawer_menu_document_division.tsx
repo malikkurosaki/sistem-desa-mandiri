@@ -1,25 +1,45 @@
 "use clent"
 import { LayoutDrawer, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Button, Divider, Flex, Grid, Modal, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaFolderClosed, FaRegImage } from 'react-icons/fa6';
 import { HiDocumentText } from 'react-icons/hi2';
 import { IoAddCircle, IoDocumentText } from 'react-icons/io5';
+import { funCreateFolder } from '../lib/api_document';
+import { useHookstate } from '@hookstate/core';
+import { globalRefreshDocument } from '../lib/val_document';
 
 export default function DrawerMenuDocumentDivision() {
   const [openDrawerDocument, setOpenDrawerDocument] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const router = useRouter()
+  const param = useParams<{ id: string }>()
+  const searchParams = useSearchParams()
+  const path = searchParams.get('path')
+  const refresh = useHookstate(globalRefreshDocument)
 
-  function onCreate(val: boolean) {
-    if (val) {
-      toast.success("Sukses! Data tersimpan");
+  const [bodyFolder, setBodyFolder] = useState({
+    name: '',
+    path: (path == undefined || path == '' || path == null) ? 'home' : path,
+    idDivision: param.id
+  })
+
+  async function onCreateFolder() {
+    try {
+      const res = await funCreateFolder(bodyFolder)
+      if (res.success) {
+        refresh.set(true)
+        setOpenModal(false)
+        setOpenDrawerDocument(false)
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal membuat folder baru, coba lagi nanti");
     }
-    setOpenDrawerDocument(false)
-    setOpenModal(false)
-    router.push('/document')
   }
 
   return (
@@ -77,6 +97,8 @@ export default function DrawerMenuDocumentDivision() {
         </SimpleGrid>
       </LayoutDrawer>
 
+
+
       <Modal styles={{
         body: {
           borderRadius: 20
@@ -100,6 +122,8 @@ export default function DrawerMenuDocumentDivision() {
               size="md"
               radius={10}
               placeholder="Buat Folder Baru"
+              value={bodyFolder.name}
+              onChange={(e) => setBodyFolder({ ...bodyFolder, name: e.target.value })}
             />
           </Box>
           <Grid mt={40}>
@@ -107,7 +131,7 @@ export default function DrawerMenuDocumentDivision() {
               <Button variant="subtle" fullWidth color='#969494' onClick={() => setOpenModal(false)}>Batalkan</Button>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Button variant="subtle" fullWidth color={WARNA.biruTua} onClick={(val) => onCreate(true)}>Membuat</Button>
+              <Button variant="subtle" fullWidth color={WARNA.biruTua} onClick={() => onCreateFolder()}>Membuat</Button>
             </Grid.Col>
           </Grid>
         </Box>

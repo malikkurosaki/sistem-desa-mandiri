@@ -25,7 +25,7 @@ export default function NavbarDetailDivision() {
 
       } catch (error) {
          console.error(error);
-         toast.error("Gagal mendapatkan grup, coba lagi nanti");
+         toast.error("Gagal mendapatkan divisi, coba lagi nanti");
       }
    }
 
