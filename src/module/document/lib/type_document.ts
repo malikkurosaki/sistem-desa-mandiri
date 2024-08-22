@@ -45,3 +45,14 @@ export interface IFormMoreCopyItem {
    path: string,
    dataItem: IDataDocument[]
 }
+
+
+export interface IShareDivision {
+   id: string
+   name: string
+}
+
+export interface IShareDocument {
+   dataDivision: IShareDivision[],
+   dataItem: IShareDivision[]
+}
