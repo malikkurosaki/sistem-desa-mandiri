@@ -3,16 +3,39 @@ import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Flex, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaPencil, FaUsers } from 'react-icons/fa6';
 import { HiMenu } from 'react-icons/hi';
 import { IoAddCircle } from 'react-icons/io5';
 import { MdCancel } from 'react-icons/md';
+import { funGetOneProjectById } from '../lib/api_project';
+import { useShallowEffect } from '@mantine/hooks';
 
 export default function NavbarDetailProject() {
   const router = useRouter()
   const param = useParams<{ id: string }>()
   const [name, setName] = useState('')
   const [isOpen, setOpen] = useState(false)
+
+  async function getOneData() {
+    try {
+      const res = await funGetOneProjectById(param.id, 'data');
+      if (res.success) {
+        setName(res.data.name);
+      } else {
+        toast.error(res.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan data proyek, coba lagi nanti");
+    }
+  }
+
+  useShallowEffect(() => {
+    getOneData();
+  }, [param.id])
+
   return (
     <>
       <LayoutNavbarNew back="" title={name} menu={
@@ -27,7 +50,6 @@ export default function NavbarDetailProject() {
           <HiMenu size={20} color="white" />
         </ActionIcon>
       } />
-
 
       <LayoutDrawer opened={isOpen} title={'Menu'} onClose={() => setOpen(false)}>
         <Box>

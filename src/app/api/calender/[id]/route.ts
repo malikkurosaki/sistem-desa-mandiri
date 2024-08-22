@@ -152,7 +152,6 @@ export async function DELETE(request: Request, context: { params: { id: string }
 export async function PUT(request: Request, context: { params: { id: string } }) {
     try {
 
-        console.log('amalai')
         const user = await funGetUserByCookies()
         if (user.id == undefined) {
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
@@ -167,8 +166,6 @@ export async function PUT(request: Request, context: { params: { id: string } })
                 id: id
             }
         })
-
-        console.log(id, title, desc, timeStart, dateStart, timeEnd, linkMeet, repeatEventTyper, member)
 
         if (cek == 0) {
             return NextResponse.json(
@@ -218,7 +215,6 @@ export async function PUT(request: Request, context: { params: { id: string } })
             data: omitMember
         });
 
-        console.log(omitMember)
 
 
         return NextResponse.json({ success: true, message: "Berhasil mengedit calender" }, { status: 200 });

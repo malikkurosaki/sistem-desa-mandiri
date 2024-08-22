@@ -14,7 +14,13 @@ import NavbarDetailProject from "./ui/navbar_detail_project";
 import ProgressDetailProject from "./ui/progress_detail_project";
 import ListTugasDetailProject from "./ui/list_tugas_detail_project";
 import ListFileDetailProject from "./ui/list_file_detail_project";
-import LiatAnggotaDetailProject from "./ui/liat_anggota_detail_project";
+import LiatAnggotaDetailProject from "./ui/list_anggota_detail_project";
+import EditTaskProject from "./ui/edit_task_project";
+import EditDetailTaskProject from "./ui/edit_detail_task_project";
+import ListAnggotaDetailProject from "./ui/list_anggota_detail_project";
+import AddDetailTaskProject from "./ui/add_detail_task_project";
+import CancelProject from "./ui/cancel_project";
+import AddMemberDetailProject from "./ui/add_member_detail_project";
 
 export { ViewProject }
 export { ViewCreateProject }
@@ -32,4 +38,9 @@ export { NavbarDetailProject }
 export { ProgressDetailProject }
 export { ListTugasDetailProject }
 export { ListFileDetailProject }
-export { LiatAnggotaDetailProject }
+export { ListAnggotaDetailProject }
+export { EditTaskProject }
+export { EditDetailTaskProject }
+export { AddDetailTaskProject }
+export { CancelProject }
+export { AddMemberDetailProject }

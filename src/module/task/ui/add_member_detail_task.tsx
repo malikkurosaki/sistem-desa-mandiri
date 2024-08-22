@@ -117,9 +117,11 @@ export default function AddMemberDetailTask() {
       <Box>
          <LayoutNavbarNew
             back=""
-            title="Pilih Anggota"
+            title="Pilih Anggotak"
             menu
          />
+               <pre>{JSON.stringify(isData, null, 1)}</pre>
+               <pre>{JSON.stringify(isDataMember, null, 1)}</pre>
          <Box p={20}>
             {/* <TextInput
           styles={{
