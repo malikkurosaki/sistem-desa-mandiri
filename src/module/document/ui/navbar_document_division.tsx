@@ -286,7 +286,7 @@ export default function NavbarDocumentDivision() {
                   <Grid align='center' >
                     <Grid.Col span={10}
                       onClick={() => {
-                        if (v.category == "FOLDER")
+                        if (v.category == "FOLDER" && selectedFiles.length == 0 && !dariSelectAll)
                           router.push('?path=' + v.id)
                       }}
                     >
