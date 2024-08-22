@@ -2,6 +2,7 @@ import prisma from "./bin/prisma";
 import { pwd_key_config } from "./bin/val_global";
 import SkeletonDetailDiscussionComment from "./components/skeleton_detail_discussion_comment";
 import SkeletonDetailDiscussionMember from "./components/skeleton_detail_discussion_member";
+import SkeletonDetailProfile from "./components/skeleton_detail_profile";
 import SkeletonSingle from "./components/skeleton_single";
 import { funUploadFile } from "./fun/upload-file";
 import { WARNA } from "./fun/WARNA";
@@ -27,3 +28,4 @@ export { SkeletonSingle }
 export { SkeletonDetailDiscussionComment }
 export { SkeletonDetailDiscussionMember }
 export { funUploadFile }
+export { SkeletonDetailProfile }

@@ -1,6 +1,6 @@
 'use client'
-import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer } from "@/module/_global";
-import { Box, Group, ActionIcon, Stack, Text, Center, Avatar } from "@mantine/core";
+import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, SkeletonDetailProfile } from "@/module/_global";
+import { Box, Group, ActionIcon, Stack, Text, Center, Avatar, Skeleton } from "@mantine/core";
 import { HiMenu } from "react-icons/hi";
 import { HiUser } from "react-icons/hi2";
 import DrawerDetailMember from "./drawer_detail_member";
@@ -21,6 +21,7 @@ export default function NavbarDetailMember({ id }: IMember) {
    const [dataOne, setDataOne] = useState<IListMember>()
    const [selectId, setSelectId] = useState<string>('');
    const [active, setActive] = useState<boolean>(false)
+   const [loading, setLoading] = useState(true)
 
    useShallowEffect(() => {
       featchGetOne()
@@ -29,6 +30,7 @@ export default function NavbarDetailMember({ id }: IMember) {
 
    async function featchGetOne() {
       try {
+         setLoading(true)
          const respose = await funGetOneMember(id)
          if (respose.success) {
             setDataOne(respose.data)
@@ -37,9 +39,13 @@ export default function NavbarDetailMember({ id }: IMember) {
          } else {
             toast.error(respose.message)
          }
+
+         setLoading(false)
       } catch (error) {
          console.error(error)
          toast.error("Gagal mendapatkan detail user, coba lagi nanti");
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -62,42 +68,56 @@ export default function NavbarDetailMember({ id }: IMember) {
                   <Center>
                      <Avatar src={'https://i.pravatar.cc/1000?img=25'} alt="it's me" size="xl" />
                   </Center>
-                  <Text c={'white'} fw={'bold'} fz={25}>{dataOne?.name}</Text>
-                  <Text c={'white'} fw={'lighter'} fz={15}>{dataOne?.group} - {dataOne?.position}</Text>
+                  {loading ? 
+                     <>
+                     <Skeleton height={25} mt={10} width={"40%"} />
+                     <Skeleton height={15} mt={12} width={"30%"} />
+                     </>
+                  :
+                     <>
+                        <Text c={'white'} fw={'bold'} fz={25}>{dataOne?.name}</Text>
+                        <Text c={'white'} fw={'lighter'} fz={15}>{dataOne?.group} - {dataOne?.position}</Text>
+                     </>
+                  }
                </Stack>
             </LayoutNavbarHome>
-            <Box p={20}>
-               <Group justify="space-between" grow py={5}>
-                  <Group>
-                     <RiIdCardFill size={28} />
-                     <Text fz={18}>NIK</Text>
+            {loading
+               ? 
+               <SkeletonDetailProfile />
+               :
+               <Box p={20}>
+                  <Group justify="space-between" grow py={5}>
+                     <Group>
+                        <RiIdCardFill size={28} />
+                        <Text fz={18}>NIK</Text>
+                     </Group>
+                     <Text fz={18} fw={'bold'} ta={"right"}>{dataOne?.nik}</Text>
                   </Group>
-                  <Text fz={18} fw={'bold'} ta={"right"}>{dataOne?.nik}</Text>
-               </Group>
-               <Group justify="space-between" grow py={5}>
-                  <Group>
-                     <FaSquarePhone size={28} />
-                     <Text fz={18}>No Telepon</Text>
+                  <Group justify="space-between" grow py={5}>
+                     <Group>
+                        <FaSquarePhone size={28} />
+                        <Text fz={18}>No Telepon</Text>
+                     </Group>
+                     <Text fz={18} fw={'bold'} ta={"right"}>{dataOne?.phone}</Text>
                   </Group>
-                  <Text fz={18} fw={'bold'} ta={"right"}>{dataOne?.phone}</Text>
-               </Group>
-               <Group justify="space-between" grow py={5}>
-                  <Group>
-                     <MdEmail size={28} />
-                     <Text fz={18}>Email</Text>
+                  <Group justify="space-between" grow py={5}>
+                     <Group>
+                        <MdEmail size={28} />
+                        <Text fz={18}>Email</Text>
+                     </Group>
+                     <Text fz={18} fw={'bold'} ta={"right"}>{dataOne?.email}</Text>
                   </Group>
-                  <Text fz={18} fw={'bold'} ta={"right"}>{dataOne?.email}</Text>
-               </Group>
-               <Group justify="space-between" grow py={5}>
-                  <Group>
-                     <IoMaleFemale size={28} />
-                     <Text fz={18}>Gender</Text>
+                  <Group justify="space-between" grow py={5}>
+                     <Group>
+                        <IoMaleFemale size={28} />
+                        <Text fz={18}>Gender</Text>
+                     </Group>
+                     <Text fz={18} fw={'bold'} ta={"right"}>
+                        {dataOne?.gender === 'M' ? 'Laki-laki' : dataOne?.gender === 'F' ? 'Perempuan' : ''}
+                     </Text>
                   </Group>
-                  <Text fz={18} fw={'bold'} ta={"right"}>
-                     {dataOne?.gender === 'M' ? 'Laki-laki' : dataOne?.gender === 'F' ? 'Perempuan' : ''}
-                  </Text>
-               </Group>
-            </Box>
+               </Box>
+            }
             <LayoutDrawer opened={isOpen} title={'Menu'} onClose={() => setOpen(false)}>
                <DrawerDetailMember id={selectId} status={active} onDeleted={() => setOpen(false)} />
             </LayoutDrawer>

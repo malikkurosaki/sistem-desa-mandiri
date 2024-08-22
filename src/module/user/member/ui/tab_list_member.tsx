@@ -1,5 +1,5 @@
 
-import { WARNA } from "@/module/_global"
+import { SkeletonSingle, WARNA } from "@/module/_global"
 import { Box, Group, ActionIcon, Text, TextInput } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -54,28 +54,43 @@ export default function TabListMember() {
                onChange={(e) => setSearchQuery(e.target.value)}
                my={10}
             />
-            {dataMember.map((v, i) => {
-               return (
-                  <Box pt={20} key={i} onClick={() => {
-                     router.push(`/member/${v.id}`)
-                  }}>
-                     <Group align='center' style={{
-                        borderBottom: `1px solid #D9D9D9`,
-                        padding: 10,
-                     }} >
-                        <Box>
-                           <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
-                              <HiMiniUser color={'white'} size={25} />
-                           </ActionIcon>
-                        </Box>
-                        <Box>
-                           <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
-                           <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
-                        </Box>
-                     </Group>
+            {loading
+               ? Array(6)
+                  .fill(null)
+                  .map((_, i) => (
+                     <Box key={i}>
+                        <SkeletonSingle />
+                     </Box>
+                  ))
+               :
+               dataMember.length == 0 ?
+                  <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+                      <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
                   </Box>
-               )
-            })}
+                  :
+                  dataMember.map((v, i) => {
+                     return (
+                        <Box pt={20} key={i} onClick={() => {
+                           router.push(`/member/${v.id}`)
+                        }}>
+                           <Group align='center' style={{
+                              borderBottom: `1px solid #D9D9D9`,
+                              padding: 10,
+                           }} >
+                              <Box>
+                                 <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
+                                    <HiMiniUser color={'white'} size={25} />
+                                 </ActionIcon>
+                              </Box>
+                              <Box>
+                                 <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
+                                 <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
+                              </Box>
+                           </Group>
+                        </Box>
+                     )
+                  })
+            }
          </Box>
       </>
    )

@@ -65,13 +65,13 @@ export default function ListAnnouncement() {
                   </Box>
                ))
             : (isData.length === 0) ?
-               <Stack align="stretch" justify="center" w={"100%"} h={200}>
+               <Stack align="stretch" justify="center" w={"100%"} h={"60vh"}>
                   <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada pengumuman</Text>
                </Stack>
                :
                isData.map((v, i) => {
                   return (
-                     <Box key={i} mt={15}>
+                     <Box key={i} mt={20}>
                         <Box >
                            <Grid>
                               <Grid.Col span={2}>
