@@ -17,6 +17,7 @@ export async function GET(request: Request) {
       const { searchParams } = new URL(request.url);
       const idDivision = searchParams.get("division");
       const path = searchParams.get("path");
+      const category = searchParams.get("category");
 
       const cekDivision = await prisma.division.count({
          where: {
@@ -43,14 +44,24 @@ export async function GET(request: Request) {
       }
 
 
+      let kondisi: any = {
+         isActive: true,
+         idDivision: String(idDivision),
+         path: (path == "undefined" || path == "null" || path == "" || path == null) ? "home" : path
+      }
+
+      if (category == "folder") {
+         kondisi = {
+            isActive: true,
+            idDivision: String(idDivision),
+            path: (path == "undefined" || path == "null" || path == "" || path == null) ? "home" : path,
+            category: "FOLDER"
+         }
+      }
 
 
       const data = await prisma.divisionDocumentFolderFile.findMany({
-         where: {
-            isActive: true,
-            idDivision: String(idDivision),
-            path: (path == "undefined" || path == "null" || path == "" || path == null) ? "home" : path
-         },
+         where: kondisi,
          select: {
             id: true,
             category: true,
@@ -78,7 +89,35 @@ export async function GET(request: Request) {
       }))
 
 
-      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: allData, }, { status: 200 });
+      let pathNow = path
+      let jalur = []
+
+      if (path != "home" && path != "null" && path != "undefined" && path != "") {
+         do {
+            const dataPath = await prisma.divisionDocumentFolderFile.findUnique({
+               where: {
+                  id: String(pathNow)
+               }
+            })
+
+            if (dataPath) {
+               const fix = {
+                  id: String(pathNow),
+                  name: dataPath.name,
+               }
+               jalur.push(fix)
+               pathNow = dataPath.path
+            } else {
+               pathNow = "home"
+            }
+         } while (pathNow != "home");
+
+      }
+
+      jalur.push({ id: 'home', name: 'home' })
+      jalur = [...jalur].reverse()
+
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: allData, jalur }, { status: 200 });
 
    } catch (error) {
       console.log(error);

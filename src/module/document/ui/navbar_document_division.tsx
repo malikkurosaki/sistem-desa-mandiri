@@ -1,6 +1,6 @@
 'use client'
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
-import { ActionIcon, Box, Button, Checkbox, Divider, Flex, Grid, Group, Modal, Select, SimpleGrid, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Anchor, Box, Breadcrumbs, Button, Checkbox, Divider, Flex, Grid, Group, Modal, Select, SimpleGrid, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { FcDocument, FcFolder, FcImageFile } from 'react-icons/fc';
@@ -17,10 +17,11 @@ import DrawerMore from './drawer_more';
 import { funGetDivisionById } from '@/module/division_new';
 import { useShallowEffect } from '@mantine/hooks';
 import { funDeleteDocument, funGetAllDocument, funRenameDocument } from '../lib/api_document';
-import { IDataDocument } from '../lib/type_document';
+import { IDataDocument, IJalurItem } from '../lib/type_document';
 import { useHookstate } from '@hookstate/core';
 import { globalRefreshDocument } from '../lib/val_document';
 import { RiListCheck } from 'react-icons/ri';
+import { GoChevronRight } from 'react-icons/go';
 
 export default function NavbarDocumentDivision() {
   const router = useRouter()
@@ -34,6 +35,7 @@ export default function NavbarDocumentDivision() {
   const searchParams = useSearchParams()
   const path = searchParams.get('path')
   const [dataDocument, setDataDocument] = useState<IDataDocument[]>([])
+  const [dataJalur, setDataJalur] = useState<IJalurItem[]>([])
   const refresh = useHookstate(globalRefreshDocument)
   const [selectedFiles, setSelectedFiles] = useState<any>([])
   const [selectAll, setSelectAll] = useState(false)
@@ -57,7 +59,8 @@ export default function NavbarDocumentDivision() {
           id: dataDocument[index].id,
           name: dataDocument[index].name,
           path: dataDocument[index].path,
-          extension: dataDocument[index].extension
+          extension: dataDocument[index].extension,
+          category: dataDocument[index].category,
         }
       ])
     }
@@ -81,7 +84,8 @@ export default function NavbarDocumentDivision() {
             id: dataDocument[index].id,
             name: dataDocument[index].name,
             path: dataDocument[index].path,
-            extension: dataDocument[index].extension
+            extension: dataDocument[index].extension,
+            category: dataDocument[index].category,
           }
           setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
         }
@@ -146,6 +150,7 @@ export default function NavbarDocumentDivision() {
       const respon = await funGetAllDocument("?division=" + param.id + "&path=" + path);
       if (respon.success) {
         setDataDocument(respon.data);
+        setDataJalur(respon.jalur);
       } else {
         toast.error(respon.message);
       }
@@ -166,6 +171,8 @@ export default function NavbarDocumentDivision() {
   function resetRefresh() {
     refresh.set(false)
     setOpen(false)
+    setMore(false)
+    handleBatal()
   }
 
   useShallowEffect(() => {
@@ -258,6 +265,19 @@ export default function NavbarDocumentDivision() {
 
       <Box>
         <Box p={20} pb={60}>
+          <Box>
+            <Breadcrumbs separator={<GoChevronRight />} separatorMargin="md" mt="xs">
+              {
+                dataJalur.map((v, i) => {
+                  return (
+                    <Text onClick={() => router.push('?path=' + v.id)} key={i} style={{ cursor: 'pointer' }}>
+                      {v.name}
+                    </Text>
+                  )
+                })
+              }
+            </Breadcrumbs>
+          </Box>
           {dataDocument.map((v, i) => {
             const isSelected = selectedFiles.some((i: any) => i?.id == v.id);
             return (
@@ -266,7 +286,7 @@ export default function NavbarDocumentDivision() {
                   <Grid align='center' >
                     <Grid.Col span={10}
                       onClick={() => {
-                        if (v.category == "FOLDER")
+                        if (v.category == "FOLDER" && selectedFiles.length == 0 && !dariSelectAll)
                           router.push('?path=' + v.id)
                       }}
                     >
@@ -397,8 +417,11 @@ export default function NavbarDocumentDivision() {
           </Box>
         </Box>
       </LayoutDrawer>
+
+
+
       <LayoutDrawer opened={more} title={''} onClose={() => setMore(false)}>
-        <DrawerMore />
+        <DrawerMore data={selectedFiles} />
       </LayoutDrawer>
     </Box>
   );

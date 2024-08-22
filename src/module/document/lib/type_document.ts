@@ -16,6 +16,11 @@ export interface IFormFolder {
    idDivision: string
 }
 
+export interface IJalurItem {
+   id: string
+   name: string
+}
+
 
 export interface IFormEditItem {
    id: string
@@ -23,4 +28,20 @@ export interface IFormEditItem {
    path: string
    idDivision: string
    extension: string
+}
+
+export interface IFormDetailMoreItem {
+   id: string
+   name: string
+}
+
+export interface IFormMoreItem {
+   path: string,
+   dataItem: IFormDetailMoreItem[]
+}
+
+export interface IFormMoreCopyItem {
+   idDivision: string,
+   path: string,
+   dataItem: IDataDocument[]
 }
