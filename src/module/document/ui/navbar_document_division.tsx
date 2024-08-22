@@ -166,6 +166,8 @@ export default function NavbarDocumentDivision() {
   function resetRefresh() {
     refresh.set(false)
     setOpen(false)
+    setMore(false)
+    handleBatal()
   }
 
   useShallowEffect(() => {
@@ -397,8 +399,11 @@ export default function NavbarDocumentDivision() {
           </Box>
         </Box>
       </LayoutDrawer>
+
+
+
       <LayoutDrawer opened={more} title={''} onClose={() => setMore(false)}>
-        <DrawerMore />
+        <DrawerMore data={selectedFiles} />
       </LayoutDrawer>
     </Box>
   );

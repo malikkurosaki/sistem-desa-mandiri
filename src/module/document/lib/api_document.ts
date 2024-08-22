@@ -1,4 +1,4 @@
-import { IFormEditItem, IFormFolder } from "./type_document";
+import { IFormEditItem, IFormFolder, IFormMoreItem } from "./type_document";
 
 export const funGetAllDocument = async (path?: string) => {
    const response = await fetch(`/api/document${(path) ? path : ''}`, { next: { tags: ['document'] } });
@@ -37,6 +37,17 @@ export const funRenameDocument = async (data: IFormEditItem) => {
 export const funDeleteDocument = async (data: []) => {
    const response = await fetch("/api/document", {
       method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};
+
+export const funMoveDocument = async (data: IFormMoreItem) => {
+   const response = await fetch("/api/document/more", {
+      method: "POST",
       headers: {
          "Content-Type": "application/json",
       },

@@ -4,10 +4,36 @@ import React, { useState } from "react";
 import { LuFolders, LuFolderSymlink } from "react-icons/lu";
 import DrawerCutDocuments from "./drawer_cut_documents";
 import DrawerCopyDocuments from "./drawer_copy_documents";
+import { IFormDetailMoreItem } from "../lib/type_document";
+import toast from "react-hot-toast";
+import { funMoveDocument } from "../lib/api_document";
+import { useHookstate } from "@hookstate/core";
+import { globalRefreshDocument } from "../lib/val_document";
 
-export default function DrawerMore() {
+export default function DrawerMore({ data }: { data: IFormDetailMoreItem[] }) {
   const [isCut, setIsCut] = useState(false)
   const [isCopy, setIsCopy] = useState(false)
+  const refresh = useHookstate(globalRefreshDocument)
+
+
+  async function onMoveItem(path: string) {
+    try {
+      const res = await funMoveDocument({ path, dataItem: data })
+      if (res.success) {
+        toast.success(res.message)
+        refresh.set(true)
+      } else {
+        toast.error(res.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error("Gagal memindahkan item, coba lagi nanti")
+    }
+    setIsCut(false)
+  }
+
+
+
   return (
     <Box>
       <Stack p={10} >
@@ -35,11 +61,9 @@ export default function DrawerMore() {
 
 
       <LayoutDrawer opened={isCut} onClose={() => setIsCut(false)} title={'Pilih Lokasi Pemindahan'} size="lg">
-        <DrawerCutDocuments />
+        <DrawerCutDocuments data={data} onChoosePath={(val) => { onMoveItem(val) }} />
       </LayoutDrawer>
 
-
-      
       <LayoutDrawer opened={isCopy} onClose={() => setIsCopy(false)} title={'Pilih Lokasi Salin'} size="lg">
         <DrawerCopyDocuments />
       </LayoutDrawer>

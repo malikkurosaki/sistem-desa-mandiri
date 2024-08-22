@@ -3,12 +3,16 @@ import { Box, Button, Divider, Flex, Grid, Group, Modal, Text, TextInput } from 
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FcDocument, FcFolder, FcImageFile } from 'react-icons/fc';
-import { funCreateFolder, funGetAllDocument } from '../lib/api_document';
+import { funCreateFolder, funGetAllDocument, funMoveDocument } from '../lib/api_document';
 import { useParams } from 'next/navigation';
-import { IDataDocument } from '../lib/type_document';
+import { IDataDocument, IFormDetailMoreItem } from '../lib/type_document';
 import { useShallowEffect } from '@mantine/hooks';
+import { FaFolder } from 'react-icons/fa6';
+import { IoMdFolder } from 'react-icons/io';
+import { MdFolder } from 'react-icons/md';
 
-export default function DrawerCutDocuments() {
+
+export default function DrawerCutDocuments({ onChoosePath, data }: { data: IFormDetailMoreItem[], onChoosePath: (val: string) => void }) {
   const [opened, setOpened] = useState(false);
   const param = useParams<{ id: string }>()
   const [path, setPath] = useState('home')
@@ -36,10 +40,9 @@ export default function DrawerCutDocuments() {
     setOpened(false)
   }
 
-
   async function getOneData() {
     try {
-      const respon = await funGetAllDocument("?division=" + param.id + "&path=" + path);
+      const respon = await funGetAllDocument("?division=" + param.id + "&path=" + path + "&category=folder");
       if (respon.success) {
         setDataDocument(respon.data);
       } else {
@@ -66,29 +69,35 @@ export default function DrawerCutDocuments() {
             <Button variant="subtle" fullWidth color={WARNA.biruTua} radius={"xl"} onClick={() => setOpened(true)}>BUAT FOLDER BARU</Button>
           </Grid.Col>
           <Grid.Col span={6}>
-            <Button variant="filled" fullWidth color={WARNA.biruTua} radius={"xl"}>PINDAH</Button>
+            <Button variant="filled" fullWidth color={WARNA.biruTua} radius={"xl"} onClick={() => onChoosePath(path)}>PINDAH</Button>
           </Grid.Col>
         </Grid>
       </Box>
       <Box p={10} pb={60}>
         {dataDocument.map((v, i) => {
+          const found = data.some((i: any) => i.id == v.id)
           return (
             <Box key={i}>
-              <Box mt={10} mb={10} onClick={() => setPath(v.id)}>
+              <Box mt={10} mb={10} onClick={() => {
+                if (!found) {
+                  setPath(v.id)
+                }
+              }}>
                 <Grid align='center'>
                   <Grid.Col span={12}>
                     <Group gap={20}>
                       <Box>
                         {
-                          (v.category == "FOLDER") ?
-                            <FcFolder size={60} /> :
-                            (v.extension == "pdf" || v.extension == "csv") ?
-                              <FcDocument size={60} /> :
-                              <FcImageFile size={60} />
+                          (found) ?
+                            <MdFolder size={60} color='grey' /> :
+                            <FcFolder size={60} />
                         }
                       </Box>
                       <Flex direction={'column'}>
                         <Text>{(v.category == "FOLDER") ? v.name : v.name + '.' + v.extension}</Text>
+                        {
+                          (found) && <Text c={'dimmed'} fz={13} fs={'italic'}>Tidak bisa memilih folder ini</Text>
+                        }
                       </Flex>
                     </Group>
                   </Grid.Col>

@@ -24,3 +24,13 @@ export interface IFormEditItem {
    idDivision: string
    extension: string
 }
+
+export interface IFormDetailMoreItem {
+   id: string
+   name: string
+}
+
+export interface IFormMoreItem {
+   path: string,
+   dataItem: IFormDetailMoreItem[]
+}

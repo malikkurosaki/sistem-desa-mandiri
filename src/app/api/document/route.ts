@@ -17,6 +17,7 @@ export async function GET(request: Request) {
       const { searchParams } = new URL(request.url);
       const idDivision = searchParams.get("division");
       const path = searchParams.get("path");
+      const category = searchParams.get("category");
 
       const cekDivision = await prisma.division.count({
          where: {
@@ -43,14 +44,26 @@ export async function GET(request: Request) {
       }
 
 
+      let kondisi: any = {
+         isActive: true,
+         idDivision: String(idDivision),
+         path: (path == "undefined" || path == "null" || path == "" || path == null) ? "home" : path
+      }
+
+      if (category == "folder") {
+         kondisi = {
+            isActive: true,
+            idDivision: String(idDivision),
+            path: (path == "undefined" || path == "null" || path == "" || path == null) ? "home" : path,
+            category: "FOLDER"
+         }
+      }
+
+
 
 
       const data = await prisma.divisionDocumentFolderFile.findMany({
-         where: {
-            isActive: true,
-            idDivision: String(idDivision),
-            path: (path == "undefined" || path == "null" || path == "" || path == null) ? "home" : path
-         },
+         where: kondisi,
          select: {
             id: true,
             category: true,
