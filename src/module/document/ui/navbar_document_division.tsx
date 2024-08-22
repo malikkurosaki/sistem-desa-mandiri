@@ -57,7 +57,8 @@ export default function NavbarDocumentDivision() {
           id: dataDocument[index].id,
           name: dataDocument[index].name,
           path: dataDocument[index].path,
-          extension: dataDocument[index].extension
+          extension: dataDocument[index].extension,
+          category: dataDocument[index].category,
         }
       ])
     }
@@ -81,7 +82,8 @@ export default function NavbarDocumentDivision() {
             id: dataDocument[index].id,
             name: dataDocument[index].name,
             path: dataDocument[index].path,
-            extension: dataDocument[index].extension
+            extension: dataDocument[index].extension,
+            category: dataDocument[index].category,
           }
           setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
         }

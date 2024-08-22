@@ -12,7 +12,7 @@ import { IoMdFolder } from 'react-icons/io';
 import { MdFolder } from 'react-icons/md';
 
 
-export default function DrawerCutDocuments({ onChoosePath, data }: { data: IFormDetailMoreItem[], onChoosePath: (val: string) => void }) {
+export default function DrawerCutDocuments({ category, onChoosePath, data }: { category: string, data: IFormDetailMoreItem[], onChoosePath: (val: string) => void }) {
   const [opened, setOpened] = useState(false);
   const param = useParams<{ id: string }>()
   const [path, setPath] = useState('home')
@@ -69,7 +69,13 @@ export default function DrawerCutDocuments({ onChoosePath, data }: { data: IForm
             <Button variant="subtle" fullWidth color={WARNA.biruTua} radius={"xl"} onClick={() => setOpened(true)}>BUAT FOLDER BARU</Button>
           </Grid.Col>
           <Grid.Col span={6}>
-            <Button variant="filled" fullWidth color={WARNA.biruTua} radius={"xl"} onClick={() => onChoosePath(path)}>PINDAH</Button>
+            <Button variant="filled" fullWidth color={WARNA.biruTua} radius={"xl"} onClick={() => onChoosePath(path)}>
+              {
+                (category == "move") ?
+                  "PINDAH" : "SALIN"
+              }
+
+            </Button>
           </Grid.Col>
         </Grid>
       </Box>

@@ -34,3 +34,9 @@ export interface IFormMoreItem {
    path: string,
    dataItem: IFormDetailMoreItem[]
 }
+
+export interface IFormMoreCopyItem {
+   idDivision: string,
+   path: string,
+   dataItem: IDataDocument[]
+}
