@@ -43,7 +43,6 @@ export async function GET(request: Request, context: { params: { id: string } })
                 }
             })
 
-            console.log(dataProgress)
             const semua = dataProgress.length
             const selesai = _.filter(dataProgress, { status: 1 }).length
             const progress = Math.ceil((selesai / semua) * 100)
@@ -185,10 +184,10 @@ export async function DELETE(request: Request, context: { params: { id: string }
         }
 
         const { id } = context.params
-        const { idTask } = await request.json()
-        const data = await prisma.projectTask.count({
+        const { reason } = await request.json()
+        const data = await prisma.project.count({
             where: {
-                id: String(idTask)
+                id: id
             }
         })
 
@@ -207,7 +206,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
             },
             data: {
                 status: 3,
-                reason: idTask
+                reason: reason
             }
         })
 

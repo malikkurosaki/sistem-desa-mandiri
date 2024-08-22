@@ -19,7 +19,6 @@ export default function ProgressDetailProject() {
   async function getOneData() {
     try {
       const res = await funGetOneProjectById(param.id, 'progress');
-      console.log("data",res)
       if (res.success) {
         setValProgress(res.data.progress);
         setValLastUpdate(res.data.lastUpdate);

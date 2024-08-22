@@ -1,4 +1,4 @@
-import { LiatAnggotaDetailProject, ListFileDetailProject, ListTugasDetailProject, NavbarDetailProject, ProgressDetailProject, ViewDetailProject } from '@/module/project';
+import { ListAnggotaDetailProject, ListFileDetailProject, ListTugasDetailProject, NavbarDetailProject, ProgressDetailProject, ViewDetailProject } from '@/module/project';
 import { Box } from '@mantine/core';
 import React from 'react';
 
@@ -10,7 +10,7 @@ function Page() {
         <ProgressDetailProject />
         <ListTugasDetailProject />
         <ListFileDetailProject />
-        <LiatAnggotaDetailProject />
+        <ListAnggotaDetailProject />
       </Box>
     </Box>
   );
