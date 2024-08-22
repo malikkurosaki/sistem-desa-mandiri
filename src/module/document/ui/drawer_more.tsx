@@ -3,7 +3,6 @@ import { Box, Flex, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import React, { useState } from "react";
 import { LuFolders, LuFolderSymlink } from "react-icons/lu";
 import DrawerCutDocuments from "./drawer_cut_documents";
-import DrawerCopyDocuments from "./drawer_copy_documents";
 import { IDataDocument, IFormDetailMoreItem } from "../lib/type_document";
 import toast from "react-hot-toast";
 import { funCopyDocument, funMoveDocument } from "../lib/api_document";

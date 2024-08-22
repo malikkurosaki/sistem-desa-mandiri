@@ -1,15 +1,15 @@
 import { WARNA } from '@/module/_global';
-import { Box, Button, Divider, Flex, Grid, Group, Modal, Text, TextInput } from '@mantine/core';
+import { Box, Breadcrumbs, Button, Divider, Flex, Grid, Group, Modal, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { FcDocument, FcFolder, FcImageFile } from 'react-icons/fc';
+import { FcFolder } from 'react-icons/fc';
 import { funCreateFolder, funGetAllDocument, funMoveDocument } from '../lib/api_document';
 import { useParams } from 'next/navigation';
-import { IDataDocument, IFormDetailMoreItem } from '../lib/type_document';
+import { IDataDocument, IFormDetailMoreItem, IJalurItem } from '../lib/type_document';
 import { useShallowEffect } from '@mantine/hooks';
-import { FaFolder } from 'react-icons/fa6';
-import { IoMdFolder } from 'react-icons/io';
 import { MdFolder } from 'react-icons/md';
+import router from 'next/router';
+import { GoChevronRight } from 'react-icons/go';
 
 
 export default function DrawerCutDocuments({ category, onChoosePath, data }: { category: string, data: IFormDetailMoreItem[], onChoosePath: (val: string) => void }) {
@@ -17,6 +17,7 @@ export default function DrawerCutDocuments({ category, onChoosePath, data }: { c
   const param = useParams<{ id: string }>()
   const [path, setPath] = useState('home')
   const [dataDocument, setDataDocument] = useState<IDataDocument[]>([])
+  const [dataJalur, setDataJalur] = useState<IJalurItem[]>([])
   const [valName, setValName] = useState('')
 
 
@@ -45,6 +46,7 @@ export default function DrawerCutDocuments({ category, onChoosePath, data }: { c
       const respon = await funGetAllDocument("?division=" + param.id + "&path=" + path + "&category=folder");
       if (respon.success) {
         setDataDocument(respon.data);
+        setDataJalur(respon.jalur);
       } else {
         toast.error(respon.message);
       }
@@ -80,6 +82,19 @@ export default function DrawerCutDocuments({ category, onChoosePath, data }: { c
         </Grid>
       </Box>
       <Box p={10} pb={60}>
+        <Box>
+          <Breadcrumbs separator={<GoChevronRight />} separatorMargin="md" mt="xs">
+            {
+              dataJalur.map((v, i) => {
+                return (
+                  <Text onClick={() => setPath(v.id)} key={i} style={{ cursor: 'pointer' }}>
+                    {v.name}
+                  </Text>
+                )
+              })
+            }
+          </Breadcrumbs>
+        </Box>
         {dataDocument.map((v, i) => {
           const found = data.some((i: any) => i.id == v.id)
           return (

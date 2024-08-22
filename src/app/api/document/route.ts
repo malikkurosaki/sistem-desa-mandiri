@@ -60,8 +60,6 @@ export async function GET(request: Request) {
       }
 
 
-
-
       const data = await prisma.divisionDocumentFolderFile.findMany({
          where: kondisi,
          select: {
@@ -91,7 +89,35 @@ export async function GET(request: Request) {
       }))
 
 
-      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: allData, }, { status: 200 });
+      let pathNow = path
+      let jalur = []
+
+      if (path != "home" && path != "null" && path != "undefined" && path != "") {
+         do {
+            const dataPath = await prisma.divisionDocumentFolderFile.findUnique({
+               where: {
+                  id: String(pathNow)
+               }
+            })
+
+            if (dataPath) {
+               const fix = {
+                  id: String(pathNow),
+                  name: dataPath.name,
+               }
+               jalur.push(fix)
+               pathNow = dataPath.path
+            } else {
+               pathNow = "home"
+            }
+         } while (pathNow != "home");
+
+      }
+
+      jalur.push({ id: 'home', name: 'home' })
+      jalur = [...jalur].reverse()
+
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: allData, jalur }, { status: 200 });
 
    } catch (error) {
       console.log(error);

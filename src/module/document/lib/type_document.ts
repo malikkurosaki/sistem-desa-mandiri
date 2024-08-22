@@ -16,6 +16,11 @@ export interface IFormFolder {
    idDivision: string
 }
 
+export interface IJalurItem {
+   id: string
+   name: string
+}
+
 
 export interface IFormEditItem {
    id: string
