@@ -73,7 +73,7 @@ export default function ViewDetailFeature() {
                 <Text fz={15} c={WARNA.biruTua}>Anggota</Text>
               </Center>
             </Box>
-            <Box onClick={() => router.push('/position')}>
+            <Box onClick={() => router.push('position?active=true')}>
               <Center>
                 <ActionIcon variant="gradient"
                   size={68}

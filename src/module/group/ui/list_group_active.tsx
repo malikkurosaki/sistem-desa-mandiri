@@ -16,6 +16,7 @@ import { useShallowEffect } from "@mantine/hooks";
 import { funGetAllGroup } from "../lib/api_group";
 import { IDataGroup } from "../lib/type_group";
 import { useSearchParams } from "next/navigation";
+import _ from "lodash";
 
 
 export default function ListGroupActive() {
@@ -28,7 +29,7 @@ export default function ListGroupActive() {
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams()
   const status = searchParams.get('active')
-  
+
 
   const fetchData = async () => {
     try {
@@ -80,47 +81,54 @@ export default function ListGroupActive() {
               <SkeletonSingle />
             </Box>
           ))
-        : isData.map((v, i) => {
-          return (
-            <Box pt={20} key={i}>
-              <Group
-                align="center"
-                style={{
-                  border: `1px solid ${"#DCEED8"}`,
-                  padding: 10,
-                  borderRadius: 10,
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setValChoose(v.name);
-                  setOpenDrawer(true);
-                  setSelectId(v.id);
-                  setActive(v.isActive);
-                }}
-              >
-                <Box>
-                  <ActionIcon
-                    variant="light"
-                    bg={"#DCEED8"}
-                    size={50}
-                    radius={100}
-                    aria-label="icon"
-                  >
-                    <HiOutlineOfficeBuilding
-                      color={WARNA.biruTua}
-                      size={25}
-                    />
-                  </ActionIcon>
-                </Box>
-                <Box>
-                  <Text fw={"bold"} c={WARNA.biruTua}>
-                    {v.name}
-                  </Text>
-                </Box>
-              </Group>
-            </Box>
-          );
-        })}
+        :
+        _.isEmpty(isData)
+          ?
+          <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+             <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada grup</Text>
+          </Box>
+          :
+          isData.map((v, i) => {
+            return (
+              <Box pt={20} key={i}>
+                <Group
+                  align="center"
+                  style={{
+                    border: `1px solid ${"#DCEED8"}`,
+                    padding: 10,
+                    borderRadius: 10,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setValChoose(v.name);
+                    setOpenDrawer(true);
+                    setSelectId(v.id);
+                    setActive(v.isActive);
+                  }}
+                >
+                  <Box>
+                    <ActionIcon
+                      variant="light"
+                      bg={"#DCEED8"}
+                      size={50}
+                      radius={100}
+                      aria-label="icon"
+                    >
+                      <HiOutlineOfficeBuilding
+                        color={WARNA.biruTua}
+                        size={25}
+                      />
+                    </ActionIcon>
+                  </Box>
+                  <Box>
+                    <Text fw={"bold"} c={WARNA.biruTua}>
+                      {v.name}
+                    </Text>
+                  </Box>
+                </Group>
+              </Box>
+            );
+          })}
 
       <LayoutDrawer
         opened={openDrawer}

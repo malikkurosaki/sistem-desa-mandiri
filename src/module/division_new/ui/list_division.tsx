@@ -1,6 +1,6 @@
 'use client'
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Text, TextInput, Title } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
@@ -21,6 +21,8 @@ export default function ListDivision() {
   const [searchQuery, setSearchQuery] = useState('')
   const searchParams = useSearchParams()
   const group = searchParams.get('group')
+  const [loading, setLoading] = useState(true)
+
 
   const handleList = () => {
     setIsList(!isList)
@@ -29,6 +31,7 @@ export default function ListDivision() {
   const fetchData = async (search: string) => {
     try {
       setData([]);
+      setLoading(true);
       const response = await funGetAllDivision('?search=' + search + '&group=' + group)
 
       if (response.success) {
@@ -37,10 +40,12 @@ export default function ListDivision() {
       } else {
         toast.error(response.message);
       }
-
+      setLoading(false);
     } catch (error) {
       toast.error("Gagal mendapatkan divisi, coba lagi nanti");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,14 +95,14 @@ export default function ListDivision() {
             </Flex>
           </Grid.Col>
         </Grid>
-        <Box pt={20}>
-          <Box bg={WARNA.biruTua} p={10} style={{ borderRadius: 10 }}>
-            <Text fw={'bold'} c={'white'}>Total Divisi</Text>
-            <Flex justify={'center'} align={'center'} h={'100%'}>
-              <Text fz={40} fw={'bold'} c={'white'}>{jumlah}</Text>
-            </Flex>
+          <Box pt={20}>
+            <Box bg={WARNA.biruTua} p={10} style={{ borderRadius: 10 }}>
+              <Text fw={'bold'} c={'white'}>Total Divisi</Text>
+              <Flex justify={'center'} align={'center'} h={'100%'}>
+                <Text fz={40} fw={'bold'} c={'white'}>{jumlah}</Text>
+              </Flex>
+            </Box>
           </Box>
-        </Box>
         {isList ? (
           <Box pt={20}>
             {data?.map((v: any, i: any) => {
@@ -129,7 +134,7 @@ export default function ListDivision() {
             })}
           </Box>
         ) : (
-          <Box pt={20}>
+            <Box pt={20}>
             {data?.map((v: any, i: any) => {
               return (
                 <Box key={i} mb={20}>
@@ -142,7 +147,7 @@ export default function ListDivision() {
                       </Box>
                     </Card.Section>
                     <Box pt={10}>
-                      <Text>{v.desc}</Text>
+                      <Text lineClamp={2}>{v.desc}</Text>
                       <Group align='center' pt={10} justify='flex-end'>
                         <Avatar.Group>
                           <Avatar>

@@ -1,5 +1,5 @@
 "use client"
-import { Box, Flex, Grid, Group, List, Skeleton, Spoiler, Stack, Text } from "@mantine/core";
+import { ActionIcon, Box, Flex, Grid, Group, List, Skeleton, Spoiler, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { BsCardText } from "react-icons/bs";
@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 export default function DetailAnnouncement({ id }: { id: string }) {
    const [isData, setIsData] = useState<IAnnouncement>()
    const [isMember, setIsMember] = useState<any>({})
-   const [loading, setLoading] = useState(false)
+   const [loading, setLoading] = useState(true)
 
    async function fetchOneAnnouncement() {
       try {
@@ -41,36 +41,59 @@ export default function DetailAnnouncement({ id }: { id: string }) {
    return (
       <Box py={30} px={20}>
          <Box p={20} style={{ borderRadius: 10, border: '1px solid #E5E5E5' }} bg={'white'} >
-            <Stack>
-               <Group>
-                  <TfiAnnouncement size={25} />
-                  {
-                     loading ?
-                        <Skeleton height={10} radius="md" m={0} width={200} />
-                        : <Text fw={'bold'}>{isData?.title}</Text>
-                  }
-
-               </Group>
-               <Grid gutter={'md'}>
-                  <Grid.Col span={1}>
-                     <BsCardText size={25} />
-                  </Grid.Col>
-                  <Grid.Col span={11}>
-                     {
-                        loading ? Array(3)
-                           .fill(null)
-                           .map((_, i) => (
-                              <Skeleton key={i} height={10} radius="md" mb={5} width={"100%"} />
-                           ))
-
-                           : <Spoiler maxHeight={100} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
-                              <Text>{isData?.desc}</Text>
-                           </Spoiler>
-                     }
-
-                  </Grid.Col>
-               </Grid>
-            </Stack>
+            {loading ?
+               <Stack>
+                  <Group>
+                     <ActionIcon
+                        variant="light"
+                        bg={"#DCEED8"}
+                        size={30}
+                        radius={100}
+                        aria-label="icon"
+                     >
+                        <Skeleton height={25} width={40} />
+                     </ActionIcon>
+                     <Box>
+                        <Skeleton height={18} width={150} />
+                     </Box>
+                  </Group>
+                  <Grid gutter={'md'}>
+                     <Grid.Col span={1}>
+                        <ActionIcon
+                           variant="light"
+                           bg={"#DCEED8"}
+                           size={30}
+                           radius={100}
+                           aria-label="icon"
+                        >
+                           <Skeleton height={25} width={40} />
+                        </ActionIcon>
+                     </Grid.Col>
+                     <Grid.Col span={11}>
+                        <Spoiler maxHeight={100} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
+                           <Skeleton mt={5} ml={5} height={18} width={150} />
+                        </Spoiler>
+                     </Grid.Col>
+                  </Grid>
+               </Stack>
+               :
+               <Stack>
+                  <Group>
+                     <TfiAnnouncement size={25} />
+                     <Text fw={'bold'}>{isData?.title}</Text>
+                  </Group>
+                  <Grid gutter={'md'}>
+                     <Grid.Col span={1}>
+                        <BsCardText size={25} />
+                     </Grid.Col>
+                     <Grid.Col span={11}>
+                        <Spoiler maxHeight={100} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
+                           <Text>{isData?.desc}</Text>
+                        </Spoiler>
+                     </Grid.Col>
+                  </Grid>
+               </Stack>
+            }
          </Box>
          <Box my={15} p={20} style={{ borderRadius: 10, border: '1px solid #E5E5E5' }} bg={'white'} >
 

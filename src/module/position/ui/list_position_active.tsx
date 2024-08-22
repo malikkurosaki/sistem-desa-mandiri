@@ -28,7 +28,7 @@ export default function ListPositionActive() {
     try {
       setDataPosition([]);
       setLoading(true)
-       const res = await funGetAllPosition('?active=' + status + '&group=' + group + '&search=' + searchQuery)
+      const res = await funGetAllPosition('?active=' + status + '&group=' + group + '&search=' + searchQuery)
       setDataPosition(res.data);
       setLoading(false);
     } catch (error) {
@@ -64,46 +64,51 @@ export default function ListPositionActive() {
           <SkeletonSingle />
         </Box>
       )) :
-        isDataPosition.map((v, i) => {
-          return (
-            <Box pt={20} key={i}>
-              <Group
-                align="center"
-                style={{
-                  border: `1px solid ${"#DCEED8"}`,
-                  padding: 10,
-                  borderRadius: 10,
-                }}
-                onClick={() => {
-                  setData(v.name);
-                  setOpenDrawer(true);
-                  setSelectId(v.id);
-                  setActive(v.isActive);
-                }}
-              >
-                <Box>
-                  <ActionIcon
-                    variant="light"
-                    bg={"#DCEED8"}
-                    size={50}
-                    radius={100}
-                    aria-label="icon"
-                  >
-                    <FaUserTie color={WARNA.biruTua} size={25} />
-                  </ActionIcon>
-                </Box>
-                <Box>
-                  <Text fw={"bold"} c={WARNA.biruTua}>
-                    {v.name}
-                  </Text>
-                  <Text fw={"lighter"} fz={12}>
-                    {v.group}
-                  </Text>
-                </Box>
-              </Group>
-            </Box>
-          );
-        })
+        _.isEmpty(isDataPosition) ?
+          <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+             <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada jabatan</Text>
+          </Box>
+          :
+          isDataPosition.map((v, i) => {
+            return (
+              <Box pt={20} key={i}>
+                <Group
+                  align="center"
+                  style={{
+                    border: `1px solid ${"#DCEED8"}`,
+                    padding: 10,
+                    borderRadius: 10,
+                  }}
+                  onClick={() => {
+                    setData(v.name);
+                    setOpenDrawer(true);
+                    setSelectId(v.id);
+                    setActive(v.isActive);
+                  }}
+                >
+                  <Box>
+                    <ActionIcon
+                      variant="light"
+                      bg={"#DCEED8"}
+                      size={50}
+                      radius={100}
+                      aria-label="icon"
+                    >
+                      <FaUserTie color={WARNA.biruTua} size={25} />
+                    </ActionIcon>
+                  </Box>
+                  <Box>
+                    <Text fw={"bold"} c={WARNA.biruTua}>
+                      {v.name}
+                    </Text>
+                    <Text fw={"lighter"} fz={12}>
+                      {v.group}
+                    </Text>
+                  </Box>
+                </Group>
+              </Box>
+            );
+          })
       }
       <LayoutDrawer
         opened={openDrawer}

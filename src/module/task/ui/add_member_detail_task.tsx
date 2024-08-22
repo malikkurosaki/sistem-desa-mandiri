@@ -120,8 +120,6 @@ export default function AddMemberDetailTask() {
             title="Pilih Anggota"
             menu
          />
-               <pre>{JSON.stringify(isData, null, 1)}</pre>
-               <pre>{JSON.stringify(isDataMember, null, 1)}</pre>
          <Box p={20}>
             {/* <TextInput
           styles={{
