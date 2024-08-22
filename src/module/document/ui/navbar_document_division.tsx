@@ -22,6 +22,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalRefreshDocument } from '../lib/val_document';
 import { RiListCheck } from 'react-icons/ri';
 import { GoChevronRight } from 'react-icons/go';
+import DrawerShareDocument from './drawer_share_document';
 
 export default function NavbarDocumentDivision() {
   const router = useRouter()
@@ -172,6 +173,7 @@ export default function NavbarDocumentDivision() {
     refresh.set(false)
     setOpen(false)
     setMore(false)
+    setShare(false)
     handleBatal()
   }
 
@@ -266,11 +268,11 @@ export default function NavbarDocumentDivision() {
       <Box>
         <Box p={20} pb={60}>
           <Box>
-            <Breadcrumbs separator={<GoChevronRight />} separatorMargin="md" mt="xs">
+            <Breadcrumbs separator={<GoChevronRight />} separatorMargin="md" mt="xs" style={{ cursor: 'pointer' }}>
               {
                 dataJalur.map((v, i) => {
                   return (
-                    <Text onClick={() => router.push('?path=' + v.id)} key={i} style={{ cursor: 'pointer' }}>
+                    <Text onClick={() => router.push('?path=' + v.id)} key={i}>
                       {v.name}
                     </Text>
                   )
@@ -386,36 +388,7 @@ export default function NavbarDocumentDivision() {
 
 
       <LayoutDrawer opened={share} title={'Bagikan'} onClose={() => setShare(false)} size='lg'>
-        <Box pt={10}>
-          <Select
-            styles={{
-              input: {
-                color: WARNA.biruTua,
-                borderRadius: WARNA.biruTua,
-                borderColor: WARNA.biruTua,
-              },
-            }}
-            size="lg"
-            radius={10}
-            placeholder="Pilih Divisi"
-          />
-          <Box h={90} pos={"fixed"} bottom={0} w={{ base: "92%", md: "94%" }} style={{
-            zIndex: 999
-          }}>
-            <Box>
-              <Button
-                c={"white"}
-                bg={WARNA.biruTua}
-                size="lg"
-                radius={30}
-                fullWidth
-                onClick={() => ''}
-              >
-                Simpan
-              </Button>
-            </Box>
-          </Box>
-        </Box>
+        <DrawerShareDocument data={selectedFiles} />
       </LayoutDrawer>
 
 

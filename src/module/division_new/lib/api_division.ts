@@ -71,3 +71,10 @@ export const funAddDivisionMember = async (path: string, data: IFormMemberDivisi
    });
    return await response.json().catch(() => null);
 }
+
+
+
+export const funGetListDivisionByIdDivision = async (path: string) => {
+   const response = await fetch(`/api/division/more${path}`);
+   return await response.json().catch(() => null);
+}

@@ -117,7 +117,7 @@ export default function AddMemberDetailTask() {
       <Box>
          <LayoutNavbarNew
             back=""
-            title="Pilih Anggotak"
+            title="Pilih Anggota"
             menu
          />
                <pre>{JSON.stringify(isData, null, 1)}</pre>
@@ -142,7 +142,7 @@ export default function AddMemberDetailTask() {
                </Text>
                {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
             </Group>
-            <Box mt={15}>
+            {/* <Box mt={15}>
                {isData.map((v, i) => {
                   const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
                   const found = isDataMember.some((i: any) => i.idUser == v.idUser)
@@ -177,7 +177,7 @@ export default function AddMemberDetailTask() {
                      </Box>
                   );
                })}
-            </Box>
+            </Box> */}
             <Box mt={"xl"}>
                <Button
                   c={"white"}

@@ -1,4 +1,4 @@
-import { IFormEditItem, IFormFolder, IFormMoreCopyItem, IFormMoreItem } from "./type_document";
+import { IFormEditItem, IFormFolder, IFormMoreCopyItem, IFormMoreItem, IShareDocument } from "./type_document";
 
 export const funGetAllDocument = async (path?: string) => {
    const response = await fetch(`/api/document${(path) ? path : ''}`, { next: { tags: ['document'] } });
@@ -59,6 +59,18 @@ export const funMoveDocument = async (data: IFormMoreItem) => {
 export const funCopyDocument = async (data: IFormMoreCopyItem) => {
    const response = await fetch("/api/document/more", {
       method: "PUT",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};
+
+
+export const funShareDocument = async (data: IShareDocument) => {
+   const response = await fetch("/api/document/more", {
+      method: "DELETE",
       headers: {
          "Content-Type": "application/json",
       },

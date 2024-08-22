@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import _ from "lodash";
 import { NextResponse } from "next/server";
 
 
@@ -183,5 +184,44 @@ export async function PUT(request: Request) {
    } catch (error) {
       console.log(error);
       return NextResponse.json({ success: false, message: "Gagal salin item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+   }
+};
+
+
+// SHARE ITEM
+export async function DELETE(request: Request) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const { dataDivision, dataItem } = (await request.json());
+
+
+      for (let i = 0; i < dataItem.length; i++) {
+         const del = await prisma.divisionDocumentShare.deleteMany({
+            where: {
+               idDocument: dataItem[i].id
+            }
+         })
+
+         const omitData = dataDivision.map((v: any) => ({
+            ..._.omit(v, ["name", "id"]),
+            idDivision: v.id,
+            idDocument: dataItem[i].id
+         }))
+
+         const insert = await prisma.divisionDocumentShare.createMany({
+            data: omitData
+         })
+
+      }
+
+
+      return NextResponse.json({ success: true, message: "Berhasil membagikan item" }, { status: 200 });
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ success: false, message: "Gagal membagikan item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
