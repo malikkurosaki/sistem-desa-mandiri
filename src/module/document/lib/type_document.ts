@@ -4,6 +4,7 @@ export interface IDataDocument {
    extension: string;
    category: string;
    path: string;
+   share: boolean;
    createdBy: string;
    createdAt: string;
    updatedAt: string;
