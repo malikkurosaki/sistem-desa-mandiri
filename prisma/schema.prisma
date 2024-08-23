@@ -166,7 +166,7 @@ model Project {
   idVillage      String
   Group          Group            @relation(fields: [idGroup], references: [id])
   idGroup        String
-  name           String
+  title          String
   status         Int              @default(0) // 0 = pending, 1 = ongoing, 2 = done, 3 = cancelled
   desc           String?          @db.Text
   reason         String?          @db.Text
@@ -208,9 +208,9 @@ model ProjectTask {
   id        String   @id @default(cuid())
   Project   Project  @relation(fields: [idProject], references: [id])
   idProject String
-  name      String
+  title     String
   desc      String?
-  status    Int      @default(0) // 0 = pending, 1 = ongoing
+  status    Int      @default(0) // 0 = todo, 1 = done
   dateStart DateTime @db.Date
   dateEnd   DateTime @db.Date
   isActive  Boolean  @default(true)

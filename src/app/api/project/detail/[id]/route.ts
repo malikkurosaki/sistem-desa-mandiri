@@ -174,7 +174,7 @@ export async function POST(request: Request, context: { params: { id: string } }
                 id
             },
             data: {
-                name: name,
+                title: name,
                 dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
                 dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
             }

@@ -7,6 +7,9 @@ export const funGetAllProject = async (path?: string) => {
 }
 
 export const funCreateProject = async (data: IFormProject) => {
+    if (data.title.length < 3)
+        return { success: false, message: 'Nama proyek minimal 3 karakter' }
+    
     const response = await fetch(`/api/project`, {
         method: "POST",
         headers: {

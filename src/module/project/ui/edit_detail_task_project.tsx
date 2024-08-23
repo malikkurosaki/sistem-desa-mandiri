@@ -25,7 +25,7 @@ export default function EditDetailTaskProject() {
 
     try {
       const res = await funEditDetailProject(param.id, {
-        name: name,
+        title: name,
         dateStart: value[0],
         dateEnd: value[1],
 
