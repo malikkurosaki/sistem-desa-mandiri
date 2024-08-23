@@ -10,6 +10,7 @@ import { HiUser } from "react-icons/hi2";
 import { IDataPositionMember, IDataROleMember } from "../lib/type_member";
 import { funGetAllPosition } from "@/module/position/lib/api_position";
 import { funCreateMember, funGetRoleUser } from "../lib/api_member";
+import _ from "lodash";
 
 export default function CreateMember() {
   const router = useRouter();
@@ -17,6 +18,16 @@ export default function CreateMember() {
   const [listGroup, setListGorup] = useState<IDataGroup[]>([]);
   const [listPosition, setListPosition] = useState<IDataPositionMember[]>([]);
   const [listUserRole, setListUserRole] = useState<IDataROleMember[]>([]);
+  const [touched, setTouched] = useState({
+    nik: false,
+    name: false,
+    phone: false,
+    email: false,
+    gender: false,
+    idGroup: false,
+    idPosition: false,
+    idUserRole: false
+  });
 
   const [listData, setListData] = useState({
     nik: "",
@@ -80,24 +91,29 @@ export default function CreateMember() {
 
   async function onSubmit(val: boolean) {
     try {
-      const res = await funCreateMember({
-        nik: listData.nik,
-        name: listData.name,
-        phone: listData.phone,
-        email: listData.email,
-        gender: listData.gender,
-        idGroup: listData.idGroup,
-        idPosition: listData.idPosition,
-        idUserRole: listData.idUserRole,
-      });
-
-      if (res.success) {
-        toast.success(res.message);
-        setModal(false);
-        router.push("/member?active=true");
-      } else {
-        toast.error(res.message);
+      if (_.isEmpty(listData)) {
+        return;
       }
+      if (val) {
+        const res = await funCreateMember({
+          nik: listData.nik,
+          name: listData.name,
+          phone: listData.phone,
+          email: listData.email,
+          gender: listData.gender,
+          idGroup: listData.idGroup,
+          idPosition: listData.idPosition,
+          idUserRole: listData.idUserRole,
+        });
+        if (res.success) {
+          toast.success(res.message);
+          setModal(false);
+          router.push("/member?active=true");
+        } else {
+          toast.error(res.message);
+        }
+      }
+      setModal(false);
     } catch (error) {
       toast.error("Error");
     } finally {
@@ -142,14 +158,20 @@ export default function CreateMember() {
           data={
             listGroup
               ? listGroup.map((data) => ({
-                  value: data.id,
-                  label: data.name,
-                }))
+                value: data.id,
+                label: data.name,
+              }))
               : []
           }
           onChange={(val: any) => {
             changeGrup(val);
           }}
+          onBlur={() => setTouched({ ...touched, idGroup: true })}
+          error={
+            touched.idGroup && (
+              listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+            )
+          }
         />
         <Select
           placeholder="Pilih Jabatan"
@@ -169,9 +191,9 @@ export default function CreateMember() {
           data={
             listPosition
               ? listPosition.map((data) => ({
-                  value: data.id,
-                  label: data.name,
-                }))
+                value: data.id,
+                label: data.name,
+              }))
               : []
           }
           onChange={(val: any) =>
@@ -181,6 +203,12 @@ export default function CreateMember() {
             })
           }
           value={listData.idPosition == "" ? null : listData.idPosition}
+          onBlur={() => setTouched({ ...touched, idPosition: true })}
+          error={
+            touched.idPosition && (
+              listData.idPosition == "" ? "Jabatan Tidak Boleh Kosong" : null
+            )
+          }
         />
         <Select
           placeholder="Pilih Role"
@@ -200,9 +228,9 @@ export default function CreateMember() {
           data={
             listUserRole
               ? listUserRole.map((data) => ({
-                  value: data.id,
-                  label: data.name,
-                }))
+                value: data.id,
+                label: data.name,
+              }))
               : []
           }
           onChange={(val: any) =>
@@ -210,6 +238,12 @@ export default function CreateMember() {
               ...listData,
               idUserRole: val,
             })
+          }
+          onBlur={() => setTouched({ ...touched, idUserRole: true })}
+          error={
+            touched.idUserRole && (
+              listData.idUserRole == "" ? "Role Tidak Boleh Kosong" : null
+            )
           }
         />
         <TextInput
@@ -227,11 +261,16 @@ export default function CreateMember() {
               borderColor: WARNA.biruTua,
             },
           }}
-          onChange={(event: any) =>
-            setListData({
-              ...listData,
-              nik: event.target.value,
-            })
+          onChange={(event: any) => {
+            setListData({ ...listData, nik: event.target.value });
+            setTouched({ ...touched, nik: true });
+          }}
+          onBlur={() => setTouched({ ...touched, nik: true })}
+          error={
+            touched.nik && (
+              listData.nik == "" ? "NIK Tidak Boleh Kosong" :
+                listData.nik.length < 16 ? "NIK Harus 16 Karakter" : null
+            )
           }
         />
         <TextInput
@@ -255,6 +294,12 @@ export default function CreateMember() {
               name: event.target.value,
             })
           }
+          onBlur={() => setTouched({ ...touched, name: true })}
+          error={
+            touched.name && (
+              listData.name == "" ? "Nama Tidak Boleh Kosong" : null
+            )
+          }
         />
         <TextInput
           size="md"
@@ -277,6 +322,13 @@ export default function CreateMember() {
               email: event.target.value,
             })
           }
+          onBlur={() => setTouched({ ...touched, email: true })}
+          error={
+            touched.email && (
+              listData.email == "" ? "Email Tidak Boleh Kosong" :
+                !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(listData.email) ? "Email tidak valid" : null
+            )
+          }
         />
         <TextInput
           size="md"
@@ -298,6 +350,13 @@ export default function CreateMember() {
               ...listData,
               phone: event.target.value,
             })
+          }
+          onBlur={() => setTouched({ ...touched, phone: true })}
+          error={
+            touched.phone && (
+              listData.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" :
+                listData.phone.length < 10 ? "Nomor Telepon harus 10 digit" : null
+            )
           }
         />
         <Select
@@ -325,6 +384,12 @@ export default function CreateMember() {
               gender: val,
             })
           }
+          onBlur={() => setTouched({ ...touched, gender: true })}
+          error={
+            touched.gender && (
+              listData.gender == "" ? "Gender Tidak Boleh Kosong" : null
+            )
+          }
         />
       </Stack>
       <Box mt={30} mx={20} pb={20}>
@@ -334,7 +399,22 @@ export default function CreateMember() {
           size="md"
           radius={30}
           fullWidth
-          onClick={() => setModal(true)}
+          onClick={() => {
+            if (
+              listData.nik !== "" &&
+              listData.name !== "" &&
+              listData.email !== "" &&
+              listData.phone !== "" &&
+              listData.gender !== "" &&
+              listData.idGroup !== "" &&
+              listData.idPosition !== "" &&
+              listData.idUserRole !== ""
+            ) {
+              setModal(true);
+            } else {
+              toast.error("Mohon lengkapi semua form");
+            }
+          }}
         >
           Simpan
         </Button>

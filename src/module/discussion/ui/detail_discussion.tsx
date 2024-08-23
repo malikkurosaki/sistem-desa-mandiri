@@ -1,5 +1,5 @@
 "use client"
-import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput } from "@mantine/core";
 import { SkeletonDetailDiscussionComment, SkeletonDetailDiscussionMember, SkeletonSingle, WARNA } from "@/module/_global";
 import { GrChatOption } from "react-icons/gr";
 import { LuSendHorizonal } from "react-icons/lu";
@@ -17,7 +17,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    const [isData, setData] = useState<IDetailDiscussion>()
    const [isComent, setIsComent] = useState("")
    const param = useParams<{ id: string, detail: string }>()
-   const [isLoad, setIsLoad] = useState(false)
+   const [isLoad, setIsLoad] = useState(true)
 
    const getData = async () => {
       try {
@@ -67,8 +67,26 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                Array(1)
                   .fill(null)
                   .map((_, i) => (
-                     <Box key={i} p={10}>
-                        <SkeletonDetailDiscussionMember/>
+                     <Box key={i}>
+                        <Box>
+                           <Flex
+                              justify={"space-between"}
+                              align={"center"}
+                              mt={20}
+                           >
+                              <Group>
+                                 <Skeleton width={60} height={60} radius={100} />
+                                 <Box>
+                                    <Skeleton width={"50%"} height={20} radius={"md"} />
+                                    <Skeleton width={"50%"} height={20} radius={"md"} />
+                                 </Box>
+                              </Group>
+                              <Skeleton width={"50%"} height={20} radius={"md"} />
+                           </Flex>
+                           <Box mt={10}>
+                              <Skeleton width={"100%"} height={100} radius={"md"} />
+                           </Box>
+                        </Box>
                      </Box>
                   )) :
                <Box>
@@ -104,11 +122,35 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
             }
             <Box p={10}>
                {isLoad ?
-                  Array(6)
+                  Array(2)
                      .fill(0)
                      .map((_, i) => (
                         <Box key={i} p={10}>
-                          <SkeletonDetailDiscussionComment />
+                           <Box>
+                              <Flex
+                                 justify={"space-between"}
+                                 align={"center"}
+                                 mt={20}
+                              >
+                                 <Group>
+                                    <Skeleton width={40} height={40} radius={100} />
+                                    <Box>
+                                       <Skeleton width={"50%"} height={20} radius={"md"} />
+                                       <Skeleton width={"50%"} height={20} radius={"md"} />
+                                    </Box>
+                                 </Group>
+                                 <Skeleton width={"50%"} height={20} radius={"md"} />
+                              </Flex>
+                              <Box mt={10}>
+                                 <Skeleton width={"100%"} height={50} radius={"md"} />
+                              </Box>
+                              <Group justify="space-between" mt={20} c={'#8C8C8C'}>
+                                 <Skeleton width={"30%"} height={20} radius={"md"} />
+                              </Group>
+                           </Box>
+                           <Box mt={20}>
+                              <Skeleton width={"100%"} height={1} radius={"md"} />
+                           </Box>
                         </Box>
                      )) :
                   isData?.DivisionDisscussionComment.map((v, i) => {
@@ -137,14 +179,20 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                   })
                }
             </Box>
-            <Box h={60} pos={"fixed"} bottom={0} w={{ base: "90%", md: "35.5%" }} style={{
+            {isLoad ? 
+             <Skeleton width={"100%"} height={50} radius={100} />
+            :
+            <Box h={60} pos={"fixed"} bottom={20} w={{ base: "90%", md: "35.5%" }} style={{
                zIndex: 999
             }}>
+                  <Group justify="flex-end">
+                     <Text fz={13}>{300 - isComent.length} karakter tersisa</Text>
+                  </Group>
                <Grid bg={"white"} style={{
                   border: '1px solid gray',
                   borderRadius: 40
                }} justify="center" align="center">
-                  <Grid.Col span={10}>
+                     <Grid.Col span={10}>
                      <TextInput
                         styles={{
                            input: {
@@ -157,8 +205,10 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                         placeholder="Kirim Komentar"
                         disabled={isData?.status === 2}
                         onChange={(e) => setIsComent(e.target.value)}
-                        value={isComent}
-                     />
+                           value={isComent}
+                           maxLength={300}
+                        />
+                        
                   </Grid.Col>
                   <Grid.Col span={2}>
                      <Center>
@@ -171,6 +221,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                   </Grid.Col>
                </Grid>
             </Box>
+            }
          </Box>
       </>
    )

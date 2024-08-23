@@ -1,7 +1,7 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
-import { Avatar, Box, Button, Center, Input, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Center, Input, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -17,6 +17,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
   const member = useHookstate(globalMemberDivision)
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
   const [dataMember, setDataMember] = useState<TypeUser>([])
+  const [loading, setLoading] = useState(true)
 
   const handleFileClick = (index: number) => {
     if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
@@ -28,6 +29,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
 
 
   async function loadData(search: string) {
+    setLoading(true)
     const res = await funGetAllmember('?active=true&group=' + grup + '&search=' + search);
     const user = await funGetUserByCookies();
 
@@ -41,7 +43,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
     } else {
       toast.error(res.message)
     }
-
+    setLoading(false)
   }
 
 
@@ -77,35 +79,51 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
             onChange={(e) => loadData(e.target.value)}
           />
           <Box pt={10}>
-            <SimpleGrid
-              cols={{ base: 2, sm: 2, lg: 2 }}
-              spacing={{ base: 20, sm: "xl" }}
-              verticalSpacing={{ base: "md", sm: "xl" }}
-            >
-              {dataMember.map((v, index) => {
-                const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id);
-                return (
-                  <Box key={index} mb={10}>
-                    <Box
-                      bg={isSelected ? WARNA.bgHijauMuda : "white"}
-                      style={{
-                        border: `1px solid ${WARNA.biruTua}`,
-                        borderRadius: 20,
-                      }}
-                      py={10}
-                      onClick={() => handleFileClick(index)}
-                    >
-                      <Center>
-                        <Avatar src={"https://i.pravatar.cc/1000?img=37"} alt="it's me" size="xl" />
-                      </Center>
-                      <Text mt={20} ta="center">
-                        {v.name}
-                      </Text>
+            {loading ?
+              <SimpleGrid
+                cols={{ base: 2, sm: 2, lg: 2 }}
+                spacing={{ base: 20, sm: "xl" }}
+                verticalSpacing={{ base: "md", sm: "xl" }}
+              >
+                {Array(6)
+                  .fill(null)
+                  .map((_, i) => (
+                    <Box key={i}>
+                      <Skeleton width={"100%"} height={100} radius={"md"} />
                     </Box>
-                  </Box>
-                );
-              })}
-            </SimpleGrid>
+                  ))}
+              </SimpleGrid>
+              :
+              <SimpleGrid
+                cols={{ base: 2, sm: 2, lg: 2 }}
+                spacing={{ base: 20, sm: "xl" }}
+                verticalSpacing={{ base: "md", sm: "xl" }}
+              >
+                {dataMember.map((v, index) => {
+                  const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id);
+                  return (
+                    <Box key={index} mb={10}>
+                      <Box
+                        bg={isSelected ? WARNA.bgHijauMuda : "white"}
+                        style={{
+                          border: `1px solid ${WARNA.biruTua}`,
+                          borderRadius: 20,
+                        }}
+                        py={10}
+                        onClick={() => handleFileClick(index)}
+                      >
+                        <Center>
+                          <Avatar src={"https://i.pravatar.cc/1000?img=37"} alt="it's me" size="xl" />
+                        </Center>
+                        <Text mt={20} ta="center">
+                          {v.name}
+                        </Text>
+                      </Box>
+                    </Box>
+                  );
+                })}
+              </SimpleGrid>
+            }
           </Box>
         </Stack>
         <Box mt="xl">

@@ -1,6 +1,6 @@
 'use client'
 import { WARNA } from "@/module/_global";
-import { Box, Grid, ActionIcon, Progress, Text } from "@mantine/core";
+import { Box, Grid, ActionIcon, Progress, Text, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
@@ -15,9 +15,11 @@ export default function ProgressDetailTask() {
    const [valLastUpdate, setValLastUpdate] = useState('')
    const param = useParams<{ id: string, detail: string }>()
    const refresh = useHookstate(globalRefreshTask)
+   const [loading, setLoading] = useState(true)
 
    async function getOneData() {
       try {
+         setLoading(true)
          const res = await funGetTaskDivisionById(param.detail, 'progress');
          if (res.success) {
             setValProgress(res.data.progress);
@@ -25,10 +27,12 @@ export default function ProgressDetailTask() {
          } else {
             toast.error(res.message);
          }
-
+         setLoading(false)
       } catch (error) {
          console.error(error);
          toast.error("Gagal mendapatkan progress tugas divisi, coba lagi nanti");
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -39,7 +43,7 @@ export default function ProgressDetailTask() {
       }
    }
 
-   
+
 
    useEffect(() => {
       onRefresh()
@@ -51,6 +55,9 @@ export default function ProgressDetailTask() {
 
    return (
       <Box mt={10}>
+         {loading ?
+             <Skeleton width={"100%"} height={100} radius={"md"} />
+            : 
          <Box
             p={20}
             bg={"#DCEED8"}
@@ -83,11 +90,11 @@ export default function ProgressDetailTask() {
                         size="xl"
                         value={valProgress}
                      />
-                     {/* <Text c={"dimmed"}>Update terakhir : {valLastUpdate}</Text> */}
                   </Box>
                </Grid.Col>
             </Grid>
          </Box>
+         }
       </Box>
    )
 }

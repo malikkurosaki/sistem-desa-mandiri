@@ -1,5 +1,5 @@
 import { WARNA } from "@/module/_global";
-import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Progress, Text, TextInput, Title } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Progress, Skeleton, Text, TextInput, Title } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from "react-icons/hi2";
@@ -8,6 +8,7 @@ import { IDataTask } from "../lib/type_task";
 import { funGetAllTask } from "../lib/api_task";
 import toast from "react-hot-toast";
 import { useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
 
 export default function ListDivisionTask() {
    const [isList, setIsList] = useState(false)
@@ -79,12 +80,18 @@ export default function ListDivisionTask() {
             </Grid.Col>
          </Grid>
          <Box pt={20}>
+            {loading ? 
+               <Box>
+                  <Skeleton width={"100%"} height={100} radius={"md"} />
+               </Box>
+            :
             <Box bg={"#DCEED8"} p={10} style={{ borderRadius: 10 }}>
                <Text fw={'bold'} c={WARNA.biruTua}>Total Proyek</Text>
                <Flex justify={'center'} align={'center'} h={'100%'}>
                   <Text fz={40} fw={'bold'} c={WARNA.biruTua}>{isData.length}</Text>
                </Flex>
             </Box>
+         }
             {isList ? (
                <Box pt={20}>
                   {isData.map((v, i) => {
@@ -117,37 +124,53 @@ export default function ListDivisionTask() {
                </Box>
             ) : (
                <Box pt={20}>
-                  {isData.map((v: any, i: any) => {
-                     return (
-                        <Box key={i} mb={20}>
-                           <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`task/${v.id}`)}>
-                              <Card.Section>
-                                 <Box h={120} bg={WARNA.biruTua}>
-                                    <Flex justify={'center'} align={'center'} h={"100%"}>
-                                       <Title order={3} c={"white"}>{v.title}</Title>
-                                    </Flex>
-                                 </Box>
-                              </Card.Section>
-                              <Box pt={10}>
-                                 <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
-                                    <Progress.Section value={v.progress} color="yellow" striped >
-                                       <Progress.Label>{v.progress}%</Progress.Label>
-                                    </Progress.Section>
-                                 </Progress.Root>
-                                 <Text my={10}>{v.desc}</Text>
-                                 <Group align='center' pt={10} justify='space-between'>
-                                    <Avatar.Group>
-                                       <Avatar>
-                                          <MdAccountCircle size={32} color={WARNA.biruTua} />
-                                       </Avatar>
-                                       <Avatar>+{v.member-1}</Avatar>
-                                    </Avatar.Group>
-                                 </Group>
-                              </Box>
-                           </Card>
+                     {loading ? 
+                        Array(3)
+                        .fill(null)
+                        .map((_, i) => (
+                          <Box key={i} mb={20}>
+                            <Skeleton width={"100%"} height={200} radius={"md"} />
+                          </Box>
+                        ))
+                        :
+                        _.isEmpty(isData)
+                        ?
+                        <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                           <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Tugas</Text>
                         </Box>
-                     );
-                  })}
+                        :
+                     isData.map((v: any, i: any) => {
+                        return (
+                           <Box key={i} mb={20}>
+                              <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`task/${v.id}`)}>
+                                 <Card.Section>
+                                    <Box h={120} bg={WARNA.biruTua}>
+                                       <Flex justify={'center'} align={'center'} h={"100%"}>
+                                          <Title order={3} c={"white"}>{v.title}</Title>
+                                       </Flex>
+                                    </Box>
+                                 </Card.Section>
+                                 <Box pt={10}>
+                                    <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
+                                       <Progress.Section value={v.progress} color="yellow" striped >
+                                          <Progress.Label>{v.progress}%</Progress.Label>
+                                       </Progress.Section>
+                                    </Progress.Root>
+                                    <Text my={10}>{v.desc}</Text>
+                                    <Group align='center' pt={10} justify='space-between'>
+                                       <Avatar.Group>
+                                          <Avatar>
+                                             <MdAccountCircle size={32} color={WARNA.biruTua} />
+                                          </Avatar>
+                                          <Avatar>+{v.member - 1}</Avatar>
+                                       </Avatar.Group>
+                                    </Group>
+                                 </Box>
+                              </Card>
+                           </Box>
+                        );
+                     })
+                  }
                </Box>
             )}
          </Box>
