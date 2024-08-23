@@ -66,6 +66,8 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
          <Stack pt={10}>
             <SimpleGrid
                cols={{ base: 3, sm: 3, lg: 3 }}
+               spacing={{ base: 10, sm: 'xl' }}
+               verticalSpacing={{ base: 'md', sm: 'xl' }}
             >
                <Flex onClick={() => setValModal(true)} justify={'center'} align={'center'} direction={'column'} >
                   <Box>

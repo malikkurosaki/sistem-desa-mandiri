@@ -77,18 +77,10 @@ export default function EditDivision() {
   }, [param.id])
 
   return (
-    <Box>
+    <Box pos={"relative"} h={"100vh"}>
       <LayoutNavbarNew back="" title="Edit Divisi" menu />
       <Box p={20}>
-
         <Stack>
-          {/* <Select
-            placeholder="Grup"
-            label="Grup"
-            size="md"
-            required
-            radius={40}
-          /> */}
           <TextInput
             placeholder="Judul"
             label="Judul"
@@ -101,8 +93,14 @@ export default function EditDivision() {
           <Textarea placeholder="Deskripsi" label="Deskripsi" size="md" radius={10}
             value={body.desc}
             onChange={(e) => { setBody({ ...body, desc: e.currentTarget.value }) }}
+            styles={{
+              input: {
+                 height: "40vh"
+              }
+           }}
           />
-          <Box mt="xl">
+        </Stack>
+          <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
             <Button
               color="white"
               bg={WARNA.biruTua}
@@ -114,7 +112,6 @@ export default function EditDivision() {
               Simpan
             </Button>
           </Box>
-        </Stack>
       </Box>
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)} description='Apakah Anda yakin ingin edit data'
         onYes={(val) => {
