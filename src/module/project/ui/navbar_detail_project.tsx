@@ -21,7 +21,7 @@ export default function NavbarDetailProject() {
     try {
       const res = await funGetOneProjectById(param.id, 'data');
       if (res.success) {
-        setName(res.data.name);
+        setName(res.data.title);
       } else {
         toast.error(res.message);
       }

@@ -1,6 +1,6 @@
 export interface IDataProject {
   id: string
-  name: string
+  title: string
   desc: string
   status: number
   member: number
@@ -8,7 +8,7 @@ export interface IDataProject {
 
 export interface IDataListTaskProject {
   id: string
-  name: string
+  title: string
   desc: string
   status: number
   dateStart: string
@@ -29,8 +29,8 @@ export interface IDataMemberProject {
 }
 
 export interface IFormProject {
-  idDivision: string,
-  name: string,
+  title: string,
+  idGroup: string,
   task: IFormDateProject[] | [],
   member: IFormMemberProject[] | [],
   file: FormData[] | []
@@ -39,7 +39,7 @@ export interface IFormProject {
 export interface IFormDateProject {
   dateStart: Date,
   dateEnd: Date,
-  name: string,
+  title: string,
 }
 
 export interface IFormMemberProject {
@@ -64,4 +64,9 @@ export interface IDataMemberProjectDetail {
   idUser: string,
   isLeader: string,
   name: string
+}
+
+export interface IListFileTaskProject {
+  name: string,
+  extension: string
 }

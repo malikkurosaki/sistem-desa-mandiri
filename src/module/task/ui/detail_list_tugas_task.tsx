@@ -49,7 +49,7 @@ export default function ListTugasDetailTask() {
 
    async function onDelete() {
       try {
-         const res = await funDeleteDetailTask(idData);
+         const res = await funDeleteDetailTask(idData, { idProject: param.detail });
          if (res.success) {
             toast.success(res.message);
             refresh.set(true)

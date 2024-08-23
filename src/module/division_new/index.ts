@@ -1,12 +1,9 @@
 import { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison, IDataMemberDivision } from './lib/type_division';
 import CreateUserDivisionCalender from "./_division_fitur/calender/components/create_user_division_calender";
-import UlangiEvent from "./_division_fitur/calender/components/ulangi_event";
-import UpdateUlangiEvent from "./_division_fitur/calender/components/update_calander/update_ulangi_event";
 import ViewCreateDivisionCalender from "./_division_fitur/calender/view/view_create_division_calender";
 import ViewDetailEventDivision from "./_division_fitur/calender/view/view_detail_event_division";
 import ViewDivisionCalender from "./_division_fitur/calender/view/view_division_calender";
 import ViewHistoryDivisionCalender from "./_division_fitur/calender/view/view_history_division_calender";
-import ViewUpdateDivisionCalender from "./_division_fitur/calender/view/view_update_division_calender";
 import CreateAdminDivision from "./ui/create_admin_division";
 import CreateUsers from "./ui/create_users";
 import ListDivision from './ui/list_division';
@@ -23,17 +20,15 @@ import EditDivision from './ui/edit_division';
 import CreateReport from './ui/create_report';
 import ReportDivisionId from './ui/report_division_id';
 import { funGetDivisionById, funGetListDivisionByIdDivision } from './lib/api_division';
+import UlangiEvent from './_division_fitur/calender/components/ulangi_event';
 
 export { CreateUsers };
 export { CreateAdminDivision };
 export { ViewDivisionCalender };
 export { ViewCreateDivisionCalender };
-export { UlangiEvent };
 export { CreateUserDivisionCalender };
 export { ViewHistoryDivisionCalender };
 export { ViewDetailEventDivision };
-export { ViewUpdateDivisionCalender };
-export { UpdateUlangiEvent };
 export type { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison, IDataMemberDivision }
 export { ListDivision }
 export { CreateDivision }
@@ -50,3 +45,4 @@ export { CreateReport }
 export { ReportDivisionId }
 export { funGetDivisionById }
 export { funGetListDivisionByIdDivision }
+export { UlangiEvent }

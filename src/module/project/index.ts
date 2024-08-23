@@ -1,7 +1,6 @@
-import ViewCreateProject from "./view/view_create_project";
-import ViewDateEndTask from "./components/create_date_end_task";
+import ViewDateEndTask from "./ui/create_date_end_task";
 import ViewProject from "./view/view_project";
-import CreateUsersProject from "./components/create_users_project";
+import CreateUsersProject from "./ui/create_users_project";
 import ViewFileSave from "./view/view_file_save";
 import ViewDetailProject from "./view/view_detail_project";
 import ViewUpdateProgres from "./view/view_update_progres";
@@ -21,9 +20,9 @@ import ListAnggotaDetailProject from "./ui/list_anggota_detail_project";
 import AddDetailTaskProject from "./ui/add_detail_task_project";
 import CancelProject from "./ui/cancel_project";
 import AddMemberDetailProject from "./ui/add_member_detail_project";
+import CreateProject from "./ui/create_project";
 
 export { ViewProject }
-export { ViewCreateProject }
 export { ViewDateEndTask }
 export { CreateUsersProject }
 export { ViewFileSave }
@@ -44,3 +43,4 @@ export { EditDetailTaskProject }
 export { AddDetailTaskProject }
 export { CancelProject }
 export { AddMemberDetailProject }
+export { CreateProject }

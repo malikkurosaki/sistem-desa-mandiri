@@ -59,7 +59,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                 },
                 select: {
                     id: true,
-                    name: true,
+                    title: true,
                     desc: true,
                     status: true,
                     dateStart: true,
@@ -159,7 +159,7 @@ export async function POST(request: Request, context: { params: { id: string } }
 
         const dataCreate = await prisma.projectTask.create({
             data: {
-                name,
+                title: name,
                 idProject: id,
                 dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
                 dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
@@ -249,7 +249,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
                 id
             },
             data: {
-                name
+                title: name
             }
         })
 

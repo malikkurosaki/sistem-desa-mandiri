@@ -2,11 +2,12 @@ import { WARNA } from '@/module/_global';
 import { Box, Group, SimpleGrid, Text } from '@mantine/core';
 import React from 'react';
 import { AiOutlineFileSync } from "react-icons/ai";
+import { IFormDateProject } from '../lib/type_project';
+import moment from 'moment';
 
-export default function ResultsDateAndTask() {
+export default function ResultsDateAndTask(data: IFormDateProject) {
   return (
-    <Box pt={20}>
-      <Text fw={'bold'} c={WARNA.biruTua}>Tanggal & Tugas</Text>
+    <Box pt={5}>
       <Box bg={"white"} style={{
         borderRadius: 10,
         border: `1px solid ${"#D6D8F6"}`,
@@ -19,7 +20,7 @@ export default function ResultsDateAndTask() {
         }}>
           <Group>
             <AiOutlineFileSync size={25} />
-            <Text>Proyek Laporan Permasyarakatan</Text>
+            <Text>{data.title}</Text>
           </Group>
         </Box>
         <Box>
@@ -32,7 +33,7 @@ export default function ResultsDateAndTask() {
                 h={45}
                 style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
               >
-                <Text>16 Juni 2024</Text>
+                <Text>{moment(data.dateStart).format('DD-MM-YYYY')}</Text>
               </Group>
             </Box>
             <Box>
@@ -43,7 +44,7 @@ export default function ResultsDateAndTask() {
                 h={45}
                 style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
               >
-                <Text>20 Juni 2024</Text>
+                <Text>{moment(data.dateEnd).format('DD-MM-YYYY')}</Text>
               </Group>
             </Box>
           </SimpleGrid>

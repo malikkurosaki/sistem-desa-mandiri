@@ -25,7 +25,7 @@ export default function EditDetailTaskProject() {
 
     try {
       const res = await funEditDetailProject(param.id, {
-        name: name,
+        title: name,
         dateStart: value[0],
         dateEnd: value[1],
 
@@ -46,7 +46,7 @@ export default function EditDetailTaskProject() {
     try {
       const res = await funGetDetailProject(param.id);
       if (res.success) {
-        setName(res.data.name)
+        setName(res.data.title)
         setValue([
           new Date(moment(res.data.dateStart).format('YYYY-MM-DD')),
           new Date(moment(res.data.dateEnd).format('YYYY-MM-DD')),

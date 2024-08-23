@@ -13,6 +13,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
          return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
       }
       const { id } = context.params;
+      const { idProject } = (await request.json());
       const data = await prisma.divisionProjectTask.count({
          where: {
             id: id,
@@ -37,6 +38,34 @@ export async function DELETE(request: Request, context: { params: { id: string }
             isActive: false,
          },
       });
+
+      // const cek progress 
+      const dataTask = await prisma.divisionProjectTask.findMany({
+         where: {
+            isActive: true,
+            idProject: idProject
+         }
+      })
+
+      const semua = dataTask.length
+      const selesai = _.filter(dataTask, { status: 1 }).length
+      const progress = Math.ceil((selesai / semua) * 100)
+      let statusProject = 1
+
+      if (progress == 100) {
+         statusProject = 2
+      } else if (progress == 0) {
+         statusProject = 0
+      }
+
+      const updProject = await prisma.divisionProject.update({
+         where: {
+            id: idProject
+         },
+         data: {
+            status: statusProject
+         }
+      })
 
       return NextResponse.json(
          {

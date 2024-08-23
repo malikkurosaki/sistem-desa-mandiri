@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { IDataMemberProject, IDataMemberProjectDetail } from '../lib/type_project';
 import toast from 'react-hot-toast';
 import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
-import { funGetDivisionById } from '@/module/division_new';
 import { useShallowEffect } from '@mantine/hooks';
 import { Avatar, Box, Button, Divider, Flex, Group, Stack, Text } from '@mantine/core';
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
@@ -103,11 +102,9 @@ export default function AddMemberDetailProject() {
     <Box>
       <LayoutNavbarNew
         back=""
-        title="Pilih Anggotak"
+        title="Pilih Anggota"
         menu
       />
-      <pre>{JSON.stringify(isData, null, 1)}</pre>
-      <pre>{JSON.stringify(isDataMember, null, 1)}</pre>
       <Box p={20}>
         {/* <TextInput
      styles={{

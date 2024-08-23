@@ -12,6 +12,8 @@ export async function DELETE(request: Request, context: { params: { id: string }
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
         const { id } = context.params;
+        const { idProject } = (await request.json());
+
         const data = await prisma.projectTask.count({
             where: {
                 id: id,
@@ -36,6 +38,35 @@ export async function DELETE(request: Request, context: { params: { id: string }
                 isActive: false,
             },
         });
+
+        const dataTask = await prisma.projectTask.findMany({
+            where: {
+                isActive: true,
+                idProject: idProject,
+            }
+        })
+
+        const semua = dataTask.length
+        const selesai = dataTask.filter((item) => item.status == 1).length
+        const prosess = Math.ceil((selesai / semua) * 100)
+        let statusProject = 1
+
+        if (prosess == 100) {
+            statusProject = 2
+        } else if (prosess == 0) {
+            statusProject = 0
+        }
+
+
+        const updProject = await prisma.project.update({
+            where: {
+                id: idProject
+            },
+            data: {
+                status: statusProject
+            }
+        })
+
 
         return NextResponse.json(
             {
@@ -87,6 +118,8 @@ export async function PUT(request: Request, context: { params: { id: string } })
             }
         })
 
+
+        // const cek progress 
         const dataTask = await prisma.projectTask.findMany({
             where: {
                 isActive: true,
@@ -174,7 +207,7 @@ export async function POST(request: Request, context: { params: { id: string } }
                 id
             },
             data: {
-                name: name,
+                title: name,
                 dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
                 dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
             }

@@ -29,7 +29,7 @@ export async function GET(request: Request) {
                 idVillage: String(villageId),
                 idGroup: String(groupId),
                 createdBy: String(userId),
-                name: {
+                title: {
                     contains: (name == undefined || name == "null") ? "" : name,
                     mode: "insensitive"
                 },
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
             },
             select: {
                 id: true,
-                name: true,
+                title: true,
                 desc: true,
                 status: true,
                 ProjectMember: {
@@ -73,16 +73,15 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
 
-        const { idVillage, idGroup, name, task, member, file } = (await request.json())
+        const { idGroup, title, task, member, file } = (await request.json())
         const userId = user.id
-        
+
 
         const data = await prisma.project.create({
             data: {
-                idVillage: String(idVillage),
+                idVillage: String(user.idVillage),
                 idGroup: String(idGroup),
-                name: name,
-                desc: "",
+                title,
                 createdBy: String(userId)
             },
             select: {
@@ -94,7 +93,7 @@ export async function POST(request: Request) {
             const dataProject = task.map((v: any) => ({
                 ..._.omit(v, ["dateStart", "dateEnd", "name"]),
                 idProject: data.id,
-                name: v.name,
+                title: v.title,
                 dateStart: new Date(moment(v.dateStart).format('YYYY-MM-DD')),
                 dateEnd: new Date(moment(v.dateEnd).format('YYYY-MM-DD')),
             }))
@@ -109,7 +108,6 @@ export async function POST(request: Request) {
                 ..._.omit(v, ["idUser", "name"]),
                 idProject: data.id,
                 idUser: v.idUser,
-                name: v.name
             }))
 
             const insertMember = await prisma.projectMember.createMany({
@@ -121,31 +119,31 @@ export async function POST(request: Request) {
 
         if (file.length > 0) {
             file.map((v: any, index: any) => {
-               const f: any = file[index].get('file')
-               const fName = f.name
-               const fExt = fName.split(".").pop()
-               // funUploadFile(fName, f)
-   
-               const dataFile = {
-                  name: fName,
-                   extension: fExt,
-                  idProject: data.id,
-               }
-   
-               fileFix.push(dataFile)
+                const f: any = file[index].get('file')
+                const fName = f.name
+                const fExt = fName.split(".").pop()
+                // funUploadFile(fName, f)
+
+                const dataFile = {
+                    name: fName,
+                    extension: fExt,
+                    idProject: data.id,
+                }
+
+                fileFix.push(dataFile)
             })
-   
+
             const insertFile = await prisma.divisionProjectFile.createMany({
-               data: fileFix
+                data: fileFix
             })
-   
-         }
+
+        }
 
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: data, }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil membuat proyek", data: data, }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membuat proyek, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

@@ -49,12 +49,13 @@ export default function ListTugasDetailProject() {
 
   async function onDelete() {
     try {
-      const res = await funDeleteDetailProject(idData);
+      const res = await funDeleteDetailProject(idData, { idProject: param.id });
       if (res.success) {
         toast.success(res.message);
         getOneData();
         setIdData("")
         setOpenDrawer(false)
+        refresh.set(true)
       } else {
         toast.error(res.message);
       }
@@ -125,7 +126,7 @@ export default function ListTugasDetailProject() {
                           >
                             <Group>
                               <AiOutlineFileSync size={25} />
-                              <Text>{item.name}</Text>
+                              <Text>{item.title}</Text>
                             </Group>
                           </Box>
                           <Box>
@@ -206,51 +207,51 @@ export default function ListTugasDetailProject() {
         </LayoutDrawer>
 
         <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
-            description="Apakah Anda yakin ingin menghapus proyek ini?"
-            onYes={(val) => {
-               if (val) {
-                  onDelete()
-               }
-               setOpenModal(false)
+          description="Apakah Anda yakin ingin menghapus proyek ini?"
+          onYes={(val) => {
+            if (val) {
+              onDelete()
+            }
+            setOpenModal(false)
           }} />
-        
-        <LayoutDrawer opened={openDrawerStatus} title={'Status'} onClose={() => setOpenDrawerStatus(false)}>
-            <Box>
-               <Stack pt={10}>
-                  {
-                     valStatusDetailProject.map((item, index) => {
-                        return (
-                           <Box mb={5} key={index} onClick={() => { onUpdateStatus(item.value) }}>
-                              <Flex justify={"space-between"} align={"center"}>
-                                 <Group>
-                                    <Text style={{
-                                       cursor: 'pointer',
-                                       display: 'flex',
-                                       alignItems: 'center',
-                                    }}>
-                                       {item.name}
-                                    </Text>
-                                 </Group>
-                                 <Text
-                                    style={{
-                                       cursor: 'pointer',
-                                       display: 'flex',
-                                       alignItems: 'center',
-                                       paddingLeft: 20,
-                                    }}
-                                 >
-                                    {statusData === item.value ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-                                 </Text>
-                              </Flex>
-                              <Divider my={"md"} />
-                           </Box>
-                        )
-                     })
-                  }
 
-               </Stack>
-            </Box>
-         </LayoutDrawer>
+        <LayoutDrawer opened={openDrawerStatus} title={'Status'} onClose={() => setOpenDrawerStatus(false)}>
+          <Box>
+            <Stack pt={10}>
+              {
+                valStatusDetailProject.map((item, index) => {
+                  return (
+                    <Box mb={5} key={index} onClick={() => { onUpdateStatus(item.value) }}>
+                      <Flex justify={"space-between"} align={"center"}>
+                        <Group>
+                          <Text style={{
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}>
+                            {item.name}
+                          </Text>
+                        </Group>
+                        <Text
+                          style={{
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            paddingLeft: 20,
+                          }}
+                        >
+                          {statusData === item.value ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+                        </Text>
+                      </Flex>
+                      <Divider my={"md"} />
+                    </Box>
+                  )
+                })
+              }
+
+            </Stack>
+          </Box>
+        </LayoutDrawer>
 
       </Box>
     </>

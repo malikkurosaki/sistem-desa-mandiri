@@ -110,7 +110,7 @@ export default function ListProject() {
                           <HiMiniPresentationChartBar size={25} color={WARNA.biruTua} />
                         </ActionIcon>
                       </Center>
-                      <Text>{v.name}</Text>
+                      <Text>{v.title}</Text>
                     </Group>
                     <Box>
                       <RiCircleFill size={12} color={
@@ -136,7 +136,7 @@ export default function ListProject() {
                     <Card.Section>
                       <Box h={120} bg={WARNA.biruTua}>
                         <Flex justify={'center'} align={'center'} h={"100%"}>
-                          <Title order={3} c={"white"}>{v.name}</Title>
+                          <Title order={3} c={"white"}>{v.title}</Title>
                         </Flex>
                       </Box>
                     </Card.Section>

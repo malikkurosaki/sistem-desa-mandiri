@@ -40,7 +40,7 @@ export default function EditTaskProject() {
     try {
       const res = await funGetOneProjectById(param.id, 'data');
       if (res.success) {
-        setName(res.data.name);
+        setName(res.data.title);
       } else {
         toast.error(res.message);
       }
@@ -57,7 +57,7 @@ export default function EditTaskProject() {
 
   return (
     <Box>
-      <LayoutNavbarNew back="" title={"Edit Judul Tugas"} menu />
+      <LayoutNavbarNew back="" title={"Edit Judul Proyek"} menu />
       <Box p={20}>
         <Stack pt={15}>
           <Input

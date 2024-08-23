@@ -7,6 +7,9 @@ export const funGetAllProject = async (path?: string) => {
 }
 
 export const funCreateProject = async (data: IFormProject) => {
+    if (data.title.length < 3)
+        return { success: false, message: 'Nama proyek minimal 3 karakter' }
+    
     const response = await fetch(`/api/project`, {
         method: "POST",
         headers: {
@@ -28,12 +31,13 @@ export const funGetAllMemberById = async (path?: string) => {
 }
 
 
-export const funDeleteDetailProject = async (path: string) => {
+export const funDeleteDetailProject = async (path: string, data: { idProject: string }) => {
     const response = await fetch(`/api/project/detail/${path}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
         },
+        body: JSON.stringify(data),
     });
     return await response.json().catch(() => null);
 }

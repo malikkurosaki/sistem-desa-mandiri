@@ -23,7 +23,7 @@ import { globalRefreshDocument } from '../lib/val_document';
 import { RiListCheck } from 'react-icons/ri';
 import { GoChevronRight } from 'react-icons/go';
 import DrawerShareDocument from './drawer_share_document';
-import { FaSlideshare } from 'react-icons/fa6';
+import { FaShare } from 'react-icons/fa6';
 
 export default function NavbarDocumentDivision() {
   const router = useRouter()
@@ -309,7 +309,7 @@ export default function NavbarDocumentDivision() {
                         <Box>
                           {
                             (v.share) ?
-                              <Indicator offset={15} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaSlideshare />} size={25}>
+                              <Indicator offset={15} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaShare />} size={25}>
                                 {
                                   (v.category == "FOLDER") ?
                                     <FcFolder size={60} /> :
