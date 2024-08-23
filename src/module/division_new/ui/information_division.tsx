@@ -141,7 +141,10 @@ export default function InformationDivision() {
                 <Group
                   align="center"
                   style={{
+                    border: `1px solid ${"#DCEED8"}`,
                     padding: 10,
+                    borderRadius: 10,
+                    cursor: "pointer",
                   }}
                 >
                   <Box>

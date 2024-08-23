@@ -22,6 +22,15 @@ export default function NavbarCreateDivisionCalender() {
   const memberValue = memberUser.get() as IFormMemberCalender[]
   const [openMember, setOpenMember] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
+  const [touched, setTouched] = useState({
+    title: false,
+    dateStart: false,
+    timeStart: false,
+    timeEnd: false,
+    linkMeet: false,
+    repeatEventTyper: false,
+    desc: false
+  })
   const [isData, setData] = useState({
     idDivision: "",
     title: "",
@@ -50,7 +59,7 @@ export default function NavbarCreateDivisionCalender() {
           desc: isData.desc,
           member: memberValue
         })
-  
+
         if (response.success) {
           setModal(false)
           router.push(`/division/${param.id}/calender`)
@@ -69,7 +78,7 @@ export default function NavbarCreateDivisionCalender() {
         } else {
           toast.error(response.message)
           setModal(false)
-        } 
+        }
       }
     } catch (error) {
       console.log(error)
@@ -89,6 +98,7 @@ export default function NavbarCreateDivisionCalender() {
       <Box p={20}>
         <Stack>
           <TextInput
+            required
             styles={{
               input: {
                 border: `1px solid ${"#D6D8F6"}`,
@@ -96,12 +106,19 @@ export default function NavbarCreateDivisionCalender() {
               },
             }}
             size="md"
-            placeholder="Event Nama"
-            label="Event Nama"
+            placeholder="Nama Acara"
+            label="Nama Acara"
             value={isData.title}
             onChange={(event) => setData({ ...isData, title: event.target.value })}
+            onBlur={() => setTouched({ ...touched, title: true })}
+            error={
+              touched.title && (
+                isData.title == "" ? "Nama Acara Tidak Boleh Kosong" : null
+              )
+            }
           />
           <DateInput
+            required
             styles={{
               input: {
                 border: `1px solid ${"#D6D8F6"}`,
@@ -117,11 +134,18 @@ export default function NavbarCreateDivisionCalender() {
             placeholder="Input Tanggal"
             label="Tanggal"
             minDate={new Date()}
+            onBlur={() => setTouched({ ...touched, dateStart: true })}
+            error={
+              touched.dateStart && (
+                isData.dateStart == "" ? "Tanggal Tidak Boleh Kosong" : null
+              )
+            }
           />
           <SimpleGrid
             cols={{ base: 2, sm: 2, lg: 2 }}
           >
             <TimeInput
+              required
               styles={{
                 input: {
                   border: `1px solid ${"#D6D8F6"}`,
@@ -132,8 +156,15 @@ export default function NavbarCreateDivisionCalender() {
               label="Waktu Awal"
               value={isData.timeStart}
               onChange={(event) => setData({ ...isData, timeStart: event.target.value })}
+              onBlur={() => setTouched({ ...touched, timeStart: true })}
+              error={
+                touched.timeStart && (
+                  isData.timeStart == "" ? "Waktu Awal Tidak Boleh Kosong" : null
+                )
+              }
             />
             <TimeInput
+              required
               styles={{
                 input: {
                   border: `1px solid ${"#D6D8F6"}`,
@@ -144,9 +175,16 @@ export default function NavbarCreateDivisionCalender() {
               label="Waktu Akhir"
               value={isData.timeEnd}
               onChange={(event) => setData({ ...isData, timeEnd: event.target.value })}
+              onBlur={() => setTouched({ ...touched, timeEnd: true })}
+              error={
+                touched.timeEnd && (
+                  isData.timeEnd == "" ? "Waktu Akhir Tidak Boleh Kosong" : null
+                )
+              }
             />
           </SimpleGrid>
           <TextInput
+            required
             styles={{
               input: {
                 border: `1px solid ${"#D6D8F6"}`,
@@ -158,8 +196,15 @@ export default function NavbarCreateDivisionCalender() {
             label="Link Meet"
             value={isData.linkMeet}
             onChange={(event) => setData({ ...isData, linkMeet: event.target.value })}
+            onBlur={() => setTouched({ ...touched, linkMeet: true })}
+            error={
+              touched.linkMeet && (
+                isData.linkMeet == "" ? "Link Meet Tidak Boleh Kosong" : null
+              )
+            }
           />
           <Select
+            required
             styles={{
               input: {
                 border: `1px solid ${"#D6D8F6"}`,
@@ -180,20 +225,13 @@ export default function NavbarCreateDivisionCalender() {
             onChange={(val: any) =>
               setData({ ...isData, repeatEventTyper: val })
             }
+            onBlur={() => setTouched({ ...touched, repeatEventTyper: true })}
+            error={
+              touched.repeatEventTyper && (
+                isData.repeatEventTyper == "" ? "Ulangi Event Tidak Boleh Kosong" : null
+              )
+            }
           />
-          <Box mt={5} onClick={() => setOpenMember(true)}>
-            <Group
-              justify="space-between"
-              p={10}
-              style={{
-                border: `1px solid ${"#D6D8F6"}`,
-                borderRadius: 10,
-              }}
-            >
-              <Text>Tambah Anggota</Text>
-              <IoIosArrowDropright size={25} />
-            </Group>
-          </Box>
           <Textarea styles={{
             input: {
               border: `1px solid ${"#D6D8F6"}`,
@@ -204,6 +242,19 @@ export default function NavbarCreateDivisionCalender() {
             size="md" placeholder='Deskripsi' label="Deskripsi"
             onChange={(event) => setData({ ...isData, desc: event.target.value })}
           />
+          <Box mt={5} onClick={() => setOpenMember(true)}>
+            <Group
+              justify="space-between"
+              p={10}
+              style={{
+                border: `1px solid ${"#D6D8F6"}`,
+                borderRadius: 10,
+              }}
+            >
+              <Text>Tambah Anggota *</Text>
+              <IoIosArrowDropright size={25} />
+            </Group>
+          </Box>
           {
             memberUser.length > 0 &&
             <Box pt={30}>
@@ -248,7 +299,6 @@ export default function NavbarCreateDivisionCalender() {
               </Box>
             </Box>
           }
-
           <Box mt={"xl"}>
             <Button
               c={"white"}
@@ -256,7 +306,20 @@ export default function NavbarCreateDivisionCalender() {
               size="lg"
               radius={30}
               fullWidth
-              onClick={() => setModal(true)}
+              onClick={() => {
+                if (
+                  isData.title !== "" &&
+                  isData.dateStart !== " " &&
+                  isData.timeStart !== "" &&
+                  isData.timeEnd !== "" &&
+                  isData.linkMeet !== "" &&
+                  isData.repeatEventTyper !== ""
+                ) {
+                  setModal(true);
+                } else {
+                  toast.error("Mohon lengkapi semua form");
+                }
+              }}
             >
               Simpan
             </Button>

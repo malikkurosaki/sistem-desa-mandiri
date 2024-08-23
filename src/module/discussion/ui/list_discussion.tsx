@@ -1,6 +1,6 @@
 'use client'
 import { WARNA } from "@/module/_global";
-import { Avatar, Badge, Box, Divider, Flex, Group, Skeleton, Text, TextInput } from "@mantine/core";
+import { Avatar, Badge, Box, Divider, Flex, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { GrChatOption } from "react-icons/gr";
@@ -62,20 +62,20 @@ export default function ListDiscussion({ id }: { id: string }) {
                            mt={20}
                         >
                            <Group>
-                              <Skeleton width={40} height={40} radius={"md"} />
+                              <Skeleton width={60} height={60} radius={100} />
                               <Box>
-                                 <Skeleton width={"50%"} height={20} radius={"md"} />
-                                 <Skeleton width={"50%"} height={20} radius={"md"} />
+                                 <Skeleton width={100} height={20} radius={"md"} />
+                                 <Skeleton mt={8} width={60} height={20} radius={"md"} />
                               </Box>
                            </Group>
-                           <Skeleton width={"50%"} height={20} radius={"md"} />
+                           <Skeleton width={"40%"} height={20} radius={"md"} />
                         </Flex>
                         <Box mt={10}>
                            <Skeleton width={"100%"} height={100} radius={"md"} />
                         </Box>
                         <Group justify="space-between" mt={20} c={'#8C8C8C'}>
-                           <Skeleton width={"30%"} height={20} radius={"md"} />
-                           <Skeleton width={"30%"} height={20} radius={"md"} />
+                           <Skeleton width={"20%"} height={20} radius={"md"} />
+                           <Skeleton width={"20%"} height={20} radius={"md"} />
                         </Group>
                         <Box mt={20}>
                            <Skeleton width={"100%"} height={1} radius={"md"} />
@@ -86,15 +86,14 @@ export default function ListDiscussion({ id }: { id: string }) {
             :
             isData.map((v, i) => {
                return (
-                  <Box key={i} pl={10} pr={10}
-                     onClick={() => {
-                        router.push(`/division/${param.id}/discussion/${v.id}`)
-                     }}
-                  >
+                  <Box key={i} pl={10} pr={10}>
                      <Flex
                         justify={"space-between"}
                         align={"center"}
                         mt={20}
+                        onClick={() => {
+                           router.push(`/division/${param.id}/discussion/${v.id}`)
+                        }}
                      >
                         <Group>
                            <Avatar alt="it's me" size="lg" />
@@ -107,8 +106,21 @@ export default function ListDiscussion({ id }: { id: string }) {
                         </Group>
                         <Text c={"grey"} fz={13}>{v.createdAt}</Text>
                      </Flex>
-                     <Box mt={10}>{v.desc}</Box>
-                     <Group justify="space-between" mt={20} c={'#8C8C8C'}>
+                     <Box mt={10}>
+                        <Spoiler maxHeight={50} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
+                           <Text
+                              style={{
+                                 overflowWrap: "break-word"
+                              }}
+                              onClick={() => {
+                                 router.push(`/division/${param.id}/discussion/${v.id}`)
+                              }}
+                           >
+                              {v.desc}
+                           </Text>
+                        </Spoiler>
+                     </Box>
+                     <Group justify="space-between" mt={40} c={'#8C8C8C'}>
                         <Group gap={5} align="center">
                            <GrChatOption size={18} />
                            <Text fz={13}>Diskusikan</Text>

@@ -75,7 +75,6 @@ export default function FormEditDiscussion() {
                      />
                   </Box>
                </Grid.Col>
-
             </Grid>
             <Box mt="xl">
                <Button

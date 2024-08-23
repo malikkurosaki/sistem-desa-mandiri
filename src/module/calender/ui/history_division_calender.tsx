@@ -1,6 +1,6 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Box, Center, Flex, Grid, Group, Text, TextInput } from '@mantine/core';
+import { Box, Center, Flex, Grid, Group, Skeleton, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
@@ -9,63 +9,25 @@ import { funGetAllCalender, funGetHostory } from '../lib/api_calender';
 import { useShallowEffect } from '@mantine/hooks';
 import moment from 'moment';
 import "moment/locale/id";
-
-const history = [
-  {
-    dateStart: "21",
-    data: [
-      {
-        id: 1,
-        title: "Pembahasan Mengenai Darmasaba",
-        timeEnd: "10:00",
-        timeStart: "10.00",
-        status: "Selesai",
-      },
-      {
-        id: 2,
-        title: "Pembahasan Mengenai Darmasaba",
-        timeEnd: "10:00",
-        timeStart: "13.00 - 14.00",
-      },
-    ]
-  },
-  {
-    dateStart: "21",
-    data: [
-      {
-        id: 1,
-        title: "Pembahasan Mengenai Darmasaba",
-        timeEnd: "10:00",
-        timeStart: "10.00",
-      },
-      {
-        id: 1,
-        title: "Pembahasan Mengenai Darmasaba",
-        timeEnd: "10:00",
-        timeStart: "13.00",
-      },
-      {
-        id: 1,
-        title: "Pembahasan Mengenai Darmasaba",
-        timeEnd: "10:00",
-        timeStart: "15.00",
-      },
-    ]
-  },
-]
+import _ from 'lodash';
 
 export default function HistoryDivisionCalender() {
   const [isData, setData] = useState<IHistoryCalender[]>([])
   const router = useRouter()
   const param = useParams<{ id: string, detail: string }>()
   const [searchQuery, setSearchQuery] = useState('')
+  const [loading, setLoading] = useState(true)
 
   const getData = async () => {
     try {
+      setLoading(true)
       const response = await funGetHostory('?division=' + param.id + '&search=' + searchQuery)
       setData(response.data)
+      setLoading(false)
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -74,7 +36,7 @@ export default function HistoryDivisionCalender() {
   }, [searchQuery])
   return (
     <Box>
-      <LayoutNavbarNew back="/calender" title="Riwayat kalender" menu />
+      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Riwayat kalender" menu />
       <Box p={20}>
         <TextInput
           styles={{
@@ -96,28 +58,59 @@ export default function HistoryDivisionCalender() {
             borderRadius: 10,
             padding: 20
           }}>
-            {isData.map((v, i) => {
-              return (
-                <Grid key={i}>
-                  <Grid.Col span={2}>
+            {loading ?
+              Array(6)
+                .fill(null)
+                .map((_, i) => (
+                  <Box key={i} mb={10}>
+                    <Grid >
+                      <Grid.Col span={2}>
+                        <Flex justify={"center"} direction={'column'}>
+                          <Skeleton height={30} width={"100%"} radius={"md"} />
+                          <Skeleton height={20} width={"100%"} radius={"md"} mt={10} />
+                        </Flex>
+                      </Grid.Col>
+                      <Grid.Col span={'auto'}>
+                        {[...Array(1)].map((_, x) => (
+                          <Box mb={10} key={x}>
+                            <Skeleton height={20} width={"100%"} radius={"md"} />
+                            <Skeleton height={20} width={"100%"} radius={"md"} mt={10} />
+                          </Box>
+                        ))}
+                      </Grid.Col>
+                    </Grid>
+                  </Box>
+                ))
+              :
+              _.isEmpty(isData)
+              ?
+              <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+                 <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada history</Text>
+              </Box>
+              :
+              isData.map((v, i) => {
+                return (
+                  <Grid key={i}>
+                    <Grid.Col span={2}>
                       <Flex justify={"center"} direction={'column'}>
                         <Text ta={"center"} fz={20} fw={'bold'}>{moment(v.dateStart).format('D MMM')}</Text>
                         <Text ta={"center"} fz={15}>{moment(v.dateStart).format('dddd')}</Text>
                       </Flex>
-                  </Grid.Col>
-                  <Grid.Col span={'auto'}>
-                    {v.data.map((d, x) => {
-                      return (
-                        <Box mb={10} key={x} >
-                          <Text fw={"bold"}>{d.title}</Text>
-                          <Text>{d.timeStart} | {d.timeEnd}</Text>
-                        </Box>
-                      )
-                    })}
-                  </Grid.Col>
-                </Grid>
-              )
-            })}
+                    </Grid.Col>
+                    <Grid.Col span={'auto'}>
+                      {v.data.map((d, x) => {
+                        return (
+                          <Box mb={10} key={x} >
+                            <Text fw={"bold"}>{d.title}</Text>
+                            <Text>{d.timeStart} | {d.timeEnd}</Text>
+                          </Box>
+                        )
+                      })}
+                    </Grid.Col>
+                  </Grid>
+                )
+              })
+            }
           </Box>
         </Box>
       </Box>

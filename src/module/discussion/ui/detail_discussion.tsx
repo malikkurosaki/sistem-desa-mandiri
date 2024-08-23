@@ -1,5 +1,5 @@
 "use client"
-import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
 import { SkeletonDetailDiscussionComment, SkeletonDetailDiscussionMember, SkeletonSingle, WARNA } from "@/module/_global";
 import { GrChatOption } from "react-icons/gr";
 import { LuSendHorizonal } from "react-icons/lu";
@@ -10,7 +10,7 @@ import { useShallowEffect } from "@mantine/hooks";
 import { IDetailDiscussion } from "../lib/type_discussion";
 import moment from "moment";
 import "moment/locale/id";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 export default function DetailDiscussion({ id, idDivision }: { id: string, idDivision: string }) {
@@ -18,6 +18,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    const [isComent, setIsComent] = useState("")
    const param = useParams<{ id: string, detail: string }>()
    const [isLoad, setIsLoad] = useState(true)
+   const router = useRouter()
 
    const getData = async () => {
       try {
@@ -77,8 +78,8 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                               <Group>
                                  <Skeleton width={60} height={60} radius={100} />
                                  <Box>
-                                    <Skeleton width={"50%"} height={20} radius={"md"} />
-                                    <Skeleton width={"50%"} height={20} radius={"md"} />
+                                    <Skeleton width={100} height={20} radius={"md"} />
+                                    <Skeleton mt={8} width={60} height={20} radius={"md"} />
                                  </Box>
                               </Group>
                               <Skeleton width={"50%"} height={20} radius={"md"} />
@@ -109,7 +110,16 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                      <Text c={"grey"} fz={13}>{isData?.createdAt}</Text>
                   </Flex>
                   <Box mt={10}>
-                     <Text fw={"bold"}>{isData?.desc}</Text>
+                     <Spoiler maxHeight={50} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
+                        <Text
+                           style={{
+                              overflowWrap: "break-word"
+                           }}
+                           fw={"bold"}
+                        >
+                           {isData?.desc}
+                        </Text>
+                     </Spoiler>
                   </Box>
                   <Group justify="space-between" mt={20} c={'#8C8C8C'}>
                      {isData?.totalComments ? <Group gap={5} align="center">
@@ -135,8 +145,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                                  <Group>
                                     <Skeleton width={40} height={40} radius={100} />
                                     <Box>
-                                       <Skeleton width={"50%"} height={20} radius={"md"} />
-                                       <Skeleton width={"50%"} height={20} radius={"md"} />
+                                       <Skeleton width={60} height={20} radius={"md"} />
                                     </Box>
                                  </Group>
                                  <Skeleton width={"50%"} height={20} radius={"md"} />
@@ -170,7 +179,17 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                               </Group>
                               <Text c={"grey"} fz={13}>{moment(v.createdAt).format("LL")}</Text>
                            </Flex>
-                           <Box mt={10}>{v.comment}</Box>
+                           <Box mt={10}>
+                              <Spoiler maxHeight={50} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
+                                 <Text
+                                    style={{
+                                       overflowWrap: "break-word"
+                                    }}
+                                 >
+                                    {v.comment}
+                                 </Text>
+                              </Spoiler>
+                           </Box>
                            <Box mt={20}>
                               <Divider size={"xs"} />
                            </Box>
@@ -179,48 +198,52 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                   })
                }
             </Box>
-            {isLoad ? 
-             <Skeleton width={"100%"} height={50} radius={100} />
-            :
-            <Box h={60} pos={"fixed"} bottom={20} w={{ base: "90%", md: "35.5%" }} style={{
-               zIndex: 999
-            }}>
-                  <Group justify="flex-end">
-                     <Text fz={13}>{300 - isComent.length} karakter tersisa</Text>
-                  </Group>
-               <Grid bg={"white"} style={{
-                  border: '1px solid gray',
-                  borderRadius: 40
-               }} justify="center" align="center">
-                     <Grid.Col span={10}>
-                     <TextInput
-                        styles={{
-                           input: {
-                              color: WARNA.biruTua,
-                              border: "none",
-                              backgroundColor: "transparent"
-                           },
-                        }}
-                        size="md"
-                        placeholder="Kirim Komentar"
-                        disabled={isData?.status === 2}
-                        onChange={(e) => setIsComent(e.target.value)}
-                           value={isComent}
-                           maxLength={300}
-                        />
-                        
-                  </Grid.Col>
-                  <Grid.Col span={2}>
-                     <Center>
-                        <ActionIcon
-                           onClick={sendComent}
-                           variant="subtle" aria-label="submit" disabled={isData?.status === 2}>
-                           <LuSendHorizonal size={30} />
-                        </ActionIcon>
-                     </Center>
-                  </Grid.Col>
-               </Grid>
-            </Box>
+            {isLoad ?
+               <Skeleton width={"100%"} height={50} radius={100} />
+               :
+               <Box pos={"fixed"} bottom={0} w={{ base: "90%", md: "35.5%" }} style={{
+                  zIndex: 999
+               }} bg={WARNA.bgWhite}>
+                  <Box bg={WARNA.bgWhite} >
+                     <Group justify="flex-end">
+                        <Text fz={13}>{300 - isComent.length} karakter tersisa</Text>
+                     </Group>
+                     <Box mb={20} bg={WARNA.bgWhite}>
+                        <Grid bg={"white"} style={{
+                           border: '1px solid gray',
+                           borderRadius: 40
+                        }} justify="center" align="center">
+                           <Grid.Col span={10}>
+                              <TextInput
+                                 styles={{
+                                    input: {
+                                       color: WARNA.biruTua,
+                                       border: "none",
+                                       backgroundColor: "transparent"
+                                    },
+                                 }}
+                                 size="md"
+                                 placeholder="Kirim Komentar"
+                                 disabled={isData?.status === 2}
+                                 onChange={(e) => setIsComent(e.target.value)}
+                                 value={isComent}
+                                 maxLength={300}
+                              />
+
+                           </Grid.Col>
+                           <Grid.Col span={2}>
+                              <Center>
+                                 <ActionIcon
+                                    onClick={sendComent}
+                                    variant="subtle" aria-label="submit" disabled={isData?.status === 2}>
+                                    <LuSendHorizonal size={30} />
+                                 </ActionIcon>
+                              </Center>
+                           </Grid.Col>
+                        </Grid>
+                     </Box>
+                  </Box>
+               </Box>
             }
          </Box>
       </>
