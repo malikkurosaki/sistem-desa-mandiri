@@ -3,6 +3,7 @@ import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import { funGetDivisionById, IDataMemberDivision } from "@/module/division_new";
 import { useHookstate } from "@hookstate/core";
 import {
+  ActionIcon,
   Anchor,
   Avatar,
   Box,
@@ -11,6 +12,7 @@ import {
   Divider,
   Flex,
   Group,
+  Skeleton,
   Text,
   TextInput,
 } from "@mantine/core";
@@ -28,10 +30,12 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
   const [isData, setData] = useState<IDataMemberDivision[]>([])
   const member = useHookstate(globalMemberTask)
   const [selectAll, setSelectAll] = useState(false)
+  const [loading, setLoading] = useState(true)
 
 
   async function getData() {
     try {
+      setLoading(true)
       const response = await funGetDivisionById(param.id)
       if (response.success) {
         setData(response.data.member)
@@ -41,9 +45,12 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
       } else {
         toast.error(response.message)
       }
+      setLoading(false)
     } catch (error) {
       console.log(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -110,43 +117,72 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
           leftSection={<HiMagnifyingGlass size={20} />}
           placeholder="Pencarian"
         /> */}
-        <Group justify="space-between" mt={20} onClick={handleSelectAll}>
-          <Text c={WARNA.biruTua} fw={"bold"}>
-            Pilih Semua Anggota
-          </Text>
-          {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-        </Group>
+        {loading ?
+          <Skeleton height={20} width={"100%"} mt={20} />
+          :
+          <Group justify="space-between" mt={20} onClick={handleSelectAll}>
+            <Text c={WARNA.biruTua} fw={"bold"}>
+              Pilih Semua Anggota
+            </Text>
+            {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+          </Group>
+        }
         <Box mt={15}>
-          {isData.map((v, i) => {
-            const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
-            return (
-              <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
-                <Flex justify={"space-between"} align={"center"}>
+          {loading ?
+            Array(3)
+              .fill(null)
+              .map((_, i) => (
+                <Box key={i} mb={15}>
                   <Group>
-                    <Avatar src={"v.image"} alt="it's me" size="lg" />
-                    <Text style={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}>
-                      {v.name}
-                    </Text>
+                    <Box>
+                      <ActionIcon
+                        variant="light"
+                        bg={"#DCEED8"}
+                        size={"lg"}
+                        radius={100}
+                        aria-label="icon"
+                      >
+                        <Skeleton height={30} width={30} />
+                      </ActionIcon>
+                    </Box>
+                    <Box>
+                      <Skeleton height={20} width={"80%"} />
+                    </Box>
                   </Group>
-                  <Text
-                    style={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      paddingLeft: 20,
-                    }}
-                  >
-                    {isSelected ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-                  </Text>
-                </Flex>
-                <Divider my={"md"} />
-              </Box>
-            );
-          })}
+                </Box>
+              ))
+            :
+            isData.map((v, i) => {
+              const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
+              return (
+                <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
+                  <Flex justify={"space-between"} align={"center"}>
+                    <Group>
+                      <Avatar src={"v.image"} alt="it's me" size="lg" />
+                      <Text style={{
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}>
+                        {v.name}
+                      </Text>
+                    </Group>
+                    <Text
+                      style={{
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        paddingLeft: 20,
+                      }}
+                    >
+                      {isSelected ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+                    </Text>
+                  </Flex>
+                  <Divider my={"md"} />
+                </Box>
+              );
+            })
+          }
         </Box>
         <Box mt={"xl"}>
           <Button
@@ -155,7 +191,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
             size="lg"
             radius={30}
             fullWidth
-            onClick={() => {onSubmit()}}
+            onClick={() => { onSubmit() }}
           >
             Simpan
           </Button>

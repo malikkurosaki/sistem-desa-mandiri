@@ -1,6 +1,6 @@
 'use client'
-import { WARNA } from "@/module/_global";
-import { Box, Group, Text } from "@mantine/core";
+import { SkeletonDetailListTugasTask, WARNA } from "@/module/_global";
+import { Box, Group, Skeleton, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -22,7 +22,6 @@ export default function ListFileDetailTask() {
          } else {
             toast.error(res.message);
          }
-
       } catch (error) {
          console.error(error);
          toast.error("Gagal mendapatkan file tugas divisi, coba lagi nanti");
@@ -45,7 +44,18 @@ export default function ListFileDetailTask() {
          }}>
             {
 
-               loading ? <Text>loading</Text> :
+               loading ?
+                  Array(1)
+                     .fill(null)
+                     .map((_, i) => (
+                        <Box key={i} mb={10}>
+                           <Group>
+                              <Skeleton width={30} height={30} radius={"md"} />
+                              <Skeleton width={"50%"} height={30} radius={"md"} />
+                           </Group>
+                        </Box>
+                     ))
+                  :
                   isData.length === 0 ? <Text>Tidak ada file</Text> :
                      isData.map((item, index) => {
                         return (

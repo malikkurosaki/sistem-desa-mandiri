@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, WARNA } from "@/module/_global";
+import { LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
 import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
@@ -79,7 +79,15 @@ export default function ListAnggotaDetailTask() {
                   py={10}
                >
                   {
-                     loading ? <Text>loading</Text> :
+                     loading ?
+                        Array(6)
+                           .fill(null)
+                           .map((_, i) => (
+                              <Box key={i}>
+                                 <SkeletonSingle />
+                              </Box>
+                           ))
+                        :
                         isData.length === 0 ? <Text>Tidak ada anggota</Text> :
                            isData.map((v, i) => {
                               return (

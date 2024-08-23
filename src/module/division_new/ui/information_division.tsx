@@ -21,7 +21,7 @@ export default function InformationDivision() {
   const [name, setName] = useState('')
   const [deskripsi, setDeskripsi] = useState('')
   const [member, setMember] = useState<IDataMemberDivision[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [valChooseMember, setChooseMember] = useState("")
   const [valChooseMemberStatus, setChooseMemberStatus] = useState<boolean>(false)
   const [valChooseMemberName, setChooseMemberName] = useState("")
@@ -137,12 +137,36 @@ export default function InformationDivision() {
               <Text>{member.length} Anggota</Text>
             </Box>
             <Box mt={15}>
-              <Group align='center' onClick={() => router.push('/division/add-member/' + param.id)}>
-                <Avatar size="lg">
-                  <AiOutlineUserAdd size={30} color={WARNA.biruTua} />
-                </Avatar>
-                <Text>Tambah Anggota</Text>
-              </Group>
+              {loading ?
+                <Group
+                  align="center"
+                  style={{
+                    padding: 10,
+                  }}
+                >
+                  <Box>
+                    <ActionIcon
+                      variant="light"
+                      bg={"#DCEED8"}
+                      size={50}
+                      radius={100}
+                      aria-label="icon"
+                    >
+                      <Skeleton height={25} width={25} />
+                    </ActionIcon>
+                  </Box>
+                  <Box>
+                    <Skeleton height={20} width={100} />
+                  </Box>
+                </Group>
+                :
+                <Group align='center' onClick={() => router.push('/division/add-member/' + param.id)}>
+                  <Avatar size="lg">
+                    <AiOutlineUserAdd size={30} color={WARNA.biruTua} />
+                  </Avatar>
+                  <Text>Tambah Anggota</Text>
+                </Group>
+              }
             </Box>
             <Box pt={10}>
               <Box mb={10}>

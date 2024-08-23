@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -95,72 +95,98 @@ export default function ListDivision() {
             </Flex>
           </Grid.Col>
         </Grid>
-          <Box pt={20}>
+        <Box pt={20}>
+          {loading ?
+            <>
+              <Skeleton width={"100%"} height={100} radius={"md"} />
+            </>
+            :
             <Box bg={WARNA.biruTua} p={10} style={{ borderRadius: 10 }}>
               <Text fw={'bold'} c={'white'}>Total Divisi</Text>
               <Flex justify={'center'} align={'center'} h={'100%'}>
                 <Text fz={40} fw={'bold'} c={'white'}>{jumlah}</Text>
               </Flex>
             </Box>
-          </Box>
+          }
+        </Box>
         {isList ? (
           <Box pt={20}>
-            {data?.map((v: any, i: any) => {
-              return (
-                <Box key={i}>
-                  <Group justify="space-between" mb={10} onClick={() => router.push(`/division/${v.id}`)}>
-                    <Group>
-                      <Center>
-                        <ActionIcon
-                          variant="gradient"
-                          size={50}
-                          aria-label="Gradient action icon"
-                          radius={100}
-                          gradient={{
-                            from: '#DFDA7C',
-                            to: '#F2AF46',
-                            deg: 174
-                          }}
-                        >
-                          <HiMiniUserGroup size={25} color={WARNA.biruTua} />
-                        </ActionIcon>
-                      </Center>
-                      <Text>{v.name}</Text>
+            {loading
+              ? Array(6)
+                .fill(null)
+                .map((_, i) => (
+                  <Box key={i}>
+                    <SkeletonSingle />
+                  </Box>
+                ))
+              :
+              data?.map((v: any, i: any) => {
+                return (
+                  <Box key={i}>
+                    <Group justify="space-between" mb={10} onClick={() => router.push(`/division/${v.id}`)}>
+                      <Group>
+                        <Center>
+                          <ActionIcon
+                            variant="gradient"
+                            size={50}
+                            aria-label="Gradient action icon"
+                            radius={100}
+                            gradient={{
+                              from: '#DFDA7C',
+                              to: '#F2AF46',
+                              deg: 174
+                            }}
+                          >
+                            <HiMiniUserGroup size={25} color={WARNA.biruTua} />
+                          </ActionIcon>
+                        </Center>
+                        <Text>{v.name}</Text>
+                      </Group>
                     </Group>
-                  </Group>
-                  <Divider my="sm" />
-                </Box>
-              );
-            })}
+                    <Divider my="sm" />
+                  </Box>
+                );
+              })
+            }
           </Box>
         ) : (
-            <Box pt={20}>
-            {data?.map((v: any, i: any) => {
-              return (
-                <Box key={i} mb={20}>
-                  <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
-                    <Card.Section>
-                      <Box h={120} bg={WARNA.biruTua}>
-                        <Flex justify={'center'} align={'center'} h={"100%"}>
-                          <Title order={3} c={"white"}>{v.name}</Title>
-                        </Flex>
+          <Box pt={20}>
+            {loading ?
+              Array(6)
+                .fill(null)
+                .map((_, i) => (
+                  <Box key={i} pb={20}>
+                    <Skeleton width={"100%"} height={200} radius={"md"} />
+                  </Box>
+                ))
+              :
+              data?.map((v: any, i: any) => {
+                return (
+                  <Box key={i} mb={20}>
+                    <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
+                      <Card.Section>
+                        <Box h={120} bg={WARNA.biruTua}>
+                          <Flex justify={'center'} align={'center'} h={"100%"}>
+                            <Title order={3} c={"white"}>{v.name}</Title>
+                          </Flex>
+                        </Box>
+                      </Card.Section>
+                      <Box pt={10}>
+                        <Text lineClamp={2}>{v.desc}</Text>
+                        <Group align='center' pt={10} justify='flex-end'>
+                          <Avatar.Group>
+                            <Avatar>
+                              <MdAccountCircle size={32} color={WARNA.biruTua} />
+                            </Avatar>
+                            <Avatar>+{v.jumlah_member - 1}</Avatar>
+                          </Avatar.Group>
+                        </Group>
                       </Box>
-                    </Card.Section>
-                    <Box pt={10}>
-                      <Text lineClamp={2}>{v.desc}</Text>
-                      <Group align='center' pt={10} justify='flex-end'>
-                        <Avatar.Group>
-                          <Avatar>
-                            <MdAccountCircle size={32} color={WARNA.biruTua} />
-                          </Avatar>
-                          <Avatar>+{v.jumlah_member - 1}</Avatar>
-                        </Avatar.Group>
-                      </Group>
-                    </Box>
-                  </Card>
-                </Box>
-              );
-            })}
+                    </Card>
+                  </Box>
+                );
+              })
+            }
           </Box>
         )}
       </Box>

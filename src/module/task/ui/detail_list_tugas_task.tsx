@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, WARNA } from "@/module/_global"
+import { LayoutDrawer, SkeletonDetailListTugasTask, WARNA } from "@/module/_global"
 import { Box, Grid, Center, Checkbox, Group, SimpleGrid, Text, Stack, Flex, Divider } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useParams, useRouter } from "next/navigation"
@@ -99,7 +99,11 @@ export default function ListTugasDetailTask() {
             }}
          >
             {
-               loading ? <Text>loading</Text> :
+               loading ?
+                  <>
+                     <SkeletonDetailListTugasTask />
+                  </>
+                  :
                   isData.length === 0 ? <Text>Tidak ada tugas</Text> :
                      isData.map((item, index) => {
                         return (
@@ -163,7 +167,10 @@ export default function ListTugasDetailTask() {
                                     </Box>
                                  </Grid.Col>
                               </Grid>
-                              <Divider my={"lg"} />
+                              {isData.length >= 1
+                                 ? "" :
+                                 <Divider my={"lg"} />
+                              }
                            </Box>
                         )
                      })
