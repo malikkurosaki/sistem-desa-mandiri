@@ -1,6 +1,6 @@
 'use client'
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
-import { ActionIcon, Anchor, Box, Breadcrumbs, Button, Checkbox, Divider, Flex, Grid, Group, Modal, Select, SimpleGrid, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Anchor, Box, Breadcrumbs, Button, Checkbox, Divider, Flex, Grid, Group, Indicator, Modal, Select, SimpleGrid, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { FcDocument, FcFolder, FcImageFile } from 'react-icons/fc';
@@ -23,6 +23,7 @@ import { globalRefreshDocument } from '../lib/val_document';
 import { RiListCheck } from 'react-icons/ri';
 import { GoChevronRight } from 'react-icons/go';
 import DrawerShareDocument from './drawer_share_document';
+import { FaSlideshare } from 'react-icons/fa6';
 
 export default function NavbarDocumentDivision() {
   const router = useRouter()
@@ -33,6 +34,7 @@ export default function NavbarDocumentDivision() {
   const [rename, setRename] = useState(false)
   const [share, setShare] = useState(false)
   const [more, setMore] = useState(false)
+  const [shareSelected, setShareSelected] = useState(false)
   const searchParams = useSearchParams()
   const path = searchParams.get('path')
   const [dataDocument, setDataDocument] = useState<IDataDocument[]>([])
@@ -62,6 +64,7 @@ export default function NavbarDocumentDivision() {
           path: dataDocument[index].path,
           extension: dataDocument[index].extension,
           category: dataDocument[index].category,
+          share: dataDocument[index].share,
         }
       ])
     }
@@ -73,6 +76,13 @@ export default function NavbarDocumentDivision() {
       setSelectAll(true)
     } else {
       setSelectAll(false)
+    }
+
+    const shareSelected = selectedFiles.some((i: any) => i?.share == true)
+    if (shareSelected) {
+      setShareSelected(true)
+    } else {
+      setShareSelected(false)
     }
   }
 
@@ -87,6 +97,7 @@ export default function NavbarDocumentDivision() {
             path: dataDocument[index].path,
             extension: dataDocument[index].extension,
             category: dataDocument[index].category,
+            share: dataDocument[index].share,
           }
           setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
         }
@@ -154,6 +165,8 @@ export default function NavbarDocumentDivision() {
         setDataJalur(respon.jalur);
       } else {
         toast.error(respon.message);
+        setDataDocument([]);
+        setDataJalur([]);
       }
 
       const res = await funGetDivisionById(param.id);
@@ -231,24 +244,24 @@ export default function NavbarDocumentDivision() {
                   <Text fz={12} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Unduh</Text>
                 </Flex>
                 <Flex onClick={() => setIsDelete(true)} justify={'center'} align={'center'} direction={'column'}>
-                  <AiOutlineDelete size={20} color={(selectedFiles.length > 0) ? 'white' : 'grey'} />
-                  <Text fz={12} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Hapus</Text>
+                  <AiOutlineDelete size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'} />
+                  <Text fz={12} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Hapus</Text>
                 </Flex>
                 <Flex onClick={() => {
                   if (selectedFiles.length == 1) {
                     onChooseRename()
                   }
                 }} justify={'center'} align={'center'} direction={'column'}>
-                  <CgRename size={20} color={(selectedFiles.length == 1) ? 'white' : 'grey'} />
-                  <Text fz={12} c={(selectedFiles.length == 1) ? 'white' : 'grey'}>Ganti Nama</Text>
+                  <CgRename size={20} color={(selectedFiles.length == 1 && !shareSelected) ? 'white' : 'grey'} />
+                  <Text fz={12} c={(selectedFiles.length == 1 && !shareSelected) ? 'white' : 'grey'}>Ganti Nama</Text>
                 </Flex>
                 <Flex onClick={() => setShare(true)} justify={'center'} align={'center'} direction={'column'}>
-                  <LuShare2 size={20} color={(selectedFiles.length > 0) ? 'white' : 'grey'} />
-                  <Text fz={12} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Bagikan</Text>
+                  <LuShare2 size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'} />
+                  <Text fz={12} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Bagikan</Text>
                 </Flex>
                 <Flex onClick={() => setMore(true)} justify={'center'} align={'center'} direction={'column'}>
-                  <MdOutlineMoreHoriz size={20} color={(selectedFiles.length > 0) ? 'white' : 'grey'} />
-                  <Text fz={12} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Lainnya</Text>
+                  <MdOutlineMoreHoriz size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'} />
+                  <Text fz={12} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Lainnya</Text>
                 </Flex>
               </SimpleGrid>
             </Flex>
@@ -295,12 +308,29 @@ export default function NavbarDocumentDivision() {
                       <Group gap={20}>
                         <Box>
                           {
-                            (v.category == "FOLDER") ?
-                              <FcFolder size={60} /> :
-                              (v.extension == "pdf" || v.extension == "csv") ?
-                                <FcDocument size={60} /> :
-                                <FcImageFile size={60} />
+                            (v.share) ?
+                              <Indicator offset={15} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaSlideshare />} size={25}>
+                                {
+                                  (v.category == "FOLDER") ?
+                                    <FcFolder size={60} /> :
+                                    (v.extension == "pdf" || v.extension == "csv") ?
+                                      <FcDocument size={60} /> :
+                                      <FcImageFile size={60} />
+                                }
+                              </Indicator>
+                              :
+                              <>
+                                {
+                                  (v.category == "FOLDER") ?
+                                    <FcFolder size={60} /> :
+                                    (v.extension == "pdf" || v.extension == "csv") ?
+                                      <FcDocument size={60} /> :
+                                      <FcImageFile size={60} />
+                                }
+                              </>
+
                           }
+
                         </Box>
                         <Flex direction={'column'}>
                           <Text>{(v.category == "FOLDER") ? v.name : v.name + '.' + v.extension}</Text>

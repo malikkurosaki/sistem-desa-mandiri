@@ -30,16 +30,56 @@ export async function GET(request: Request) {
          return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, data tidak ditemukan" }, { status: 404 });
       }
 
+      let statusAkses = false
+      let aksesPath = String(path)
       if (path != "home" && path != "null" && path != "undefined" && path != "") {
          const cekPath = await prisma.divisionDocumentFolderFile.count({
             where: {
                isActive: true,
-               id: String(path)
+               id: String(path),
+               idDivision: String(idDivision)
             }
          })
 
-         if (cekPath == 0) {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan item, data tidak ditemukan" }, { status: 404 });
+         const cekSharePath = await prisma.divisionDocumentShare.count({
+            where: {
+               isActive: true,
+               idDivision: String(idDivision),
+               idDocument: String(path)
+            }
+         })
+
+         if (cekPath == 0 && cekSharePath == 0) {
+            do {
+               const dataPath = await prisma.divisionDocumentFolderFile.findUnique({
+                  where: {
+                     id: String(aksesPath)
+                  }
+               })
+
+               if (dataPath) {
+                  const cekShare = await prisma.divisionDocumentShare.count({
+                     where: {
+                        isActive: true,
+                        idDivision: String(idDivision),
+                        idDocument: String(aksesPath)
+                     }
+                  })
+                  if (cekShare == 0) {
+                     statusAkses = false
+                     aksesPath = dataPath.path
+                  } else {
+                     statusAkses = true
+                  }
+
+               } else {
+                  aksesPath = "home"
+               }
+            } while (aksesPath != "home" && statusAkses == false);
+
+            if (statusAkses == false) {
+               return NextResponse.json({ success: false, message: "Data tidak ditemukan / tidak memilik hak akses" }, { status: 404 });
+            }
          }
       }
 
@@ -50,12 +90,60 @@ export async function GET(request: Request) {
          path: (path == "undefined" || path == "null" || path == "" || path == null) ? "home" : path
       }
 
+      let formatDataShare: any[] = [];
+
       if (category == "folder") {
          kondisi = {
             isActive: true,
             idDivision: String(idDivision),
             path: (path == "undefined" || path == "null" || path == "" || path == null) ? "home" : path,
             category: "FOLDER"
+         }
+      } else {
+         if (path == "home" || path == "null" || path == "undefined") {
+            const dataShare = await prisma.divisionDocumentShare.findMany({
+               where: {
+                  isActive: true,
+                  idDivision: String(idDivision),
+               },
+               select: {
+                  DivisionDocumentFolderFile: {
+                     select: {
+                        id: true,
+                        category: true,
+                        name: true,
+                        extension: true,
+                        path: true,
+                        User: {
+                           select: {
+                              name: true
+                           }
+                        },
+                        createdAt: true,
+                        updatedAt: true
+                     }
+                  }
+               }
+            })
+
+            formatDataShare = dataShare.map((v: any) => ({
+               ..._.omit(v, ["DivisionDocumentFolderFile"]),
+               id: v.DivisionDocumentFolderFile.id,
+               category: v.DivisionDocumentFolderFile.category,
+               name: v.DivisionDocumentFolderFile.name,
+               extension: v.DivisionDocumentFolderFile.extension,
+               path: v.DivisionDocumentFolderFile.path,
+               createdBy: v.DivisionDocumentFolderFile.User.name,
+               createdAt: moment(v.DivisionDocumentFolderFile.createdAt).format("DD-MM-YYYY HH:mm"),
+               updatedAt: moment(v.DivisionDocumentFolderFile.updatedAt).format("DD-MM-YYYY HH:mm"),
+               share: true
+            }))
+
+         } else {
+            kondisi = {
+               isActive: true,
+               path: (path == "undefined" || path == "null" || path == null) ? "home" : path
+            }
          }
       }
 
@@ -85,9 +173,15 @@ export async function GET(request: Request) {
          ..._.omit(v, ["User", "createdAt", "updatedAt"]),
          createdBy: v.User.name,
          createdAt: moment(v.createdAt).format("DD-MM-YYYY HH:mm"),
-         updatedAt: moment(v.updatedAt).format("DD-MM-YYYY HH:mm")
+         updatedAt: moment(v.updatedAt).format("DD-MM-YYYY HH:mm"),
+         share: false
       }))
 
+      if (formatDataShare.length > 0) {
+         allData.push(...formatDataShare)
+      }
+
+      const formatData = _.orderBy(allData, ['category', 'name'])
 
       let pathNow = path
       let jalur = []
@@ -100,13 +194,14 @@ export async function GET(request: Request) {
                }
             })
 
-            if (dataPath) {
+            if (dataPath && (dataPath.idDivision == idDivision || path == pathNow || pathNow == aksesPath)) {
                const fix = {
                   id: String(pathNow),
                   name: dataPath.name,
                }
                jalur.push(fix)
                pathNow = dataPath.path
+
             } else {
                pathNow = "home"
             }
@@ -117,7 +212,7 @@ export async function GET(request: Request) {
       jalur.push({ id: 'home', name: 'home' })
       jalur = [...jalur].reverse()
 
-      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: allData, jalur }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: formatData, jalur }, { status: 200 });
 
    } catch (error) {
       console.log(error);
