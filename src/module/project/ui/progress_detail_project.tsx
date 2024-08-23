@@ -3,7 +3,7 @@ import { WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Box, Grid, Progress, Text } from '@mantine/core';
 import { useParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { HiMiniPresentationChartBar } from 'react-icons/hi2';
 import { globalRefreshProject } from '../lib/val_project';
 import toast from 'react-hot-toast';
@@ -39,7 +39,7 @@ export default function ProgressDetailProject() {
     }
   }
 
-  useEffect(() => {
+  useShallowEffect(() => {
     onRefresh()
   }, [refresh.get()])
 

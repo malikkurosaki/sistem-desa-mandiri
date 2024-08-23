@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
 import { funGetTaskDivisionById } from "../lib/api_task";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { globalRefreshTask } from "../lib/val_task";
 import { useHookstate } from "@hookstate/core";
 
@@ -44,8 +44,7 @@ export default function ProgressDetailTask() {
    }
 
 
-
-   useEffect(() => {
+   useShallowEffect(() => {
       onRefresh()
    }, [refresh.get()])
 
@@ -56,44 +55,44 @@ export default function ProgressDetailTask() {
    return (
       <Box mt={10}>
          {loading ?
-             <Skeleton width={"100%"} height={100} radius={"md"} />
-            : 
-         <Box
-            p={20}
-            bg={"#DCEED8"}
-            style={{
-               borderRadius: 10,
-            }}
-         >
-            <Grid gutter={"lg"}>
-               <Grid.Col span={3}>
-                  <ActionIcon
-                     variant="gradient"
-                     size={68}
-                     aria-label="Gradient action icon"
-                     radius={100}
-                     gradient={{ from: "#DFDA7C", to: "#F2AF46", deg: 174 }}
-                  >
-                     <HiMiniPresentationChartBar size={35} color={WARNA.biruTua} />
-                  </ActionIcon>
-               </Grid.Col>
-               <Grid.Col span={9}>
-                  <Box>
-                     <Text>Kemajuan Proyek {valProgress}%</Text>
-                     <Progress
-                        style={{
-                           border: `1px solid ${"#BDBDBD"}`,
-                        }}
-                        w={"100%"}
-                        color="#FCAA4B"
-                        radius="md"
-                        size="xl"
-                        value={valProgress}
-                     />
-                  </Box>
-               </Grid.Col>
-            </Grid>
-         </Box>
+            <Skeleton width={"100%"} height={100} radius={"md"} />
+            :
+            <Box
+               p={20}
+               bg={"#DCEED8"}
+               style={{
+                  borderRadius: 10,
+               }}
+            >
+               <Grid gutter={"lg"}>
+                  <Grid.Col span={3}>
+                     <ActionIcon
+                        variant="gradient"
+                        size={68}
+                        aria-label="Gradient action icon"
+                        radius={100}
+                        gradient={{ from: "#DFDA7C", to: "#F2AF46", deg: 174 }}
+                     >
+                        <HiMiniPresentationChartBar size={35} color={WARNA.biruTua} />
+                     </ActionIcon>
+                  </Grid.Col>
+                  <Grid.Col span={9}>
+                     <Box>
+                        <Text>Kemajuan Proyek {valProgress}%</Text>
+                        <Progress
+                           style={{
+                              border: `1px solid ${"#BDBDBD"}`,
+                           }}
+                           w={"100%"}
+                           color="#FCAA4B"
+                           radius="md"
+                           size="xl"
+                           value={valProgress}
+                        />
+                     </Box>
+                  </Grid.Col>
+               </Grid>
+            </Box>
          }
       </Box>
    )

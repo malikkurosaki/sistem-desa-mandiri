@@ -46,7 +46,7 @@ export default function EditDetailTaskProject() {
     try {
       const res = await funGetDetailProject(param.id);
       if (res.success) {
-        setName(res.data.name)
+        setName(res.data.title)
         setValue([
           new Date(moment(res.data.dateStart).format('YYYY-MM-DD')),
           new Date(moment(res.data.dateEnd).format('YYYY-MM-DD')),

@@ -26,12 +26,13 @@ export const funGetTaskDivisionById = async (path: string, kategori: string) => 
 }
 
 
-export const funDeleteDetailTask = async (path: string) => {
+export const funDeleteDetailTask = async (path: string, data: { idProject: string }) => {
    const response = await fetch(`/api/task/detail/${path}`, {
       method: "DELETE",
       headers: {
          "Content-Type": "application/json",
       },
+      body: JSON.stringify(data),
    });
    return await response.json().catch(() => null);
 };

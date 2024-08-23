@@ -8,7 +8,7 @@ export interface IDataProject {
 
 export interface IDataListTaskProject {
   id: string
-  name: string
+  title: string
   desc: string
   status: number
   dateStart: string
