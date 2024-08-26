@@ -10,10 +10,11 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  TextInput,
 } from "@mantine/core";
 import React, { useState } from "react";
 import { DatePicker } from "@mantine/dates";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { IFormDateTask } from "../lib/type_task";
 import moment from "moment";
@@ -22,7 +23,11 @@ import moment from "moment";
 export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateTask) => void }) {
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const router = useRouter()
+  const param = useParams<{ id: string }>()
   const [title, setTitle] = useState("")
+  const [touched, setTouched] = useState({
+    title: false,
+  });
 
   function onSubmit() {
     if (value[0] == null || value[1] == null)
@@ -43,7 +48,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateT
 
   return (
     <Box>
-      <LayoutNavbarNew back="" title={"Tanggal Tugas"} menu />
+      <LayoutNavbarNew back={`/division/${param.id}/task/create`} title={"Tanggal Tugas"} menu />
       <Box p={20}>
         <Group
           justify="center"
@@ -85,7 +90,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateT
           </Box>
         </SimpleGrid>
         <Stack pt={15}>
-          <Input
+          <TextInput
             styles={{
               input: {
                 border: `1px solid ${"#D6D8F6"}`,
@@ -93,9 +98,16 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateT
               },
             }}
             placeholder="Input Nama Tahapan"
+            label="Judul Tugas"
+            required
             size="md"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value)
+              setTouched({ ...touched, title: false })
+            }}
+            onBlur={() => setTouched({ ...touched, title: true })}
+            error={touched.title && title == "" ? "Judul Tugas Tidak Boleh Kosong" : null}
           />
         </Stack>
         <Box mt={"xl"}>

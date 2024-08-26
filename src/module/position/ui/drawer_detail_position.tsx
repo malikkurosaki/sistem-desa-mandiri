@@ -20,6 +20,10 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
       idGroup: ""
    })
    const [listGroup, setListGorup] = useState<IDataPosition[]>([])
+   const [touched, setTouched] = useState({
+      name: false,
+      idGroup: false
+    });
 
    function onCLose() {
       onUpdated(true)
@@ -153,7 +157,10 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                   }
                   value={String(data.idGroup)}
                   mb={5}
-                  onChange={(val) => setData({ ...data, idGroup: val })}
+                  onChange={(val) => {
+                     setData({ ...data, idGroup: val })
+                     setTouched({ ...touched, idGroup: false })
+                  }}
                   withAsterisk
                   styles={{
                      input: {
@@ -162,6 +169,12 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                         borderColor: WARNA.biruTua,
                      },
                   }}
+                  error={
+                     touched.idGroup && (
+                       data.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                     )
+                   }
+                  onBlur={() => setTouched({ ...touched, idGroup: true })}
                />
                <TextInput
                   label="Jabatan"
@@ -172,10 +185,20 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                         borderColor: WARNA.biruTua,
                      },
                   }}
+                  required
                   my={15}
                   size="md"
                   value={String(data.name)}
-                  onChange={(e) => setData({ ...data, name: e.target.value })}
+                  onChange={(e) => {
+                     setData({ ...data, name: e.target.value })
+                     setTouched({ ...touched, name: false })
+                  }}
+                  onBlur={() => setTouched({ ...touched, name: true })}
+                  error={
+                     touched.name && (
+                       data.name == "" ? "Nama Jabatan Tidak Boleh Kosong" : null
+                     )
+                   }
                   radius={10}
                   placeholder="Nama Jabatan"
                />

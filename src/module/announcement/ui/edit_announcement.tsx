@@ -17,6 +17,10 @@ export default function EditAnnouncement() {
    const [isOpen, setOpen] = useState(false)
    const [isChooseDivisi, setChooseDivisi] = useState(false)
    const param = useParams<{ id: string }>()
+   const [touched, setTouched] = useState({
+      title: false,
+      desc: false
+    });
    const [body, setBody] = useState({
       title: "",
       desc: "",
@@ -116,7 +120,16 @@ export default function EditAnnouncement() {
                   },
                }}
                value={body.title}
-               onChange={(val) => setBody({ ...body, title: val.target.value })}
+               onChange={(val) => {
+                  setBody({ ...body, title: val.target.value })
+                  setTouched({ ...touched, title: false })
+               }}
+               onBlur={() => setTouched({ ...touched, title: true })}
+               error={
+                  touched.title && (
+                     body.title == "" ? "Judul Tidak Boleh Kosong" : null
+                  )
+                }
             />
             <Textarea
                size="md"
@@ -133,7 +146,17 @@ export default function EditAnnouncement() {
                   },
                }}
                value={body.desc}
-               onChange={(val) => setBody({ ...body, desc: val.target.value })}
+               onChange={(val) => {
+                  setBody({ ...body, desc: val.target.value })
+                  setTouched({ ...touched, desc: false })
+               }}
+               onBlur={() => setTouched({ ...touched, desc: true })}
+               error={
+                  touched.desc && (
+                     body.desc == "" ? "Pengumuman Tidak Boleh Kosong" : null
+                  )
+                }
+               
             />
 
             <Button onClick={() => { setChooseDivisi(true) }} rightSection={<HiOutlineChevronRight size={14} />} variant="default" fullWidth radius={30} size="md" mt={10}>
@@ -169,7 +192,16 @@ export default function EditAnnouncement() {
                size="md"
                radius={30}
                fullWidth
-               onClick={() => { setOpen(true) }}
+               onClick={() => { 
+                  if (
+                     body.title !== "" &&
+                     body.desc !== "" 
+                  ) {
+                     setOpen(true)
+                  } else {
+                     toast.error("Isi data dengan lengkap")
+                  }
+                }}
             >
                Simpan
             </Button>

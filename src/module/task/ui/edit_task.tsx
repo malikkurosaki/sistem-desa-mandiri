@@ -6,6 +6,7 @@ import {
    Input,
    Stack,
    Textarea,
+   TextInput,
 } from "@mantine/core";
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -20,6 +21,9 @@ export default function EditTask() {
    const [title, setTitle] = useState("")
    const [openModal, setOpenModal] = useState(false)
    const param = useParams<{ id: string, detail: string }>()
+   const [touched, setTouched] = useState({
+      title: false,
+    });
 
    function onVerification() {
       if (title == "")
@@ -65,11 +69,11 @@ export default function EditTask() {
 
 
    return (
-      <Box>
+      <Box pos={"relative"} h={"100vh"}>
          <LayoutNavbarNew back="" title={"Edit Judul Tugas"} menu />
          <Box p={20}>
             <Stack pt={15}>
-               <Input
+               <TextInput
                   styles={{
                      input: {
                         border: `1px solid ${"#D6D8F6"}`,
@@ -77,12 +81,22 @@ export default function EditTask() {
                      },
                   }}
                   placeholder="Tugas"
+                  label="Judul Tugas"
                   size="md"
                   value={title}
-                  onChange={(e) => { setTitle(e.target.value) }}
+                  onChange={(e) => {
+                     setTitle(e.target.value) 
+                     setTouched({ ...touched, title: false })
+                  }}
+                  error={
+                     touched.title && (
+                       title == "" ? "Error! harus memasukkan judul tugas" : null
+                     )
+                   }
+                  onBlur={() => setTouched({ ...touched, title: true })}
                />
             </Stack>
-            <Box mt={"xl"}>
+            <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
                <Button
                   c={"white"}
                   bg={WARNA.biruTua}

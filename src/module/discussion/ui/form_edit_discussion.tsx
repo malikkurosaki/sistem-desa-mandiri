@@ -13,6 +13,9 @@ export default function FormEditDiscussion() {
    const router = useRouter()
    const param = useParams<{ id: string, detail: string }>()
    const [isDataOne, setDataOne] = useState("")
+   const [touched, setTouched] = useState({
+      desc: false,
+    });
 
    async function fetchGetOneDiscussion() {
       try {
@@ -53,7 +56,7 @@ export default function FormEditDiscussion() {
    }, [])
 
    return (
-      <Box>
+      <Box pos={"relative"} h={"89vh"}>
          <Box p={20}>
             <Grid gutter={0} pt={10}>
                <Grid.Col span={"auto"}>
@@ -67,23 +70,37 @@ export default function FormEditDiscussion() {
                            input: {
                               border: 'none',
                               backgroundColor: 'transparent',
-                              height: "50vh"
+                              height: "60vh"
                            }
                         }}
                         value={isDataOne}
                         onChange={(e) => setDataOne(e.target.value)}
+                        onBlur={() => setTouched({ ...touched, desc: true })}
+                        error={
+                           touched.desc && (
+                             isDataOne == "" ? "Form Tidak Boleh Kosong" : null
+                           )
+                         }
                      />
                   </Box>
                </Grid.Col>
             </Grid>
-            <Box mt="xl">
+            <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
                <Button
                   color="white"
                   bg={WARNA.biruTua}
                   size="lg"
                   radius={30}
                   fullWidth
-                  onClick={() => setValModal(true)}
+                  onClick={() => {
+                     if (
+                        isDataOne !== ""
+                     ) {
+                        setValModal(true)   
+                     } else {
+                        toast.error("Form Tidak Boleh Kosong");
+                  }
+               }}
                >
                   Simpan
                </Button>

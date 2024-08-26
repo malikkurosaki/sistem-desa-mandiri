@@ -24,6 +24,9 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
   const [isModal, setModal] = useState(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [touched, setTouched] = useState({
+    name: false,
+  });
 
   async function getOneGroup() {
     try {
@@ -135,9 +138,18 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
             }}
             size="lg"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value)
+              setTouched({ ...touched, name: false })
+            }}
+            onBlur={() => setTouched({ ...touched, name: true })}
+            error={touched.name ? "Error! harus memasukkan grup" : ""}
             radius={10}
             placeholder="Grup"
+            label="Grup"
+            required
+
+
           />
           <Box mt={"xl"}>
             <Button

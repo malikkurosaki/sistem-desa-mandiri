@@ -23,6 +23,14 @@ export default function UpdateDivisionCalender() {
   const memberValue = memberUser.get() as IFormMemberCalender[]
   const [isDataCalender, setDataCalender] = useState<IDetailByIdCalender>()
   const [openMember, setOpenMember] = useState(false)
+  const [touched, setTouched] = useState({
+    title: false,
+    dateStart: false,
+    timeStart: false,
+    timeEnd: false,
+    repeatEventTyper: false,
+    desc: false
+  })
 
   const fetchGetOne = async () => {
     try {
@@ -40,7 +48,6 @@ export default function UpdateDivisionCalender() {
 
   const [value, setValue] = useState<Date | null>(null);
   const router = useRouter()
-
   async function onSubmit(val: boolean) {
     try {
       if (val) {
@@ -77,7 +84,7 @@ export default function UpdateDivisionCalender() {
 
   return (
     <Box>
-      <LayoutNavbarNew back={`/division/${param.id}/calender`} title="Edit kalender" menu />
+      <LayoutNavbarNew back={`/division/${param.id}/calender/${param.detail}`} title="Edit kalender" menu />
       <Box p={20}>
         <Stack>
           <TextInput
@@ -99,6 +106,9 @@ export default function UpdateDivisionCalender() {
                 })
               }
             }
+            onBlur={() => setTouched({ ...touched, title: true })}
+            required
+            error={touched.title && !isDataCalender?.title ? "Nama Acara Tidak Boleh Kosong" : null}
           />
           <DateInput
             styles={{
@@ -122,6 +132,10 @@ export default function UpdateDivisionCalender() {
             }
             placeholder="Input Tanggal"
             label="Tanggal"
+            minDate={new Date()}
+            onBlur={() => setTouched({ ...touched, dateStart: true })}
+            error={touched.dateStart && !isDataCalender?.dateStart ? "Tanggal Tidak Boleh Kosong" : null}
+            required
           />
           <SimpleGrid
             cols={{ base: 2, sm: 2, lg: 2 }}
@@ -145,6 +159,9 @@ export default function UpdateDivisionCalender() {
                   })
                 }
               }
+              onBlur={() => setTouched({ ...touched, timeStart: true })}
+              error={touched.timeStart && !isDataCalender?.timeStart ? "Waktu Awal Tidak Boleh Kosong" : null}
+              required
             />
             <TimeInput
               styles={{
@@ -164,6 +181,14 @@ export default function UpdateDivisionCalender() {
                     timeEnd: event.target.value
                   })
                 }
+              }
+              onBlur={() => setTouched({ ...touched, timeEnd: true })}
+              required
+              error={
+                touched.timeEnd && (
+                  isDataCalender?.timeEnd == "" ? "Waktu Akhir Tidak Boleh Kosong" : null
+                ) ||
+                (String(isDataCalender?.timeStart) > String(isDataCalender?.timeEnd) ? "Waktu Akhir Tidak Tepat" : null)
               }
             />
           </SimpleGrid>
@@ -215,20 +240,14 @@ export default function UpdateDivisionCalender() {
                 })
               }
             }
+            onBlur={() => setTouched({ ...touched, repeatEventTyper: true })}
+            error={
+              touched.repeatEventTyper && (
+                isDataCalender?.repeatEventTyper == "" ? "Ulangi Event Tidak Boleh Kosong" : null
+              )
+            }
+            required
           />
-          <Box mt={5} onClick={() => setOpenMember(true)}>
-            <Group
-              justify="space-between"
-              p={10}
-              style={{
-                border: `1px solid ${"#D6D8F6"}`,
-                borderRadius: 10,
-              }}
-            >
-              <Text>Tambah Anggota</Text>
-              <IoIosArrowDropright size={25} />
-            </Group>
-          </Box>
           <Textarea styles={{
             input: {
               border: `1px solid ${"#D6D8F6"}`,
@@ -236,7 +255,7 @@ export default function UpdateDivisionCalender() {
             },
           }}
             size="md" placeholder='Deskripsi' label="Deskripsi"
-          // value={isDataCalender?.desc}
+            // value={isDataCalender?.desc}
             defaultValue={isDataCalender?.desc}
             onChange={
               (event) => {
@@ -247,6 +266,19 @@ export default function UpdateDivisionCalender() {
               }
             }
           />
+          <Box mt={5} onClick={() => setOpenMember(true)}>
+            <Group
+              justify="space-between"
+              p={10}
+              style={{
+                border: `1px solid ${"#D6D8F6"}`,
+                borderRadius: 10,
+              }}
+            >
+              <Text>Tambah Anggota *</Text>
+              <IoIosArrowDropright size={25} />
+            </Group>
+          </Box>
           <Box pt={30}>
             <Group justify="space-between">
               <Text c={WARNA.biruTua}>Anggota Terpilih</Text>

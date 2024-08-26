@@ -29,7 +29,7 @@ export default function EditMember({ id }: { id: string }) {
       idGroup: false,
       idPosition: false,
       idUserRole: false
-    });
+   });
    const [data, setData] = useState<IEditDataMember>({
       id: "",
       nik: "",
@@ -121,7 +121,7 @@ export default function EditMember({ id }: { id: string }) {
                idPosition: data.idPosition,
                idUserRole: data.idUserRole
             })
-   
+
             toast.success(res.message)
             router.push(`/member?active=true`)
          }
@@ -165,13 +165,14 @@ export default function EditMember({ id }: { id: string }) {
                }
                onChange={(val: any) => {
                   changeGrup(val)
+                  setTouched({ ...touched, idGroup: false })
                }}
                value={data?.idGroup}
                onBlur={() => setTouched({ ...touched, idGroup: true })}
                error={
-                 touched.idGroup && (
-                   data.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
-                 )
+                  touched.idGroup && (
+                     data.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                  )
                }
             />
             <Select
@@ -191,13 +192,16 @@ export default function EditMember({ id }: { id: string }) {
                      }))
                      : []
                }
-               onChange={(val: any) => setData({ ...data, idPosition: val })}
+               onChange={(val: any) => {
+                  setData({ ...data, idPosition: val })
+                  setTouched({ ...touched, idPosition: false })
+               }}
                value={(data?.idPosition == "") ? null : data.idPosition}
                onBlur={() => setTouched({ ...touched, idPosition: true })}
                error={
-                 touched.idPosition && (
-                   data.idPosition == "" ? "Jabatan Tidak Boleh Kosong" : null
-                 )
+                  touched.idPosition && (
+                     data.idPosition == "" ? "Jabatan Tidak Boleh Kosong" : null
+                  )
                }
             />
             <Select
@@ -217,13 +221,16 @@ export default function EditMember({ id }: { id: string }) {
                      }))
                      : []
                }
-               onChange={(val: any) => setData({ ...data, idUserRole: val })}
+               onChange={(val: any) => {
+                  setData({ ...data, idUserRole: val })
+                  setTouched({ ...touched, idUserRole: false })
+               }}
                value={data?.idUserRole}
                onBlur={() => setTouched({ ...touched, idUserRole: true })}
                error={
-                 touched.idUserRole && (
-                   data.idUserRole == "" ? "Role Tidak Boleh Kosong" : null
-                 )
+                  touched.idUserRole && (
+                     data.idUserRole == "" ? "Role Tidak Boleh Kosong" : null
+                  )
                }
             />
             <TextInput
@@ -235,14 +242,17 @@ export default function EditMember({ id }: { id: string }) {
                      borderColor: WARNA.biruTua,
                   },
                }}
-               onChange={(e) => setData({ ...data, nik: e.target.value })}
+               onChange={(e) => {
+                  setData({ ...data, nik: e.target.value })
+                  setTouched({ ...touched, nik: false })
+               }}
                value={data.nik}
                onBlur={() => setTouched({ ...touched, nik: true })}
                error={
-                 touched.nik && (
-                   data.nik == "" ? "NIK Tidak Boleh Kosong" :
-                     data.nik.length < 16 ? "NIK Harus 16 Karakter" : null
-                 )
+                  touched.nik && (
+                     data.nik == "" ? "NIK Tidak Boleh Kosong" :
+                        data.nik.length < 16 ? "NIK Harus 16 Karakter" : null
+                  )
                }
             />
             <TextInput
@@ -254,13 +264,16 @@ export default function EditMember({ id }: { id: string }) {
                      borderColor: WARNA.biruTua,
                   },
                }}
-               onChange={(e) => setData({ ...data, name: e.target.value })}
+               onChange={(e) => {
+                  setData({ ...data, name: e.target.value })
+                  setTouched({ ...touched, name: false })
+               }}
                value={data.name}
                onBlur={() => setTouched({ ...touched, name: true })}
                error={
-                 touched.name && (
-                   data.name == "" ? "Nama Tidak Boleh Kosong" : null
-                 )
+                  touched.name && (
+                     data.name == "" ? "Nama Tidak Boleh Kosong" : null
+                  )
                }
             />
             <TextInput
@@ -272,14 +285,17 @@ export default function EditMember({ id }: { id: string }) {
                      borderColor: WARNA.biruTua,
                   },
                }}
-               onChange={(e) => setData({ ...data, email: e.target.value })}
+               onChange={(e) => {
+                  setData({ ...data, email: e.target.value })
+                  setTouched({ ...touched, email: false })
+               }}
                value={data.email}
                onBlur={() => setTouched({ ...touched, email: true })}
                error={
-                 touched.email && (
-                   data.email == "" ? "Email Tidak Boleh Kosong" :
-                     !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email) ? "Email tidak valid" : null
-                 )
+                  touched.email && (
+                     data.email == "" ? "Email Tidak Boleh Kosong" :
+                        !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email) ? "Email tidak valid" : null
+                  )
                }
             />
             <TextInput
@@ -291,14 +307,17 @@ export default function EditMember({ id }: { id: string }) {
                      borderColor: WARNA.biruTua,
                   },
                }}
-               onChange={(e) => setData({ ...data, phone: e.target.value })}
+               onChange={(e) => {
+                  setData({ ...data, phone: e.target.value })
+                  setTouched({ ...touched, phone: false })
+               }}
                value={data.phone}
                onBlur={() => setTouched({ ...touched, phone: true })}
                error={
-                 touched.phone && (
-                   data.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" :
-                     data.phone.length < 10 ? "Nomor Telepon harus 10 digit" : null
-                 )
+                  touched.phone && (
+                     data.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" :
+                        data.phone.length < 10 ? "Nomor Telepon harus 10 digit" : null
+                  )
                }
             />
             <Select
@@ -322,42 +341,45 @@ export default function EditMember({ id }: { id: string }) {
                      }
                   ]
                }
-               onChange={(val: any) => setData({ ...data, gender: val })}
+               onChange={(val: any) => {
+                  setData({ ...data, gender: val })
+                  setTouched({ ...touched, gender: false })
+               }}
                value={data.gender}
                onBlur={() => setTouched({ ...touched, gender: true })}
                error={
-                 touched.gender && (
-                   data.gender == "" ? "Gender Tidak Boleh Kosong" : null
-                 )
+                  touched.gender && (
+                     data.gender == "" ? "Gender Tidak Boleh Kosong" : null
+                  )
                }
             />
          </Stack>
          <Box mt={30} mx={20} pb={20}>
-         <Button
-          c={"white"}
-          bg={WARNA.biruTua}
-          size="md"
-          radius={30}
-          fullWidth
-          onClick={() => {
-            if (
-              data.nik !== "" &&
-              data.name !== "" &&
-              data.email !== "" &&
-              data.phone !== "" &&
-              data.gender !== "" &&
-              data.idGroup !== "" &&
-              data.idPosition !== "" &&
-              data.idUserRole !== ""
-            ) {
-              setModal(true);
-            } else {
-              toast.error("Mohon lengkapi semua form");
-            }
-          }}
-        >
-          Simpan
-        </Button>
+            <Button
+               c={"white"}
+               bg={WARNA.biruTua}
+               size="md"
+               radius={30}
+               fullWidth
+               onClick={() => {
+                  if (
+                     data.nik !== "" &&
+                     data.name !== "" &&
+                     data.email !== "" &&
+                     data.phone !== "" &&
+                     data.gender !== "" &&
+                     data.idGroup !== "" &&
+                     data.idPosition !== "" &&
+                     data.idUserRole !== ""
+                  ) {
+                     setModal(true);
+                  } else {
+                     toast.error("Mohon lengkapi semua form");
+                  }
+               }}
+            >
+               Simpan
+            </Button>
          </Box>
          <LayoutModal opened={isModal} onClose={() => setModal(false)}
             description="Apakah Anda yakin ingin mengubah data?"

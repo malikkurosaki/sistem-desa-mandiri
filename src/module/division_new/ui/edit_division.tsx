@@ -22,12 +22,9 @@ export default function EditDivision() {
     desc: "",
   });
 
-  function onTrue(val: boolean) {
-    if (val) {
-      toast.success("Sukses! Data tersimpan");
-    }
-    setOpenModal(false)
-  }
+  const [touched, setTouched] = useState({
+    name: false,
+  });
 
 
   async function getOneData() {
@@ -88,30 +85,47 @@ export default function EditDivision() {
             required
             radius={40}
             value={body.name}
-            onChange={(e) => { setBody({ ...body, name: e.target.value }) }}
+            onChange={(e) => {
+              setBody({ ...body, name: e.target.value })
+              setTouched({ ...touched, name: false })
+            }}
+            onBlur={() => setTouched({ ...touched, name: true })}
+            error={
+              touched.name && (
+                body.name == "" ? "Judul Tidak Boleh Kosong" : null
+              )
+            }
           />
           <Textarea placeholder="Deskripsi" label="Deskripsi" size="md" radius={10}
             value={body.desc}
             onChange={(e) => { setBody({ ...body, desc: e.currentTarget.value }) }}
             styles={{
               input: {
-                 height: "40vh"
+                height: "40vh"
               }
-           }}
+            }}
           />
         </Stack>
-          <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
-            <Button
-              color="white"
-              bg={WARNA.biruTua}
-              size="lg"
-              radius={30}
-              fullWidth
-              onClick={() => { setOpenModal(true) }}
-            >
-              Simpan
-            </Button>
-          </Box>
+        <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
+          <Button
+            color="white"
+            bg={WARNA.biruTua}
+            size="lg"
+            radius={30}
+            fullWidth
+            onClick={() => {
+              if (
+                body.name !== ""
+              ) {
+                setOpenModal(true)
+              } else {
+                toast.error("Judul Tidak Boleh Kosong")
+              }
+            }}
+          >
+            Simpan
+          </Button>
+        </Box>
       </Box>
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)} description='Apakah Anda yakin ingin edit data'
         onYes={(val) => {

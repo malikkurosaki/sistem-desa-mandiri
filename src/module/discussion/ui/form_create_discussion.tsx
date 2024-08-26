@@ -11,6 +11,9 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
    const [isValModal, setValModal] = useState(false)
    const router = useRouter()
    const param = useParams<{ id: string }>()
+   const [touched, setTouched] = useState({
+      desc: false,
+    });
    const [isData, setData] = useState({
       desc: "",
       idDivision: id
@@ -26,8 +29,9 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
    
             if (response.success) {
                toast.success(response.message)
-               router.push(`/division/${response.data.id}/discussion/`)
+               router.push(`/division/${param.id}/discussion/`)
                setValModal(false)
+               router.back()
             } else {
                toast.error(response.message)
             }
@@ -62,6 +66,12 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                         }}
                         value={isData.desc}
                         onChange={(e) => setData({ ...isData, desc: e.target.value })}
+                        onBlur={() => setTouched({ ...touched, desc: true })}
+                        error={
+                           touched.desc && (
+                             isData.desc == "" ? "Form Tidak Boleh Kosong" : null
+                           )
+                         }
                      />
                   </Box>
                </Grid.Col>
@@ -73,7 +83,15 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                size="lg"
                radius={30}
                fullWidth
-               onClick={() => setValModal(true)}
+                  onClick={() => {
+                     if (
+                        isData.desc !== ""
+                     ) {
+                        setValModal(true)   
+                     } else {
+                        toast.error("Form Tidak Boleh Kosong");
+                  }
+               }}
             >
                Simpan
             </Button>

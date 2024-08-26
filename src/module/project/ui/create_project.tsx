@@ -43,7 +43,11 @@ export default function CreateProject() {
   const [body, setBody] = useState<any>({
     idGroup: "",
     title: "",
-    desc: "",
+  });
+  const [touched, setTouched] = useState({
+    title: false,
+    idGroup: false,
+    desc: false
   });
 
   function deleteFile(index: number) {
@@ -138,9 +142,16 @@ export default function CreateProject() {
                 }))}
                 onChange={(val) => {
                   onChooseGroup(val)
+                  setTouched({ ...touched, idGroup: false })
                 }}
 
-                value={(body.idGroup=="")?null:body.idGroup}
+                value={(body.idGroup == "") ? null : body.idGroup}
+                onBlur={() => setTouched({ ...touched, idGroup: true })}
+                error={
+                   touched.idGroup && (
+                    body.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                   )
+                 }
               />
             )
           }
@@ -157,6 +168,12 @@ export default function CreateProject() {
             size="md"
             value={body.title}
             onChange={(e) => setBody({ ...body, title: e.target.value })}
+            onBlur={() => setTouched({ ...touched, title: true })}
+            error={
+              touched.title && (
+                body.title == "" ? "Proyek Tidak Boleh Kosong" : null
+              )
+            }
           />
           <Box onClick={() => { setOpenTugas(true) }}>
             <Group

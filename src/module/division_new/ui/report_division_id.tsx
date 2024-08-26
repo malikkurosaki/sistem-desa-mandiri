@@ -7,12 +7,14 @@ import EchartPaiReport from './echart_pai_report';
 import EchartBarReport from './echart_bar_report';
 import EventReport from './event_report';
 import DiscussionReport from './discussion_report';
+import { useParams } from 'next/navigation';
 
 export default function ReportDivisionId() {
   const [value, setValue] = useState<Date | null>(null);
+  const param = useParams<{ id: string }>()
   return (
     <Box>
-      <LayoutNavbarNew back="/division/1" title="Report Divisi" menu />
+      <LayoutNavbarNew back={`/division/${param.id}`} title="Report Divisi" menu />
       <Box p={20}>
         <Stack>
           <DateInput

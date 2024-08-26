@@ -36,6 +36,10 @@ export default function CreateDivision() {
         name: "",
         desc: "",
     });
+    const [touched, setTouched] = useState({
+        idGroup: false,
+        name: false,
+    });
 
     async function loadData() {
         const loadGroup = await funGetAllGroup('?active=true')
@@ -86,7 +90,7 @@ export default function CreateDivision() {
         loadData();
     }, []);
 
-    
+
 
     if (isChooseAdmin) return <NavbarAdminDivision data={body} onSuccess={(val) => {
         if (val) {
@@ -124,7 +128,12 @@ export default function CreateDivision() {
                                 onChange={(val) => {
                                     onChooseGroup(val)
                                 }}
-
+                                onBlur={() => setTouched({ ...touched, idGroup: true })}
+                                error={
+                                    touched.idGroup && (
+                                        body.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                                    )
+                                }
                                 value={body.idGroup}
                             />
                         )
@@ -137,6 +146,12 @@ export default function CreateDivision() {
                         radius={40}
                         value={body.name}
                         onChange={(val) => { setBody({ ...body, name: val.target.value }) }}
+                        onBlur={() => setTouched({ ...touched, name: true })}
+                        error={
+                            touched.name && (
+                                body.name == "" ? "Nama Tidak Boleh Kosong" : null
+                            )
+                        }
                     />
                     <Textarea size="md" placeholder="Deskripsi" label="Deskripsi" value={body.desc} radius={10} onChange={(val) => { setBody({ ...body, desc: val.currentTarget.value }) }} />
                     <Box onClick={() => { onToChooseAnggota() }}>
