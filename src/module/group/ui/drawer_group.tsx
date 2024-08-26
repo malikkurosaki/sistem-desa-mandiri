@@ -18,6 +18,9 @@ import toast from "react-hot-toast";
 export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) => void; }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false);
   const [namaGroup, setNamaGroup] = useState("");
+  const [touched, setTouched] = useState({
+    name: false,
+  });
 
 
   async function createData() {
@@ -50,7 +53,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
               <IoAddCircle size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Tambah Group</Text>
+              <Text c={WARNA.biruTua}>Tambah Grup</Text>
             </Box>
           </Flex>
         </SimpleGrid>
@@ -71,8 +74,15 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
             }}
             size="lg"
             radius={10}
+            label="Grup"
+            required
             placeholder="Grup"
-            onChange={(e) => setNamaGroup(e.target.value)}
+            onChange={(e) => {
+              setNamaGroup(e.target.value)
+              setTouched({ ...touched, name: false })
+            }}
+            error={touched.name ? "Error! harus memasukkan grup" : ""}
+            onBlur={() => setTouched({ ...touched, name: true })}
           />
           <Box mt={"xl"}>
             <Button

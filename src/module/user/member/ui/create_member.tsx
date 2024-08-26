@@ -165,6 +165,7 @@ export default function CreateMember() {
           }
           onChange={(val: any) => {
             changeGrup(val);
+            setTouched({ ...touched, idGroup: false })
           }}
           onBlur={() => setTouched({ ...touched, idGroup: true })}
           error={
@@ -196,11 +197,13 @@ export default function CreateMember() {
               }))
               : []
           }
-          onChange={(val: any) =>
+          onChange={(val: any) => {
             setListData({
               ...listData,
               idPosition: val,
             })
+            setTouched({ ...touched, idPosition: false })
+          }
           }
           value={listData.idPosition == "" ? null : listData.idPosition}
           onBlur={() => setTouched({ ...touched, idPosition: true })}
@@ -233,11 +236,13 @@ export default function CreateMember() {
               }))
               : []
           }
-          onChange={(val: any) =>
+          onChange={(val: any) => {
             setListData({
               ...listData,
               idUserRole: val,
             })
+            setTouched({ ...touched, idUserRole: false })
+          }
           }
           onBlur={() => setTouched({ ...touched, idUserRole: true })}
           error={
@@ -263,7 +268,7 @@ export default function CreateMember() {
           }}
           onChange={(event: any) => {
             setListData({ ...listData, nik: event.target.value });
-            setTouched({ ...touched, nik: true });
+            setTouched({ ...touched, nik: false });
           }}
           onBlur={() => setTouched({ ...touched, nik: true })}
           error={
@@ -288,11 +293,13 @@ export default function CreateMember() {
               borderColor: WARNA.biruTua,
             },
           }}
-          onChange={(event: any) =>
+          onChange={(event: any) => {
             setListData({
               ...listData,
               name: event.target.value,
             })
+            setTouched({ ...touched, name: false })
+          }
           }
           onBlur={() => setTouched({ ...touched, name: true })}
           error={
@@ -316,11 +323,13 @@ export default function CreateMember() {
               borderColor: WARNA.biruTua,
             },
           }}
-          onChange={(event: any) =>
+          onChange={(event: any) => {
             setListData({
               ...listData,
               email: event.target.value,
             })
+            setTouched({ ...touched, email: false })
+          }
           }
           onBlur={() => setTouched({ ...touched, email: true })}
           error={
@@ -345,11 +354,13 @@ export default function CreateMember() {
               borderColor: WARNA.biruTua,
             },
           }}
-          onChange={(event: any) =>
+          onChange={(event: any) => {
             setListData({
               ...listData,
               phone: event.target.value,
             })
+            setTouched({ ...touched, phone: false })
+          }
           }
           onBlur={() => setTouched({ ...touched, phone: true })}
           error={
@@ -378,11 +389,13 @@ export default function CreateMember() {
             { value: "M", label: "Laki-laki" },
             { value: "F", label: "Perempuan" },
           ]}
-          onChange={(val: any) =>
+          onChange={(val: any) => {
             setListData({
               ...listData,
               gender: val,
             })
+            setTouched({ ...touched, gender: false })
+          }
           }
           onBlur={() => setTouched({ ...touched, gender: true })}
           error={

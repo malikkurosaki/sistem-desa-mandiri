@@ -27,7 +27,6 @@ export default function NavbarCreateDivisionCalender() {
     dateStart: false,
     timeStart: false,
     timeEnd: false,
-    linkMeet: false,
     repeatEventTyper: false,
     desc: false
   })
@@ -94,7 +93,7 @@ export default function NavbarCreateDivisionCalender() {
 
   return (
     <Box>
-      <LayoutNavbarNew back="/calender" title="tambah kalender" menu />
+      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="tambah kalender" menu />
       <Box p={20}>
         <Stack>
           <TextInput
@@ -179,12 +178,12 @@ export default function NavbarCreateDivisionCalender() {
               error={
                 touched.timeEnd && (
                   isData.timeEnd == "" ? "Waktu Akhir Tidak Boleh Kosong" : null
-                )
+                ) ||
+                (isData.timeStart > isData.timeEnd ? "Waktu Akhir Tidak Tepat" : null)
               }
             />
           </SimpleGrid>
           <TextInput
-            required
             styles={{
               input: {
                 border: `1px solid ${"#D6D8F6"}`,
@@ -196,12 +195,6 @@ export default function NavbarCreateDivisionCalender() {
             label="Link Meet"
             value={isData.linkMeet}
             onChange={(event) => setData({ ...isData, linkMeet: event.target.value })}
-            onBlur={() => setTouched({ ...touched, linkMeet: true })}
-            error={
-              touched.linkMeet && (
-                isData.linkMeet == "" ? "Link Meet Tidak Boleh Kosong" : null
-              )
-            }
           />
           <Select
             required
@@ -312,7 +305,6 @@ export default function NavbarCreateDivisionCalender() {
                   isData.dateStart !== " " &&
                   isData.timeStart !== "" &&
                   isData.timeEnd !== "" &&
-                  isData.linkMeet !== "" &&
                   isData.repeatEventTyper !== ""
                 ) {
                   setModal(true);

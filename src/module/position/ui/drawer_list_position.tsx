@@ -14,6 +14,10 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const router = useRouter()
    const [listGroup, setListGorup] = useState<IDataGroup[]>([])
+   const [touched, setTouched] = useState({
+      name: false,
+      idGroup: false
+    });
 
    const [listData, setListData] = useState({
       name: "",
@@ -101,10 +105,13 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                   radius={10}
                   mb={5}
                   withAsterisk
-                  onChange={(val: any) => setListData({
-                     ...listData,
-                     idGroup: val
-                  })}
+                  onChange={(val: any) => {
+                     setListData({
+                        ...listData,
+                        idGroup: val
+                     })
+                     setTouched({ ...touched, idGroup: false })
+                  }}
                   styles={{
                      input: {
                         color: WARNA.biruTua,
@@ -112,6 +119,13 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                         borderColor: WARNA.biruTua,
                      },
                   }}
+                  error={
+                     touched.idGroup && (
+                      listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                     )
+                   }
+                  onFocus={() => setTouched({ ...touched, idGroup: true })}
+                  onBlur={() => setTouched({ ...touched, idGroup: true })}
                />
                <TextInput
                   label="Jabatan"
@@ -124,12 +138,23 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                   }}
                   my={15}
                   size="md"
-                  onChange={(event: any) => setListData({
-                     ...listData,
-                     name: event.target.value
-                  })}
+                  onChange={(event: any) => {
+                     setListData({
+                        ...listData,
+                        name: event.target.value
+                     })
+                     setTouched({ ...touched, name: false })
+                  }}
                   radius={10}
                   placeholder="Nama Jabatan"
+                  error={
+                     touched.name && (
+                      listData.name == "" ? "Nama Jabatan Tidak Boleh Kosong" : null
+                     )
+                   }
+                  onFocus={() => setTouched({ ...touched, name: true })}
+                  onBlur={() => setTouched({ ...touched, name: true })}
+                  required
                />
                <Box mt={'xl'}>
                   <Button

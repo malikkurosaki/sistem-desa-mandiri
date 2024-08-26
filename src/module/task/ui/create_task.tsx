@@ -1,6 +1,6 @@
 "use client";
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Avatar, Box, Button, Center, Flex, Group, Input, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Avatar, Box, Button, Center, Flex, Group, Input, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
@@ -37,6 +37,11 @@ export default function CreateTask() {
   const [indexDelFile, setIndexDelFile] = useState<number>(0)
   const [indexDelTask, setIndexDelTask] = useState<number>(0)
   const [title, setTitle] = useState("")
+  const [touched, setTouched] = useState({
+    title: false,
+    task: false,
+    member: false
+  });
 
   function deleteFile(index: number) {
     setListFile([...listFile.filter((val, i) => i !== index)])
@@ -52,7 +57,14 @@ export default function CreateTask() {
 
   async function onSubmit() {
     try {
-      const response = await funCreateTask({ idDivision: param.id, title, task: dataTask, file: fileForm, member: memberValue })
+      const response = await funCreateTask(
+        {
+          idDivision: param.id,
+          title,
+          task: dataTask,
+          file: fileForm,
+          member: memberValue
+        })
 
       if (response.success) {
         toast.success(response.message)
@@ -81,20 +93,31 @@ export default function CreateTask() {
 
   return (
     <Box>
-      <LayoutNavbarNew back="" title="tambah tugas" menu />
+      <LayoutNavbarNew back={`/division/${param.id}/task/`} title="tambah tugas" menu />
       <Box p={20}>
         <Stack>
-          <Input
+          <TextInput
             styles={{
               input: {
                 border: `1px solid ${"#D6D8F6"}`,
                 borderRadius: 10,
               },
             }}
-            placeholder="Nama Proyek"
+            placeholder="Nama Tugas"
             size="md"
+            label="Judul Tugas"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value)
+              setTouched({ ...touched, title: false })
+            }}
+            onBlur={() => setTouched({ ...touched, title: true })}
+            required
+            error={
+              touched.title && (
+                title == "" ? "Nama Tidak Boleh Kosong" : null
+              )
+            }
           />
           <Box onClick={() => { setOpenTugas(true) }}>
             <Group
@@ -227,7 +250,20 @@ export default function CreateTask() {
 
 
         <Box mt="xl">
-          <Button color="white" bg={WARNA.biruTua} size="lg" radius={30} fullWidth onClick={() => setOpenModal(true)}>
+          <Button
+            color="white"
+            bg={WARNA.biruTua}
+            size="lg" radius={30}
+            fullWidth
+            onClick={() => {
+              if (
+                title !== ""
+              ) {
+                setOpenModal(true)
+              } else  {
+                toast.error("Semua form harus diisi")
+              }
+            }}>
             Simpan
           </Button>
         </Box>

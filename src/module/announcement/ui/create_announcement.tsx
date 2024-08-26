@@ -26,6 +26,10 @@ export default function CreateAnnouncement() {
       title: "",
       desc: "",
    })
+   const [touched, setTouched] = useState({
+      title: false,
+      desc: false
+    });
 
 
    async function onSubmit() {
@@ -85,7 +89,16 @@ export default function CreateAnnouncement() {
                   },
                }}
                value={isData.title}
-               onChange={(e) => { setisData({ ...isData, title: e.target.value }) }}
+               onChange={(e) => {
+                  setisData({ ...isData, title: e.target.value })
+                  setTouched({ ...touched, title: false })
+               }}
+               onBlur={() => setTouched({ ...touched, title: true })}
+               error={
+                  touched.title && (
+                     isData.title == "" ? "Judul Tidak Boleh Kosong" : null
+                  )
+                }
             />
             <Textarea
                size="md"
@@ -102,7 +115,16 @@ export default function CreateAnnouncement() {
                   },
                }}
                value={isData.desc}
-               onChange={(e) => { setisData({ ...isData, desc: e.target.value }) }}
+               onChange={(e) => {
+                  setisData({ ...isData, desc: e.target.value })
+                  setTouched({ ...touched, desc: false })
+               }}
+               onBlur={() => setTouched({ ...touched, desc: true })}
+               error={
+                  touched.desc && (
+                     isData.desc == "" ? "Pengumuman Tidak Boleh Kosong" : null
+                  )
+                }
             />
             <Box pt={10}>
                <Group justify="space-between" style={{
@@ -145,7 +167,16 @@ export default function CreateAnnouncement() {
                size="md"
                radius={30}
                fullWidth
-               onClick={() => { setOpen(true) }}
+               onClick={() => { 
+                  if (
+                     isData.title !== "" &&
+                     isData.desc !== "" 
+                  ) {
+                     setOpen(true)
+                  } else {
+                     toast.error("Isi data dengan lengkap")
+                  }
+                }}
             >
                Simpan
             </Button>

@@ -10,6 +10,7 @@ import {
    SimpleGrid,
    Stack,
    Text,
+   TextInput,
 } from "@mantine/core";
 import React, { useState } from "react";
 import { DatePicker } from "@mantine/dates";
@@ -27,6 +28,9 @@ export default function AddDetailTask() {
    const [title, setTitle] = useState("")
    const [openModal, setOpenModal] = useState(false)
    const param = useParams<{ id: string, detail: string }>()
+   const [touched, setTouched] = useState({
+      title: false,
+   });
 
    function onVerification() {
       if (value[0] == null || value[1] == null)
@@ -106,17 +110,25 @@ export default function AddDetailTask() {
                </Box>
             </SimpleGrid>
             <Stack pt={15}>
-               <Input
+               <TextInput
                   styles={{
                      input: {
                         border: `1px solid ${"#D6D8F6"}`,
                         borderRadius: 10,
                      },
                   }}
+                  label="Tahapan"
                   placeholder="Input Nama Tahapan"
                   size="md"
+                  required
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => {
+                     setTitle(e.target.value)
+                     setTouched({ ...touched, title: false })
+                     }
+                  }
+                  onBlur={() => setTouched({ ...touched, title: true })}
+                  error={touched.title ? "Tahapan wajib diisi" : undefined}
                />
             </Stack>
             <Box mt={"xl"}>

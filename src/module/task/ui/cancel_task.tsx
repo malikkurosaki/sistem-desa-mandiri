@@ -18,6 +18,9 @@ export default function CancelTask() {
    const [alasan, setAlasan] = useState("")
    const [openModal, setOpenModal] = useState(false)
    const param = useParams<{ id: string, detail: string }>()
+   const [touched, setTouched] = useState({
+      reason: false,
+    });
 
    function onVerification() {
       if (alasan == "")
@@ -44,7 +47,7 @@ export default function CancelTask() {
 
 
    return (
-      <Box>
+      <Box pos={"relative"} h={"100vh"}>
          <LayoutNavbarNew back="" title={"Pembatalan Tugas"} menu />
          <Box p={20}>
             <Stack pt={15}>
@@ -56,10 +59,15 @@ export default function CancelTask() {
                }}
                   value={alasan}
                   size="md" placeholder='Contoh : Tugas tidak sesuai' label="Alasan Pembatalan"
-                  onChange={(event) => setAlasan(event.target.value)}
+                  onChange={(event) => {
+                     setAlasan(event.target.value)
+                     setTouched({ ...touched, reason: false })
+                  }}
+                  error={touched.reason ? "Error! harus memasukkan alasan pembatalan tugas" : ""}
+                  onBlur={() => setTouched({ ...touched, reason: true })}
                />
             </Stack>
-            <Box mt={"xl"}>
+            <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
                <Button
                   c={"white"}
                   bg={WARNA.biruTua}

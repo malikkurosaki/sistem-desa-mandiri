@@ -121,26 +121,13 @@ export default function AddMemberDetailTask() {
             menu
          />
          <Box p={20}>
-            {/* <TextInput
-          styles={{
-            input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
-            },
-          }}
-          size="md"
-          radius={30}
-          leftSection={<HiMagnifyingGlass size={20} />}
-          placeholder="Pencarian"
-        /> */}
             <Group justify="space-between" mt={20} onClick={handleSelectAll}>
                <Text c={WARNA.biruTua} fw={"bold"}>
                   Pilih Semua Anggota
                </Text>
                {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
             </Group>
-            {/* <Box mt={15}>
+            <Box mt={15}>
                {isData.map((v, i) => {
                   const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
                   const found = isDataMember.some((i: any) => i.idUser == v.idUser)
@@ -175,7 +162,7 @@ export default function AddMemberDetailTask() {
                      </Box>
                   );
                })}
-            </Box> */}
+            </Box>
             <Box mt={"xl"}>
                <Button
                   c={"white"}

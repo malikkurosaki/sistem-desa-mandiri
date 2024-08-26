@@ -39,7 +39,7 @@ export default function NavbarDetailDivisionTask() {
 
    return (
       <>
-         <LayoutNavbarNew back="" title={name} menu={
+         <LayoutNavbarNew back={`/division/${param.id}/task/`} title={name} menu={
             <ActionIcon
                variant="light"
                bg={WARNA.bgIcon}
