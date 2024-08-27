@@ -12,6 +12,8 @@ import moment from "moment";
 import "moment/locale/id";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useHookstate } from "@hookstate/core";
+import { globalRefreshDiscussion } from "../lib/val_discussion";
 
 export default function DetailDiscussion({ id, idDivision }: { id: string, idDivision: string }) {
    const [isData, setData] = useState<IDetailDiscussion>()
@@ -19,6 +21,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    const param = useParams<{ id: string, detail: string }>()
    const [isLoad, setIsLoad] = useState(true)
    const router = useRouter()
+   const refresh = useHookstate(globalRefreshDiscussion)
 
    const getData = async () => {
       try {
@@ -35,7 +38,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
 
    useShallowEffect(() => {
       getData()
-   }, [])
+   }, [refresh.get()])
 
    const sendComent = async () => {
       try {

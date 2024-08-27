@@ -8,12 +8,15 @@ import toast from "react-hot-toast"
 import { FaPencil, FaToggleOff } from "react-icons/fa6"
 import { funEditPosition, funEditStatusPosition, funGetOnePosition } from "../lib/api_position"
 import { IDataPosition } from "../lib/type_position"
+import { useHookstate } from "@hookstate/core"
+import { globalRefreshPosition } from "../lib/val_posisition"
 
 export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    onUpdated: (val: boolean) => void, id: string, isActive: boolean;
 }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const [isModal, setModal] = useState(false)
+   const refresh = useHookstate(globalRefreshPosition)
    const [data, setData] = useState<any>({
       id: id,
       name: "",
@@ -68,6 +71,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
          if (res.success) {
             toast.success(res.message);
+            refresh.set(!refresh.get())
             onUpdated(true);
             onCLose();
          } else {
@@ -84,7 +88,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    useShallowEffect(() => {
       getAllGroup()
       getOneData()
-   }, [])
+   }, [refresh.get()])
 
    async function nonActive(val: boolean) {
       try {
@@ -92,6 +96,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
             const res = await funEditStatusPosition(id, { isActive: isActive })
             if (res.success) {
                toast.success(res.message);
+               refresh.set(!refresh.get())
                onUpdated(true);
             } else {
                onUpdated(false);
