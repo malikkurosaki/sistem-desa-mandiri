@@ -28,7 +28,7 @@ export default function NavbarDetailProject() {
 
     } catch (error) {
       console.error(error);
-      toast.error("Gagal mendapatkan data proyek, coba lagi nanti");
+      toast.error("Gagal mendapatkan data Kegiatan, coba lagi nanti");
     }
   }
 
@@ -38,7 +38,7 @@ export default function NavbarDetailProject() {
 
   return (
     <>
-      <LayoutNavbarNew back="" title={name} menu={
+      <LayoutNavbarNew back="/project?status=0" title={name} menu={
         <ActionIcon
           variant="light"
           bg={WARNA.bgIcon}

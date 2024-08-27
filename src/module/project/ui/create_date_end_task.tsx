@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  TextInput,
 } from "@mantine/core";
 import React, { useState } from "react";
 import { DatePicker } from "@mantine/dates";
@@ -23,6 +24,9 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const router = useRouter()
   const [title, setTitle] = useState("")
+  const [touched, setTouched] = useState({
+    title: false
+  });
 
   function onSubmit() {
     if (value[0] == null || value[1] == null)
@@ -85,7 +89,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
           </Box>
         </SimpleGrid>
         <Stack pt={15}>
-          <Input
+          <TextInput
             styles={{
               input: {
                 border: `1px solid ${"#D6D8F6"}`,
@@ -93,9 +97,20 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
               },
             }}
             placeholder="Input Nama Tahapan"
+            label="Judul Tahapan"
+            required
             size="md"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value)
+              setTouched({ ...touched, title: false })
+            }}
+            onBlur={() => setTouched({ ...touched, title: true })}
+            error={
+              touched.title && (
+                title == "" ? "Judul Tidak Boleh Kosong" : null
+              )
+            }
           />
         </Stack>
         <Box mt={"xl"}>

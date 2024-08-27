@@ -140,10 +140,10 @@ export async function POST(request: Request) {
         }
 
 
-        return NextResponse.json({ success: true, message: "Berhasil membuat proyek", data: data, }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil membuat kegiatan", data: data, }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal membuat proyek, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membuat kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

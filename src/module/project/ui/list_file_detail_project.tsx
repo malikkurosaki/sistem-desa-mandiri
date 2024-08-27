@@ -1,6 +1,6 @@
 'use client'
 import { WARNA } from '@/module/_global';
-import { Box, Group, Text } from '@mantine/core';
+import { Box, Group, Skeleton, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funGetOneProjectById } from '../lib/api_project';
@@ -26,7 +26,7 @@ export default function ListFileDetailProject() {
 
     } catch (error) {
       console.error(error);
-      toast.error("Gagal mendapatkan file proyek, coba lagi nanti");
+      toast.error("Gagal mendapatkan file Kegiatan, coba lagi nanti");
     } finally {
       setLoading(false)
     }
@@ -47,7 +47,18 @@ export default function ListFileDetailProject() {
         }}>
           {
 
-            loading ? <Text>loading</Text> :
+            loading ?
+              Array(1)
+                .fill(null)
+                .map((_, i) => (
+                  <Box key={i} mb={10}>
+                    <Group>
+                      <Skeleton width={30} height={30} radius={"md"} />
+                      <Skeleton width={"50%"} height={30} radius={"md"} />
+                    </Group>
+                  </Box>
+                ))
+              :
               isData.length === 0 ? <Text>Tidak ada file</Text> :
                 isData.map((item, index) => {
                   return (

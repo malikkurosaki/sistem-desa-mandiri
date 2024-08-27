@@ -17,7 +17,7 @@ export default function ViewHome() {
     <>
       <LayoutNavbarHome>
         <Group justify='space-between'>
-          <Text fw={'bold'} c={'white'} >Perbekal Darmasaba</Text>
+          <Text fw={'bold'} c={'white'} >Perbekel Darmasaba</Text>
           <IconNavbar />
         </Group>
       </LayoutNavbarHome>

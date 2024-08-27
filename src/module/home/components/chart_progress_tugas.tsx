@@ -16,7 +16,7 @@ export default function ChartProgressHome() {
    const loadData = () => {
       const option: EChartsOption = {
          title: {
-            text: "PROGRES PROYEK",
+            text: "PROGRES KEGIATAN",
             top: '2%',
             left: 'center',
             textStyle: {

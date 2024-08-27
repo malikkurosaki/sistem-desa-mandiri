@@ -371,8 +371,8 @@ export default function CreateMember() {
           }
         />
         <Select
-          placeholder="Pilih Gender"
-          label="Gender"
+          placeholder="Jenis Kelamin"
+          label="Jenis Kelamin"
           w={"100%"}
           size="md"
           required

@@ -104,11 +104,16 @@ export default function UpdateDivisionCalender() {
                   ...isDataCalender,
                   title: event.target.value
                 })
+                setTouched({ ...touched, title: false })
               }
             }
             onBlur={() => setTouched({ ...touched, title: true })}
             required
-            error={touched.title && !isDataCalender?.title ? "Nama Acara Tidak Boleh Kosong" : null}
+            error={
+              touched.title && (
+                isDataCalender?.title == "" ? "Nama Acara Tidak Boleh Kosong" : null
+              )
+            }
           />
           <DateInput
             styles={{
@@ -128,13 +133,18 @@ export default function UpdateDivisionCalender() {
                   ...isDataCalender,
                   dateStart: moment(val).format("YYYY-MM-DD")
                 })
+                setTouched({ ...touched, dateStart: false })
               }
             }
             placeholder="Input Tanggal"
             label="Tanggal"
             minDate={new Date()}
             onBlur={() => setTouched({ ...touched, dateStart: true })}
-            error={touched.dateStart && !isDataCalender?.dateStart ? "Tanggal Tidak Boleh Kosong" : null}
+            error={
+              touched.dateStart && (
+                isDataCalender?.dateStart == "" ? "Tanggal Tidak Boleh Kosong" : null
+              )
+            }
             required
           />
           <SimpleGrid
@@ -238,6 +248,7 @@ export default function UpdateDivisionCalender() {
                   ...isDataCalender,
                   repeatEventTyper: val
                 })
+                setTouched({ ...touched, repeatEventTyper: false })
               }
             }
             onBlur={() => setTouched({ ...touched, repeatEventTyper: true })}

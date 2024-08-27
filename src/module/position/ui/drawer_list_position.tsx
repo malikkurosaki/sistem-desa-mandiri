@@ -89,7 +89,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
             </SimpleGrid>
          </Stack>
          <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Tambah Jabatan'} size="lg">
-            <Box pt={0}>
+            <Box pt={10} pos={"relative"} h={"70vh"}>
                <Select
                   label="Grup"
                   placeholder="Pilih grup"
@@ -156,7 +156,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                   onBlur={() => setTouched({ ...touched, name: true })}
                   required
                />
-               <Box mt={'xl'}>
+               <Box pos={"absolute"} bottom={10} left={0} right={0}>
                   <Button
                      c={"white"}
                      bg={WARNA.biruTua}

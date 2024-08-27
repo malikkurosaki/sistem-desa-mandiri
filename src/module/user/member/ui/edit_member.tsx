@@ -321,7 +321,7 @@ export default function EditMember({ id }: { id: string }) {
                }
             />
             <Select
-               placeholder="Pilih Gender" label="Gender" w={"100%"} size="md" required withAsterisk radius={30}
+               placeholder="Jenis Kelamin" label="Jenis Kelamin" w={"100%"} size="md" required withAsterisk radius={30}
                styles={{
                   input: {
                      color: WARNA.biruTua,

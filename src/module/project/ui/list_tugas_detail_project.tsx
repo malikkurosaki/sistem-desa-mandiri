@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, WARNA } from '@/module/_global';
+import { LayoutDrawer, SkeletonDetailListTugasTask, WARNA } from '@/module/_global';
 import { Box, Center, Checkbox, Divider, Flex, Grid, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -37,7 +37,7 @@ export default function ListTugasDetailProject() {
 
     } catch (error) {
       console.error(error);
-      toast.error("Gagal mendapatkan list tugas proyek, coba lagi nanti");
+      toast.error("Gagal mendapatkan list tugas Kegiatan, coba lagi nanti");
     } finally {
       setLoading(false)
     }
@@ -61,7 +61,7 @@ export default function ListTugasDetailProject() {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Gagal hapus tugas proyek, coba lagi nanti");
+      toast.error("Gagal hapus tugas Kegiatan, coba lagi nanti");
     }
   }
 
@@ -80,7 +80,7 @@ export default function ListTugasDetailProject() {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Gagal update status tugas proyek, coba lagi nanti");
+      toast.error("Gagal update status tugas Kegiatan, coba lagi nanti");
     }
   }
 
@@ -99,7 +99,9 @@ export default function ListTugasDetailProject() {
           }}
         >
           {
-            loading ? <Text>loading</Text> :
+            loading ? <>
+              <SkeletonDetailListTugasTask />
+            </> :
               isData.length === 0 ? <Text>Tidak ada tugas</Text> :
                 isData.map((item, index) => {
                   return (
@@ -163,7 +165,10 @@ export default function ListTugasDetailProject() {
                           </Box>
                         </Grid.Col>
                       </Grid>
-                      <Divider my={"lg"} />
+                      {isData.length >= 1
+                        ? "" :
+                        <Divider my={"lg"} />
+                      }
                     </Box>
                   )
                 })
@@ -207,7 +212,7 @@ export default function ListTugasDetailProject() {
         </LayoutDrawer>
 
         <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
-          description="Apakah Anda yakin ingin menghapus proyek ini?"
+          description="Apakah Anda yakin ingin menghapus Kegiatan ini?"
           onYes={(val) => {
             if (val) {
               onDelete()

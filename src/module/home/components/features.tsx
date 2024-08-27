@@ -39,7 +39,7 @@ export default function Features() {
               </ActionIcon>
             </Center>
             <Center>
-              <Text fz={15} c={WARNA.biruTua}>Proyek</Text>
+              <Text fz={15} c={WARNA.biruTua}>Kegiatan</Text>
             </Center>
           </Box>
           <Box onClick={() => router.push('/announcement')}>

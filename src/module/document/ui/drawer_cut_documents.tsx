@@ -1,5 +1,5 @@
 import { WARNA } from '@/module/_global';
-import { Box, Breadcrumbs, Button, Divider, Flex, Grid, Group, Modal, Text, TextInput } from '@mantine/core';
+import { Box, Breadcrumbs, Button, Divider, Flex, Grid, Group, Modal, ScrollArea, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FcFolder } from 'react-icons/fc';
@@ -95,6 +95,10 @@ export default function DrawerCutDocuments({ category, onChoosePath, data }: { c
             }
           </Breadcrumbs>
         </Box>
+        <ScrollArea h={{
+          base: "55vh", xl: "58vh", md: "57vh",
+          sm: "58vh",
+        }} type="scroll" scrollbarSize={2} scrollHideDelay={0} scrollbars="y">
         {dataDocument.map((v, i) => {
           const found = data.some((i: any) => i.id == v.id)
           return (
@@ -128,6 +132,7 @@ export default function DrawerCutDocuments({ category, onChoosePath, data }: { c
             </Box>
           )
         })}
+        </ScrollArea>
       </Box>
 
 

@@ -36,7 +36,7 @@ export default function ListProjects() {
    return (
       <>
          <Box pt={10}>
-            <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Proyek Terbaru</Text>
+            <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Kegiatan Terbaru</Text>
             <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
                {dataProject.map((v) =>
                   <Carousel.Slide key={v.id}>

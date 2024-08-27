@@ -12,10 +12,13 @@ export default function CancelProject() {
   const [alasan, setAlasan] = useState("")
   const [openModal, setOpenModal] = useState(false)
   const param = useParams<{ id: string }>()
+  const [touched, setTouched] = useState({
+    reason: false,
+  });
 
   function onVerification() {
     if (alasan == "")
-      return toast.error("Error! harus memasukkan alasan pembatalan proyek")
+      return toast.error("Error! harus memasukkan alasan pembatalan Kegiatan")
 
     setOpenModal(true)
   }
@@ -31,13 +34,13 @@ export default function CancelProject() {
       }
     } catch (error) {
       console.log(error)
-      toast.error("Gagal membatalkan proyek, coba lagi nanti")
+      toast.error("Gagal membatalkan Kegiatan, coba lagi nanti")
     }
   }
 
   return (
-    <Box>
-      <LayoutNavbarNew back="" title={"Pembatalan Proyek"} menu />
+    <Box pos={"relative"} h={"100vh"}>
+      <LayoutNavbarNew back="" title={"Pembatalan Kegiatan"} menu />
       <Box p={20}>
         <Stack pt={15}>
           <Textarea styles={{
@@ -47,11 +50,20 @@ export default function CancelProject() {
             },
           }}
             value={alasan}
-            size="md" placeholder='Contoh : proyek tidak sesuai' label="Alasan Pembatalan"
-            onChange={(event) => setAlasan(event.target.value)}
+            size="md" placeholder='Contoh : Kegiatan tidak sesuai' label="Alasan Pembatalan"
+            onChange={(event) => {
+              setAlasan(event.target.value)
+              setTouched({ ...touched, reason: false })
+            }}
+            error={
+              touched.reason && (
+                alasan == "" ? "Alasan Tidak Boleh Kosong" : null
+              )
+            }
+            onBlur={() => setTouched({ ...touched, reason: true })}
           />
         </Stack>
-        <Box mt={"xl"}>
+        <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
           <Button
             c={"white"}
             bg={WARNA.biruTua}
@@ -67,7 +79,7 @@ export default function CancelProject() {
 
 
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
-        description="Apakah Anda yakin ingin membatalkan proyek ini? Pembatalan proyek bersifat permanen"
+        description="Apakah Anda yakin ingin membatalkan Kegiatan ini? Pembatalan Kegiatan bersifat permanen"
         onYes={(val) => {
           if (val) {
             onSubmit()
