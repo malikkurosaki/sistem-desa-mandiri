@@ -59,7 +59,7 @@ export default function NavbarProject() {
 
   return (
     <Box>
-      <LayoutNavbarNew back='/home' title='proyek'
+      <LayoutNavbarNew back='/home' title='Kegiatan'
         menu={<ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
           <HiMenu size={20} color='white' />
         </ActionIcon>} />

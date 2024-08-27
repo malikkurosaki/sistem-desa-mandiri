@@ -59,6 +59,7 @@ export default function CancelTask() {
                }}
                   value={alasan}
                   size="md" placeholder='Contoh : Tugas tidak sesuai' label="Alasan Pembatalan"
+                  required
                   onChange={(event) => {
                      setAlasan(event.target.value)
                      setTouched({ ...touched, reason: false })

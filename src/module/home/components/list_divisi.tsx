@@ -42,7 +42,7 @@ export default function ListDivisi() {
                               </Box>
                            </Card.Section>
                            <Box pt={10} mih={150}>
-                              <Text fw={'bold'} fz={18}>PROYEK</Text>
+                              <Text fw={'bold'} fz={18}>KEGIATAN</Text>
                               <Text fw={'bolder'} ta={'center'} fz={70}>{v.total}</Text>
                            </Box>
                         </Card>

@@ -16,7 +16,7 @@ export default function MenuDrawerProject() {
               <IoAddCircle size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Tambah Proyek</Text>
+              <Text c={WARNA.biruTua}>Tambah Kegiatan</Text>
             </Box>
           </Flex>
           <Flex onClick={() => window.location.href = "/project?cat=filter"} justify={'center'} align={'center'} direction={'column'} >

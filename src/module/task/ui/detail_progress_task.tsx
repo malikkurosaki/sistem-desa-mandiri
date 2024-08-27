@@ -78,7 +78,7 @@ export default function ProgressDetailTask() {
                   </Grid.Col>
                   <Grid.Col span={9}>
                      <Box>
-                        <Text>Kemajuan Proyek {valProgress}%</Text>
+                        <Text>Kemajuan Kegiatan {valProgress}%</Text>
                         <Progress
                            style={{
                               border: `1px solid ${"#BDBDBD"}`,

@@ -61,7 +61,7 @@ export default function DetailProject() {
     <Box>
       <LayoutNavbarNew
         back=""
-        title="Proyek Desa Maju"
+        title="Kegiatan Desa Maju"
         menu={
           <ActionIcon
             variant="light"
@@ -98,7 +98,7 @@ export default function DetailProject() {
               </Grid.Col>
               <Grid.Col span={9}>
                 <Box>
-                  <Text>Kemajuan Proyek 60%</Text>
+                  <Text>Kemajuan Kegiatan 60%</Text>
                   <Progress
                     style={{
                       border: `1px solid ${"#BDBDBD"}`,

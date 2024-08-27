@@ -108,7 +108,10 @@ export default function NavbarCreateDivisionCalender() {
             placeholder="Nama Acara"
             label="Nama Acara"
             value={isData.title}
-            onChange={(event) => setData({ ...isData, title: event.target.value })}
+            onChange={(event) => {
+              setData({ ...isData, title: event.target.value })
+              setTouched({ ...touched, title: false })
+            }}
             onBlur={() => setTouched({ ...touched, title: true })}
             error={
               touched.title && (
@@ -129,6 +132,7 @@ export default function NavbarCreateDivisionCalender() {
             onChange={(val) => {
               setValue(val);
               setData({ ...isData, dateStart: moment(val).format("YYYY-MM-DD") });
+              setTouched({ ...touched, dateStart: false });
             }}
             placeholder="Input Tanggal"
             label="Tanggal"
@@ -215,8 +219,10 @@ export default function NavbarCreateDivisionCalender() {
               { value: '5', label: 'Tahunan' },
             ]}
             value={isData.repeatEventTyper}
-            onChange={(val: any) =>
+            onChange={(val: any) => {
               setData({ ...isData, repeatEventTyper: val })
+              setTouched({ ...touched, repeatEventTyper: false })
+            }
             }
             onBlur={() => setTouched({ ...touched, repeatEventTyper: true })}
             error={

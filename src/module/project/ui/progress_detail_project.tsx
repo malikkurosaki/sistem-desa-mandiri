@@ -1,7 +1,7 @@
 'use client'
 import { WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
-import { ActionIcon, Box, Grid, Progress, Text } from '@mantine/core';
+import { ActionIcon, Box, Grid, Progress, Skeleton, Text } from '@mantine/core';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMiniPresentationChartBar } from 'react-icons/hi2';
@@ -15,9 +15,11 @@ export default function ProgressDetailProject() {
   const [valLastUpdate, setValLastUpdate] = useState('')
   const param = useParams<{ id: string }>()
   const refresh = useHookstate(globalRefreshProject)
+  const [loading, setLoading] = useState(true)
 
   async function getOneData() {
     try {
+      setLoading(true)
       const res = await funGetOneProjectById(param.id, 'progress');
       if (res.success) {
         setValProgress(res.data.progress);
@@ -25,10 +27,12 @@ export default function ProgressDetailProject() {
       } else {
         toast.error(res.message);
       }
-
+      setLoading(false)
     } catch (error) {
       console.error(error);
-      toast.error("Gagal mendapatkan progress proyek, coba lagi nanti");
+      toast.error("Gagal mendapatkan progress Kegiatan, coba lagi nanti");
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -50,6 +54,9 @@ export default function ProgressDetailProject() {
   return (
     <>
       <Box mt={10}>
+        {loading ? 
+          <Skeleton width={"100%"} height={100} radius={"md"} />
+          :
         <Box
           p={20}
           bg={"#DCEED8"}
@@ -71,7 +78,7 @@ export default function ProgressDetailProject() {
             </Grid.Col>
             <Grid.Col span={9}>
               <Box>
-                <Text>Kemajuan Proyek {valProgress}%</Text>
+                <Text>Kemajuan Kegiatan {valProgress}%</Text>
                 <Progress
                   style={{
                     border: `1px solid ${"#BDBDBD"}`,
@@ -86,6 +93,7 @@ export default function ProgressDetailProject() {
             </Grid.Col>
           </Grid>
         </Box>
+        }
       </Box>
     </>
   );

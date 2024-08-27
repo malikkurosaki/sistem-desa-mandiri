@@ -125,7 +125,7 @@ export default function CreateProject() {
 
   return (
     <Box>
-      <LayoutNavbarNew back="/project" title="tambah proyek" menu />
+      <LayoutNavbarNew back="/project" title="tambah Kegiatan" menu />
       <Box p={20}>
         <Stack>
           {
@@ -156,7 +156,7 @@ export default function CreateProject() {
             )
           }
           <TextInput
-            label="Proyek"
+            label="Kegiatan"
             styles={{
               input: {
                 border: `1px solid ${"#D6D8F6"}`,
@@ -164,14 +164,17 @@ export default function CreateProject() {
               },
             }}
             required withAsterisk
-            placeholder="Nama Proyek"
+            placeholder="Nama Kegiatan"
             size="md"
             value={body.title}
-            onChange={(e) => setBody({ ...body, title: e.target.value })}
+            onChange={(e) => {
+              setBody({ ...body, title: e.target.value })
+              setTouched({ ...touched, title: false })
+            }}
             onBlur={() => setTouched({ ...touched, title: true })}
             error={
               touched.title && (
-                body.title == "" ? "Proyek Tidak Boleh Kosong" : null
+                body.title == "" ? "Kegiatan Tidak Boleh Kosong" : null
               )
             }
           />
@@ -304,7 +307,22 @@ export default function CreateProject() {
         }
 
         <Box mt="xl">
-          <Button color="white" bg={WARNA.biruTua} size="lg" radius={30} fullWidth onClick={() => setModal(true)}>
+          <Button
+            color="white"
+            bg={WARNA.biruTua}
+            size="lg"
+            radius={30}
+            fullWidth
+            onClick={() => {
+              if (
+                body.title !== "" &&
+                body.idGroup !== ""
+              ) {
+                setModal(true)
+              } else {
+                toast.error("Mohon lengkapi data terlebih dahulu");
+              }
+            }}>
             Simpan
           </Button>
         </Box>

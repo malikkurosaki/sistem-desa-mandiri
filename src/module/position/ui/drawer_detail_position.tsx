@@ -141,7 +141,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
          </Stack>
 
          <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Edit Jabatan'} size="lg">
-            <Box pt={10}>
+            <Box pt={10} pos={"relative"} h={"70vh"}>
                <Select
                   label="Grup"
                   placeholder="Pilih grup"
@@ -202,7 +202,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                   radius={10}
                   placeholder="Nama Jabatan"
                />
-               <Box mt={'xl'}>
+               <Box pos={"absolute"} bottom={10} left={0} right={0}>
                   <Button
                      c={"white"}
                      bg={WARNA.biruTua}

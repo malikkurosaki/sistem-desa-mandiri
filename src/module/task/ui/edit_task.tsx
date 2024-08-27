@@ -80,6 +80,7 @@ export default function EditTask() {
                         borderRadius: 10,
                      },
                   }}
+                  required
                   placeholder="Tugas"
                   label="Judul Tugas"
                   size="md"

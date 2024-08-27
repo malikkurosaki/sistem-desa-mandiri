@@ -35,7 +35,7 @@ export default function ListProject() {
 
       setLoading(false);
     } catch (error) {
-      toast.error("Gagal mendapatkan proyek, coba lagi nanti");
+      toast.error("Gagal mendapatkan Kegiatan, coba lagi nanti");
       console.error(error);
     } finally {
       setLoading(false);
@@ -83,7 +83,7 @@ export default function ListProject() {
       </Grid>
       <Box pt={20}>
         <Box bg={"#DCEED8"} p={10} style={{ borderRadius: 10 }}>
-          <Text fw={'bold'} c={WARNA.biruTua}>Total Proyek</Text>
+          <Text fw={'bold'} c={WARNA.biruTua}>Total Kegiatan</Text>
           <Flex justify={'center'} align={'center'} h={'100%'}>
             <Text fz={40} fw={'bold'} c={WARNA.biruTua}>{isData.length}</Text>
           </Flex>

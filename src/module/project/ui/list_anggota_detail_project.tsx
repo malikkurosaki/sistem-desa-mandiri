@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, WARNA } from '@/module/_global';
+import { LayoutDrawer, SkeletonSingle, WARNA } from '@/module/_global';
 import { Avatar, Box, Flex, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import { funDeleteMemberProject, funGetOneProjectById } from '../lib/api_project';
@@ -33,7 +33,7 @@ export default function ListAnggotaDetailProject() {
 
     } catch (error) {
       console.error(error);
-      toast.error("Gagal mendapatkan member proyek, coba lagi nanti");
+      toast.error("Gagal mendapatkan member Kegiatan, coba lagi nanti");
     } finally {
       setLoading(false)
     }
@@ -56,7 +56,7 @@ export default function ListAnggotaDetailProject() {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Gagal menghapus anggota proyek, coba lagi nanti");
+      toast.error("Gagal menghapus anggota Kegiatan, coba lagi nanti");
     }
   }
 
@@ -77,7 +77,15 @@ export default function ListAnggotaDetailProject() {
             py={10}
           >
             {
-              loading ? <Text>loading</Text> :
+              loading ?
+                Array(6)
+                  .fill(null)
+                  .map((_, i) => (
+                    <Box key={i}>
+                      <SkeletonSingle />
+                    </Box>
+                  ))
+                :
                 isData.length === 0 ? <Text>Tidak ada anggota</Text> :
                   isData.map((v, i) => {
                     return (
@@ -113,41 +121,41 @@ export default function ListAnggotaDetailProject() {
       </Box>
 
       <LayoutDrawer opened={openDrawer} title={dataChoose.name} onClose={() => setOpenDrawer(false)}>
-            <Box>
-               <Stack pt={10}>
-                  <SimpleGrid
-                     cols={{ base: 3, sm: 3, lg: 3 }}
-                  >
-                     <Flex onClick={() => { router.push('/member/' + dataChoose.id) }} justify={'center'} align={'center'} direction={'column'} >
-                        <Box>
-                           <FaUser size={30} color={WARNA.biruTua} />
-                        </Box>
-                        <Box>
-                           <Text c={WARNA.biruTua}>Lihat profil</Text>
-                        </Box>
-                     </Flex>
+        <Box>
+          <Stack pt={10}>
+            <SimpleGrid
+              cols={{ base: 3, sm: 3, lg: 3 }}
+            >
+              <Flex onClick={() => { router.push('/member/' + dataChoose.id) }} justify={'center'} align={'center'} direction={'column'} >
+                <Box>
+                  <FaUser size={30} color={WARNA.biruTua} />
+                </Box>
+                <Box>
+                  <Text c={WARNA.biruTua}>Lihat profil</Text>
+                </Box>
+              </Flex>
 
-                     <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
-                        <Box>
-                           <IoIosCloseCircle size={30} color={WARNA.biruTua} />
-                        </Box>
-                        <Box>
-                           <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
-                        </Box>
-                     </Flex>
-                  </SimpleGrid>
-               </Stack>
-            </Box>
-         </LayoutDrawer>
+              <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
+                <Box>
+                  <IoIosCloseCircle size={30} color={WARNA.biruTua} />
+                </Box>
+                <Box>
+                  <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
+                </Box>
+              </Flex>
+            </SimpleGrid>
+          </Stack>
+        </Box>
+      </LayoutDrawer>
 
-         <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
-            description="Apakah Anda yakin ingin mengeluarkan anggota?"
-            onYes={(val) => {
-               if (val) {
-                  onSubmit()
-               }
-               setOpenModal(false)
-            }} />
+      <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+        description="Apakah Anda yakin ingin mengeluarkan anggota?"
+        onYes={(val) => {
+          if (val) {
+            onSubmit()
+          }
+          setOpenModal(false)
+        }} />
 
     </Box>
   );
