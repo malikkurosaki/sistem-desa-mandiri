@@ -8,12 +8,15 @@ import { FaCheck, FaPencil } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { funDeleteDiscussion, funEditStatusDiscussion } from "../lib/api_discussion";
 import { useParams, useRouter } from "next/navigation";
+import { useHookstate } from "@hookstate/core";
+import { globalRefreshDiscussion } from "../lib/val_discussion";
 
 export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivision }: { onSuccess: (val: boolean) => void, id: string, status: number, idDivision: string }) {
    const [isValModal, setValModal] = useState(false)
    const [isValModalStatus, setValModalStatus] = useState(false)
    const router = useRouter()
    const param = useParams<{ id: string, detail: string }>()
+   const refresh = useHookstate(globalRefreshDiscussion)
 
 
    async function fetchStatusDiscussion(val: boolean) {
@@ -23,6 +26,8 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
 
             if (response.success) {
                toast.success(response.message)
+               refresh.set(!refresh.get())
+               onSuccess(false)
                setValModalStatus(false)
             } else {
                toast.error(response.message)
@@ -45,6 +50,7 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
             if (response.success) {
                toast.success(response.message)
                setValModal(false)
+               onSuccess(false)
                router.push(`/division/${param.id}/discussion`)
             } else {
                toast.error(response.message)

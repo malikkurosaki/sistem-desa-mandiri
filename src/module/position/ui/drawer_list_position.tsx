@@ -43,7 +43,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
 
    useShallowEffect(() => {
       getAllGroup()
-   }, [])
+   }, [refresh.get()])
 
 
    async function onSubmit() {
@@ -56,7 +56,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
          if (res.success) {
             setOpenDrawerGroup(false)
             toast.success(res.message)
-            refresh.set(true)
+            refresh.set(!refresh.get())
             onCreated(true)
          } else {
             toast.error(res.message)
