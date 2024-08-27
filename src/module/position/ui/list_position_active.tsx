@@ -10,6 +10,8 @@ import { useShallowEffect } from "@mantine/hooks";
 import { useSearchParams } from "next/navigation";
 import { funGetAllPosition } from "../lib/api_position";
 import { IDataPosition } from "../lib/type_position";
+import { useHookstate } from "@hookstate/core";
+import { globalRefreshPosition } from "../lib/val_posisition";
 
 
 export default function ListPositionActive() {
@@ -23,6 +25,7 @@ export default function ListPositionActive() {
   const searchParams = useSearchParams()
   const group = searchParams.get('group')
   const status = searchParams.get('active')
+  const refresh = useHookstate(globalRefreshPosition)
 
   async function getAllPosition() {
     try {
@@ -41,7 +44,7 @@ export default function ListPositionActive() {
 
   useShallowEffect(() => {
     getAllPosition();
-  }, [status, group, searchQuery])
+  }, [status, group, searchQuery, refresh.get()])
 
   return (
     <Box pt={20}>

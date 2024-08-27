@@ -8,12 +8,15 @@ import toast from "react-hot-toast";
 import { IoAddCircle } from "react-icons/io5";
 import { RiFilter2Line } from "react-icons/ri";
 import { funCreatePosition } from "../lib/api_position";
+import { useHookstate } from "@hookstate/core";
+import { globalRefreshPosition } from "../lib/val_posisition";
 
 
 export default function DrawerListPosition({ onCreated }: { onCreated: (val: boolean) => void }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const router = useRouter()
    const [listGroup, setListGorup] = useState<IDataGroup[]>([])
+   const refresh = useHookstate(globalRefreshPosition)
    const [touched, setTouched] = useState({
       name: false,
       idGroup: false
@@ -53,6 +56,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
          if (res.success) {
             setOpenDrawerGroup(false)
             toast.success(res.message)
+            refresh.set(true)
             onCreated(true)
          } else {
             toast.error(res.message)
