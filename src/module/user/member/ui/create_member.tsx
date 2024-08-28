@@ -273,8 +273,8 @@ export default function CreateMember() {
           onBlur={() => setTouched({ ...touched, nik: true })}
           error={
             touched.nik && (
-              listData.nik == "" ? "NIK Tidak Boleh Kosong" :
-                listData.nik.length < 16 ? "NIK Harus 16 Karakter" : null
+              listData.nik === "" ? "NIK Tidak Boleh Kosong" :
+              listData.nik.length !== 16 ? "NIK Harus 16 Karakter" : null
             )
           }
         />

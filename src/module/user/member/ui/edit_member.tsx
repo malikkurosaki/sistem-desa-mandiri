@@ -250,10 +250,10 @@ export default function EditMember({ id }: { id: string }) {
                onBlur={() => setTouched({ ...touched, nik: true })}
                error={
                   touched.nik && (
-                     data.nik == "" ? "NIK Tidak Boleh Kosong" :
-                        data.nik.length < 16 ? "NIK Harus 16 Karakter" : null
+                    data.nik === "" ? "NIK Tidak Boleh Kosong" :
+                    data.nik.length !== 16 ? "NIK Harus 16 Karakter" : null
                   )
-               }
+                }
             />
             <TextInput
                size="md" type="text" radius={30} placeholder="Nama" withAsterisk label="Nama" w={"100%"}
