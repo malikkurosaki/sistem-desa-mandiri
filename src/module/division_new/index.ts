@@ -1,9 +1,4 @@
 import { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison, IDataMemberDivision } from './lib/type_division';
-import CreateUserDivisionCalender from "./_division_fitur/calender/components/create_user_division_calender";
-import ViewCreateDivisionCalender from "./_division_fitur/calender/view/view_create_division_calender";
-import ViewDetailEventDivision from "./_division_fitur/calender/view/view_detail_event_division";
-import ViewDivisionCalender from "./_division_fitur/calender/view/view_division_calender";
-import ViewHistoryDivisionCalender from "./_division_fitur/calender/view/view_history_division_calender";
 import CreateAdminDivision from "./ui/create_admin_division";
 import CreateUsers from "./ui/create_users";
 import ListDivision from './ui/list_division';
@@ -20,15 +15,9 @@ import EditDivision from './ui/edit_division';
 import CreateReport from './ui/create_report';
 import ReportDivisionId from './ui/report_division_id';
 import { funGetDivisionById, funGetListDivisionByIdDivision } from './lib/api_division';
-import UlangiEvent from './_division_fitur/calender/components/ulangi_event';
 
 export { CreateUsers };
 export { CreateAdminDivision };
-export { ViewDivisionCalender };
-export { ViewCreateDivisionCalender };
-export { CreateUserDivisionCalender };
-export { ViewHistoryDivisionCalender };
-export { ViewDetailEventDivision };
 export type { IFormDivision, IFormMemberDivision, IFormFixDivision, IDataDivison, IDataMemberDivision }
 export { ListDivision }
 export { CreateDivision }
@@ -45,4 +34,3 @@ export { CreateReport }
 export { ReportDivisionId }
 export { funGetDivisionById }
 export { funGetListDivisionByIdDivision }
-export { UlangiEvent }

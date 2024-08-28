@@ -2,7 +2,7 @@
 import { WARNA } from "@/module/_global";
 import { Carousel } from "@mantine/carousel";
 import { Box, Image, Text, Center, Paper, Stack, UnstyledButton, Skeleton, Group } from "@mantine/core";
-import * as ICON from '../../division/lib/file_icon'
+import * as ICON from '../lib/file_icon'
 import { useParams, useRouter } from "next/navigation";
 import { useShallowEffect } from "@mantine/hooks";
 import toast from "react-hot-toast";
