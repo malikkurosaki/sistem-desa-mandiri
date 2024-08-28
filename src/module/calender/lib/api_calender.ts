@@ -42,3 +42,9 @@ export const funEditCalenderById = async (path: string, data: IEditCalender) => 
     });
     return await response.json().catch(() => null);
 }
+
+
+export const funGetIndicatorCalender = async (path?: string) => {
+    const response = await fetch(`/api/calender/indicator${(path) ? path : ''}`, { next: { tags: ['hostory'] } });
+    return await response.json().catch(() => null);
+}
