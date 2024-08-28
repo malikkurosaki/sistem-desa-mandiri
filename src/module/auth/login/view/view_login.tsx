@@ -50,7 +50,8 @@ function ViewLogin() {
       const code = Math.floor(Math.random() * 1000) + 1000
       setLoading(true)
 
-      const res = await fetch(`https://wa.wibudev.com/code?nom=${cekLogin.phone}&text=${code}`).then(
+      const res = await fetch(`https://wa.wibudev.com/code?nom=${cekLogin.phone}&text=*DARMASABA*%0A%0A
+JANGAN BERIKAN KODE RAHASIA ini kepada siapa pun TERMASUK PIHAK DARMASABA. Masukkan otentikasi:  *${encodeURIComponent(code)}*`).then(
         async (res) => {
           if (res.status == 200) {
             setValPhone(cekLogin.phone)
