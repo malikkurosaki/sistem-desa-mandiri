@@ -2,7 +2,7 @@
 import { WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
-import { Box, Button, Select, Stack, TextInput } from "@mantine/core";
+import { Box, Button, Select, Stack, Text, TextInput } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -343,7 +343,8 @@ export default function CreateMember() {
           size="md"
           type="number"
           radius={30}
-          placeholder="+62...."
+          placeholder="87701795778"
+          leftSection={<Text>+62</Text>}
           withAsterisk
           label="Nomor Telepon"
           w={"100%"}
@@ -357,7 +358,7 @@ export default function CreateMember() {
           onChange={(event: any) => {
             setListData({
               ...listData,
-              phone: event.target.value,
+              phone: "62" + event.target.value,
             })
             setTouched({ ...touched, phone: false })
           }

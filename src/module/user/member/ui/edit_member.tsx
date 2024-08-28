@@ -3,7 +3,7 @@ import { WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { funGetAllPosition } from "@/module/position/lib/api_position";
-import { Box, Button, Select, Stack, TextInput } from "@mantine/core";
+import { Box, Button, Select, Stack, Text, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -299,7 +299,7 @@ export default function EditMember({ id }: { id: string }) {
                }
             />
             <TextInput
-               size="md" type="number" radius={30} placeholder="+62...." withAsterisk label="Nomor Telepon" w={"100%"}
+               size="md" type="number" radius={30} withAsterisk label="Nomor Telepon" w={"100%"}
                styles={{
                   input: {
                      color: WARNA.biruTua,
@@ -307,8 +307,9 @@ export default function EditMember({ id }: { id: string }) {
                      borderColor: WARNA.biruTua,
                   },
                }}
+               placeholder="6287701795778"
                onChange={(e) => {
-                  setData({ ...data, phone: e.target.value })
+                  setData({ ...data, phone:  e.target.value })
                   setTouched({ ...touched, phone: false })
                }}
                value={data.phone}

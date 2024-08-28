@@ -16,7 +16,8 @@ export default function ViewVerification({ phone, otp, user }: IVerification) {
   async function onResend() {
     const code = Math.floor(Math.random() * 1000) + 1000
 
-    const res = await fetch(`https://wa.wibudev.com/code?nom=${phone}&text=${code}`)
+    const res = await fetch(`https://wa.wibudev.com/code?nom=${phone}&text=*DARMASABA*%0A%0A
+JANGAN BERIKAN KODE RAHASIA ini kepada siapa pun TERMASUK PIHAK DARMASABA. Masukkan otentikasi:  *${encodeURIComponent(code)}*`)
       .then(
         async (res) => {
           if (res.status == 200) {
@@ -43,7 +44,7 @@ export default function ViewVerification({ phone, otp, user }: IVerification) {
         toast.error(setCookies.message)
       }
 
-      
+
 
       setLoading(false)
 
