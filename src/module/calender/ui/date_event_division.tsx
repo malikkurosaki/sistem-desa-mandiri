@@ -3,30 +3,61 @@ import { Box, Divider, Group, Indicator, Skeleton, Text } from '@mantine/core';
 import { DatePicker, DatePickerProps } from '@mantine/dates';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { funGetAllCalender } from '../lib/api_calender';
+import { funGetAllCalender, funGetIndicatorCalender } from '../lib/api_calender';
 import { useSetState, useShallowEffect } from '@mantine/hooks';
 import { IDataCalender } from '../lib/type_calender';
 import moment from 'moment';
 import _ from 'lodash';
+import toast from 'react-hot-toast';
 
 
 export default function DateEventDivision() {
   const [isData, setData] = useState<IDataCalender[]>([])
+  const [isListTgl, setListTgl] = useState<any[]>([])
   const router = useRouter()
   const param = useParams<{ id: string, detail: string }>()
   const [isDate, setDate] = useSetState<any>(moment().format('YYYY-MM-DD'))
+  const [isMonth, setMonth] = useState<any>(moment().month() + 1)
   const [loading, setLoading] = useState(true)
 
   const getData = async (tgl: any) => {
     try {
       setLoading(true)
       const response = await funGetAllCalender('?division=' + param.id + '&date=' + tgl)
-      setData(response.data)
+      if (response.success) {
+        setData(response.data)
+      } else {
+        toast.error(response.message)
+      }
       setLoading(false)
     } catch (error) {
       console.log(error)
+      toast.error("Gagal mendapatkan list acara")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const getIndicator = async (tgl: any) => {
+    try {
+      const response = await funGetIndicatorCalender('?division=' + param.id + '&date=' + tgl)
+      if (response.success) {
+        setListTgl(response.data)
+      } else {
+        setListTgl([])
+        toast.error(response.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error("Gagal mendapatkan list acara")
+    }
+  }
+
+  async function changeMonth(value: any) {
+    const monthKlik = moment(value).format('MM')
+    if (monthKlik != isMonth) {
+      setMonth(monthKlik)
+      getIndicator(value)
     }
   }
 
@@ -39,17 +70,24 @@ export default function DateEventDivision() {
 
   useShallowEffect(() => {
     getData(isDate)
+    getIndicator(isDate)
   }, [])
 
 
   const dayRenderer: DatePickerProps['renderDay'] = (date) => {
-    const day = date.getDate();
+    const coba = moment(date).format('YYYY-MM-DD')
+    const day = date.getDate()
+    const muncul = isListTgl.includes(coba)
+
     return (
-      <Indicator size={6} color="red" offset={-5} disabled={day !== 16}>
+      <Indicator size={6} color="red" offset={-5} disabled={!muncul}>
         <div>{day}</div>
       </Indicator>
     );
   };
+
+
+
   return (
     <Box>
       <Group
@@ -58,22 +96,25 @@ export default function DateEventDivision() {
         py={20}
         style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
       >
-        <DatePicker size='md' defaultValue={new Date()} renderDay={dayRenderer}
+        <DatePicker size='md'
+          defaultValue={new Date()}
+          renderDay={dayRenderer}
           onChange={(val: any) => { change(val) }}
+          onDateChange={(val) => { changeMonth(val) }}
         />
       </Group>
       <Box>
         <Text mb={10} mt={20} fw={"bold"}>
           Event
         </Text>
-        {loading ? 
+        {loading ?
           Array(6)
-          .fill(null)
-          .map((_, i) => (
-            <Box key={i} mb={10}>
-              <Skeleton height={100} width={"100%"} radius={"md"} />
-            </Box>
-          ))
+            .fill(null)
+            .map((_, i) => (
+              <Box key={i} mb={10}>
+                <Skeleton height={100} width={"100%"} radius={"md"} />
+              </Box>
+            ))
           :
           _.isEmpty(isData)
             ?
