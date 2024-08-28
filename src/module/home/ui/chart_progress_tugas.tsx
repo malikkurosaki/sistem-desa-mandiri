@@ -5,13 +5,40 @@ import { useShallowEffect } from "@mantine/hooks";
 import { EChartsOption } from "echarts";
 import EChartsReact from "echarts-for-react";
 import { useState } from "react";
+import { funGetHome } from "../lib/api_home";
+import toast from "react-hot-toast";
 
 export default function ChartProgressHome() {
    const [options, setOptions] = useState<EChartsOption>({});
+   const [isData, setData] = useState<any[]>([])
+   const [loading, setLoading] = useState(true);
 
    useShallowEffect(() => {
       loadData()
+      fetchData()
    }, [])
+
+
+
+   const fetchData = async () => {
+      try {
+         setData([]);
+         setLoading(true);
+         const response = await funGetHome('?cat=progress')
+
+         if (response.success) {
+            setData(response.data)
+         } else {
+            toast.error(response.message);
+         }
+         setLoading(false);
+      } catch (error) {
+         toast.error("Gagal mendapatkan data, coba lagi nanti");
+         console.error(error);
+      } finally {
+         setLoading(false);
+      }
+   };
 
    const loadData = () => {
       const option: EChartsOption = {
