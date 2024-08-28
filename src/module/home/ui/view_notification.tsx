@@ -1,7 +1,7 @@
 import { LayoutNavbarNew } from '@/module/_global'
 import { Box, } from '@mantine/core'
 import React from 'react'
-import ListNotification from '../components/list_notification'
+import ListNotification from './list_notification'
 
 export default function ViewNotification() {
     return (

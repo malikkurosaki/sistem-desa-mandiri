@@ -70,21 +70,21 @@ export default function ChartDocumentHome() {
                data: [
                   {
                      value: 78,
-                     name: 'Confidence',
+                     name: 'File',
                      itemStyle: {
                         color: "#F3C96B"
                      }
                   },
                   {
                      value: 35,
-                     name: 'Supportive',
+                     name: 'Folder',
                      itemStyle: {
                         color: "#9EC97F"
                      }
                   },
                   {
                      value: 58,
-                     name: 'Positive',
+                     name: 'Documen',
                      itemStyle: {
                         color: "#5971C0"
                      }
