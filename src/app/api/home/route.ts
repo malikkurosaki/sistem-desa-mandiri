@@ -115,8 +115,75 @@ export async function GET(request: Request) {
          allData = _.orderBy(format, 'jumlah', 'desc').slice(0, 5)
 
       } else if (kategori == "progress") {
+         let kondisi
+
+         // klo perbekel == semua grup
+         if (roleUser == "supadmin") {
+            kondisi = {
+               isActive: true,
+               Division: {
+                  idVillage: idVillage,
+                  Group: {
+                     isActive: true,
+                  }
+               }
+            }
+         } else {
+            kondisi = {
+               isActive: true,
+               Division: {
+                  idGroup: idGroup
+               }
+            }
+         }
+
+         const data = await prisma.divisionProject.groupBy({
+            where: kondisi,
+            by: ["status"],
+            _count: true
+         })
+
+         console.log(data)
+         allData = data
+
 
       } else if (kategori == "dokumen") {
+         let kondisi
+
+         // klo perbekel == semua grup
+         if (roleUser == "supadmin") {
+            kondisi = {
+               isActive: true,
+               category: 'FILE',
+               Division: {
+                  idVillage: idVillage,
+                  Group: {
+                     isActive: true,
+                  }
+               }
+            }
+         } else {
+            kondisi = {
+               isActive: true,
+               category: 'FILE',
+               Division: {
+                  idGroup: idGroup
+               }
+            }
+         }
+
+         const data = await prisma.divisionDocumentFolderFile.findMany({
+            where: kondisi,
+         })
+
+         allData = _.map(_.groupBy(data, "extension"), (v: any) => ({
+            file: v[0].extension,
+            jumlah: v.length,
+         }))
+
+         console.log(allData)
+
+
 
       } else if (kategori == "event") {
          let kondisi
