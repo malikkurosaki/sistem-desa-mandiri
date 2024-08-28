@@ -307,7 +307,7 @@ export default function EditMember({ id }: { id: string }) {
                      borderColor: WARNA.biruTua,
                   },
                }}
-               placeholder="6287701795778"
+               placeholder="62xxx xxxx xxxx"
                onChange={(e) => {
                   setData({ ...data, phone:  e.target.value })
                   setTouched({ ...touched, phone: false })

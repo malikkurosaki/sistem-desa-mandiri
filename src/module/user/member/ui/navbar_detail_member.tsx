@@ -98,7 +98,7 @@ export default function NavbarDetailMember({ id }: IMember) {
                         <FaSquarePhone size={28} />
                         <Text fz={18}>No Telepon</Text>
                      </Group>
-                     <Text fz={18} fw={'bold'} ta={"right"}>{dataOne?.phone}</Text>
+                     <Text fz={18} fw={'bold'} ta={"right"}>+{dataOne?.phone}</Text>
                   </Group>
                   <Group justify="space-between" grow py={5}>
                      <Group>

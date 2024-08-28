@@ -62,16 +62,6 @@ export default function NavbarCreateDivisionCalender() {
         if (response.success) {
           setModal(false)
           router.push(`/division/${param.id}/calender`)
-          setData({
-            ...isData,
-            title: "",
-            dateStart: "",
-            timeStart: "",
-            timeEnd: "",
-            linkMeet: "",
-            repeatEventTyper: "1",
-            desc: "",
-          })
           toast.success(response.message)
           memberUser.set([])
         } else {
@@ -136,7 +126,6 @@ export default function NavbarCreateDivisionCalender() {
             }}
             placeholder="Input Tanggal"
             label="Tanggal"
-            minDate={new Date()}
             onBlur={() => setTouched({ ...touched, dateStart: true })}
             error={
               touched.dateStart && (
@@ -250,7 +239,7 @@ export default function NavbarCreateDivisionCalender() {
                 borderRadius: 10,
               }}
             >
-              <Text>Tambah Anggota *</Text>
+              <Text>Tambah Anggota</Text>
               <IoIosArrowDropright size={25} />
             </Group>
           </Box>
