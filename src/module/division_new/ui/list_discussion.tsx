@@ -10,32 +10,6 @@ import { GoDiscussionClosed } from "react-icons/go";
 import { funGetDetailDivisionById } from "../lib/api_division";
 import { IDataDiscussionOnDetailDivision } from "../lib/type_division";
 
-const dataDiskusi = [
-  {
-    id: 1,
-    judul: "Mengatasi Limbah Makanan ",
-    user: "Fibra Marcell",
-    date: "21 Juni 2024",
-  },
-  {
-    id: 2,
-    judul: "Pentingnya Menjaga Kelestarian Hutan ",
-    user: "Bayu Tegar",
-    date: "15 Juni 2024",
-  },
-  {
-    id: 3,
-    judul: "Mengatasi Limbah Industri ",
-    user: "Nian Putri",
-    date: "11 Mei 2024",
-  },
-  {
-    id: 4,
-    judul: "Manfaat Sampah Plastik",
-    user: "Budi Prasetyo",
-    date: "10 Mei 2024",
-  },
-];
 
 export default function ListDiscussionOnDetailDivision() {
   const router = useRouter();
@@ -110,7 +84,7 @@ export default function ListDiscussionOnDetailDivision() {
                   padding: 10,
                 }}
                 mb={10}
-                onClick={() => router.push(`/discussion/${v.id}`)}
+                onClick={() => router.push(`${param.id}/discussion/${v.id}`)}
               >
                 <Group>
                   <GoDiscussionClosed size={25} />
