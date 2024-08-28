@@ -238,14 +238,14 @@ export default function NavbarDocumentDivision() {
             zIndex: 999,
           }}>
             <Flex justify={"center"} align={"center"} h={"100%"} w={"100%"}>
-              <SimpleGrid cols={{ base: 5, sm: 5, lg: 5 }}>
+              <SimpleGrid cols={{ base: 5, sm: 5, lg: 5 }} spacing="xs">
                 <Flex justify={'center'} align={'center'} direction={'column'}>
                   <BsDownload size={20} color={(selectedFiles.length > 0) ? 'white' : 'grey'} />
-                  <Text fz={12} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Unduh</Text>
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Unduh</Text>
                 </Flex>
                 <Flex onClick={() => setIsDelete(true)} justify={'center'} align={'center'} direction={'column'}>
                   <AiOutlineDelete size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'} />
-                  <Text fz={12} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Hapus</Text>
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Hapus</Text>
                 </Flex>
                 <Flex onClick={() => {
                   if (selectedFiles.length == 1) {
@@ -253,15 +253,15 @@ export default function NavbarDocumentDivision() {
                   }
                 }} justify={'center'} align={'center'} direction={'column'}>
                   <CgRename size={20} color={(selectedFiles.length == 1 && !shareSelected) ? 'white' : 'grey'} />
-                  <Text fz={12} c={(selectedFiles.length == 1 && !shareSelected) ? 'white' : 'grey'}>Ganti Nama</Text>
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length == 1 && !shareSelected) ? 'white' : 'grey'}>Ganti Nama</Text>
                 </Flex>
                 <Flex onClick={() => setShare(true)} justify={'center'} align={'center'} direction={'column'}>
                   <LuShare2 size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'} />
-                  <Text fz={12} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Bagikan</Text>
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Bagikan</Text>
                 </Flex>
                 <Flex onClick={() => setMore(true)} justify={'center'} align={'center'} direction={'column'}>
                   <MdOutlineMoreHoriz size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'} />
-                  <Text fz={12} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Lainnya</Text>
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Lainnya</Text>
                 </Flex>
               </SimpleGrid>
             </Flex>
@@ -269,15 +269,13 @@ export default function NavbarDocumentDivision() {
         </>
       )}
 
-      <LayoutNavbarNew back='' title={name}
+      <LayoutNavbarNew back={`/division/${param.id}/`} title={name}
         menu={
           <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
             <HiMenu size={20} color='white' />
           </ActionIcon>
         }
       />
-
-
       <Box>
         <Box p={20} pb={60}>
           <Box>

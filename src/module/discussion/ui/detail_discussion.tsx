@@ -93,47 +93,90 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                         </Box>
                      </Box>
                   )) :
-               <Box>
-                  <Flex
-                     justify={"space-between"}
-                     align={"center"}
-                     mt={20}
-                  >
-                     {isData?.username ?
-                        <Group>
-                           <Avatar src={'https://i.pravatar.cc/1000?img=5'} alt="it's me" size="lg" />
-                           <Box>
-                              <Text c={WARNA.biruTua} fw={"bold"}>
-                                 {isData?.username}
-                              </Text>
-                              <Badge color={isData?.status === 1 ? "green" : "red"} size="sm">{isData?.status === 1 ? "BUKA" : "TUTUP"}</Badge>
-                           </Box>
-                        </Group> : ""
-                     }
-                     <Text c={"grey"} fz={13}>{isData?.createdAt}</Text>
-                  </Flex>
-                  <Box mt={10}>
-                     <Spoiler maxHeight={50} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
-                        <Text
-                           style={{
-                              overflowWrap: "break-word"
-                           }}
-                           fw={"bold"}
+               <>
+                  {isData?.totalComments == 0 ?
+                     <Box mb={60}>
+                        <Flex
+                           justify={"space-between"}
+                           align={"center"}
+                           mt={20}
                         >
-                           {isData?.desc}
-                        </Text>
-                     </Spoiler>
-                  </Box>
-                  <Group justify="space-between" mt={20} c={'#8C8C8C'}>
-                     {isData?.totalComments ? <Group gap={5} align="center">
-                        <GrChatOption size={18} />
-                        <Text fz={13}>{isData?.totalComments} Komentar</Text>
-                     </Group > : ""}
+                           {isData?.username ?
+                              <Group>
+                                 <Avatar src={'https://i.pravatar.cc/1000?img=5'} alt="it's me" size="lg" />
+                                 <Box>
+                                    <Text c={WARNA.biruTua} fw={"bold"}>
+                                       {isData?.username}
+                                    </Text>
+                                    <Badge color={isData?.status === 1 ? "green" : "red"} size="sm">{isData?.status === 1 ? "BUKA" : "TUTUP"}</Badge>
+                                 </Box>
+                              </Group> : ""
+                           }
+                           <Text c={"grey"} fz={13}>{isData?.createdAt}</Text>
+                        </Flex>
+                        <Box mt={10}>
+                           <Spoiler maxHeight={50} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
+                              <Text
+                                 style={{
+                                    overflowWrap: "break-word"
+                                 }}
+                                 fw={"bold"}
+                              >
+                                 {isData?.desc}
+                              </Text>
+                           </Spoiler>
+                        </Box>
+                        <Group justify="space-between" mt={30} c={'#8C8C8C'}>
+                           {isData?.totalComments ? <Group gap={5} align="center">
+                              <GrChatOption size={18} />
+                              <Text fz={13}>{isData?.totalComments} Komentar</Text>
+                           </Group > : ""}
 
-                  </Group>
-               </Box>
+                        </Group>
+                     </Box> :
+                     <Box mb={20}>
+                        <Flex
+                           justify={"space-between"}
+                           align={"center"}
+                           mt={20}
+                        >
+                           {isData?.username ?
+                              <Group>
+                                 <Avatar src={'https://i.pravatar.cc/1000?img=5'} alt="it's me" size="lg" />
+                                 <Box>
+                                    <Text c={WARNA.biruTua} fw={"bold"}>
+                                       {isData?.username}
+                                    </Text>
+                                    <Badge color={isData?.status === 1 ? "green" : "red"} size="sm">{isData?.status === 1 ? "BUKA" : "TUTUP"}</Badge>
+                                 </Box>
+                              </Group> : ""
+                           }
+                           <Text c={"grey"} fz={13}>{isData?.createdAt}</Text>
+                        </Flex>
+                        <Box mt={10}>
+                           <Spoiler maxHeight={50} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
+                              <Text
+                                 style={{
+                                    overflowWrap: "break-word"
+                                 }}
+                                 fw={"bold"}
+                              >
+                                 {isData?.desc}
+                              </Text>
+                           </Spoiler>
+                        </Box>
+                        <Group justify="space-between" mt={30} c={'#8C8C8C'}>
+                           {isData?.totalComments ? <Group gap={5} align="center">
+                              <GrChatOption size={18} />
+                              <Text fz={13}>{isData?.totalComments} Komentar</Text>
+                           </Group > : ""}
+
+                        </Group>
+                     </Box>
+                  }
+               </>
             }
-            <Box p={10}>
+            <Box pl={10} pr={10} mb={30}>
                {isLoad ?
                   Array(2)
                      .fill(0)
@@ -167,7 +210,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                      )) :
                   isData?.DivisionDisscussionComment.map((v, i) => {
                      return (
-                        <Box key={i} p={10}>
+                        <Box key={i} p={10} >
                            <Flex
                               justify={"space-between"}
                               align={"center"}

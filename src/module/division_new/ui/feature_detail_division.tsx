@@ -12,7 +12,7 @@ import { LuFileSignature } from "react-icons/lu";
 import { useParams, useRouter } from 'next/navigation';
 import { funGetDetailDivisionById } from '../lib/api_division';
 import toast from 'react-hot-toast';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { IDataJumlahDetailDivision } from '../lib/type_division';
 
 export default function FeatureDetailDivision() {
@@ -37,7 +37,7 @@ export default function FeatureDetailDivision() {
   useShallowEffect(() => {
     fetchData()
   }, [param.id])
-
+  const isMobile = useMediaQuery('(max-width: 399px)');
 
   return (
     <Box pt={10}>
@@ -69,7 +69,7 @@ export default function FeatureDetailDivision() {
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Tugas</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.tugas} Tugas</Text>
-                <IoIosArrowRoundForward size={20} color='gray' />
+                {!isMobile && <IoIosArrowRoundForward size={20} color='gray' />}
               </Group>
             </Grid.Col>
           </Grid>
@@ -94,7 +94,7 @@ export default function FeatureDetailDivision() {
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Dokumen</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.dokumen} File</Text>
-                <IoIosArrowRoundForward size={20} color='gray' />
+                {!isMobile && <IoIosArrowRoundForward size={20} color='gray' />}
               </Group>
             </Grid.Col>
           </Grid>
@@ -119,7 +119,7 @@ export default function FeatureDetailDivision() {
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Diskusi</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.diskusi} Diskusi</Text>
-                <IoIosArrowRoundForward size={20} color='gray' />
+                {!isMobile && <IoIosArrowRoundForward size={20} color='gray' />}
               </Group>
             </Grid.Col>
           </Grid>
@@ -144,7 +144,7 @@ export default function FeatureDetailDivision() {
               <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Kalender</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.kalender} Acara</Text>
-                <IoIosArrowRoundForward size={20} color='gray' />
+                {!isMobile && <IoIosArrowRoundForward size={20} color='gray' />}
               </Group>
             </Grid.Col>
           </Grid>

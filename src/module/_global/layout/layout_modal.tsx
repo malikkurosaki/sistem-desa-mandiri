@@ -19,7 +19,7 @@ export default function LayoutModal({ opened, onClose, description, onYes }: { o
         <BsQuestionCircleFill size={100} color="red" />
         <Text mt={30} ta={"center"} fw={"bold"} fz={18}>{description}</Text>
         <Group mt={30} w={'100%'} justify='center'>
-          <Button w={"47%"} size="lg" radius={'xl'} bg={'#DCE1FE'} c={'#4754F0'} onClick={() => onYes(false)}>TIDAK</Button>
+          <Button w={"47%"} size="lg" radius={'xl'} bg={'#F1C1CF'} c={'#D30B30'} onClick={() => onYes(false)}>TIDAK</Button>
           <Button w={"47%"} size="lg" radius={'xl'} bg={WARNA.biruTua} onClick={() => onYes(true)}>YA</Button>
         </Group>
       </Flex>
