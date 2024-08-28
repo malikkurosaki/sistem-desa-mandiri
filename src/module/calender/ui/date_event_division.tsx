@@ -9,6 +9,8 @@ import { IDataCalender } from '../lib/type_calender';
 import moment from 'moment';
 import _ from 'lodash';
 import toast from 'react-hot-toast';
+import 'dayjs/locale/id'
+import { PiCalendarStarThin } from 'react-icons/pi';
 
 
 export default function DateEventDivision() {
@@ -80,11 +82,12 @@ export default function DateEventDivision() {
     const muncul = isListTgl.includes(coba)
 
     return (
-      <Indicator size={6} color="red" offset={-5} disabled={!muncul}>
+      <Indicator color="red" offset={-3} disabled={!muncul} position='top-end' inline processing size={10} >
         <div>{day}</div>
       </Indicator>
     );
   };
+
 
 
 
@@ -101,6 +104,7 @@ export default function DateEventDivision() {
           renderDay={dayRenderer}
           onChange={(val: any) => { change(val) }}
           onDateChange={(val) => { changeMonth(val) }}
+          locale='id'
         />
       </Group>
       <Box>

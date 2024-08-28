@@ -102,22 +102,6 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, data tidak ditemukan" }, { status: 404 });
         }
 
-        if (timeStart > timeEnd) {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, waktu mulai harus lebih kecil dari waktu berakhir" }, { status: 404 });
-        }
-
-        if (dateStart > dateEnd) {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, Tanggal mulai harus lebih kecil dari Tanggal berakhir" }, { status: 404 });
-        }
-
-        if (dateStart < moment().format("YYYY-MM-DD")) {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, Tanggal mulai harus lebih kecil dari Tanggal sekarang" }, { status: 404 });
-        }
-
-        if (dateEnd < moment().format("YYYY-MM-DD")) {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, Tanggal berakhir harus lebih kecil dari Tanggal sekarang" }, { status: 404 });
-        }
-
         const statusCalender = 0
 
         const y = new Date('1970-01-01 ' + timeStart)

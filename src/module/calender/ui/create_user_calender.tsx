@@ -5,7 +5,7 @@ import { funGetDivisionById, IDataMemberDivision } from '@/module/division_new';
 import { useHookstate } from '@hookstate/core';
 import toast from 'react-hot-toast';
 import { useShallowEffect } from '@mantine/hooks';
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import { Avatar, Box, Button, Divider, Flex, Group, Text } from '@mantine/core';
 import { FaCheck } from 'react-icons/fa6';
 
@@ -16,21 +16,27 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
   const [isData, setData] = useState<IDataMemberDivision[]>([])
   const member = useHookstate(globalCalender)
   const [selectAll, setSelectAll] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   async function getData() {
     try {
+      setLoading(true)
       const response = await funGetDivisionById(param.id)
       if (response.success) {
         setData(response.data.member)
         if (member.length > 0) {
           setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
         }
+        setLoading(false)
       } else {
         toast.error(response.message)
       }
+      
     } catch (error) {
       console.log(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -88,8 +94,17 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
           Pilih Semua Anggota
         </Text>
         {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-      </Group>
-      <Box mt={15}>
+        </Group>
+        {loading ? 
+          Array(4)
+          .fill(null)
+          .map((_, i) => (
+             <Box key={i}>
+                <SkeletonSingle />
+             </Box>
+          ))
+          :  
+      <Box mt={20}>
         {isData.map((v, i) => {
           const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
           return (
@@ -121,6 +136,7 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
           );
         })}
       </Box>
+        }
       <Box mt={"xl"}>
         <Button
           c={"white"}
