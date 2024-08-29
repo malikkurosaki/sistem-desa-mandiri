@@ -122,7 +122,6 @@ export async function POST(request: Request) {
                 const f: any = file[index].get('file')
                 const fName = f.name
                 const fExt = fName.split(".").pop()
-                // funUploadFile(fName, f)
 
                 const dataFile = {
                     name: fName,

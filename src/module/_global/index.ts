@@ -5,7 +5,6 @@ import SkeletonDetailDiscussionMember from "./components/skeleton_detail_discuss
 import SkeletonDetailListTugasTask from "./components/skeleton_detail_list_tugas_task";
 import SkeletonDetailProfile from "./components/skeleton_detail_profile";
 import SkeletonSingle from "./components/skeleton_single";
-import { funUploadFile } from "./fun/upload-file";
 import { WARNA } from "./fun/WARNA";
 import LayoutDrawer from "./layout/layout_drawer";
 import LayoutIconBack from "./layout/layout_icon_back";
@@ -28,6 +27,5 @@ export { pwd_key_config };
 export { SkeletonSingle }
 export { SkeletonDetailDiscussionComment }
 export { SkeletonDetailDiscussionMember }
-export { funUploadFile }
 export { SkeletonDetailProfile }
-export {SkeletonDetailListTugasTask}
+export { SkeletonDetailListTugasTask }

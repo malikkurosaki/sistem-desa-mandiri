@@ -5,13 +5,10 @@ export const funGetProfileByCookies = async (path?: string) => {
     return await response.json().catch(() => null);
 }
 
-export const funEditProfileByCookies = async ( data: IEditDataProfile) => {
+export const funEditProfileByCookies = async (data: FormData) => {
     const response = await fetch(`/api/user/profile/`, {
         method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: data,
     });
     return await response.json().catch(() => null);
 }

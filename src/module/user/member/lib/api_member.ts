@@ -53,10 +53,6 @@ export const funEditStatusMember = async (path: string, data: IStatusmember) => 
 
 
 export const funEditMember = async (path: string, data: IEditDataMember) => {
-
-    if (data.name.length < 3)
-        return { success: false, message: 'Minimal 3 karakter' }
-
     const response = await fetch(`/api/user/${path}`, {
         method: "PUT",
         headers: {

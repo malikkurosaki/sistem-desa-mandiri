@@ -134,35 +134,38 @@ export async function PUT(request: Request, context: { params: { id: string } })
         const data = await request.json();
         const cek = await prisma.user.count({
             where: {
-              nik: data.nik,
-              email: data.email,
-              phone: data.phone
+                nik: data.nik,
+                email: data.email,
+                phone: data.phone,
+                NOT: {
+                    id: id
+                }
             },
         });
 
         if (cek == 0) {
             const updates = await prisma.user.update({
-              where: {
-                id: id
-              },
-              data: {
-                nik: data.nik,
-                name: data.name,
-                phone: data.phone,
-                email: data.email,
-                gender: data.gender,
-                idGroup: data.idGroup,
-                idPosition: data.idPosition,
-                idUserRole: data.idUserRole,
-              },
+                where: {
+                    id: id
+                },
+                data: {
+                    nik: data.nik,
+                    name: data.name,
+                    phone: data.phone,
+                    email: data.email,
+                    gender: data.gender,
+                    idGroup: data.idGroup,
+                    idPosition: data.idPosition,
+                    idUserRole: data.idUserRole,
+                },
             });
-        
+
             // create log user
             const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data user', table: 'user', data: data.id })
-        
+
             return Response.json(
-              { success: true, message: "Sukses Update User", updates },
-              { status: 200 }
+                { success: true, message: "Sukses Update User", updates },
+                { status: 200 }
             );
         } else {
             return Response.json({ success: false, message: "User sudah ada" }, { status: 400 });

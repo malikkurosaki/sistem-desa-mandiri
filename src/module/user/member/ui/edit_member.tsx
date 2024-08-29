@@ -122,8 +122,12 @@ export default function EditMember({ id }: { id: string }) {
                idUserRole: data.idUserRole
             })
 
-            toast.success(res.message)
-            router.push(`/member?active=true`)
+            if (res.success) {
+               toast.success(res.message)
+               router.push(`/member?active=true`)
+            } else {
+               toast.error(res.message)
+            }
          }
 
       } catch (error) {
@@ -250,10 +254,10 @@ export default function EditMember({ id }: { id: string }) {
                onBlur={() => setTouched({ ...touched, nik: true })}
                error={
                   touched.nik && (
-                    data.nik === "" ? "NIK Tidak Boleh Kosong" :
-                    data.nik.length !== 16 ? "NIK Harus 16 Karakter" : null
+                     data.nik === "" ? "NIK Tidak Boleh Kosong" :
+                        data.nik.length !== 16 ? "NIK Harus 16 Karakter" : null
                   )
-                }
+               }
             />
             <TextInput
                size="md" type="text" radius={30} placeholder="Nama" withAsterisk label="Nama" w={"100%"}
@@ -309,7 +313,7 @@ export default function EditMember({ id }: { id: string }) {
                }}
                placeholder="62xxx xxxx xxxx"
                onChange={(e) => {
-                  setData({ ...data, phone:  e.target.value })
+                  setData({ ...data, phone: e.target.value })
                   setTouched({ ...touched, phone: false })
                }}
                value={data.phone}

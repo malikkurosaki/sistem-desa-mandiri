@@ -14,7 +14,6 @@ export default function ChartProgressHome() {
    const [loading, setLoading] = useState(true);
 
    useShallowEffect(() => {
-      loadData()
       fetchData()
    }, [])
 
@@ -28,6 +27,7 @@ export default function ChartProgressHome() {
 
          if (response.success) {
             setData(response.data)
+            loadData(response.data)
          } else {
             toast.error(response.message);
          }
@@ -40,7 +40,7 @@ export default function ChartProgressHome() {
       }
    };
 
-   const loadData = () => {
+   const loadData = (value:any) => {
       const option: EChartsOption = {
          title: {
             text: "PROGRES KEGIATAN",
@@ -69,12 +69,7 @@ export default function ChartProgressHome() {
                      return `${a.value + "%"}`;
                   },
                },
-               data: [
-                  { value: 25, name: 'Dikerjakan' },
-                  { value: 35, name: 'Selesai dikerjakan' },
-                  { value: 10, name: 'Segera dikerjakan' },
-                  { value: 30, name: 'Batal dikerjakan' },
-               ],
+               data: value,
                emphasis: {
                   itemStyle: {
                      shadowBlur: 10,

@@ -1,18 +1,25 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Box, Button, Flex, Modal, Select, Stack, Text, TextInput } from "@mantine/core";
-import { HiUser } from "react-icons/hi2";
+import { Avatar, Box, Button, Flex, Indicator, Modal, Select, Stack, Text, TextInput } from "@mantine/core";
 import toast from "react-hot-toast";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IEditDataProfile, IProfileById } from "../lib/type_profile";
 import { funEditProfileByCookies, funGetProfileByCookies } from "../lib/api_profile";
 import { useShallowEffect } from "@mantine/hooks";
-import { funGetUserByCookies } from "@/module/auth";
+import { FaCamera, FaShare } from "react-icons/fa6";
+import { Dropzone } from "@mantine/dropzone";
+import _ from "lodash";
+import { useRouter } from "next/navigation";
 
 export default function EditProfile() {
   const [isValModal, setValModal] = useState(false)
   const [isDataEdit, setDataEdit] = useState<IProfileById[]>([])
+  const openRef = useRef<() => void>(null)
+  const [img, setIMG] = useState<any | null>()
+  const [imgForm, setImgForm] = useState<any>()
+  const router = useRouter()
+
   const [touched, setTouched] = useState({
     nik: false,
     name: false,
@@ -20,6 +27,7 @@ export default function EditProfile() {
     email: false,
     gender: false,
   });
+
   const [data, setData] = useState<IEditDataProfile>({
     id: "",
     nik: "",
@@ -27,12 +35,15 @@ export default function EditProfile() {
     phone: "",
     email: "",
     gender: "",
+    img: "",
   })
+
 
   async function getAllProfile() {
     try {
       const res = await funGetProfileByCookies()
       setData(res.data)
+      setIMG(`/api/file/img?cat=user&file=${res.data.img}`)
     } catch (error) {
       console.error(error);
     }
@@ -45,17 +56,15 @@ export default function EditProfile() {
   async function onEditProfile(val: boolean) {
     try {
       if (val) {
-        const res = await funEditProfileByCookies({
-          id: data.id,
-          nik: data.nik,
-          name: data.name,
-          phone: data.phone,
-          email: data.email,
-          gender: data.gender,
-        })
+        const fd = new FormData();
+        fd.append("file", imgForm)
+        fd.append("data", JSON.stringify(data))
+
+        const res = await funEditProfileByCookies(fd)
         if (res.success) {
           setValModal(false)
           toast.success(res.message)
+          router.push('/profile')
         } else {
           toast.error(res.message)
         }
@@ -77,12 +86,31 @@ export default function EditProfile() {
         pt={30}
         px={20}
       >
-        <Box bg={WARNA.biruTua} py={30} px={50}
-          style={{
-            borderRadius: 10,
-          }}>
-          <HiUser size={100} color={WARNA.bgWhite} />
-        </Box>
+        <Dropzone
+          openRef={openRef}
+          onDrop={async (files) => {
+            if (!files || _.isEmpty(files))
+              return toast.error('Tidak ada gambar yang dipilih')
+            setImgForm(files[0])
+            const buffer = URL.createObjectURL(new Blob([new Uint8Array(await files[0].arrayBuffer())]))
+            setIMG(buffer)
+          }}
+          activateOnClick={false}
+          maxSize={1 * 1024 ** 2}
+          accept={['image/png', 'image/jpeg', 'image/heic']}
+          onReject={(files) => {
+            return toast.error('File yang diizinkan: .png, .jpg, dan .heic  dengan ukuran maksimal 1 MB')
+          }}
+        >
+        </Dropzone>
+
+        <Indicator offset={20} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
+          <Avatar
+            size="150"
+            radius={"100"}
+            src={img}
+          />
+        </Indicator>
         <TextInput
           size="md" type="number" radius={30} placeholder="NIK" withAsterisk label="NIK" w={"100%"}
           styles={{
@@ -149,7 +177,7 @@ export default function EditProfile() {
           }
         />
         <TextInput
-          size="md" type="number" radius={30} placeholder="+62...." withAsterisk label="Nomor Telepon" w={"100%"}
+          size="md" type="number" radius={30} placeholder="8xx xxxx xxxx" withAsterisk label="Nomor Telepon" w={"100%"}
           styles={{
             input: {
               color: WARNA.biruTua,
@@ -157,6 +185,7 @@ export default function EditProfile() {
               borderColor: WARNA.biruTua,
             },
           }}
+          leftSection={<Text>+62</Text>}
           onChange={(e) => {
             setData({ ...data, phone: e.target.value })
             setTouched({ ...touched, phone: false })
@@ -198,7 +227,7 @@ export default function EditProfile() {
           onBlur={() => setTouched({ ...touched, gender: true })}
           error={
             touched.gender && (
-              data.gender == "" ? "Gender Tidak Boleh Kosong" : null
+              data.gender == "" ? "Jenis Kelamin Tidak Boleh Kosong" : null
             )
           }
         />
