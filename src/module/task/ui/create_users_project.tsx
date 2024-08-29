@@ -12,6 +12,7 @@ import {
   Divider,
   Flex,
   Group,
+  rem,
   Skeleton,
   Text,
   TextInput,
@@ -104,19 +105,6 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
         menu
       />
       <Box p={20}>
-        {/* <TextInput
-          styles={{
-            input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
-            },
-          }}
-          size="md"
-          radius={30}
-          leftSection={<HiMagnifyingGlass size={20} />}
-          placeholder="Pencarian"
-        /> */}
         {loading ?
           <Skeleton height={20} width={"100%"} mt={20} />
           :
@@ -127,7 +115,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
             {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
           </Group>
         }
-        <Box mt={15}>
+        <Box mt={15} mb={60}>
           {loading ?
             Array(3)
               .fill(null)
@@ -184,7 +172,12 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
             })
           }
         </Box>
-        <Box mt={"xl"}>
+      </Box>
+        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
           <Button
             c={"white"}
             bg={WARNA.biruTua}
@@ -196,7 +189,6 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
             Simpan
           </Button>
         </Box>
-      </Box>
     </Box>
   );
 }

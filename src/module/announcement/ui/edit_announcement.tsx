@@ -1,7 +1,7 @@
 'use client'
 import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { Box, Button, Flex, List, Stack, Text, Textarea, TextInput } from "@mantine/core";
+import { Box, Button, Flex, List, rem, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -163,7 +163,7 @@ export default function EditAnnouncement() {
                Pilih Divisi
             </Button>
          </Stack>
-         <Box mt={20} mx={20}>
+         <Box mb={60} p={20}>
             {
                memberGroup.get().map((v: any, i: any) => {
                   return (
@@ -185,11 +185,15 @@ export default function EditAnnouncement() {
 
          </Box>
 
-         <Box mt={30} mx={20}>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
             <Button
                c={"white"}
                bg={WARNA.biruTua}
-               size="md"
+               size="lg"
                radius={30}
                fullWidth
                onClick={() => { 

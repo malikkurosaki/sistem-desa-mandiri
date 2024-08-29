@@ -1,6 +1,6 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Avatar, Box, Button, Flex, Group, Input, Select, SimpleGrid, Stack, Text, Textarea, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Flex, Group, Input, rem, Select, SimpleGrid, Stack, Text, Textarea, TextInput } from '@mantine/core';
 import { DateInput, TimeInput } from '@mantine/dates';
 import React, { useState } from 'react';
 import { IoIosArrowDropright } from 'react-icons/io';
@@ -245,7 +245,7 @@ export default function NavbarCreateDivisionCalender() {
           </Box>
           {
             memberUser.length > 0 &&
-            <Box pt={30}>
+            <Box pt={30} mb={60}>
               <Group justify="space-between">
                 <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
                 <Text c={WARNA.biruTua}>Total {memberUser.length} Anggota</Text>
@@ -287,31 +287,35 @@ export default function NavbarCreateDivisionCalender() {
               </Box>
             </Box>
           }
-          <Box mt={"xl"}>
-            <Button
-              c={"white"}
-              bg={WARNA.biruTua}
-              size="lg"
-              radius={30}
-              fullWidth
-              onClick={() => {
-                if (
-                  isData.title !== "" &&
-                  isData.dateStart !== " " &&
-                  isData.timeStart !== "" &&
-                  isData.timeEnd !== "" &&
-                  isData.repeatEventTyper !== ""
-                ) {
-                  setModal(true);
-                } else {
-                  toast.error("Mohon lengkapi semua form");
-                }
-              }}
-            >
-              Simpan
-            </Button>
-          </Box>
         </Stack>
+      </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          c={"white"}
+          bg={WARNA.biruTua}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => {
+            if (
+              isData.title !== "" &&
+              isData.dateStart !== " " &&
+              isData.timeStart !== "" &&
+              isData.timeEnd !== "" &&
+              isData.repeatEventTyper !== ""
+            ) {
+              setModal(true);
+            } else {
+              toast.error("Mohon lengkapi semua form");
+            }
+          }}
+        >
+          Simpan
+        </Button>
       </Box>
       <LayoutModal opened={isModal} onClose={() => setModal(false)}
         description="Apakah Anda yakin ingin menambahkan data?"

@@ -7,6 +7,7 @@ import {
     Button,
     Flex,
     Group,
+    rem,
     Select,
     Stack,
     Text,
@@ -167,7 +168,7 @@ export default function CreateDivision() {
                             <IoIosArrowDropright size={25} />
                         </Group>
                     </Box>
-                    <Box pt={20}>
+                    <Box pt={20} pb={50}>
                         <Group justify="space-between">
                             <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
                             <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
@@ -210,21 +211,25 @@ export default function CreateDivision() {
                             </Box>
                         </Box>
                     </Box>
-                    <Box mt="xl">
-                        <Button
-                            color="white"
-                            bg={WARNA.biruTua}
-                            size="lg"
-                            radius={30}
-                            fullWidth
-                            onClick={() => {
-                                onSubmit()
-                            }}
-                        >
-                            Simpan
-                        </Button>
-                    </Box>
                 </Stack>
+            </Box>
+            <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+                maxWidth: rem(550),
+                zIndex: 999,
+                backgroundColor: `${WARNA.bgWhite}`,
+            }}>
+                <Button
+                    color="white"
+                    bg={WARNA.biruTua}
+                    size="lg"
+                    radius={30}
+                    fullWidth
+                    onClick={() => {
+                        onSubmit()
+                    }}
+                >
+                    Simpan
+                </Button>
             </Box>
         </Box>
     );

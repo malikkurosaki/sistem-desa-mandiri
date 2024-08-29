@@ -7,9 +7,11 @@ import {
    Flex,
    Group,
    Input,
+   rem,
    SimpleGrid,
    Stack,
    Text,
+   TextInput,
 } from "@mantine/core";
 import React, { useState } from "react";
 import { DatePicker } from "@mantine/dates";
@@ -122,31 +124,37 @@ export default function EditDetailTask() {
                </Box>
             </SimpleGrid>
             <Stack pt={15}>
-               <Input
+               <TextInput
                   styles={{
                      input: {
                         border: `1px solid ${"#D6D8F6"}`,
                         borderRadius: 10,
                      },
                   }}
+                  label={"Nama Tahapan"}
+                  required
                   placeholder="Input Nama Tahapan"
                   size="md"
                   value={title}
                   onChange={(e) => { setTitle(e.target.value) }}
                />
             </Stack>
-            <Box mt={"xl"}>
-               <Button
-                  c={"white"}
-                  bg={WARNA.biruTua}
-                  size="lg"
-                  radius={30}
-                  fullWidth
-                  onClick={() => { setOpenModal(true) }}
-               >
-                  Simpan
-               </Button>
-            </Box>
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
+            <Button
+               c={"white"}
+               bg={WARNA.biruTua}
+               size="lg"
+               radius={30}
+               fullWidth
+               onClick={() => { setOpenModal(true) }}
+            >
+               Simpan
+            </Button>
          </Box>
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}

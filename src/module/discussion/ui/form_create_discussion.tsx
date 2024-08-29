@@ -1,7 +1,7 @@
 'use client'
 import { WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { Avatar, Box, Button, Center, Grid, Group, Text, Textarea } from "@mantine/core";
+import { Avatar, Box, Button, Center, Grid, Group, rem, Text, Textarea } from "@mantine/core";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { funCreateDiscussion } from "../lib/api_discussion";
@@ -13,7 +13,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
    const param = useParams<{ id: string }>()
    const [touched, setTouched] = useState({
       desc: false,
-    });
+   });
    const [isData, setData] = useState({
       desc: "",
       idDivision: id
@@ -26,7 +26,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                desc: isData.desc,
                idDivision: id
             })
-   
+
             if (response.success) {
                toast.success(response.message)
                router.push(`/division/${param.id}/discussion/`)
@@ -47,7 +47,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
 
 
    return (
-      <Box pos={"relative"} h={"89vh"}>
+      <Box >
          <Box p={20} >
             <Grid gutter={0} pt={10}>
                <Grid.Col span={"auto"}>
@@ -69,33 +69,37 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                         onBlur={() => setTouched({ ...touched, desc: true })}
                         error={
                            touched.desc && (
-                             isData.desc == "" ? "Form Tidak Boleh Kosong" : null
+                              isData.desc == "" ? "Form Tidak Boleh Kosong" : null
                            )
-                         }
+                        }
                      />
                   </Box>
                </Grid.Col>
             </Grid>
-         <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
             <Button
                color="white"
                bg={WARNA.biruTua}
                size="lg"
                radius={30}
                fullWidth
-                  onClick={() => {
-                     if (
-                        isData.desc !== ""
-                     ) {
-                        setValModal(true)   
-                     } else {
-                        toast.error("Form Tidak Boleh Kosong");
+               onClick={() => {
+                  if (
+                     isData.desc !== ""
+                  ) {
+                     setValModal(true)
+                  } else {
+                     toast.error("Form Tidak Boleh Kosong");
                   }
                }}
             >
                Simpan
             </Button>
-         </Box>
          </Box>
 
          <LayoutModal opened={isValModal} onClose={() => setValModal(false)}

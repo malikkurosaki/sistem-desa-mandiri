@@ -18,6 +18,7 @@ export default function HistoryDivisionCalender() {
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
 
+
   const getData = async () => {
     try {
       setLoading(true)
@@ -100,7 +101,9 @@ export default function HistoryDivisionCalender() {
                     <Grid.Col span={'auto'}>
                       {v.data.map((d, x) => {
                         return (
-                          <Box mb={10} key={x} >
+                          <Box mb={10} key={x}
+                          onClick={() => router.push(`/division/${param.id}/calender/${d.id}`)}
+                          >
                             <Text fw={"bold"}>{d.title}</Text>
                             <Text>{d.timeStart} | {d.timeEnd}</Text>
                           </Box>

@@ -1,6 +1,6 @@
 "use client";
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Avatar, Box, Button, Center, Flex, Group, Input, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { Avatar, Box, Button, Center, Flex, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
@@ -205,7 +205,7 @@ export default function CreateTask() {
 
         {
           member.length > 0 &&
-          <Box pt={30}>
+          <Box pt={30} mb={60}>
             <Group justify="space-between">
               <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
               <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
@@ -249,7 +249,12 @@ export default function CreateTask() {
         }
 
 
-        <Box mt="xl">
+      </Box>
+        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
           <Button
             color="white"
             bg={WARNA.biruTua}
@@ -267,7 +272,6 @@ export default function CreateTask() {
             Simpan
           </Button>
         </Box>
-      </Box>
 
 
 

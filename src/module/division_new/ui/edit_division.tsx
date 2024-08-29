@@ -1,7 +1,7 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
-import { Box, Button, Select, Stack, Textarea, TextInput } from '@mantine/core';
+import { Box, Button, rem, Select, Stack, Textarea, TextInput } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -106,7 +106,12 @@ export default function EditDivision() {
             }}
           />
         </Stack>
-        <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
+      </Box>
+        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
           <Button
             color="white"
             bg={WARNA.biruTua}
@@ -126,7 +131,6 @@ export default function EditDivision() {
             Simpan
           </Button>
         </Box>
-      </Box>
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)} description='Apakah Anda yakin ingin edit data'
         onYes={(val) => {
           if (val) {
