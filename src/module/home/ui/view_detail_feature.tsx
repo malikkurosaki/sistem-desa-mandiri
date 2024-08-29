@@ -98,7 +98,7 @@ export default function ViewDetailFeature() {
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={WARNA.biruTua}>Group</Text>
+                <Text fz={15} c={WARNA.biruTua}>Grup</Text>
               </Center>
             </Box>
           </SimpleGrid>

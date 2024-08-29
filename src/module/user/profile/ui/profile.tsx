@@ -107,7 +107,7 @@ export default function Profile() {
                 <FaSquarePhone size={28} />
                 <Text fz={18}>No Telepon</Text>
               </Group>
-              <Text fz={18} fw={'bold'} ta={"right"}>{isData?.phone}</Text>
+              <Text fz={18} fw={'bold'} ta={"right"}>+62{isData?.phone}</Text>
             </Group>
             <Group justify="space-between" grow py={5}>
               <Group>
@@ -119,7 +119,7 @@ export default function Profile() {
             <Group justify="space-between" grow py={5}>
               <Group>
                 <IoMaleFemale size={28} />
-                <Text fz={18}>Gender</Text>
+                <Text fz={18}>Jenis Kelamin</Text>
               </Group>
               <Text fz={18} fw={'bold'} ta={"right"}>
                 {isData?.gender === 'M' ? 'Laki-laki' : isData?.gender === 'F' ? 'Perempuan' : ''}
@@ -130,7 +130,7 @@ export default function Profile() {
         }
       </Box>
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
-        description="Apakah Anda yakin ingin Keluar?"
+        description="Apakah Anda yakin ingin keluar?"
         onYes={(val) => onLogout(val)} />
     </>
   )
