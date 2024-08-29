@@ -9,9 +9,9 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
     try {
 
-        let grupFix
+        let grup
         const { searchParams } = new URL(request.url);
-        const groupID = searchParams.get('group');
+        const idGroup = searchParams.get("group");
         const active = searchParams.get('active');
         const name = searchParams.get('search')
         const user = await funGetUserByCookies()
@@ -19,15 +19,15 @@ export async function GET(request: Request) {
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
 
-        if (groupID == "null") {
-            grupFix = user.idGroup
-        } else {
-            grupFix = groupID
-        }
+        if (idGroup == "null" || idGroup == undefined) {
+            grup = user.idGroup
+         } else {
+            grup = idGroup
+         }
 
         const cek = await prisma.group.count({
             where: {
-                id: String(grupFix),
+                id: grup,
                 isActive: true
             }
         })
@@ -38,7 +38,7 @@ export async function GET(request: Request) {
 
         const positions = await prisma.position.findMany({
             where: {
-                idGroup: String(grupFix),
+                idGroup: grup,
                 isActive: (active == "true" ? true : false),
                 name: {
                     contains: (name == undefined || name == null) ? "" : name,

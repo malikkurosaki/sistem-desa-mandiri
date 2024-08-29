@@ -54,7 +54,7 @@ export default function DetailEventDivision() {
       <Box p={20}>
         {loading
           ?
-          <SkeletonDetailEvent/>
+          <SkeletonDetailEvent />
           :
           <Box style={{
             border: `1px solid ${"#D8D8F1"}`,
@@ -157,28 +157,36 @@ export default function DetailEventDivision() {
                 px={20}
                 pt={20}
               >
-                {isDataAnggota.map((v, i) => {
-                  return (
-                    <Flex
-                      justify={"space-between"}
-                      align={"center"}
-                      mb={20}
-                      key={i}
-                    >
-                      <Group>
-                        <Avatar src={""} alt="it's me" size="lg" />
-                        <Box>
-                          <Text c={WARNA.biruTua} fw={"bold"}>
-                            {v.name}
-                          </Text>
-                          <Text c={"#5A687D"} fz={14}>
-                            {v.email}
-                          </Text>
-                        </Box>
-                      </Group>
-                    </Flex>
-                  );
-                })}
+                {isLengthMember == 0? (
+                  <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh' }}>
+                    <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
+                  </Box>
+                ) :
+                  <Box>
+                    {isDataAnggota.map((v, i) => {
+                      return (
+                        <Flex
+                          justify={"space-between"}
+                          align={"center"}
+                          mb={20}
+                          key={i}
+                        >
+                          <Group>
+                            <Avatar src={""} alt="it's me" size="lg" />
+                            <Box>
+                              <Text c={WARNA.biruTua} fw={"bold"}>
+                                {v.name}
+                              </Text>
+                              <Text c={"#5A687D"} fz={14}>
+                                {v.email}
+                              </Text>
+                            </Box>
+                          </Group>
+                        </Flex>
+                      );
+                    })}
+                  </Box>
+                }
               </Box>
             </Box>
           </Box>

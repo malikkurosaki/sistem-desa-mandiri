@@ -10,6 +10,7 @@ import { funGetAllProject } from '../lib/api_project';
 import toast from 'react-hot-toast';
 import { useShallowEffect } from '@mantine/hooks';
 import { IDataProject } from '../lib/type_project';
+import { funGetAllGroup, IDataGroup } from '@/module/group';
 
 export default function ListProject() {
   const [isList, setIsList] = useState(false)
@@ -18,6 +19,7 @@ export default function ListProject() {
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams()
   const status = searchParams.get('status')
+  const group = searchParams.get('group')
   const [searchQuery, setSearchQuery] = useState('')
 
   const fetchData = async () => {
@@ -25,7 +27,7 @@ export default function ListProject() {
       setData([]);
       setLoading(true);
 
-      const response = await funGetAllProject('?status=' + status + '&search=' + searchQuery)
+      const response = await funGetAllProject('?status=' + status + '&search=' + searchQuery + '&group=' + group)
 
       if (response.success) {
         setData(response?.data)
@@ -50,6 +52,31 @@ export default function ListProject() {
   const handleList = () => {
     setIsList(!isList)
   }
+
+  const [checked, setChecked] = useState<IDataGroup[]>([]);
+
+  const groupNameMap = (groupId: string) => {
+    const groupName = checked.find((group) => group.id === groupId)?.name;
+    return groupName || '-';
+  };
+
+  async function getAllGroupFilter() {
+    try {
+       const response = await funGetAllGroup('?active=true')
+       if (response.success) {
+          setChecked(response.data);
+       } else {
+          toast.error(response.message);
+       }
+    } catch (error) {
+       console.error(error);
+       toast.error("Gagal mendapatkan grup, coba lagi nanti");
+    }
+  }
+  
+  useShallowEffect(() => {
+    getAllGroupFilter();
+  }, []);
 
   return (
     <Box mt={20}>
@@ -82,6 +109,7 @@ export default function ListProject() {
         </Grid.Col>
       </Grid>
       <Box pt={20}>
+      {group && <Text>Filter by: {groupNameMap(group)}</Text>}
         <Box bg={"#DCEED8"} p={10} style={{ borderRadius: 10 }}>
           <Text fw={'bold'} c={WARNA.biruTua}>Total Kegiatan</Text>
           <Flex justify={'center'} align={'center'} h={'100%'}>

@@ -4,11 +4,12 @@ import { ActionIcon, Box, Center, Divider, Grid, Group, Spoiler, Stack, Text, Te
 import React, { useState } from 'react';
 import { TfiAnnouncement } from "react-icons/tfi";
 import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useShallowEffect } from '@mantine/hooks';
 import { IListDataAnnouncement } from '../lib/type_announcement';
 import { funGetAllAnnouncement } from '../lib/api_announcement';
 import toast from 'react-hot-toast';
+import { funGetAllGroup, IDataGroup } from '@/module/group';
 
 
 export default function ListAnnouncement() {

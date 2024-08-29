@@ -7,6 +7,8 @@ import { useEffect, useState } from "react"
 import { HiMagnifyingGlass, HiMiniUser } from "react-icons/hi2"
 import { IListMember } from "../lib/type_member"
 import { funGetAllmember } from "../lib/api_member"
+import { funGetAllGroup, IDataGroup } from "@/module/group"
+import toast from "react-hot-toast"
 
 
 export default function TabListMember() {
@@ -36,6 +38,31 @@ export default function TabListMember() {
       getAllUser()
    }, [status, searchQuery])
 
+   const [checked, setChecked] = useState<IDataGroup[]>([]);
+
+   const groupNameMap = (groupId: string) => {
+      const groupName = checked.find((group) => group.id === groupId)?.name;
+      return groupName || '-';
+   };
+
+   async function getAllGroupFilter() {
+      try {
+         const response = await funGetAllGroup('?active=true')
+         if (response.success) {
+            setChecked(response.data);
+         } else {
+            toast.error(response.message);
+         }
+      } catch (error) {
+         console.error(error);
+         toast.error("Gagal mendapatkan grup, coba lagi nanti");
+      }
+   }
+
+   useShallowEffect(() => {
+      getAllGroupFilter();
+   }, []);
+
    return (
       <>
          <Box>
@@ -63,35 +90,39 @@ export default function TabListMember() {
                      </Box>
                   ))
                :
-               dataMember.length == 0 ?
-                  <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-                     <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
-                  </Box>
-                  :
-                  dataMember.map((v, i) => {
-                     return (
-                        <Box key={i}>
-                           <Box  onClick={() => {
-                              router.push(`/member/${v.id}`)
-                           }}>
-                              <Group align='center' style={{
-                                 padding: 10,
-                              }} >
-                                 <Box>
-                                    <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
-                                       <HiMiniUser color={'white'} size={25} />
-                                    </ActionIcon>
-                                 </Box>
-                                 <Box>
-                                    <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
-                                    <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
-                                 </Box>
-                              </Group>
+               <Box>
+                  {group && <Text>Filter by: {groupNameMap(group)}</Text>}
+                  {dataMember.length == 0 ?
+                     <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+                        <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
+                     </Box>
+                     :
+                     dataMember.map((v, i) => {
+                        return (
+                           <Box key={i}>
+                              <Box onClick={() => {
+                                 router.push(`/member/${v.id}`)
+                              }}>
+                                 <Group align='center' style={{
+                                    padding: 10,
+                                 }} >
+                                    <Box>
+                                       <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
+                                          <HiMiniUser color={'white'} size={25} />
+                                       </ActionIcon>
+                                    </Box>
+                                    <Box>
+                                       <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
+                                       <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
+                                    </Box>
+                                 </Group>
+                              </Box>
+                              <Divider my={10} />
                            </Box>
-                           <Divider my={10}/>
-                        </Box>
-                     )
-                  })
+                        )
+                     })
+                  }
+               </Box>
             }
          </Box>
       </>

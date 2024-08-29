@@ -82,7 +82,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      <Text ta={'center'} c={WARNA.biruTua}>Tambah Jabatan</Text>
                   </Box>
                </Flex>
-               <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => router.push('/position?page=filter')}>
+               <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => router.push('/position?active=true&page=filter')}>
                   <Box>
                      <RiFilter2Line size={30} color={WARNA.biruTua} />
                   </Box>
