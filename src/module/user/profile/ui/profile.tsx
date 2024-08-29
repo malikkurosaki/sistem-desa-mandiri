@@ -1,12 +1,10 @@
 "use client"
 import { LayoutIconBack, LayoutNavbarHome, SkeletonDetailProfile, WARNA } from "@/module/_global";
-import { ActionIcon, Anchor, Box, Button, Flex, Group, Skeleton, Stack, Text } from "@mantine/core";
-import { BsInfo } from "react-icons/bs";
+import { ActionIcon, Anchor, Avatar, Box, Button, Flex, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { HiUser } from "react-icons/hi2";
 import { RiIdCardFill } from "react-icons/ri";
 import { FaSquarePhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
-import { InfoTitleProfile } from "../component/ui/ui_profile";
 import { IoMaleFemale } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { LuLogOut } from "react-icons/lu";
@@ -22,12 +20,14 @@ export default function Profile() {
   const [isData, setData] = useState<IProfileById>()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
+  const [img, setIMG] = useState<any | null>()
 
   async function getData() {
     try {
       setLoading(true)
       const res = await funGetProfileByCookies()
       setData(res.data)
+      setIMG(`/api/file/img?cat=user&file=${res.data.img}`)
       setLoading(false)
     } catch (error) {
       console.error(error);
@@ -62,7 +62,6 @@ export default function Profile() {
         <LayoutNavbarHome>
           <Group justify="space-between">
             <LayoutIconBack />
-
             <ActionIcon onClick={() => { setOpenModal(true) }} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
               <LuLogOut size={20} color='white' />
             </ActionIcon>
@@ -72,7 +71,11 @@ export default function Profile() {
             justify="center"
             gap="xs"
           >
-            <HiUser size={100} color='white' />
+            <Avatar
+              size="150"
+              radius={"100"}
+              src={img}
+            />
             {loading ?
               <Skeleton height={62} mt={10} width={"40%"} />
               :

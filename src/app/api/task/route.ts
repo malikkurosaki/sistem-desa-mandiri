@@ -1,4 +1,4 @@
-import { funUploadFile, prisma } from "@/module/_global";
+import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _, { ceil } from "lodash";
 import moment from "moment";
@@ -148,7 +148,6 @@ export async function POST(request: Request) {
             const f: any = file[index].get('file')
             const fName = f.name
             const fExt = fName.split(".").pop()
-            // funUploadFile(fName, f)
 
             const dataFile = {
                name: fName,

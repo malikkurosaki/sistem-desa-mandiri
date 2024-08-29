@@ -2,6 +2,8 @@ import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs";
 
 
 // GET PROFILE BY COOKIES
@@ -24,6 +26,7 @@ export async function GET(request: Request) {
                 gender: true,
                 idGroup: true,
                 idPosition: true,
+                img: true,
                 Group: {
                     select: {
                         name: true
@@ -39,16 +42,17 @@ export async function GET(request: Request) {
         const { ...userData } = data;
         const group = data?.Group.name
         const position = data?.Position.name
+        const phone = data?.phone.substr(2)
 
-        const result = { ...userData, group, position };
+        const omitData = _.omit(data, ["Group", "Position", "phone"])
 
-        const omitData = _.omit(result, ["Group", "Position",])
+        const result = { ...userData, group, position, phone };
 
-        return NextResponse.json({ success: true, data: omitData });
+        return NextResponse.json({ success: true, data: result });
     } catch (error) {
         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
     }
-    
+
 }
 
 // UPDATE PROFILE BY COOKIES
@@ -59,24 +63,85 @@ export async function PUT(request: Request) {
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
 
-        const body = await request.json();
-        const { name, email, phone, nik, gender } = body;
-        const data = await prisma.user.update({
+        const body = await request.formData()
+        const file = body.get("file") as File;
+        const data = body.get("data");
+
+        const { name, email, phone, nik, gender } = JSON.parse(data as string)
+
+        const cekNIK = await prisma.user.count({
+            where: {
+                nik: nik,
+                NOT: {
+                    id: user.id
+                }
+            },
+        });
+
+        const cekEmail = await prisma.user.count({
+            where: {
+                email: email,
+                NOT: {
+                    id: user.id
+                }
+            },
+        });
+
+        const cekPhone = await prisma.user.count({
+            where: {
+                phone: "62" + phone,
+                NOT: {
+                    id: user.id
+                }
+            },
+        });
+
+        if (cekNIK > 0 || cekEmail > 0 || cekPhone > 0) {
+            return NextResponse.json({ success: false, message: "Gagal ubah profile, NIK/email/phone sudah terdaftar" }, { status: 401 });
+        }
+
+        const update = await prisma.user.update({
             where: {
                 id: user.id
             },
             data: {
                 name: name,
                 email: email,
-                phone: phone,
+                phone: "62" + phone,
                 nik: nik,
                 gender: gender
+            },
+            select: {
+                img: true
             }
         })
 
-        return NextResponse.json({ success: true, message: "Berhasil ubah profile", data: data });
+        if (String(file) != "undefined" && String(file) != "null") {
+            fs.unlink(`./public/image/user/${update.img}`, (err) => { })
+            const root = path.join(process.cwd(), "./public/image/user/");
+            const fExt = file.name.split(".").pop()
+            const fileName = user.id + '.' + fExt;
+            const filePath = path.join(root, fileName);
+
+            // Konversi ArrayBuffer ke Buffer
+            const buffer = Buffer.from(await file.arrayBuffer());
+
+            // Tulis file ke sistem
+            fs.writeFileSync(filePath, buffer);
+
+            await prisma.user.update({
+                where: {
+                    id: user.id
+                },
+                data: {
+                    img: fileName
+                }
+            })
+        }
+
+        return NextResponse.json({ success: true, message: "Berhasil ubah profile" });
     } catch (error) {
-        return NextResponse.json({ success: false, message: "Gagal ubah profile" }, { status: 401 });
+        return NextResponse.json({ success: false, message: "Gagal ubah profile" }, { status: 500 });
     }
 }
 

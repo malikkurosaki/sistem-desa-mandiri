@@ -343,7 +343,7 @@ export default function CreateMember() {
           size="md"
           type="number"
           radius={30}
-          placeholder="xxx xxxx xxxx"
+          placeholder="8xx xxxx xxxx"
           leftSection={<Text>+62</Text>}
           withAsterisk
           label="Nomor Telepon"
