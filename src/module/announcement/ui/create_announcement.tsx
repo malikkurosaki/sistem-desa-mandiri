@@ -2,7 +2,7 @@
 import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
-import { Avatar, Box, Button, Flex, Group, Stack, Text, Textarea, TextInput } from "@mantine/core";
+import { Avatar, Box, Button, Flex, Group, rem, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -140,7 +140,7 @@ export default function CreateAnnouncement() {
                   <IoIosArrowForward />
                </Group>
             </Box>
-            <Box pt={20}>
+            <Box pt={20} mb={60}>
                <Text c={WARNA.biruTua} mb={10}>Divisi Terpilih</Text>
                {(memberGroup.length === 0) ? (
                   <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada anggota</Text>
@@ -160,11 +160,15 @@ export default function CreateAnnouncement() {
                })}
             </Box>
          </Stack>
-         <Box mt={30} mx={20}>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
             <Button
                c={"white"}
                bg={WARNA.biruTua}
-               size="md"
+               size="lg"
                radius={30}
                fullWidth
                onClick={() => { 

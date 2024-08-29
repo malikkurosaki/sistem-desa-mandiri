@@ -4,6 +4,7 @@ import {
    Box,
    Button,
    Input,
+   rem,
    Stack,
    Textarea,
    TextInput,
@@ -23,7 +24,7 @@ export default function EditTask() {
    const param = useParams<{ id: string, detail: string }>()
    const [touched, setTouched] = useState({
       title: false,
-    });
+   });
 
    function onVerification() {
       if (title == "")
@@ -69,7 +70,7 @@ export default function EditTask() {
 
 
    return (
-      <Box pos={"relative"} h={"100vh"}>
+      <Box >
          <LayoutNavbarNew back="" title={"Edit Judul Tugas"} menu />
          <Box p={20}>
             <Stack pt={15}>
@@ -86,18 +87,23 @@ export default function EditTask() {
                   size="md"
                   value={title}
                   onChange={(e) => {
-                     setTitle(e.target.value) 
+                     setTitle(e.target.value)
                      setTouched({ ...touched, title: false })
                   }}
                   error={
                      touched.title && (
-                       title == "" ? "Error! harus memasukkan judul tugas" : null
+                        title == "" ? "Error! harus memasukkan judul tugas" : null
                      )
-                   }
+                  }
                   onBlur={() => setTouched({ ...touched, title: true })}
                />
             </Stack>
-            <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
+         </Box>
+            <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+               maxWidth: rem(550),
+               zIndex: 999,
+               backgroundColor: `${WARNA.bgWhite}`,
+            }}>
                <Button
                   c={"white"}
                   bg={WARNA.biruTua}
@@ -109,7 +115,6 @@ export default function EditTask() {
                   Simpan
                </Button>
             </Box>
-         </Box>
 
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}

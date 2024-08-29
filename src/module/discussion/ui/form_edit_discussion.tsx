@@ -1,7 +1,7 @@
 'use client'
 import { WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
-import { Box, Group, Avatar, Textarea, Button, Grid } from "@mantine/core"
+import { Box, Group, Avatar, Textarea, Button, Grid, rem } from "@mantine/core"
 import { useParams, useRouter } from "next/navigation"
 import { useState } from "react"
 import toast from "react-hot-toast"
@@ -15,7 +15,7 @@ export default function FormEditDiscussion() {
    const [isDataOne, setDataOne] = useState("")
    const [touched, setTouched] = useState({
       desc: false,
-    });
+   });
 
    async function fetchGetOneDiscussion() {
       try {
@@ -56,7 +56,7 @@ export default function FormEditDiscussion() {
    }, [])
 
    return (
-      <Box pos={"relative"} h={"89vh"}>
+      <Box >
          <Box p={20}>
             <Grid gutter={0} pt={10}>
                <Grid.Col span={"auto"}>
@@ -78,33 +78,37 @@ export default function FormEditDiscussion() {
                         onBlur={() => setTouched({ ...touched, desc: true })}
                         error={
                            touched.desc && (
-                             isDataOne == "" ? "Form Tidak Boleh Kosong" : null
+                              isDataOne == "" ? "Form Tidak Boleh Kosong" : null
                            )
-                         }
+                        }
                      />
                   </Box>
                </Grid.Col>
             </Grid>
-            <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
-               <Button
-                  color="white"
-                  bg={WARNA.biruTua}
-                  size="lg"
-                  radius={30}
-                  fullWidth
-                  onClick={() => {
-                     if (
-                        isDataOne !== ""
-                     ) {
-                        setValModal(true)   
-                     } else {
-                        toast.error("Form Tidak Boleh Kosong");
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
+            <Button
+               color="white"
+               bg={WARNA.biruTua}
+               size="lg"
+               radius={30}
+               fullWidth
+               onClick={() => {
+                  if (
+                     isDataOne !== ""
+                  ) {
+                     setValModal(true)
+                  } else {
+                     toast.error("Form Tidak Boleh Kosong");
                   }
                }}
-               >
-                  Simpan
-               </Button>
-            </Box>
+            >
+               Simpan
+            </Button>
          </Box>
 
          <LayoutModal opened={isValModal} onClose={() => setValModal(false)}

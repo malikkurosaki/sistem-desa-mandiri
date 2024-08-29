@@ -6,7 +6,7 @@ import { useHookstate } from '@hookstate/core';
 import toast from 'react-hot-toast';
 import { useShallowEffect } from '@mantine/hooks';
 import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
-import { Avatar, Box, Button, Divider, Flex, Group, Text } from '@mantine/core';
+import { Avatar, Box, Button, Divider, Flex, Group, rem, Text } from '@mantine/core';
 import { FaCheck } from 'react-icons/fa6';
 
 export default function CreateUserCalender({ onClose }: { onClose: (val: any) => void }) {
@@ -96,7 +96,7 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
         {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
         </Group>
         {loading ? 
-          Array(4)
+          Array(8)
           .fill(null)
           .map((_, i) => (
              <Box key={i}>
@@ -137,7 +137,12 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
         })}
       </Box>
         }
-      <Box mt={"xl"}>
+    </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
         <Button
           c={"white"}
           bg={WARNA.biruTua}
@@ -149,7 +154,6 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
           Simpan
         </Button>
       </Box>
-    </Box>
   </Box>
   );
 }

@@ -1,7 +1,7 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
-import { Avatar, Box, Button, Center, Input, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Center, Input, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -94,50 +94,56 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
                   ))}
               </SimpleGrid>
               :
-              <SimpleGrid
-                cols={{ base: 2, sm: 2, lg: 2 }}
-                spacing={{ base: 20, sm: "xl" }}
-                verticalSpacing={{ base: "md", sm: "xl" }}
-              >
-                {dataMember.map((v, index) => {
-                  const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id);
-                  return (
-                    <Box key={index} mb={10}>
-                      <Box
-                        bg={isSelected ? WARNA.bgHijauMuda : "white"}
-                        style={{
-                          border: `1px solid ${WARNA.biruTua}`,
-                          borderRadius: 20,
-                        }}
-                        py={10}
-                        onClick={() => handleFileClick(index)}
-                      >
-                        <Center>
-                          <Avatar src={"https://i.pravatar.cc/1000?img=37"} alt="it's me" size="xl" />
-                        </Center>
-                        <Text mt={20} ta="center">
-                          {v.name}
-                        </Text>
+              <Box mb={60}>
+                <SimpleGrid
+                  cols={{ base: 2, sm: 2, lg: 2 }}
+                  spacing={{ base: 20, sm: "xl" }}
+                  verticalSpacing={{ base: "md", sm: "xl" }}
+                >
+                  {dataMember.map((v, index) => {
+                    const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id);
+                    return (
+                      <Box key={index} mb={10}>
+                        <Box
+                          bg={isSelected ? WARNA.bgHijauMuda : "white"}
+                          style={{
+                            border: `1px solid ${WARNA.biruTua}`,
+                            borderRadius: 20,
+                          }}
+                          py={10}
+                          onClick={() => handleFileClick(index)}
+                        >
+                          <Center>
+                            <Avatar src={"https://i.pravatar.cc/1000?img=37"} alt="it's me" size="xl" />
+                          </Center>
+                          <Text mt={20} ta="center">
+                            {v.name}
+                          </Text>
+                        </Box>
                       </Box>
-                    </Box>
-                  );
-                })}
-              </SimpleGrid>
+                    );
+                  })}
+                </SimpleGrid>
+              </Box>
             }
           </Box>
         </Stack>
-        <Box mt="xl">
-          <Button
-            color="white"
-            bg={WARNA.biruTua}
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => { onSubmit() }}
-          >
-            Simpan
-          </Button>
-        </Box>
+      </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          color="white"
+          bg={WARNA.biruTua}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => { onSubmit() }}
+        >
+          Simpan
+        </Button>
       </Box>
     </Box>
   );

@@ -84,21 +84,23 @@ export default function ViewFilter({ linkFilter }: { linkFilter: string }) {
                )
             }
          </Box>
-            <Box pos={'fixed'} bottom={0} p={rem(15)}  w={"100%"} style={{
-               maxWidth: rem(550)
-            }}>
-               <Button
-                  fullWidth
-                  radius={100}
-                  size="lg"
-                  color={WARNA.biruTua}
-                  onClick={() => {
-                     router.push(`/${linkFilter}?group=` + selectedFilter)
-                  }}
-               >
-                  Terapkan
-               </Button>
-            </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
+            <Button
+               fullWidth
+               radius={100}
+               size="lg"
+               color={WARNA.biruTua}
+               onClick={() => {
+                  router.push(`/${linkFilter}?group=` + selectedFilter)
+               }}
+            >
+               Terapkan
+            </Button>
+         </Box>
       </Box>
    );
 }

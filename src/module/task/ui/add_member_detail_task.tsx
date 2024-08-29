@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, SkeletonSingle, WARNA } from "@/module/_global";
 import { funGetDivisionById, IDataMemberDivision } from "@/module/division_new";
 import {
    Anchor,
@@ -10,6 +10,7 @@ import {
    Divider,
    Flex,
    Group,
+   rem,
    Stack,
    Text,
    TextInput,
@@ -31,10 +32,12 @@ export default function AddMemberDetailTask() {
    const [isDataMember, setDataMember] = useState<IDataMemberTaskDivision[]>([])
    const [selectAll, setSelectAll] = useState(false)
    const [openModal, setOpenModal] = useState(false)
+   const [loading, setLoading] = useState(true)
 
 
    async function getData() {
       try {
+         setLoading(true)
          const response = await funGetDivisionById(param.id)
          if (response.success) {
             setData(response.data.member)
@@ -48,9 +51,13 @@ export default function AddMemberDetailTask() {
          } else {
             toast.error(res.message);
          }
+
+         setLoading(false)
       } catch (error) {
          console.log(error)
          toast.error("Gagal mendapatkan anggota, coba lagi nanti");
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -127,54 +134,67 @@ export default function AddMemberDetailTask() {
                </Text>
                {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
             </Group>
-            <Box mt={15}>
-               {isData.map((v, i) => {
-                  const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
-                  const found = isDataMember.some((i: any) => i.idUser == v.idUser)
-                  return (
-                     <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
-                        <Flex justify={"space-between"} align={"center"}>
-                           <Group>
-                              <Avatar src={"v.image"} alt="it's me" size="lg" />
-                              <Stack align="flex-start" justify="flex-start">
-                                 <Text style={{
+            {loading ? Array(8)
+               .fill(null)
+               .map((_, i) => (
+                  <Box key={i}>
+                     <SkeletonSingle />
+                  </Box>
+               ))
+               :
+               <Box mt={15} mb={60}>
+                  {isData.map((v, i) => {
+                     const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
+                     const found = isDataMember.some((i: any) => i.idUser == v.idUser)
+                     return (
+                        <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
+                           <Flex justify={"space-between"} align={"center"}>
+                              <Group>
+                                 <Avatar src={"v.image"} alt="it's me" size="lg" />
+                                 <Stack align="flex-start" justify="flex-start">
+                                    <Text style={{
+                                       cursor: 'pointer',
+                                       display: 'flex',
+                                       alignItems: 'center',
+                                    }}>
+                                       {v.name}
+                                    </Text>
+                                    <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota" : ""}</Text>
+                                 </Stack>
+                              </Group>
+                              <Text
+                                 style={{
                                     cursor: 'pointer',
                                     display: 'flex',
                                     alignItems: 'center',
-                                 }}>
-                                    {v.name}
-                                 </Text>
-                                 <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota" : ""}</Text>
-                              </Stack>
-                           </Group>
-                           <Text
-                              style={{
-                                 cursor: 'pointer',
-                                 display: 'flex',
-                                 alignItems: 'center',
-                                 paddingLeft: 20,
-                              }}
-                           >
-                              {isSelected ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-                           </Text>
-                        </Flex>
-                        <Divider my={"md"} />
-                     </Box>
-                  );
-               })}
-            </Box>
-            <Box mt={"xl"}>
-               <Button
-                  c={"white"}
-                  bg={WARNA.biruTua}
-                  size="lg"
-                  radius={30}
-                  fullWidth
-                  onClick={() => { onVerifikasi() }}
-               >
-                  Simpan
-               </Button>
-            </Box>
+                                    paddingLeft: 20,
+                                 }}
+                              >
+                                 {isSelected ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+                              </Text>
+                           </Flex>
+                           <Divider my={"md"} />
+                        </Box>
+                     );
+                  })}
+               </Box>
+            }
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
+            <Button
+               c={"white"}
+               bg={WARNA.biruTua}
+               size="lg"
+               radius={30}
+               fullWidth
+               onClick={() => { onVerifikasi() }}
+            >
+               Simpan
+            </Button>
          </Box>
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}

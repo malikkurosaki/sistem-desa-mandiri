@@ -3,6 +3,7 @@ import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import {
    Box,
    Button,
+   rem,
    Stack,
    Textarea,
 } from "@mantine/core";
@@ -20,7 +21,7 @@ export default function CancelTask() {
    const param = useParams<{ id: string, detail: string }>()
    const [touched, setTouched] = useState({
       reason: false,
-    });
+   });
 
    function onVerification() {
       if (alasan == "")
@@ -47,7 +48,7 @@ export default function CancelTask() {
 
 
    return (
-      <Box pos={"relative"} h={"100vh"}>
+      <Box>
          <LayoutNavbarNew back="" title={"Pembatalan Tugas"} menu />
          <Box p={20}>
             <Stack pt={15}>
@@ -68,18 +69,22 @@ export default function CancelTask() {
                   onBlur={() => setTouched({ ...touched, reason: true })}
                />
             </Stack>
-            <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
-               <Button
-                  c={"white"}
-                  bg={WARNA.biruTua}
-                  size="lg"
-                  radius={30}
-                  fullWidth
-                  onClick={() => { onVerification() }}
-               >
-                  Simpan
-               </Button>
-            </Box>
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
+            <Button
+               c={"white"}
+               bg={WARNA.biruTua}
+               size="lg"
+               radius={30}
+               fullWidth
+               onClick={() => { onVerification() }}
+            >
+               Simpan
+            </Button>
          </Box>
 
 

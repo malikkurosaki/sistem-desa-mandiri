@@ -1,9 +1,9 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { funGetUserByCookies } from '@/module/auth';
 import { funGetAllmember, TypeUser } from '@/module/user';
-import { Avatar, Box, Button, Divider, Group, Stack, Text, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Divider, Group, rem, Stack, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -22,6 +22,7 @@ export default function CreateAnggotaDivision() {
   const [group, setGroup] = useState("")
   const [isOpen, setOpen] = useState(false)
   const param = useParams<{ id: string }>()
+  const [loading, setLoading] = useState(true)
 
   const handleFileClick = (index: number) => {
     if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
@@ -33,6 +34,7 @@ export default function CreateAnggotaDivision() {
 
 
   async function loadMember(group: string, search: string) {
+    setLoading(true)
     const res = await funGetAllmember('?active=true&group=' + group + '&search=' + search);
     const user = await funGetUserByCookies();
 
@@ -41,6 +43,7 @@ export default function CreateAnggotaDivision() {
     } else {
       toast.error(res.message)
     }
+    setLoading(false)
   }
 
   async function loadFirst() {
@@ -99,7 +102,17 @@ export default function CreateAnggotaDivision() {
             onChange={(e: any) => loadMember(group, e.target.value)}
           />
         </Stack>
-        <Box mt={20}>
+
+        {loading ? 
+           Array(8)
+           .fill(null)
+           .map((_, i) => (
+              <Box key={i}>
+                 <SkeletonSingle/>
+              </Box>
+           ))
+          :
+        <Box mt={20} mb={60}>
           {dataMember.map((v: any, index: any) => {
             const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id)
             const found = memberDb.some((i: any) => i.idUser == v.id)
@@ -122,7 +135,13 @@ export default function CreateAnggotaDivision() {
             )
           })}
         </Box>
-        <Box mt="xl">
+        }
+      </Box>
+        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
           <Button
             color="white"
             bg={WARNA.biruTua}
@@ -134,7 +153,6 @@ export default function CreateAnggotaDivision() {
             Simpan
           </Button>
         </Box>
-      </Box>
       <LayoutModal opened={isOpen} onClose={() => setOpen(false)}
         description="Apakah Anda yakin ingin menambahkan anggota divisi?"
         onYes={(val) => {

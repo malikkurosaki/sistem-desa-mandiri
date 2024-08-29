@@ -1,6 +1,6 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Avatar, Box, Button, Flex, Group, Input, Select, SimpleGrid, Stack, Text, Textarea, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Flex, Group, Input, rem, Select, SimpleGrid, Stack, Text, Textarea, TextInput } from '@mantine/core';
 import { DateInput, TimeInput } from '@mantine/dates';
 import React, { useState } from 'react';
 import { IoIosArrowDropright } from 'react-icons/io';
@@ -295,8 +295,8 @@ export default function UpdateDivisionCalender() {
               <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
               <Text c={WARNA.biruTua}>Total {memberUser.length} Anggota</Text>
             </Group>
-            <Box pt={10}>
-              <Box mb={20}>
+            <Box pt={10} >
+              <Box mb={100}>
                 <Box
                   style={{
                     border: `1px solid ${"#C7D6E8"}`,
@@ -305,45 +305,55 @@ export default function UpdateDivisionCalender() {
                   px={20}
                   py={10}
                 >
-                  {memberUser.get().map((v: any, i: any) => {
-                    return (
-                      <Flex
-                        justify={"space-between"}
-                        align={"center"}
-                        mt={20}
-                        key={i}
-                      >
-                        <Group>
-                          <Avatar src={"v.image"} alt="it's me" size="lg" />
-                          <Box>
-                            <Text c={WARNA.biruTua} fw={"bold"}>
-                              {v.name}
-                            </Text>
-                          </Box>
-                        </Group>
-                        <Text c={WARNA.biruTua} fw={"bold"}>
-                          Anggota
-                        </Text>
-                      </Flex>
-                    );
-                  })}
+                  {memberUser.length == 0 ?
+                    <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh' }}>
+                      <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Anggota</Text>
+                    </Box>
+                    :
+
+                    memberUser.get().map((v: any, i: any) => {
+                      return (
+                        <Flex
+                          justify={"space-between"}
+                          align={"center"}
+                          mt={20}
+                          key={i}
+                        >
+                          <Group>
+                            <Avatar src={"v.image"} alt="it's me" size="lg" />
+                            <Box>
+                              <Text c={WARNA.biruTua} fw={"bold"}>
+                                {v.name}
+                              </Text>
+                            </Box>
+                          </Group>
+                          <Text c={WARNA.biruTua} fw={"bold"}>
+                            Anggota
+                          </Text>
+                        </Flex>
+                      );
+                    })}
                 </Box>
               </Box>
             </Box>
           </Box>
-          <Box mt={"xl"}>
-            <Button
-              c={"white"}
-              bg={WARNA.biruTua}
-              size="lg"
-              radius={30}
-              fullWidth
-              onClick={() => setModal(true)}
-            >
-              Simpan
-            </Button>
-          </Box>
         </Stack>
+      </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          c={"white"}
+          bg={WARNA.biruTua}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => setModal(true)}
+        >
+          Simpan
+        </Button>
       </Box>
       <LayoutModal opened={isModal} onClose={() => setModal(false)}
         description="Apakah Anda yakin ingin menambahkan data?"
