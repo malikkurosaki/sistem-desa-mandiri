@@ -143,9 +143,27 @@ export async function GET(request: Request) {
             _count: true
          })
 
-         console.log(data)
-         allData = data
+         const dataStatus = [{ name: 'Segera dikerjakan', status: 0 }, { name: 'Dikerjakan', status: 1 }, { name: 'Selesai dikerjakan', status: 2 }, { name: 'Dibatalkan', status: 3 }]
+         const hasil: any[] = []
+         let input
+         for (let index = 0; index < dataStatus.length; index++) {
+            const cek = data.some((i: any) => i.status == dataStatus[index].status)
+            if (cek) {
+               const find = (Number(data.find((i: any) => i.status == dataStatus[index].status)?._count) * 100)/ data.reduce((n, {_count}) => n + _count, 0)
+               input = {
+                  name: dataStatus[index].name,
+                  value: find
+               }
+            } else {
+               input = {
+                  name: dataStatus[index].name,
+                  value: 0
+               }
+            }
+            hasil.push(input)
+         }
 
+         allData = hasil
 
       } else if (kategori == "dokumen") {
          let kondisi
@@ -181,7 +199,7 @@ export async function GET(request: Request) {
             jumlah: v.length,
          }))
 
-         console.log(allData)
+         // console.log(allData)
 
 
 
