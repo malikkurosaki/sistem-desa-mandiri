@@ -11,6 +11,7 @@ import { useShallowEffect } from '@mantine/hooks';
 import { IDataDivison } from '../lib/type_division';
 import { funGetAllDivision } from '../lib/api_division';
 import toast from 'react-hot-toast';
+import { funGetAllGroup, IDataGroup } from '@/module/group';
 
 export default function ListDivision() {
   const [isList, setIsList] = useState(false)
@@ -58,7 +59,30 @@ export default function ListDivision() {
     fetchData(searchQuery)
   }, [searchQuery])
 
+  const [checked, setChecked] = useState<IDataGroup[]>([]);
 
+  const groupNameMap = (groupId: string) => {
+    const groupName = checked.find((group) => group.id === groupId)?.name;
+    return groupName || '-';
+  };
+
+  async function getAllGroupFilter() {
+    try {
+       const response = await funGetAllGroup('?active=true')
+       if (response.success) {
+          setChecked(response.data);
+       } else {
+          toast.error(response.message);
+       }
+    } catch (error) {
+       console.error(error);
+       toast.error("Gagal mendapatkan grup, coba lagi nanti");
+    }
+  }
+  
+  useShallowEffect(() => {
+    getAllGroupFilter();
+  }, []);
 
   return (
     <Box>
@@ -66,6 +90,7 @@ export default function ListDivision() {
         menu={<ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
           <HiMenu size={20} color='white' />
         </ActionIcon>} />
+       
       <Box p={20}>
         <Grid justify='center' align='center'>
           <Grid.Col span={10}>
@@ -96,6 +121,8 @@ export default function ListDivision() {
           </Grid.Col>
         </Grid>
         <Box pt={20}>
+          {/* {group && <Text>Filter by: {group}</Text>} */}
+          {group && <Text>Filter by: {groupNameMap(group)}</Text>}
           {loading ?
             <>
               <Skeleton width={"100%"} height={100} radius={"md"} />

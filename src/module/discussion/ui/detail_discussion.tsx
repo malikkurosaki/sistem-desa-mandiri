@@ -1,5 +1,5 @@
 "use client"
-import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Input, rem, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
 import { SkeletonDetailDiscussionComment, SkeletonDetailDiscussionMember, SkeletonSingle, WARNA } from "@/module/_global";
 import { GrChatOption } from "react-icons/gr";
 import { LuSendHorizonal } from "react-icons/lu";
@@ -64,7 +64,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
 
 
    return (
-      <>
+      <Box>
          <NavbarDetailDiscussion id={id} status={Number(isData?.status)} idDivision={idDivision} />
          <Box p={20}>
             {isLoad ?
@@ -244,12 +244,13 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                   })
                }
             </Box>
+         </Box>
             {isLoad ?
                <Skeleton width={"100%"} height={50} radius={100} />
                :
-               <Box pos={"fixed"} bottom={0} w={{ base: "90%", md: "35.5%" }} style={{
-                  zIndex: 999
-               }} bg={WARNA.bgWhite}>
+               <Box pos={'fixed'} bottom={0} w={"100%"} style={{
+                  maxWidth: rem(550)
+               }} pl={rem(15)} pr={rem(15)} bg={WARNA.bgWhite}>
                   <Box bg={WARNA.bgWhite} >
                      <Group justify="flex-end">
                         <Text fz={13}>{300 - isComent.length} karakter tersisa</Text>
@@ -291,8 +292,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                   </Box>
                </Box>
             }
-         </Box>
-      </>
+      </Box>
    )
 }
 

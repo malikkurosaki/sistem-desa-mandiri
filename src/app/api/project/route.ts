@@ -16,18 +16,25 @@ export async function GET(request: Request) {
 
         const { searchParams } = new URL(request.url);
 
+        let grup
         const name = searchParams.get('search');
         const status = searchParams.get('status');
+        const idGroup = searchParams.get("group");
         const villageId = user.idVillage
-        const groupId = user.idGroup
         const userId = user.id
+
+        if (idGroup == "null" || idGroup == undefined) {
+            grup = user.idGroup
+        } else {
+            grup = idGroup
+        }
 
 
         const data = await prisma.project.findMany({
             where: {
                 isActive: true,
                 idVillage: String(villageId),
-                idGroup: String(groupId),
+                idGroup: grup,
                 createdBy: String(userId),
                 title: {
                     contains: (name == undefined || name == "null") ? "" : name,

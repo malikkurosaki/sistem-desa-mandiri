@@ -29,22 +29,6 @@ export default function DrawerAnnouncement() {
                      <Text c={WARNA.biruTua} ta='center'>Tambah Pengumuman</Text>
                   </Box>
                </Flex>
-
-               <Flex justify={'center'} align={'center'} direction={'column'}
-                  style={{
-                     cursor: 'pointer'
-                  }}
-                  onClick={() => {
-                     router.push('/announcement?page=filter')
-                  }}
-               >
-                  <Box>
-                     <RiFilter2Line size={30} color={WARNA.biruTua} />
-                  </Box>
-                  <Box>
-                     <Text c={WARNA.biruTua} ta='center'>Filter</Text>
-                  </Box>
-               </Flex>
             </SimpleGrid>
          </Stack>
       </Box>

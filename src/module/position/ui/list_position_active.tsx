@@ -12,6 +12,7 @@ import { funGetAllPosition } from "../lib/api_position";
 import { IDataPosition } from "../lib/type_position";
 import { useHookstate } from "@hookstate/core";
 import { globalRefreshPosition } from "../lib/val_posisition";
+import { funGetAllGroup, IDataGroup } from "@/module/group";
 
 
 export default function ListPositionActive() {
@@ -29,7 +30,7 @@ export default function ListPositionActive() {
 
   async function getAllPosition() {
     try {
-      setDataPosition([]);
+      // setDataPosition([]);
       setLoading(true)
       const res = await funGetAllPosition('?active=' + status + '&group=' + group + '&search=' + searchQuery)
       setDataPosition(res.data);
@@ -45,6 +46,31 @@ export default function ListPositionActive() {
   useShallowEffect(() => {
     getAllPosition();
   }, [status, group, searchQuery, refresh.get()])
+
+  const [checked, setChecked] = useState<IDataGroup[]>([]);
+
+  const groupNameMap = (groupId: string) => {
+    const groupName = checked.find((group) => group.id === groupId)?.name;
+    return groupName || '-';
+  };
+
+  async function getAllGroupFilter() {
+    try {
+      const response = await funGetAllGroup('?active=true')
+      if (response.success) {
+        setChecked(response.data);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan grup, coba lagi nanti");
+    }
+  }
+
+  useShallowEffect(() => {
+    getAllGroupFilter();
+  }, []);
 
   return (
     <Box pt={20}>
@@ -67,51 +93,56 @@ export default function ListPositionActive() {
           <SkeletonSingle />
         </Box>
       )) :
-        _.isEmpty(isDataPosition) ?
-          <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-             <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada jabatan</Text>
-          </Box>
-          :
-          isDataPosition.map((v, i) => {
-            return (
-              <Box pt={20} key={i}>
-                <Group
-                  align="center"
-                  style={{
-                    border: `1px solid ${"#DCEED8"}`,
-                    padding: 10,
-                    borderRadius: 10,
-                  }}
-                  onClick={() => {
-                    setData(v.name);
-                    setOpenDrawer(true);
-                    setSelectId(v.id);
-                    setActive(v.isActive);
-                  }}
-                >
-                  <Box>
-                    <ActionIcon
-                      variant="light"
-                      bg={"#DCEED8"}
-                      size={50}
-                      radius={100}
-                      aria-label="icon"
+        <Box pt={20}>
+          {group && <Text>Filter by: {groupNameMap(group)}</Text>}
+          {isDataPosition.length == 0 ?
+            <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+              <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada jabatan</Text>
+            </Box>
+            :
+            <Box >
+              {isDataPosition.map((v, i) => {
+                return (
+                  <Box pb={20} key={i}>
+                    <Group
+                      align="center"
+                      style={{
+                        border: `1px solid ${"#DCEED8"}`,
+                        padding: 10,
+                        borderRadius: 10,
+                      }}
+                      onClick={() => {
+                        setData(v.name);
+                        setOpenDrawer(true);
+                        setSelectId(v.id);
+                        setActive(v.isActive);
+                      }}
                     >
-                      <FaUserTie color={WARNA.biruTua} size={25} />
-                    </ActionIcon>
+                      <Box>
+                        <ActionIcon
+                          variant="light"
+                          bg={"#DCEED8"}
+                          size={50}
+                          radius={100}
+                          aria-label="icon"
+                        >
+                          <FaUserTie color={WARNA.biruTua} size={25} />
+                        </ActionIcon>
+                      </Box>
+                      <Box>
+                        <Text fw={"bold"} c={WARNA.biruTua}>
+                          {v.name}
+                        </Text>
+                        <Text fw={"lighter"} fz={12}>
+                          {v.group}
+                        </Text>
+                      </Box>
+                    </Group>
                   </Box>
-                  <Box>
-                    <Text fw={"bold"} c={WARNA.biruTua}>
-                      {v.name}
-                    </Text>
-                    <Text fw={"lighter"} fz={12}>
-                      {v.group}
-                    </Text>
-                  </Box>
-                </Group>
-              </Box>
-            );
-          })
+                );
+              })}
+            </Box>}
+        </Box>
       }
       <LayoutDrawer
         opened={openDrawer}

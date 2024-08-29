@@ -10,6 +10,7 @@ export default function TabListPosition() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const status = searchParams.get('active')
+  const group = searchParams.get("group");
 
   return (
     <Box p={20}>
@@ -26,7 +27,7 @@ export default function TabListPosition() {
             value="true"
             w={"45%"}
             leftSection={<IoMdCheckmarkCircleOutline style={iconStyle} />}
-            onClick={() => { router.push("/position?active=true") }}
+            onClick={() => { router.push("/position?active=true&group=" + group) }}
           >
             Aktif
           </Tabs.Tab>
@@ -34,7 +35,7 @@ export default function TabListPosition() {
             value="false"
             w={"53%"}
             leftSection={<IoCloseCircleOutline style={iconStyle} />}
-            onClick={() => { router.push("/position?active=false") }}
+            onClick={() => { router.push("/position?active=false&group=" + group) }}
           >
             Tidak Aktif
           </Tabs.Tab>

@@ -1,6 +1,6 @@
 'use client'
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
-import { ActionIcon, Anchor, Box, Breadcrumbs, Button, Checkbox, Divider, Flex, Grid, Group, Indicator, Modal, Select, SimpleGrid, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Anchor, Box, Breadcrumbs, Button, Checkbox, Divider, Flex, Grid, Group, Indicator, Modal, rem, Select, SimpleGrid, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { FcDocument, FcFolder, FcImageFile } from 'react-icons/fc';
@@ -216,7 +216,8 @@ export default function NavbarDocumentDivision() {
     <Box>
       {(selectedFiles.length > 0 || dariSelectAll) && (
         <>
-          <Box h={90} w={{ base: "100%", md: "38.2%" }} bg={WARNA.biruTua} pos={'fixed'} top={0} style={{
+          <Box h={90} bg={WARNA.biruTua} pos={'fixed'} top={0} w={"100%"} style={{
+            maxWidth: rem(550),
             zIndex: 999,
           }}>
             <Flex justify={'space-between'} ml={30} mr={30} align={'center'} h={"100%"}>
@@ -234,7 +235,8 @@ export default function NavbarDocumentDivision() {
               </ActionIcon>
             </Flex>
           </Box>
-          <Box h={70} w={{ base: "100%", md: "38.2%" }} bg={WARNA.biruTua} pos={'fixed'} bottom={0} style={{
+          <Box h={70} bg={WARNA.biruTua} pos={'fixed'} bottom={0} w={"100%"} style={{
+            maxWidth: rem(550),
             zIndex: 999,
           }}>
             <Flex justify={"center"} align={"center"} h={"100%"} w={"100%"}>
