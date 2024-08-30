@@ -4,18 +4,15 @@ import { funGetDivisionById, IDataMemberDivision } from "@/module/division_new";
 import { useHookstate } from "@hookstate/core";
 import {
   ActionIcon,
-  Anchor,
   Avatar,
   Box,
   Button,
-  Checkbox,
   Divider,
   Flex,
   Group,
   rem,
   Skeleton,
   Text,
-  TextInput,
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
@@ -23,6 +20,8 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { globalMemberTask } from "../lib/val_task";
 import { FaCheck } from "react-icons/fa6";
+import { RiListCheck } from "react-icons/ri";
+import { BsListCheck } from "react-icons/bs";
 
 export default function CreateUsersProject({ onClose }: { onClose: (val: any) => void }) {
   const router = useRouter()
@@ -64,7 +63,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
     if (selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
       setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != isData[index].idUser))
     } else {
-      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name }])
+      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name, img: isData[index].img }])
     }
   };
 
@@ -76,7 +75,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
       for (let index = 0; index < isData.length; index++) {
         if (!selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
           const newArr = {
-            idUser: isData[index].idUser, name: isData[index].name
+            idUser: isData[index].idUser, name: isData[index].name, img: isData[index].img
           }
           setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
         }
@@ -112,10 +111,10 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
             <Text c={WARNA.biruTua} fw={"bold"}>
               Pilih Semua Anggota
             </Text>
-            {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+            <BsListCheck size={25} style={{ marginRight: 5 }}  color={WARNA.biruTua}/>
           </Group>
         }
-        <Box mt={15} mb={60}>
+        <Box mt={15} mb={100}>
           {loading ?
             Array(3)
               .fill(null)
@@ -146,7 +145,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
                 <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
                   <Flex justify={"space-between"} align={"center"}>
                     <Group>
-                      <Avatar src={"v.image"} alt="it's me" size="lg" />
+                      <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
                       <Text style={{
                         cursor: 'pointer',
                         display: 'flex',

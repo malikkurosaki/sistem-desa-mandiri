@@ -36,7 +36,8 @@ export async function GET(request: Request, context: { params: { id: string } })
             idUser: true,
             User: {
                select: {
-                  name: true
+                  name: true,
+                  img: true
                }
             }
          },
@@ -47,7 +48,8 @@ export async function GET(request: Request, context: { params: { id: string } })
 
       const fixMember = member.map((v: any) => ({
          ..._.omit(v, ["User"]),
-         name: v.User.name
+         name: v.User.name,
+         img: v.User.img
       }))
 
       const dataFix = {

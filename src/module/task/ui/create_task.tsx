@@ -153,7 +153,7 @@ export default function CreateTask() {
                 borderRadius: 10,
               }}
             >
-              <Text c={WARNA.biruTua}>Tambah Anggota</Text>
+              <Text>Tambah Anggota</Text>
               <IoIosArrowDropright size={25} />
             </Group>
           </Box>
@@ -205,7 +205,7 @@ export default function CreateTask() {
 
         {
           member.length > 0 &&
-          <Box pt={30} mb={60}>
+          <Box pt={30} mb={100}>
             <Group justify="space-between">
               <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
               <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
@@ -229,7 +229,7 @@ export default function CreateTask() {
                         key={i}
                       >
                         <Group>
-                          <Avatar src={"v.image"} alt="it's me" size="lg" />
+                          <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
                           <Box>
                             <Text c={WARNA.biruTua} fw={"bold"}>
                               {v.name}
