@@ -55,5 +55,6 @@ export interface IDataMemberDivision {
    idUser: string,
    isAdmin: string,
    isLeader: string,
-   name: string
+   name: string,
+   img: string
 }

@@ -46,7 +46,7 @@ export default function Profile() {
         await fetch('/api/auth/logout', {
           method: 'DELETE',
         });
-        toast.success('Logout Success')
+        toast.success('Logout Sukses')
         window.location.href = '/';
       }
 

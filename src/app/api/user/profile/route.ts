@@ -4,6 +4,7 @@ import _ from "lodash";
 import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
+import { createLogUser } from "@/module/user";
 
 
 // GET PROFILE BY COOKIES
@@ -138,6 +139,8 @@ export async function PUT(request: Request) {
                 }
             })
         }
+
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data profile', table: 'user', data: user.id })
 
         return NextResponse.json({ success: true, message: "Berhasil ubah profile" });
     } catch (error) {

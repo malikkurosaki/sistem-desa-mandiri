@@ -150,7 +150,7 @@ export async function GET(request: Request) {
          for (let index = 0; index < dataStatus.length; index++) {
             const cek = data.some((i: any) => i.status == dataStatus[index].status)
             if (cek) {
-               const find = (Number(data.find((i: any) => i.status == dataStatus[index].status)?._count) * 100)/ data.reduce((n, {_count}) => n + _count, 0)
+               const find = ((Number(data.find((i: any) => i.status == dataStatus[index].status)?._count) * 100)/ data.reduce((n, {_count}) => n + _count, 0)).toFixed(2)
                input = {
                   name: dataStatus[index].name,
                   value: find
