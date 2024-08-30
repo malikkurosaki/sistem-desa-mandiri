@@ -18,6 +18,7 @@ export default function TabProject() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const status = searchParams.get('status')
+  const group = searchParams.get("group");
   const iconStyle = { width: rem(20), height: rem(20) };
 
   return (
@@ -32,27 +33,27 @@ export default function TabProject() {
           <Tabs.List grow justify='center'>
             <Tabs.Tab value="0" w={"23%"}
               leftSection={<TbClockPause style={iconStyle} />}
-              onClick={() => { router.push("?status=0") }}
+              onClick={() => { router.push("?status=0&group=" + group) }}
               color={WARNA.biruTua}
             >
               Segera
             </Tabs.Tab>
             <Tabs.Tab value="1" w={"28%"}
               leftSection={<RiProgress3Line style={iconStyle} />}
-              onClick={() => { router.push("?status=1") }}
+              onClick={() => { router.push("?status=1&group=" + group) }}
               color={WARNA.biruTua}
             >
               Dikerjakan
             </Tabs.Tab>
             <Tabs.Tab value="2" w={"23%"}
               leftSection={<IoIosCheckmarkCircleOutline style={iconStyle} />}
-              onClick={() => { router.push("?status=2") }}
+              onClick={() => { router.push("?status=2&group=" + group) }}
               color={WARNA.biruTua}>
               Selesai
             </Tabs.Tab>
             <Tabs.Tab value="3" w={"20%"}
               leftSection={<IoCloseCircleOutline style={iconStyle} />}
-              onClick={() => { router.push("?status=3") }}
+              onClick={() => { router.push("?status=3&group=" + group) }}
               color={WARNA.biruTua}>
               Batal
             </Tabs.Tab>

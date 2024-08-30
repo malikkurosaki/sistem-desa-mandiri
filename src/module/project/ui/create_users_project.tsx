@@ -1,7 +1,7 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
-import { Avatar, Box, Button, Center, Input, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Center, Input, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -79,7 +79,7 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
             placeholder="Pencarian"
             onChange={(e) => loadData(e.target.value)}
           />
-          <Box pt={10}>
+          <Box pt={10} mb={100}>
             {loading ?
               <SimpleGrid
                 cols={{ base: 2, sm: 2, lg: 2 }}
@@ -90,7 +90,7 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
                   .fill(null)
                   .map((_, i) => (
                     <Box key={i}>
-                      <Skeleton width={"100%"} height={100} radius={"md"} />
+                      <Skeleton width={"100%"} height={150} radius={20} />
                     </Box>
                   ))}
               </SimpleGrid>
@@ -127,7 +127,12 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
             }
           </Box>
         </Stack>
-        <Box mt="xl">
+      </Box>
+        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
           <Button
             color="white"
             bg={WARNA.biruTua}
@@ -139,7 +144,6 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
             Simpan
           </Button>
         </Box>
-      </Box>
     </Box>
   );
 }

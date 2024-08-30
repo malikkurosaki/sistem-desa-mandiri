@@ -59,9 +59,9 @@ export default function Profile() {
   return (
     <>
       <Box >
-        <LayoutNavbarHome>
+        <LayoutNavbarHome  >
           <Group justify="space-between">
-            <LayoutIconBack />
+            <LayoutIconBack back="/home"/>
             <ActionIcon onClick={() => { setOpenModal(true) }} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
               <LuLogOut size={20} color='white' />
             </ActionIcon>

@@ -242,28 +242,54 @@ export default function NavbarDocumentDivision() {
             <Flex justify={"center"} align={"center"} h={"100%"} w={"100%"}>
               <SimpleGrid cols={{ base: 5, sm: 5, lg: 5 }} spacing="xs">
                 <Flex justify={'center'} align={'center'} direction={'column'}>
-                  <BsDownload size={20} color={(selectedFiles.length > 0) ? 'white' : 'grey'} />
-                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0) ? 'white' : 'grey'}>Unduh</Text>
+                  <BsDownload size={20} color={(selectedFiles.length > 0) ? 'white' : '#656060'} />
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0) ? 'white' : '#656060'}>Unduh</Text>
                 </Flex>
-                <Flex onClick={() => setIsDelete(true)} justify={'center'} align={'center'} direction={'column'}>
-                  <AiOutlineDelete size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'} />
-                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Hapus</Text>
+                <Flex justify={'center'} align={'center'} direction={'column'}>
+                  <ActionIcon
+                    variant="subtle"
+                    aria-label="delete"
+                    onClick={(selectedFiles.length > 0 && !shareSelected) ? () => setIsDelete(true) : undefined}
+                  >
+                    <AiOutlineDelete size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : '#656060'} />
+                  </ActionIcon>
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : '#656060'}>Hapus</Text>
                 </Flex>
-                <Flex onClick={() => {
-                  if (selectedFiles.length == 1) {
-                    onChooseRename()
-                  }
-                }} justify={'center'} align={'center'} direction={'column'}>
-                  <CgRename size={20} color={(selectedFiles.length == 1 && !shareSelected) ? 'white' : 'grey'} />
-                  <Text fz={12} ta={"center"} c={(selectedFiles.length == 1 && !shareSelected) ? 'white' : 'grey'}>Ganti Nama</Text>
+                <Flex justify={'center'} align={'center'} direction={'column'}>
+                  <ActionIcon
+                    variant="subtle"
+                    aria-label="rename"
+                    onClick={
+                      (selectedFiles.length == 1 && !shareSelected) ? () => onChooseRename() : undefined
+                    }
+                  >
+                    <CgRename size={20} color={(selectedFiles.length == 1 && !shareSelected) ? 'white' : '#656060'} />
+                  </ActionIcon>
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length == 1 && !shareSelected) ? 'white' : '#656060'}>Ganti Nama</Text>
                 </Flex>
-                <Flex onClick={() => setShare(true)} justify={'center'} align={'center'} direction={'column'}>
-                  <LuShare2 size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'} />
-                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Bagikan</Text>
+                <Flex justify={'center'} align={'center'} direction={'column'}>
+                  <ActionIcon
+                    variant="subtle"
+                    aria-label="share"
+                    onClick={
+                      (selectedFiles.length > 0 && !shareSelected) ? () => setShare(true) : undefined
+                    }
+                  >
+                    <LuShare2 size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : '#656060'} />
+                  </ActionIcon>
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : '#656060'}>Bagikan</Text>
                 </Flex>
-                <Flex onClick={() => setMore(true)} justify={'center'} align={'center'} direction={'column'}>
-                  <MdOutlineMoreHoriz size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'} />
-                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : 'grey'}>Lainnya</Text>
+                <Flex justify={'center'} align={'center'} direction={'column'}>
+                  <ActionIcon
+                    variant="subtle"
+                    aria-label="share"
+                    onClick={
+                      (selectedFiles.length > 0 && !shareSelected) ? () => setMore(true) : undefined
+                    }
+                  >
+                    <MdOutlineMoreHoriz size={20} color={(selectedFiles.length > 0 && !shareSelected) ? 'white' : '#656060'} />
+                  </ActionIcon>
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0 && !shareSelected) ? 'white' : '#656060'}>Lainnya</Text>
                 </Flex>
               </SimpleGrid>
             </Flex>

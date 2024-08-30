@@ -38,7 +38,7 @@ export default function EchartBarReport() {
       xAxis: [
         {
           type: 'category',
-          data: ['File', 'Folder', 'Documen'],
+          data: ['File', 'Dokumen'],
           axisLabel: {
             fontSize: 14
           },
@@ -64,27 +64,20 @@ export default function EchartBarReport() {
       ],
       series: [
         {
-          name: 'Direct',
+          name: 'Dokumen',
           type: 'bar',
           barWidth: '70%',
           data: [
             {
               value: 78,
-              name: 'Confidence',
+              name: 'File',
               itemStyle: {
                 color: "#F3C96B"
               }
             },
             {
-              value: 35,
-              name: 'Supportive',
-              itemStyle: {
-                color: "#9EC97F"
-              }
-            },
-            {
               value: 58,
-              name: 'Positive',
+              name: 'Dokumen',
               itemStyle: {
                 color: "#5971C0"
               }
