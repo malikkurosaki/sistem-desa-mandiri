@@ -6,16 +6,11 @@ export const funGetAllTask = async (path?: string) => {
 }
 
 
-export const funCreateTask = async (data: IFormTaskDivision) => {
-   if (data.title.length < 3)
-      return { success: false, message: 'Nama Kegiatan minimal 3 karakter' }
+export const funCreateTask = async (data: FormData) => {
 
    const response = await fetch("/api/task", {
       method: "POST",
-      headers: {
-         "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: data,
    });
    return await response.json().catch(() => null);
 };
