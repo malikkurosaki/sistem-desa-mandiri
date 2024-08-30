@@ -3,6 +3,8 @@ import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs";
 
 // GET ONE MEMBER / USER 
 export async function GET(request: Request, context: { params: { id: string } }) {
@@ -24,6 +26,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                 phone: true,
                 email: true,
                 gender: true,
+                img: true,
                 idGroup: true,
                 isActive: true,
                 idPosition: true,
@@ -131,12 +134,27 @@ export async function PUT(request: Request, context: { params: { id: string } })
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
         const { id } = context.params;
-        const data = await request.json();
+        console.log(id)
+        
+        const body = await request.formData()
+        const file = body.get("file") as File
+        const data = body.get("data")
+        const {
+            name,
+            email,
+            phone,
+            nik,
+            gender,
+            idGroup,
+            idPosition,
+            idUserRole
+        } = JSON.parse(data as string)
+        // const data = await request.json();
         const cek = await prisma.user.count({
             where: {
-                nik: data.nik,
-                email: data.email,
-                phone: data.phone,
+                nik: nik,
+                email: email,
+                phone: phone,
                 NOT: {
                     id: id
                 }
@@ -149,22 +167,46 @@ export async function PUT(request: Request, context: { params: { id: string } })
                     id: id
                 },
                 data: {
-                    nik: data.nik,
-                    name: data.name,
-                    phone: data.phone,
-                    email: data.email,
-                    gender: data.gender,
-                    idGroup: data.idGroup,
-                    idPosition: data.idPosition,
-                    idUserRole: data.idUserRole,
-                },
+                    nik: nik,
+                    name: name,
+                    phone: "62" + phone,
+                    email: email,
+                    gender: gender,
+                    idGroup: idGroup,
+                    idPosition: idPosition,
+                    idUserRole: idUserRole,
+                }, 
+                select: {
+                    img: true
+                }
             });
 
+            if (String(file) != "undefined" && String(file) != "null") {
+                fs.unlink(`./public/image/user/${updates.img}`, (err) => { })
+                const root = path.join(process.cwd(), "./public/image/user/");
+                const fExt = file.name.split(".").pop()
+                const fileName = id + '.' + fExt;
+                const filePath = path.join(root, fileName);
+    
+                // Konversi ArrayBuffer ke Buffer
+                const buffer = Buffer.from(await file.arrayBuffer());
+                fs.writeFileSync(filePath, buffer);
+
+                await prisma.user.update({
+                    where: {
+                        id: id
+                    },
+                    data: {
+                        img: fileName
+                    }
+                })
+            }
+
             // create log user
-            const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data user', table: 'user', data: data.id })
+            const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data user', table: 'user', data: user.id })
 
             return Response.json(
-                { success: true, message: "Sukses Update User", updates },
+                { success: true, message: "Sukses Update User" },
                 { status: 200 }
             );
         } else {

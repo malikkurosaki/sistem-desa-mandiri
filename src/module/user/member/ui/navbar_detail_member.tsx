@@ -66,7 +66,7 @@ export default function NavbarDetailMember({ id }: IMember) {
                   gap="xs"
                >
                   <Center>
-                     <Avatar src={'https://i.pravatar.cc/1000?img=25'} alt="it's me" size="xl" />
+                     <Avatar src={`/api/file/img?cat=user&file=${dataOne?.img}`} alt="it's me" size="xl" />
                   </Center>
                   {loading ? 
                      <>

@@ -82,7 +82,7 @@ export default function DateEventDivision() {
     const muncul = isListTgl.includes(coba)
 
     return (
-      <Indicator color="red" offset={-3} disabled={!muncul} position='top-end' inline processing size={10} >
+      <Indicator color="red" offset={-3} disabled={!muncul} position='top-end' inline  size={6} >
         <div>{day}</div>
       </Indicator>
     );
