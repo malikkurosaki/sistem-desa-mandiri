@@ -52,13 +52,10 @@ export const funEditStatusMember = async (path: string, data: IStatusmember) => 
 }
 
 
-export const funEditMember = async (path: string, data: IEditDataMember) => {
+export const funEditMember = async (path: string, data: FormData) => {
     const response = await fetch(`/api/user/${path}`, {
         method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: data,
     });
     return await response.json().catch(() => null);
 }

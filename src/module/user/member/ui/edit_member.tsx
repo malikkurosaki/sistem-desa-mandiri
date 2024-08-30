@@ -3,15 +3,17 @@ import { WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { funGetAllPosition } from "@/module/position/lib/api_position";
-import { Box, Button, Select, Stack, Text, TextInput } from "@mantine/core";
+import { Avatar, Box, Button, Indicator, Select, Stack, Text, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { HiUser } from "react-icons/hi2";
 import { IDataPositionMember, IDataROleMember, IEditDataMember, IFormMember } from "../lib/type_member";
 import { funEditMember, funGetOneMember, funGetRoleUser } from "../lib/api_member";
 import _ from "lodash";
+import { Dropzone } from "@mantine/dropzone";
+import { FaCamera } from "react-icons/fa6";
 
 
 export default function EditMember({ id }: { id: string }) {
@@ -20,6 +22,9 @@ export default function EditMember({ id }: { id: string }) {
    const [listGroup, setListGorup] = useState<IDataGroup[]>([])
    const [listPosition, setListPosition] = useState<IDataPositionMember[]>([])
    const [listUserRole, setListUserRole] = useState<IDataROleMember[]>([])
+   const [imgForm, setImgForm] = useState<any>()
+   const openRef = useRef<() => void>(null)
+   const [img, setIMG] = useState<any | null>()
    const [touched, setTouched] = useState({
       nik: false,
       name: false,
@@ -61,6 +66,7 @@ export default function EditMember({ id }: { id: string }) {
          const res = await funGetOneMember(id)
          setData(res.data)
          getAllPosition(res.data?.idGroup)
+         setIMG(`/api/file/img?cat=user&file=${res.data.img}`)
       } catch (error) {
          console.error(error)
       }
@@ -110,17 +116,11 @@ export default function EditMember({ id }: { id: string }) {
             return
          }
          if (val) {
-            const res = await funEditMember(id, {
-               id: data.id,
-               nik: data.nik,
-               name: data.name,
-               phone: data.phone,
-               email: data.email,
-               gender: data.gender,
-               idGroup: data.idGroup,
-               idPosition: data.idPosition,
-               idUserRole: data.idUserRole
-            })
+            const fd = new FormData()
+            fd.append("file", imgForm)
+            fd.append("data", JSON.stringify(data))
+
+            const res = await funEditMember(id, fd)
 
             if (res.success) {
                toast.success(res.message)
@@ -144,12 +144,30 @@ export default function EditMember({ id }: { id: string }) {
             pt={30}
             px={20}
          >
-            <Box bg={WARNA.biruTua} py={30} px={50}
-               style={{
-                  borderRadius: 10,
-               }}>
-               <HiUser size={100} color={WARNA.bgWhite} />
-            </Box>
+            <Dropzone
+               openRef={openRef}
+               onDrop={async (files) => {
+                  if (!files || _.isEmpty(files))
+                     return toast.error('Tidak ada gambar yang dipilih')
+                  setImgForm(files[0])
+                  const buffer = URL.createObjectURL(new Blob([new Uint8Array(await files[0].arrayBuffer())]))
+                  setIMG(buffer)
+               }}
+               activateOnClick={false}
+               maxSize={1 * 1024 ** 2}
+               accept={['image/png', 'image/jpeg', 'image/heic']}
+               onReject={(files) => {
+                  return toast.error('File yang diizinkan: .png, .jpg, dan .heic  dengan ukuran maksimal 1 MB')
+               }}
+            >
+            </Dropzone>
+            <Indicator offset={20} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
+               <Avatar
+                  size="150"
+                  radius={"100"}
+                  src={img}
+               />
+            </Indicator>
             <Select
                placeholder="Pilih Grup" label="Grup" w={"100%"} size="md" required withAsterisk radius={30}
                styles={{
@@ -311,7 +329,8 @@ export default function EditMember({ id }: { id: string }) {
                      borderColor: WARNA.biruTua,
                   },
                }}
-               placeholder="62xxx xxxx xxxx"
+               placeholder="8xxx xxxx xxxx"
+               leftSection={<Text>+62</Text>}
                onChange={(e) => {
                   setData({ ...data, phone: e.target.value })
                   setTouched({ ...touched, phone: false })

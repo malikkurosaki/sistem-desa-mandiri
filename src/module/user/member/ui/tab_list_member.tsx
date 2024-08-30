@@ -1,6 +1,6 @@
 
 import { SkeletonSingle, WARNA } from "@/module/_global"
-import { Box, Group, ActionIcon, Text, TextInput, Divider } from "@mantine/core"
+import { Box, Group, ActionIcon, Text, TextInput, Divider, Avatar } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -9,6 +9,7 @@ import { IListMember } from "../lib/type_member"
 import { funGetAllmember } from "../lib/api_member"
 import { funGetAllGroup, IDataGroup } from "@/module/group"
 import toast from "react-hot-toast"
+import _ from "lodash"
 
 
 export default function TabListMember() {
@@ -107,12 +108,10 @@ export default function TabListMember() {
                                     padding: 10,
                                  }} >
                                     <Box>
-                                       <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
-                                          <HiMiniUser color={'white'} size={25} />
-                                       </ActionIcon>
+                                       <Avatar src={`/api/file/img?cat=user&file=${v.img}`} size={50} alt="image" />
                                     </Box>
                                     <Box>
-                                       <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
+                                       <Text fw={'bold'} c={WARNA.biruTua}>{_.startCase(v.name)}</Text>
                                        <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
                                     </Box>
                                  </Group>
