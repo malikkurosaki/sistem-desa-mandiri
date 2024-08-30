@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { funEditDetailProject, funGetDetailProject } from '../lib/api_project';
 import moment from 'moment';
 import { useShallowEffect } from '@mantine/hooks';
-import { Box, Button, Group, Input, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { Box, Button, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { DatePicker } from '@mantine/dates';
 import LayoutModal from '@/module/_global/layout/layout_modal';
@@ -127,31 +127,35 @@ export default function EditDetailTaskProject() {
                   onBlur={() => setTouched({ ...touched, title: true })}
                   error={
                      touched.title && (
-                       name == "" ? "Judul Tidak Boleh Kosong" : null
+                        name == "" ? "Judul Tidak Boleh Kosong" : null
                      )
-                   }
+                  }
                />
             </Stack>
-            <Box mt={"xl"}>
-               <Button
-                  c={"white"}
-                  bg={WARNA.biruTua}
-                  size="lg"
-                  radius={30}
-                  fullWidth
-                  onClick={() => {
-                     if (
-                       name !== ""
-                     ) {
-                        setOpenModal(true)
-                     } else {
-                        toast.error("Judul Tidak Boleh Kosong")
-                     }
-                   }}
-               >
-                  Simpan
-               </Button>
-            </Box>
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
+            <Button
+               c={"white"}
+               bg={WARNA.biruTua}
+               size="lg"
+               radius={30}
+               fullWidth
+               onClick={() => {
+                  if (
+                     name !== ""
+                  ) {
+                     setOpenModal(true)
+                  } else {
+                     toast.error("Judul Tidak Boleh Kosong")
+                  }
+               }}
+            >
+               Simpan
+            </Button>
          </Box>
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}

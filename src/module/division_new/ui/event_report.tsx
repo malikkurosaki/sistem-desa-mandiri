@@ -1,62 +1,98 @@
-import { Box, Divider, Group, ScrollArea, Stack, Text } from '@mantine/core';
-import React from 'react';
-
-const dataEvent = [
-  {
-    id: 1,
-    title: 'Pembahasan Mengenai Darmasaba',
-    jamAwal: "10.00",
-    jamAkhir: "11.00",
-    dibuat: "Jhon"
-  },
-  {
-    id: 2,
-    title: 'Pembahasan Mengenai Darmasaba',
-    jamAwal: "11.00",
-    jamAkhir: "12.00",
-    dibuat: "Jhon"
-  },
-  {
-    id: 3,
-    title: 'Pembahasan Mengenai Darmasaba',
-    jamAwal: "13.00",
-    jamAkhir: "14.00",
-    dibuat: "Jhon"
-  },
-  {
-    id: 4,
-    title: 'Pembahasan Mengenai Darmasaba',
-    jamAwal: "15.00",
-    jamAkhir: "16.00",
-    dibuat: "Jhon"
-  },
-]
+import React, { useState } from 'react';
+import { EChartsOption, color } from "echarts";
+import EChartsReact from "echarts-for-react";
+import { useShallowEffect } from '@mantine/hooks';
+import * as echarts from 'echarts';
+import { Box } from '@mantine/core';
+import { WARNA } from '@/module/_global';
 
 export default function EventReport() {
+  const [options, setOptions] = useState<EChartsOption>({});
+
+  useShallowEffect(() => {
+    loadData()
+  }, [])
+
+  const loadData = () => {
+    const option: EChartsOption = {
+      title: {
+        text: "EVENT",
+        top: '2%',
+        left: 'center',
+        textStyle: {
+          color: WARNA.biruTua
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category',
+          data: ['Belum Dilaksanakan', 'Sudah Dilaksanakan'],
+          axisLabel: {
+            fontSize: 14
+          },
+          axisTick: {
+            alignWithLabel: true
+          },
+          axisLine: {
+            show: true,
+          },
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          show: true,
+          splitLine: {
+            lineStyle: {
+              color: "gray",
+              opacity: 0.1
+            }
+          },
+        }
+      ],
+      series: [
+        {
+          name: 'Event',
+          type: 'bar',
+          barWidth: '70%',
+          data: [
+            {
+              value: 78,
+              name: 'Belum dilaksanakan',
+              itemStyle: {
+                color: "#BA3E3E"
+              }
+            },
+            {
+              value: 58,
+              name: 'Sudah dilaksanakan',
+              itemStyle: {
+                color: "#29A253"
+              }
+            },
+
+          ],
+        }
+      ]
+    };
+    setOptions(option);
+  }
 
   return (
     <Box>
-      <Text mb={20} mt={10} ta={'center'} fw={"bold"}>EVENT SELESAI DILAKSANAKAN</Text>
-      {dataEvent.map((event, index) => {
-        const bgColor = ['#D8D8F1', '#FED6C5'][index % 2]
-        const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
-        return (
-          <Box key={event.id} m={10}>
-            <Box bg={bgColor} pl={15} p={10} style={{
-              borderRadius: 10
-            }} h={113}>
-              <Group>
-                <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
-                <Box>
-                  <Text>{event.jamAwal} - {event.jamAkhir}</Text>
-                  <Text fw={"bold"}>{event.title}</Text>
-                  <Text>Dibuat oleh : {event.dibuat}</Text>
-                </Box>
-              </Group>
-            </Box>
-          </Box>
-        )
-      })}
+      <EChartsReact style={{ height: 400, width: "auto" }} option={options} />
     </Box>
   );
 }

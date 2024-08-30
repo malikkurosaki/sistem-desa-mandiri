@@ -7,6 +7,7 @@ import {
   Flex,
   Group,
   Input,
+  rem,
   SimpleGrid,
   Stack,
   Text,
@@ -47,7 +48,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
 
   return (
     <Box>
-      <LayoutNavbarNew back="" title={"Tanggal Tugas"} menu />
+      <LayoutNavbarNew title={"Tanggal Tugas"} menu />
       <Box p={20}>
         <Group
           justify="center"
@@ -113,7 +114,12 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
             }
           />
         </Stack>
-        <Box mt={"xl"}>
+      </Box>
+        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
           <Button
             c={"white"}
             bg={WARNA.biruTua}
@@ -125,7 +131,6 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
             Simpan
           </Button>
         </Box>
-      </Box>
     </Box>
   );
 }

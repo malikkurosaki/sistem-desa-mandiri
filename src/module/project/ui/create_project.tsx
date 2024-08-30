@@ -1,6 +1,6 @@
 "use client";
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Avatar, Box, Button, Center, Flex, Group, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { Avatar, Box, Button, Center, Flex, Group, rem, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
@@ -95,15 +95,17 @@ export default function CreateProject() {
 
       if (response.success) {
         toast.success(response.message)
-        setBody({
-          idGroup: "",
-          title: "",
-          desc: "",
-        })
+        // setBody({
+        //   idGroup: "",
+        //   title: "",
+        //   desc: "",
+        // })
+
         member.set([])
         setFileForm([])
         setListFile([])
         setDataTask([])
+        router.push('/project')
       } else {
         toast.error(response.message)
       }
@@ -148,10 +150,10 @@ export default function CreateProject() {
                 value={(body.idGroup == "") ? null : body.idGroup}
                 onBlur={() => setTouched({ ...touched, idGroup: true })}
                 error={
-                   touched.idGroup && (
+                  touched.idGroup && (
                     body.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
-                   )
-                 }
+                  )
+                }
               />
             )
           }
@@ -263,7 +265,7 @@ export default function CreateProject() {
 
         {
           member.length > 0 &&
-          <Box pt={30}>
+          <Box pt={30} mb={100}>
             <Group justify="space-between">
               <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
               <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
@@ -306,26 +308,30 @@ export default function CreateProject() {
           </Box>
         }
 
-        <Box mt="xl">
-          <Button
-            color="white"
-            bg={WARNA.biruTua}
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => {
-              if (
-                body.title !== "" &&
-                body.idGroup !== ""
-              ) {
-                setModal(true)
-              } else {
-                toast.error("Mohon lengkapi data terlebih dahulu");
-              }
-            }}>
-            Simpan
-          </Button>
-        </Box>
+      </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          color="white"
+          bg={WARNA.biruTua}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => {
+            if (
+              body.title !== "" &&
+              body.idGroup !== ""
+            ) {
+              setModal(true)
+            } else {
+              toast.error("Mohon lengkapi data terlebih dahulu");
+            }
+          }}>
+          Simpan
+        </Button>
       </Box>
 
 

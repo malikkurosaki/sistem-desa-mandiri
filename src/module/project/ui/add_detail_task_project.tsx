@@ -3,7 +3,7 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funCreateDetailProject } from '../lib/api_project';
-import { Box, Button, Group, Input, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { Box, Button, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { DatePicker } from '@mantine/dates';
 import moment from 'moment';
@@ -82,7 +82,7 @@ export default function AddDetailTaskProject() {
                   </Group>
                </Box>
                <Box>
-                  <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+                  <Text>Tanggal Berakhir</Text>
                   <Group
                      justify="center"
                      bg={"white"}
@@ -118,18 +118,22 @@ export default function AddDetailTaskProject() {
                   }
                />
             </Stack>
-            <Box mt={"xl"}>
-               <Button
-                  c={"white"}
-                  bg={WARNA.biruTua}
-                  size="lg"
-                  radius={30}
-                  fullWidth
-                  onClick={() => { onVerification() }}
-               >
-                  Simpan
-               </Button>
-            </Box>
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
+            <Button
+               c={"white"}
+               bg={WARNA.biruTua}
+               size="lg"
+               radius={30}
+               fullWidth
+               onClick={() => { onVerification() }}
+            >
+               Simpan
+            </Button>
          </Box>
 
 

@@ -5,7 +5,7 @@ import { IDataMemberProject, IDataMemberProjectDetail } from '../lib/type_projec
 import toast from 'react-hot-toast';
 import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
 import { useShallowEffect } from '@mantine/hooks';
-import { Avatar, Box, Button, Divider, Flex, Group, Stack, Text } from '@mantine/core';
+import { Avatar, Box, Button, Divider, Flex, Group, rem, Stack, Text } from '@mantine/core';
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { FaCheck } from 'react-icons/fa6';
 import LayoutModal from '@/module/_global/layout/layout_modal';
@@ -106,26 +106,13 @@ export default function AddMemberDetailProject() {
         menu
       />
       <Box p={20}>
-        {/* <TextInput
-     styles={{
-       input: {
-         color: WARNA.biruTua,
-         borderRadius: WARNA.biruTua,
-         borderColor: WARNA.biruTua,
-       },
-     }}
-     size="md"
-     radius={30}
-     leftSection={<HiMagnifyingGlass size={20} />}
-     placeholder="Pencarian"
-   /> */}
         <Group justify="space-between" mt={20} onClick={handleSelectAll}>
           <Text c={WARNA.biruTua} fw={"bold"}>
             Pilih Semua Anggota
           </Text>
           {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
         </Group>
-        <Box mt={15}>
+        <Box mt={15} mb={100}>
           {isData.map((v, i) => {
             const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
             const found = isDataMember.some((i: any) => i.idUser == v.idUser)
@@ -161,7 +148,12 @@ export default function AddMemberDetailProject() {
             );
           })}
         </Box>
-        <Box mt={"xl"}>
+      </Box>
+        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
           <Button
             c={"white"}
             bg={WARNA.biruTua}
@@ -173,7 +165,6 @@ export default function AddMemberDetailProject() {
             Simpan
           </Button>
         </Box>
-      </Box>
 
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
         description="Apakah Anda yakin ingin menambahkan anggota?"

@@ -67,7 +67,7 @@ export default function CreateReport() {
               <EventReport />
             </Box>
           </Box>
-          <Box pt={10}>
+          {/* <Box pt={10}>
             <Box
               bg={"white"}
               style={{
@@ -78,7 +78,7 @@ export default function CreateReport() {
             >
               <DiscussionReport />
             </Box>
-          </Box>
+          </Box> */}
         </Stack>
       </Box>
     </Box>
