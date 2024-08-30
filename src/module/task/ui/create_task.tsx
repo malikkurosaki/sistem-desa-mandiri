@@ -32,7 +32,8 @@ export default function CreateTask() {
   const memberValue = member.get() as IFormMemberTask[]
   const [dataTask, setDataTask] = useState<IFormDateTask[]>([])
   const openRef = useRef<() => void>(null)
-  const [fileForm, setFileForm] = useState<FormData[]>([])
+  const [fileForm, setFileForm] = useState<any[]>([])
+  const [imgForm, setImgForm] = useState<any>()
   const [listFile, setListFile] = useState<IListFileTask[]>([])
   const [indexDelFile, setIndexDelFile] = useState<number>(0)
   const [indexDelTask, setIndexDelTask] = useState<number>(0)
@@ -57,22 +58,27 @@ export default function CreateTask() {
 
   async function onSubmit() {
     try {
-      const response = await funCreateTask(
-        {
-          idDivision: param.id,
-          title,
-          task: dataTask,
-          file: fileForm,
-          member: memberValue
-        })
+      const fd = new FormData();
+      for (let i = 0; i < fileForm.length; i++) {
+        fd.append(`file${i}`, fileForm[i]);
+      }
+
+      fd.append("data", JSON.stringify({
+        idDivision: param.id,
+        title,
+        task: dataTask,
+        member: memberValue
+      }))
+
+      const response = await funCreateTask(fd)
 
       if (response.success) {
         toast.success(response.message)
-        setTitle("")
-        member.set([])
-        setFileForm([])
-        setListFile([])
-        setDataTask([])
+        // setTitle("")
+        // member.set([])
+        // setFileForm([])
+        // setListFile([])
+        // setDataTask([])
       } else {
         toast.error(response.message)
       }
@@ -250,28 +256,28 @@ export default function CreateTask() {
 
 
       </Box>
-        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-            maxWidth: rem(550),
-            zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
-         }}>
-          <Button
-            color="white"
-            bg={WARNA.biruTua}
-            size="lg" radius={30}
-            fullWidth
-            onClick={() => {
-              if (
-                title !== ""
-              ) {
-                setOpenModal(true)
-              } else  {
-                toast.error("Semua form harus diisi")
-              }
-            }}>
-            Simpan
-          </Button>
-        </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          color="white"
+          bg={WARNA.biruTua}
+          size="lg" radius={30}
+          fullWidth
+          onClick={() => {
+            if (
+              title !== ""
+            ) {
+              setOpenModal(true)
+            } else {
+              toast.error("Semua form harus diisi")
+            }
+          }}>
+          Simpan
+        </Button>
+      </Box>
 
 
 
@@ -287,9 +293,7 @@ export default function CreateTask() {
             onDrop={async (files) => {
               if (!files || _.isEmpty(files))
                 return toast.error('Tidak ada file yang dipilih')
-              const fd = new FormData();
-              fd.append("file", files[0]);
-              setFileForm([...fileForm, fd])
+              setFileForm([...fileForm, files[0]])
               setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
             }}
             activateOnClick={false}

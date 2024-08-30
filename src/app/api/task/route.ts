@@ -1,8 +1,10 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _, { ceil } from "lodash";
-import moment from "moment";
 import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs";
+import moment from "moment";
 
 
 // GET ALL DATA TUGAS DIVISI
@@ -66,7 +68,7 @@ export async function GET(request: Request) {
 
       const formatData = data.map((v: any) => ({
          ..._.omit(v, ["DivisionProjectTask", "DivisionProjectMember"]),
-         progress: ceil((v.DivisionProjectTask.filter((i: any) => i.status == 1).length*100) / v.DivisionProjectTask.length),
+         progress: ceil((v.DivisionProjectTask.filter((i: any) => i.status == 1).length * 100) / v.DivisionProjectTask.length),
          member: v.DivisionProjectMember.length
       }))
 
@@ -87,7 +89,12 @@ export async function POST(request: Request) {
          return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
       }
 
-      const { title, task, member, file, idDivision } = (await request.json());
+
+      const body = await request.formData()
+      const dataBody = body.get("data")
+      const cekFile = body.has("file0")
+
+      const { title, task, member, idDivision } = JSON.parse(dataBody as string)
 
       const cek = await prisma.division.count({
          where: {
@@ -142,31 +149,67 @@ export async function POST(request: Request) {
 
       let fileFix: any[] = []
 
+      // if (cekFile) {
+      //    let a = 0
+      //    const root = path.join(process.cwd(), "./public/image/user/");
+      //    for (var pair of body.entries()) {
+      //       if (String(pair[0]) == "file" + a) {
+      //          const file = body.get(pair[0]) as File
+      //          const fName = file.name
+      //          const fExt = fName.split(".").pop()
 
-      if (file.length > 0) {
-         file.map((v: any, index: any) => {
-            const f: any = file[index].get('file')
-            const fName = f.name
-            const fExt = fName.split(".").pop()
+      //          console.log(file, file.name)
 
-            const dataFile = {
-               name: fName,
-               extension: fExt,
-               idDivision: idDivision,
-               idProject: data.id,
-            }
+      //          const insertToContainer = await prisma.containerFileDivision.create({
+      //             data:{
+      //                idDivision: idDivision,
+      //                name: fName,
+      //                extension: String(fExt)
+      //             }
+      //          })
 
-            fileFix.push(dataFile)
-         })
-
-         const insertFile = await prisma.divisionProjectFile.createMany({
-            data: fileFix
-         })
-
-      }
+      //          const dataFile = {
+      //             name: fName,
+      //             extension: fExt,
+      //             idDivision: idDivision,
+      //          }
 
 
-      return NextResponse.json({ success: true, message: "Berhasil membuat tugas divisi", }, { status: 200 });
+      //          fileFix.push(dataFile)
+      //       }
+      //       a++
+      //    }
+
+      //    const insertFile = await prisma.divisionProjectFile.createMany({
+      //       data: fileFix
+      //    })
+      // }
+
+
+      // if (file.length > 0) {
+      //    file.map((v: any, index: any) => {
+      //       const f: any = file[index].get('file')
+      //       const fName = f.name
+      //       const fExt = fName.split(".").pop()
+
+      //       const dataFile = {
+      //          name: fName,
+      //          extension: fExt,
+      //          idDivision: idDivision,
+      //          idProject: data.id,
+      //       }
+
+      //       fileFix.push(dataFile)
+      //    })
+
+      //    const insertFile = await prisma.divisionProjectFile.createMany({
+      //       data: fileFix
+      //    })
+
+      // }
+
+
+      return NextResponse.json({ success: true, message: "Berhasil membuat tugas divisi" }, { status: 200 });
 
    } catch (error) {
       console.log(error);

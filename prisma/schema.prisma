@@ -255,6 +255,7 @@ model Division {
   DivisionDocumentShare      DivisionDocumentShare[]
   DivisionCalendar           DivisionCalendar[]
   DivisionCalendarReminder   DivisionCalendarReminder[]
+  ContainerFileDivision      ContainerFileDivision[]
 }
 
 model DivisionMember {
@@ -446,6 +447,8 @@ model ContainerImage {
 
 model ContainerFileDivision {
   id                  String                @id @default(cuid())
+  Division            Division              @relation(fields: [idDivision], references: [id])
+  idDivision          String
   name                String
   extension           String
   isActive            Boolean               @default(true)
