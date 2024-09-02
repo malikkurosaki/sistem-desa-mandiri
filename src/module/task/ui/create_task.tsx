@@ -287,7 +287,7 @@ export default function CreateTask() {
         onClose={() => setOpenDrawer(false)}
         title={"Pilih File"}
       >
-        <Flex justify={"space-around"}>
+        <Flex justify={"flex-start"} px={20}>
           <Dropzone
             openRef={openRef}
             onDrop={async (files) => {

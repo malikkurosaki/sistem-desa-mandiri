@@ -120,3 +120,13 @@ export const funEditTask = async (path: string, data: { title: string }) => {
    });
    return await response.json().catch(() => null);
 };
+
+export const funDeleteFileTask = async (path: string) => {
+   const response = await fetch(`/api/task/file/${path}`, {
+      method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+      },
+   });
+   return await response.json().catch(() => null);
+};
