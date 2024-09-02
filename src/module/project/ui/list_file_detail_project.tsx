@@ -1,6 +1,6 @@
 'use client'
 import { LayoutDrawer, WARNA } from '@/module/_global';
-import { Box, Flex, Group, SimpleGrid, Skeleton, Stack, Text } from '@mantine/core';
+import { Box, Center, Flex, Grid, Group, SimpleGrid, Skeleton, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funDeleteFileProject, funGetOneProjectById } from '../lib/api_project';
@@ -102,13 +102,21 @@ export default function ListFileDetailProject() {
                         setOpenDrawer(true)
                       }}
                     >
-                      <Group>
-                        {item.extension == "pdf" && <BsFiletypePdf size={25} />}
-                        {item.extension == "csv" && <BsFiletypeCsv size={25} />}
-                        {item.extension == "png" && <BsFiletypePng size={25} />}
-                        {item.extension == "jpg" || item.extension == "jpeg" && <BsFiletypeJpg size={25} />}
-                        {item.extension == "heic" && <BsFiletypeHeic size={25} />}
+                      <Grid gutter={"sm"} justify='flex-start' align='flex-start'>
+                        <Grid.Col span={"auto"}>
+                          <Center >
+                        {item.extension == "pdf" && <BsFiletypePdf size={30} />}
+                        {item.extension == "csv" && <BsFiletypeCsv size={30} />}
+                        {item.extension == "png" && <BsFiletypePng size={30} />}
+                        {item.extension == "jpg" || item.extension == "jpeg" && <BsFiletypeJpg size={30} />}
+                        {item.extension == "heic" && <BsFiletypeHeic size={30} />}
+                          </Center>
+                        </Grid.Col>
+                        <Grid.Col span={10}>
                         <Text>{item.name + '.' + item.extension}</Text>
+                        </Grid.Col>
+                      </Grid>
+                      <Group>
                       </Group>
                     </Box>
                   )
@@ -118,7 +126,7 @@ export default function ListFileDetailProject() {
 
 
 
-        <LayoutDrawer opened={openDrawer} title={nameData} onClose={() => setOpenDrawer(false)}>
+        <LayoutDrawer opened={openDrawer} title={<Text lineClamp={1}>{nameData}</Text>} onClose={() => setOpenDrawer(false)}>
           <Box>
             <Stack pt={10}>
               <SimpleGrid

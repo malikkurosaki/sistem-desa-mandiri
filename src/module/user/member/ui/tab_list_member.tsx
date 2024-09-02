@@ -111,7 +111,7 @@ export default function TabListMember() {
                                        <Avatar src={`/api/file/img?cat=user&file=${v.img}`} size={50} alt="image" />
                                     </Box>
                                     <Box>
-                                       <Text fw={'bold'} c={WARNA.biruTua}>{_.startCase(v.name)}</Text>
+                                       <Text fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{_.startCase(v.name)}</Text>
                                        <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
                                     </Box>
                                  </Group>

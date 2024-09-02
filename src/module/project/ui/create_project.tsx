@@ -225,6 +225,8 @@ export default function CreateProject() {
             </Group>
           </Box>
         </Stack>
+        <Box pb={100}>
+
         {
           dataTask.length > 0 &&
           <Box pt={20}>
@@ -271,7 +273,7 @@ export default function CreateProject() {
 
         {
           member.length > 0 &&
-          <Box pt={30} mb={100}>
+          <Box pt={30}>
             <Group justify="space-between">
               <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
               <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
@@ -313,6 +315,7 @@ export default function CreateProject() {
             </Box>
           </Box>
         }
+        </Box>
 
       </Box>
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
