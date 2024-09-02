@@ -108,9 +108,10 @@ export async function GET(request: Request, context: { params: { id: string } })
                     User: {
                         select: {
                             name: true,
-                            email: true
+                            email: true,
+                            img: true
                         }
-                    }
+                    },
                 }
             })
 
@@ -118,6 +119,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                 ..._.omit(v, ["User"]),
                 name: v.User.name,
                 email: v.User.email,
+                img: v.User.img
             }))
 
             allData = fix

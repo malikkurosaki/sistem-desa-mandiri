@@ -89,7 +89,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
                   .fill(null)
                   .map((_, i) => (
                     <Box key={i}>
-                      <Skeleton width={"100%"} height={100} radius={"md"} />
+                      <Skeleton width={"100%"} height={130} radius={"md"} />
                     </Box>
                   ))}
               </SimpleGrid>
@@ -114,7 +114,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
                           onClick={() => handleFileClick(index)}
                         >
                           <Center>
-                            <Avatar src={"https://i.pravatar.cc/1000?img=37"} alt="it's me" size="xl" />
+                            <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="xl" />
                           </Center>
                           <Text mt={20} ta="center">
                             {v.name}

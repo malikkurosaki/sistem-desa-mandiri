@@ -2,6 +2,7 @@ export interface IDataDiscussion {
    id: string
    title: string
    desc: string
+   img: string
    status: number
    createdAt: string
    user_name: string
@@ -26,6 +27,7 @@ export interface IDetailDiscussion {
    createdAt: string
    DivisionDisscussionComment: IAllComents[]
    username: string
+   user_img: string
    totalComments: number
  }
  
@@ -33,7 +35,8 @@ export interface IDetailDiscussion {
    id: string
    comment: string
    createdAt: string
-   User: User
+    User: User
+    img: string
    username: string
  }
  

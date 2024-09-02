@@ -24,7 +24,7 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
     if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
       setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != dataMember[index].id))
     } else {
-      setSelectedFiles([...selectedFiles, { idUser: dataMember[index].id, name: dataMember[index].name }])
+      setSelectedFiles([...selectedFiles, { idUser: dataMember[index].id, name: dataMember[index].name, img: dataMember[index].img }])
     }
   };
 
@@ -114,7 +114,7 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
                         onClick={() => handleFileClick(index)}
                       >
                         <Center>
-                          <Avatar src={"https://i.pravatar.cc/1000?img=37"} alt="it's me" size="xl" />
+                          <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="xl" />
                         </Center>
                         <Text mt={20} ta="center">
                           {v.name}

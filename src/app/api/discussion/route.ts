@@ -53,7 +53,8 @@ export async function GET(request: Request) {
                createdAt: true,
                User: {
                   select: {
-                     name: true
+                     name: true,
+                     img: true
                   }
                },
                DivisionDisscussionComment: {
@@ -69,6 +70,7 @@ export async function GET(request: Request) {
          const fixData = data.map((v: any) => ({
             ..._.omit(v, ["User", "DivisionDisscussionComment", "createdAt"]),
             user_name: v.User.name,
+            img: v.User.img,
             total_komentar: v.DivisionDisscussionComment.length,
             createdAt: moment(v.createdAt).format("LL")
          }))

@@ -7,5 +7,6 @@ export type TypeUser = {
    gender: string
    isActive: boolean,
    group: string,
+   img: string
    position: string
 }[]

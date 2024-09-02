@@ -49,7 +49,7 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
     if (selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
       setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != isData[index].idUser))
     } else {
-      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name }])
+      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name, img: isData[index].img }])
     }
   };
 
@@ -61,7 +61,7 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
       for (let index = 0; index < isData.length; index++) {
         if (!selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
           const newArr = {
-            idUser: isData[index].idUser, name: isData[index].name
+            idUser: isData[index].idUser, name: isData[index].name, img: isData[index].img
           }
           setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
         }
@@ -111,7 +111,7 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
             <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
               <Flex justify={"space-between"} align={"center"}>
                 <Group>
-                  <Avatar src={"v.image"} alt="it's me" size="lg" />
+                  <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
                   <Text style={{
                     cursor: 'pointer',
                     display: 'flex',

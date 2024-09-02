@@ -160,6 +160,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                 id: true,
                 name: true,
                 email: true,
+                img: true
             }
         })
 
@@ -167,7 +168,7 @@ export async function GET(request: Request, context: { params: { id: string } })
             idUser: v.id,
             name: v.name,
             email: v.email,
-
+            img: v.img
         }))
 
         const dataFix = {
