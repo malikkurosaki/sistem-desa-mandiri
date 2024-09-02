@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, SkeletonSingle, WARNA } from "@/module/_global";
 import { funGetDivisionById, IDataMemberDivision } from "@/module/division_new";
 import { useHookstate } from "@hookstate/core";
 import {
@@ -116,26 +116,11 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
         }
         <Box mt={15} mb={100}>
           {loading ?
-            Array(3)
+            Array(8)
               .fill(null)
               .map((_, i) => (
                 <Box key={i} mb={15}>
-                  <Group>
-                    <Box>
-                      <ActionIcon
-                        variant="light"
-                        bg={"#DCEED8"}
-                        size={"lg"}
-                        radius={100}
-                        aria-label="icon"
-                      >
-                        <Skeleton height={30} width={30} />
-                      </ActionIcon>
-                    </Box>
-                    <Box>
-                      <Skeleton height={20} width={"80%"} />
-                    </Box>
-                  </Group>
+                  <SkeletonSingle/>
                 </Box>
               ))
             :

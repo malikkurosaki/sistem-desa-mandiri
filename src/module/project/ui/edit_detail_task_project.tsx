@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { funEditDetailProject, funGetDetailProject } from '../lib/api_project';
 import moment from 'moment';
 import { useShallowEffect } from '@mantine/hooks';
-import { Box, Button, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { Box, Button, Group, Input, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { DatePicker } from '@mantine/dates';
 import LayoutModal from '@/module/_global/layout/layout_modal';
@@ -15,6 +15,7 @@ export default function EditDetailTaskProject() {
    const [name, setName] = useState("")
    const param = useParams<{ id: string }>()
    const [openModal, setOpenModal] = useState(false)
+   const [loading, setLoading] = useState(true)
    const [touched, setTouched] = useState({
       title: false,
    });
@@ -47,6 +48,7 @@ export default function EditDetailTaskProject() {
 
    async function getOneData() {
       try {
+         setLoading(true)
          const res = await funGetDetailProject(param.id);
          if (res.success) {
             setName(res.data.title)
@@ -57,9 +59,12 @@ export default function EditDetailTaskProject() {
          } else {
             toast.error(res.message);
          }
+         setLoading(false);
       } catch (error) {
          console.error(error);
          toast.error("Gagal mendapatkan detail tugas Kegiatan, coba lagi nanti");
+      } finally {
+         setLoading(false);
       }
    }
 
@@ -88,49 +93,65 @@ export default function EditDetailTaskProject() {
             </Group>
             <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
                <Box>
-                  <Text>Tanggal Mulai</Text>
-                  <Group
-                     justify="center"
-                     bg={"white"}
-                     h={45}
-                     style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
-                  >
-                     <Text>{value[0] ? `${moment(value[0]).format('DD-MM-YYYY')}` : ""}</Text>
-                  </Group>
+                  {loading ?
+                     <Skeleton height={45} mt={20} radius={10} />
+                     :
+                     <> 
+                     <Text>Tanggal Mulai</Text>
+                     <Group
+                        justify="center"
+                        bg={"white"}
+                        h={45}
+                        style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
+                     >
+                        <Text>{value[0] ? `${moment(value[0]).format('DD-MM-YYYY')}` : ""}</Text>
+                     </Group>
+                     </>
+                  }
                </Box>
                <Box>
-                  <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
-                  <Group
-                     justify="center"
-                     bg={"white"}
-                     h={45}
-                     style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
-                  >
-                     <Text>{value[1] ? `${moment(value[1]).format('DD-MM-YYYY')}` : ""}</Text>
-                  </Group>
+                  {loading ?
+                     <Skeleton height={45} mt={20} radius={10} />
+                     :
+                     <>
+                        <Text>Tanggal Berakhir</Text>
+                        <Group
+                           justify="center"
+                           bg={"white"}
+                           h={45}
+                           style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
+                        >
+                           <Text>{value[1] ? `${moment(value[1]).format('DD-MM-YYYY')}` : ""}</Text>
+                        </Group>
+                     </>
+                  }
                </Box>
             </SimpleGrid>
-            <Stack pt={15}>
-               <TextInput
-                  styles={{
-                     input: {
-                        border: `1px solid ${"#D6D8F6"}`,
-                        borderRadius: 10,
-                     },
-                  }}
-                  placeholder="Input Nama Tahapan"
-                  label="Judul Tahapan"
-                  required
-                  size="md"
-                  value={name}
-                  onChange={(e) => { setName(e.target.value) }}
-                  onBlur={() => setTouched({ ...touched, title: true })}
-                  error={
-                     touched.title && (
-                        name == "" ? "Judul Tidak Boleh Kosong" : null
-                     )
-                  }
-               />
+            <Stack pt={15} pb={100}>
+               {loading ?
+                  <Skeleton height={40} mt={20} radius={10} />
+                  :
+                  <TextInput
+                     styles={{
+                        input: {
+                           border: `1px solid ${"#D6D8F6"}`,
+                           borderRadius: 10,
+                        },
+                     }}
+                     placeholder="Input Nama Tahapan"
+                     label="Judul Tahapan"
+                     required
+                     size="md"
+                     value={name}
+                     onChange={(e) => { setName(e.target.value) }}
+                     onBlur={() => setTouched({ ...touched, title: true })}
+                     error={
+                        touched.title && (
+                           name == "" ? "Judul Tidak Boleh Kosong" : null
+                        )
+                     }
+                  />
+               }
             </Stack>
          </Box>
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
@@ -138,6 +159,9 @@ export default function EditDetailTaskProject() {
             zIndex: 999,
             backgroundColor: `${WARNA.bgWhite}`,
          }}>
+            {loading ?
+               <Skeleton height={50} radius={30} />
+               :
             <Button
                c={"white"}
                bg={WARNA.biruTua}
@@ -156,6 +180,7 @@ export default function EditDetailTaskProject() {
             >
                Simpan
             </Button>
+            }
          </Box>
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}

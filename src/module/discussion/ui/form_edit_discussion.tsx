@@ -1,7 +1,7 @@
 'use client'
 import { WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
-import { Box, Group, Avatar, Textarea, Button, Grid, rem } from "@mantine/core"
+import { Box, Group, Avatar, Textarea, Button, Grid, rem, Skeleton } from "@mantine/core"
 import { useParams, useRouter } from "next/navigation"
 import { useState } from "react"
 import toast from "react-hot-toast"
@@ -13,17 +13,21 @@ export default function FormEditDiscussion() {
    const router = useRouter()
    const param = useParams<{ id: string, detail: string }>()
    const [isDataOne, setDataOne] = useState("")
+   const [loading, setLoading] = useState(true)
    const [touched, setTouched] = useState({
       desc: false,
    });
 
    async function fetchGetOneDiscussion() {
       try {
+         setLoading(true)
          const response = await funGetDiscussionById(param.detail)
          setDataOne(response.data.desc)
       } catch (error) {
          console.log(error);
          toast.error("Gagal menampilkan discussion, coba lagi nanti");
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -60,9 +64,22 @@ export default function FormEditDiscussion() {
          <Box p={20}>
             <Grid gutter={0} pt={10}>
                <Grid.Col span={"auto"}>
+                  {loading ? 
+                    <Skeleton height={60} width={60} radius={100} />  
+               :   
                   <Avatar src={'https://i.pravatar.cc/1000?img=32'} alt="it's me" size="lg" />
+               }
                </Grid.Col>
                <Grid.Col span={10}>
+                  {loading ?
+                      Array(10)
+                      .fill(null)
+                      .map((_, i) => (
+                        <Box key={i} mb={20}>
+                          <Skeleton height={20} radius={10} />
+                        </Box>
+                      ))
+               :   
                   <Box>
                      <Textarea
                         placeholder="Tuliskan apa yang ingin anda diskusikan"
@@ -83,6 +100,7 @@ export default function FormEditDiscussion() {
                         }
                      />
                   </Box>
+               }
                </Grid.Col>
             </Grid>
          </Box>
@@ -91,24 +109,28 @@ export default function FormEditDiscussion() {
             zIndex: 999,
             backgroundColor: `${WARNA.bgWhite}`,
          }}>
-            <Button
-               color="white"
-               bg={WARNA.biruTua}
-               size="lg"
-               radius={30}
-               fullWidth
-               onClick={() => {
-                  if (
-                     isDataOne !== ""
-                  ) {
-                     setValModal(true)
-                  } else {
-                     toast.error("Form Tidak Boleh Kosong");
-                  }
-               }}
-            >
-               Simpan
-            </Button>
+            {loading ?
+               <Skeleton height={50} radius={30} />
+               :
+               <Button
+                  color="white"
+                  bg={WARNA.biruTua}
+                  size="lg"
+                  radius={30}
+                  fullWidth
+                  onClick={() => {
+                     if (
+                        isDataOne !== ""
+                     ) {
+                        setValModal(true)
+                     } else {
+                        toast.error("Form Tidak Boleh Kosong");
+                     }
+                  }}
+               >
+                  Simpan
+               </Button>
+            }
          </Box>
 
          <LayoutModal opened={isValModal} onClose={() => setValModal(false)}

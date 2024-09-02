@@ -1,7 +1,7 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
-import { Box, Button, rem, Select, Stack, Textarea, TextInput } from '@mantine/core';
+import { Box, Button, rem, Select, Skeleton, Stack, Textarea, TextInput } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -78,40 +78,52 @@ export default function EditDivision() {
       <LayoutNavbarNew back="" title="Edit Divisi" menu />
       <Box p={20}>
         <Stack>
-          <TextInput
-            placeholder="Judul"
-            label="Judul"
-            size="md"
-            required
-            radius={40}
-            value={body.name}
-            onChange={(e) => {
-              setBody({ ...body, name: e.target.value })
-              setTouched({ ...touched, name: false })
-            }}
-            onBlur={() => setTouched({ ...touched, name: true })}
-            error={
-              touched.name && (
-                body.name == "" ? "Judul Tidak Boleh Kosong" : null
-              )
-            }
-          />
-          <Textarea placeholder="Deskripsi" label="Deskripsi" size="md" radius={10}
-            value={body.desc}
-            onChange={(e) => { setBody({ ...body, desc: e.currentTarget.value }) }}
-            styles={{
-              input: {
-                height: "40vh"
-              }
-            }}
-          />
+          {loading ?
+            <>
+              <Skeleton height={40} mt={20} radius={30} />
+              <Skeleton height={"40vh"} mt={20} radius={10} />
+            </>
+            :
+            <>
+              <TextInput
+                placeholder="Judul"
+                label="Judul"
+                size="md"
+                required
+                radius={40}
+                value={body.name}
+                onChange={(e) => {
+                  setBody({ ...body, name: e.target.value })
+                  setTouched({ ...touched, name: false })
+                }}
+                onBlur={() => setTouched({ ...touched, name: true })}
+                error={
+                  touched.name && (
+                    body.name == "" ? "Judul Tidak Boleh Kosong" : null
+                  )
+                }
+              />
+              <Textarea placeholder="Deskripsi" label="Deskripsi" size="md" radius={10}
+                value={body.desc}
+                onChange={(e) => { setBody({ ...body, desc: e.currentTarget.value }) }}
+                styles={{
+                  input: {
+                    height: "40vh"
+                  }
+                }}
+              />
+            </>
+          }
         </Stack>
       </Box>
-        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-            maxWidth: rem(550),
-            zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
-         }}>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        {loading ?
+          <Skeleton height={50} radius={30} />
+          :
           <Button
             color="white"
             bg={WARNA.biruTua}
@@ -130,7 +142,8 @@ export default function EditDivision() {
           >
             Simpan
           </Button>
-        </Box>
+        }
+      </Box>
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)} description='Apakah Anda yakin ingin edit data'
         onYes={(val) => {
           if (val) {

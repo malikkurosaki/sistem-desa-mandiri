@@ -1,7 +1,7 @@
 import { LayoutDrawer, WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { funGetAllGroup, IDataGroup } from "@/module/group"
-import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button } from "@mantine/core"
+import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button, Skeleton } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
@@ -17,6 +17,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const [isModal, setModal] = useState(false)
    const refresh = useHookstate(globalRefreshPosition)
+   const [loading, setLoading] = useState(true)
    const [data, setData] = useState<any>({
       id: id,
       name: "",
@@ -26,7 +27,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    const [touched, setTouched] = useState({
       name: false,
       idGroup: false
-    });
+   });
 
    function onCLose() {
       onUpdated(true)
@@ -49,15 +50,19 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
    async function getOneData() {
       try {
+         setLoading(true)
          const res = await funGetOnePosition(id)
          if (res.success) {
             setData(res.data)
          } else {
             toast.error(res.message)
          }
+         setLoading(false)
       } catch (error) {
          console.error(error)
          toast.error("Gagal mendapatkan jabatan, coba lagi nanti");
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -147,66 +152,75 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
          <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Edit Jabatan'} size="lg">
             <Box pt={10} pos={"relative"} h={"70vh"}>
-               <Select
-                  label="Grup"
-                  placeholder="Pilih grup"
-                  size="md"
-                  radius={10}
-                  data={
-                     listGroup
-                        ? listGroup.map((data) => ({
-                           value: data.id,
-                           label: data.name,
-                        }))
-                        : []
-                  }
-                  value={String(data.idGroup)}
-                  mb={5}
-                  onChange={(val) => {
-                     setData({ ...data, idGroup: val })
-                     setTouched({ ...touched, idGroup: false })
-                  }}
-                  withAsterisk
-                  styles={{
-                     input: {
-                        color: WARNA.biruTua,
-                        borderRadius: WARNA.biruTua,
-                        borderColor: WARNA.biruTua,
-                     },
-                  }}
-                  error={
-                     touched.idGroup && (
-                       data.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
-                     )
-                   }
-                  onBlur={() => setTouched({ ...touched, idGroup: true })}
-               />
-               <TextInput
-                  label="Jabatan"
-                  styles={{
-                     input: {
-                        color: WARNA.biruTua,
-                        borderRadius: WARNA.biruTua,
-                        borderColor: WARNA.biruTua,
-                     },
-                  }}
-                  required
-                  my={15}
-                  size="md"
-                  value={String(data.name)}
-                  onChange={(e) => {
-                     setData({ ...data, name: e.target.value })
-                     setTouched({ ...touched, name: false })
-                  }}
-                  onBlur={() => setTouched({ ...touched, name: true })}
-                  error={
-                     touched.name && (
-                       data.name == "" ? "Nama Jabatan Tidak Boleh Kosong" : null
-                     )
-                   }
-                  radius={10}
-                  placeholder="Nama Jabatan"
-               />
+               {loading ?
+                  <Box>
+                     <Skeleton height={40} mt={6} radius={10} />
+                     <Skeleton height={40} mt={15} radius={10} />
+                  </Box>
+                  :
+                  <Box>
+                     <Select
+                        label="Grup"
+                        placeholder="Pilih grup"
+                        size="md"
+                        radius={10}
+                        data={
+                           listGroup
+                              ? listGroup.map((data) => ({
+                                 value: data.id,
+                                 label: data.name,
+                              }))
+                              : []
+                        }
+                        value={String(data.idGroup)}
+                        mb={5}
+                        onChange={(val) => {
+                           setData({ ...data, idGroup: val })
+                           setTouched({ ...touched, idGroup: false })
+                        }}
+                        withAsterisk
+                        styles={{
+                           input: {
+                              color: WARNA.biruTua,
+                              borderRadius: WARNA.biruTua,
+                              borderColor: WARNA.biruTua,
+                           },
+                        }}
+                        error={
+                           touched.idGroup && (
+                              data.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                           )
+                        }
+                        onBlur={() => setTouched({ ...touched, idGroup: true })}
+                     />
+                     <TextInput
+                        label="Jabatan"
+                        styles={{
+                           input: {
+                              color: WARNA.biruTua,
+                              borderRadius: WARNA.biruTua,
+                              borderColor: WARNA.biruTua,
+                           },
+                        }}
+                        required
+                        my={15}
+                        size="md"
+                        value={String(data.name)}
+                        onChange={(e) => {
+                           setData({ ...data, name: e.target.value })
+                           setTouched({ ...touched, name: false })
+                        }}
+                        onBlur={() => setTouched({ ...touched, name: true })}
+                        error={
+                           touched.name && (
+                              data.name == "" ? "Nama Jabatan Tidak Boleh Kosong" : null
+                           )
+                        }
+                        radius={10}
+                        placeholder="Nama Jabatan"
+                     />
+                  </Box>
+               }
                <Box pos={"absolute"} bottom={10} left={0} right={0}>
                   <Button
                      c={"white"}

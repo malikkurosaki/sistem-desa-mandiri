@@ -79,7 +79,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateT
             </Group>
           </Box>
           <Box>
-            <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+            <Text >Tanggal Berakhir</Text>
             <Group
               justify="center"
               bg={"white"}
@@ -90,7 +90,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateT
             </Group>
           </Box>
         </SimpleGrid>
-        <Stack pt={15}>
+        <Stack pt={15} mb={100}>
           <TextInput
             styles={{
               input: {

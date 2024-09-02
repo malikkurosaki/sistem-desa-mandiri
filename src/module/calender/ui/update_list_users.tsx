@@ -2,7 +2,7 @@
 import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import { funGetDivisionById, IDataMemberDivision } from '@/module/division_new';
 import { useHookstate } from '@hookstate/core';
-import { Avatar, Box, Button, Center, Divider, Flex, Group, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Center, Divider, Flex, Group, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
@@ -171,7 +171,15 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
             })}
           </Box>
         }
-        <Box mt={"xl"}>
+      </Box>
+        <Box  pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        {loading ?
+          <Skeleton height={50} radius={30} />
+          :
           <Button
             c={"white"}
             bg={WARNA.biruTua}
@@ -182,8 +190,8 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
           >
             Simpan
           </Button>
+        }
         </Box>
-      </Box>
     </Box>
   );
 }
