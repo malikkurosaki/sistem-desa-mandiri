@@ -7,7 +7,6 @@ export const funGetAllTask = async (path?: string) => {
 
 
 export const funCreateTask = async (data: FormData) => {
-
    const response = await fetch("/api/task", {
       method: "POST",
       body: data,
@@ -127,6 +126,22 @@ export const funDeleteFileTask = async (path: string) => {
       headers: {
          "Content-Type": "application/json",
       },
+   });
+   return await response.json().catch(() => null);
+};
+
+export const funCekNamFileUploadTask = async (path: string, data: FormData) => {
+   const response = await fetch(`/api/task/file/${path}`, {
+      method: "PUT",
+      body: data,
+   });
+   return await response.json().catch(() => null);
+};
+
+export const funAddFileTask = async (path: string, data: FormData) => {
+   const response = await fetch(`/api/task/file/${path}`, {
+      method: "POST",
+      body: data,
    });
    return await response.json().catch(() => null);
 };
