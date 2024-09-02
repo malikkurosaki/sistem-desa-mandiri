@@ -61,6 +61,7 @@ export interface IDataMemberTaskDivision {
    name: string
    email: string
    img: string
+   position: string
 }
 
 export interface IDataFileTaskDivision {

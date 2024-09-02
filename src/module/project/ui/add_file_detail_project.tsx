@@ -16,19 +16,19 @@ import toast from "react-hot-toast";
 import { IoIosArrowDropright } from "react-icons/io";
 import { Dropzone } from "@mantine/dropzone";
 import _ from "lodash";
-import { IListFileTask } from "../lib/type_task";
 import ResultsFile from "./results_file";
 import { FaTrash } from "react-icons/fa6";
-import { funAddFileTask, funCekNamFileUploadTask } from "../lib/api_task";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { IListFileTaskProject } from "../lib/type_project";
+import { funAddFileProject, funCekNamFileUploadProject } from "../lib/api_project";
 
 
-export default function AddFileDetailTask() {
+export default function AddFileDetailProject() {
    const router = useRouter()
    const [openModal, setOpenModal] = useState(false)
    const [fileForm, setFileForm] = useState<any[]>([])
-   const [listFile, setListFile] = useState<IListFileTask[]>([])
-   const param = useParams<{ id: string, detail: string }>()
+   const [listFile, setListFile] = useState<IListFileTaskProject[]>([])
+   const param = useParams<{ id: string }>()
    const [indexDelFile, setIndexDelFile] = useState<number>(0)
    const [openDrawerFile, setOpenDrawerFile] = useState(false)
    const openRef = useRef<() => void>(null)
@@ -44,7 +44,7 @@ export default function AddFileDetailTask() {
       try {
          const fd = new FormData();
          fd.append(`file`, data);
-         const res = await funCekNamFileUploadTask(param.detail, fd)
+         const res = await funCekNamFileUploadProject(param.id, fd)
          if (res.success) {
             setFileForm([...fileForm, data])
             setListFile([...listFile, { name: data.name, extension: data.type.split("/")[1] }])
@@ -64,18 +64,19 @@ export default function AddFileDetailTask() {
             fd.append(`file${i}`, fileForm[i]);
          }
 
-         const response = await funAddFileTask(param.detail, fd)
+         const response = await funAddFileProject(param.id, fd)
+         console.group(response)
          if (response.success) {
             toast.success(response.message)
             setFileForm([])
             setListFile([])
-            router.push(`/division/${param.id}/task/${param.detail}`)
+            router.push(`/project/${param.id}`)
          } else {
             toast.error(response.message)
          }
       } catch (error) {
          console.log(error)
-         toast.error("Gagal menambahkan tugas divisi, coba lagi nanti");
+         toast.error("Gagal menambahkan file, coba lagi nanti");
       }
    }
 

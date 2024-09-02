@@ -36,7 +36,7 @@ export default function CreateProject() {
   const [openTugas, setOpenTugas] = useState(false)
   const [dataTask, setDataTask] = useState<IFormDateProject[]>([])
   const openRef = useRef<() => void>(null)
-  const [fileForm, setFileForm] = useState<FormData[]>([])
+  const [fileForm, setFileForm] = useState<any[]>([])
   const [listFile, setListFile] = useState<IListFileTaskProject[]>([])
   const [indexDelFile, setIndexDelFile] = useState<number>(0)
   const [indexDelTask, setIndexDelTask] = useState<number>(0)
@@ -91,16 +91,22 @@ export default function CreateProject() {
 
   async function onSubmit() {
     try {
-      const response = await funCreateProject({ title: body.title, idGroup: body.idGroup, task: dataTask, file: fileForm, member: memberValue })
+      const fd = new FormData();
+      for (let i = 0; i < fileForm.length; i++) {
+        fd.append(`file${i}`, fileForm[i]);
+      }
+
+      fd.append("data", JSON.stringify({
+        title: body.title,
+        idGroup: body.idGroup,
+        task: dataTask,
+        member: memberValue
+      }))
+
+      const response = await funCreateProject(fd)
 
       if (response.success) {
         toast.success(response.message)
-        // setBody({
-        //   idGroup: "",
-        //   title: "",
-        //   desc: "",
-        // })
-
         member.set([])
         setFileForm([])
         setListFile([])
@@ -111,7 +117,7 @@ export default function CreateProject() {
       }
     } catch (error) {
       console.log(error)
-      toast.error("Gagal menambahkan tugas divisi, coba lagi nanti");
+      toast.error("Gagal menambahkan kegiatan, coba lagi nanti");
     }
   }
 
@@ -342,15 +348,13 @@ export default function CreateProject() {
         onClose={() => setOpenDrawer(false)}
         title={"Pilih File"}
       >
-        <Flex justify={"space-around"}>
+        <Flex justify={"flex-start"} px={20}>
           <Dropzone
             openRef={openRef}
             onDrop={async (files) => {
               if (!files || _.isEmpty(files))
                 return toast.error('Tidak ada file yang dipilih')
-              const fd = new FormData();
-              fd.append("file", files[0]);
-              setFileForm([...fileForm, fd])
+              setFileForm([...fileForm, files[0]])
               setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
             }}
             activateOnClick={false}
@@ -379,7 +383,7 @@ export default function CreateProject() {
               <Text ta={"center"}>diperangkat</Text>
             </Box>
           </Dropzone>
-          <Box onClick={() => router.push("/project/create?page=file-save")}>
+          {/* <Box onClick={() => router.push("/project/create?page=file-save")}>
             <Box
               bg={"#DCEED8"}
               style={{
@@ -396,7 +400,7 @@ export default function CreateProject() {
               Pilih file yang
             </Text>
             <Text ta={"center"}>sudah ada</Text>
-          </Box>
+          </Box> */}
         </Flex>
       </LayoutDrawer>
 
