@@ -70,7 +70,7 @@ export async function GET(request: Request) {
          allData = data.map((v: any) => ({
             ..._.omit(v, ["ProjectTask", "createdAt"]),
             progress: ceil((v.ProjectTask.filter((i: any) => i.status == 1).length * 100) / v.ProjectTask.length),
-            createdAt: moment(v.dateStart).format("LL")
+            createdAt: moment(v.createdAt).format("LL")
          }))
 
       } else if (kategori == "division") {

@@ -4,7 +4,7 @@ import { ActionIcon, Box, Flex, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { FaPencil, FaUsers } from 'react-icons/fa6';
+import { FaFileCirclePlus, FaPencil, FaUsers } from 'react-icons/fa6';
 import { HiMenu } from 'react-icons/hi';
 import { IoAddCircle } from 'react-icons/io5';
 import { MdCancel } from 'react-icons/md';
@@ -93,13 +93,15 @@ export default function NavbarDetailProject() {
                 style={{
                   cursor: 'pointer'
                 }}
-                onClick={() => { router.push(param.id + '/cancel') }}
+                onClick={() => {
+                  router.push(param.id + '/add-file')
+                }}
               >
                 <Box>
-                  <MdCancel size={30} color={WARNA.biruTua} />
+                  <FaFileCirclePlus size={30} color={WARNA.biruTua} />
                 </Box>
                 <Box>
-                  <Text c={WARNA.biruTua} ta='center'>Batal</Text>
+                  <Text c={WARNA.biruTua} ta='center'>Tambah file</Text>
                 </Box>
               </Flex>
 
@@ -116,6 +118,21 @@ export default function NavbarDetailProject() {
                   <Text c={WARNA.biruTua} ta='center'>Edit</Text>
                 </Box>
               </Flex>
+
+              <Flex justify={'center'} align={'center'} direction={'column'}
+                style={{
+                  cursor: 'pointer'
+                }}
+                onClick={() => { router.push(param.id + '/cancel') }}
+              >
+                <Box>
+                  <MdCancel size={30} color={WARNA.biruTua} />
+                </Box>
+                <Box>
+                  <Text c={WARNA.biruTua} ta='center'>Batal</Text>
+                </Box>
+              </Flex>
+
             </SimpleGrid>
           </Stack>
         </Box>

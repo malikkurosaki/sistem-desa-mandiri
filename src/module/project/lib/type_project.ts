@@ -26,6 +26,8 @@ export interface IDataMemberProject {
   idUser: string
   name: string
   email: string
+  img: string
+  position: string
 }
 
 export interface IFormProject {
