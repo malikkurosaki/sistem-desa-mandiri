@@ -74,11 +74,11 @@ export default function CreateTask() {
 
       if (response.success) {
         toast.success(response.message)
-        // setTitle("")
-        // member.set([])
-        // setFileForm([])
-        // setListFile([])
-        // setDataTask([])
+        setTitle("")
+        member.set([])
+        setFileForm([])
+        setListFile([])
+        setDataTask([])
       } else {
         toast.error(response.message)
       }
@@ -322,7 +322,7 @@ export default function CreateTask() {
               <Text ta={"center"}>diperangkat</Text>
             </Box>
           </Dropzone>
-          <Box onClick={() => router.push("/task/create?page=file-save")}>
+          {/* <Box onClick={() => router.push("/task/create?page=file-save")}>
             <Box
               bg={"#DCEED8"}
               style={{
@@ -339,7 +339,7 @@ export default function CreateTask() {
               Pilih file yang
             </Text>
             <Text ta={"center"}>sudah ada</Text>
-          </Box>
+          </Box> */}
         </Flex>
       </LayoutDrawer>
 
