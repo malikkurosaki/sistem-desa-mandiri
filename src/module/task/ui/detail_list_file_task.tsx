@@ -1,18 +1,24 @@
 'use client'
-import { SkeletonDetailListTugasTask, WARNA } from "@/module/_global";
-import { Box, Group, Skeleton, Text } from "@mantine/core";
+import { LayoutDrawer, SkeletonDetailListTugasTask, WARNA } from "@/module/_global";
+import { Box, Flex, Group, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { BsFiletypeCsv, BsFiletypeHeic, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from "react-icons/bs";
-import { funGetTaskDivisionById } from "../lib/api_task";
+import { BsFileTextFill, BsFiletypeCsv, BsFiletypeHeic, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from "react-icons/bs";
+import { funDeleteFileTask, funGetTaskDivisionById } from "../lib/api_task";
 import { IDataFileTaskDivision } from "../lib/type_task";
+import { FaTrash } from "react-icons/fa6";
+import LayoutModal from "@/module/_global/layout/layout_modal";
 
 export default function ListFileDetailTask() {
    const [isData, setData] = useState<IDataFileTaskDivision[]>([])
    const [loading, setLoading] = useState(true)
    const param = useParams<{ id: string, detail: string }>()
+   const [openDrawer, setOpenDrawer] = useState(false)
+   const [isOpenModal, setOpenModal] = useState(false)
+   const [idData, setIdData] = useState('')
+   const [nameData, setNameData] = useState('')
    async function getOneData() {
       try {
          setLoading(true)
@@ -33,6 +39,25 @@ export default function ListFileDetailTask() {
    useShallowEffect(() => {
       getOneData();
    }, [param.detail])
+
+
+   async function onDelete() {
+      try {
+         const res = await funDeleteFileTask(idData);
+         if (res.success) {
+            toast.success(res.message)
+            getOneData()
+            setIdData("")
+            setOpenDrawer(false)
+         } else {
+            toast.error(res.message);
+         }
+      } catch (error) {
+         console.error(error);
+         toast.error("Gagal menghapus file, coba lagi nanti");
+      }
+
+   }
 
    return (
       <Box pt={20}>
@@ -67,6 +92,12 @@ export default function ListFileDetailTask() {
                                  padding: 10
                               }}
                               mb={10}
+
+                              onClick={() => {
+                                 setNameData(item.name + '.' + item.extension)
+                                 setIdData(item.id)
+                                 setOpenDrawer(true)
+                              }}
                            >
                               <Group>
                                  {item.extension == "pdf" && <BsFiletypePdf size={25} />}
@@ -74,13 +105,53 @@ export default function ListFileDetailTask() {
                                  {item.extension == "png" && <BsFiletypePng size={25} />}
                                  {item.extension == "jpg" || item.extension == "jpeg" && <BsFiletypeJpg size={25} />}
                                  {item.extension == "heic" && <BsFiletypeHeic size={25} />}
-                                 <Text>{item.name}</Text>
+                                 <Text>{item.name + '.' + item.extension}</Text>
                               </Group>
                            </Box>
                         )
                      })
             }
          </Box>
+
+
+
+         <LayoutDrawer opened={openDrawer} title={nameData} onClose={() => setOpenDrawer(false)}>
+            <Box>
+               <Stack pt={10}>
+                  <SimpleGrid
+                     cols={{ base: 3, sm: 3, lg: 3 }}
+                  >
+                     <Flex onClick={() => { }} justify={'center'} align={'center'} direction={'column'} >
+                        <Box>
+                           <BsFileTextFill size={30} color={WARNA.biruTua} />
+                        </Box>
+                        <Box>
+                           <Text c={WARNA.biruTua}>Lihat file</Text>
+                        </Box>
+                     </Flex>
+
+                     <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
+                        <Box>
+                           <FaTrash size={30} color={WARNA.biruTua} />
+                        </Box>
+                        <Box>
+                           <Text c={WARNA.biruTua}>Hapus file</Text>
+                        </Box>
+                     </Flex>
+                  </SimpleGrid>
+               </Stack>
+            </Box>
+         </LayoutDrawer>
+
+
+         <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+            description="Apakah Anda yakin ingin menghapus file ini? File yang dihapus tidak dapat dikembalikan"
+            onYes={(val) => {
+               if (val) {
+                  onDelete()
+               }
+               setOpenModal(false)
+            }} />
       </Box>
    )
 }

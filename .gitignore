@@ -40,3 +40,4 @@ next-env.d.ts
 
 # folder foto kandidat
 /public/image/
+/public/file/

@@ -8,7 +8,7 @@ import { funGetTaskDivisionById } from "../lib/api_task";
 import { useShallowEffect } from "@mantine/hooks";
 import { HiMenu } from "react-icons/hi";
 import { IoAddCircle } from "react-icons/io5";
-import { FaPencil, FaUsers } from "react-icons/fa6";
+import { FaFileCirclePlus, FaPencil, FaUsers } from "react-icons/fa6";
 import { MdCancel } from "react-icons/md";
 
 export default function NavbarDetailDivisionTask() {
@@ -95,13 +95,15 @@ export default function NavbarDetailDivisionTask() {
                         style={{
                            cursor: 'pointer'
                         }}
-                        onClick={() => { router.push(param.detail + '/cancel') }}
+                        onClick={() => {
+                           router.push(param.detail + '/add-file')
+                        }}
                      >
                         <Box>
-                           <MdCancel size={30} color={WARNA.biruTua} />
+                           <FaFileCirclePlus size={30} color={WARNA.biruTua} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua} ta='center'>Batal</Text>
+                           <Text c={WARNA.biruTua} ta='center'>Tambah file</Text>
                         </Box>
                      </Flex>
 
@@ -118,6 +120,21 @@ export default function NavbarDetailDivisionTask() {
                            <Text c={WARNA.biruTua} ta='center'>Edit</Text>
                         </Box>
                      </Flex>
+
+                     <Flex justify={'center'} align={'center'} direction={'column'}
+                        style={{
+                           cursor: 'pointer'
+                        }}
+                        onClick={() => { router.push(param.detail + '/cancel') }}
+                     >
+                        <Box>
+                           <MdCancel size={30} color={WARNA.biruTua} />
+                        </Box>
+                        <Box>
+                           <Text c={WARNA.biruTua} ta='center'>Batal</Text>
+                        </Box>
+                     </Flex>
+
                   </SimpleGrid>
                </Stack>
             </Box>

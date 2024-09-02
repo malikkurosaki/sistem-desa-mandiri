@@ -136,7 +136,7 @@ export async function POST(request: Request) {
 
       if (member.length > 0) {
          const dataMember = member.map((v: any) => ({
-            ..._.omit(v, ["idUser", "name"]),
+            ..._.omit(v, ["idUser", "name", "img"]),
             idDivision: idDivision,
             idProject: data.id,
             idUser: v.idUser,
@@ -147,66 +147,56 @@ export async function POST(request: Request) {
          })
       }
 
+
+
       let fileFix: any[] = []
 
-      // if (cekFile) {
-      //    let a = 0
-      //    const root = path.join(process.cwd(), "./public/image/user/");
-      //    for (var pair of body.entries()) {
-      //       if (String(pair[0]) == "file" + a) {
-      //          const file = body.get(pair[0]) as File
-      //          const fName = file.name
-      //          const fExt = fName.split(".").pop()
-
-      //          console.log(file, file.name)
-
-      //          const insertToContainer = await prisma.containerFileDivision.create({
-      //             data:{
-      //                idDivision: idDivision,
-      //                name: fName,
-      //                extension: String(fExt)
-      //             }
-      //          })
-
-      //          const dataFile = {
-      //             name: fName,
-      //             extension: fExt,
-      //             idDivision: idDivision,
-      //          }
+      if (cekFile) {
+         let a = 0
+         const root = path.join(process.cwd(), "./public/file/task/");
+         for (var pair of body.entries()) {
+            if (String(pair[0]) == "file" + a) {
+               const file = body.get(pair[0]) as File
+               const fName = file.name.split(".")[0]
+               const fExt = file.name.split(".").pop()
 
 
-      //          fileFix.push(dataFile)
-      //       }
-      //       a++
-      //    }
+               const insertToContainer = await prisma.containerFileDivision.create({
+                  data: {
+                     idDivision: idDivision,
+                     name: fName,
+                     extension: String(fExt)
+                  },
+                  select: {
+                     id: true
+                  }
+               })
 
-      //    const insertFile = await prisma.divisionProjectFile.createMany({
-      //       data: fileFix
-      //    })
-      // }
+               const nameFix = insertToContainer.id + '.' + fExt
+               const filePath = path.join(root, nameFix)
+               // Konversi ArrayBuffer ke Buffer
+               const buffer = Buffer.from(await file.arrayBuffer());
+               // Tulis file ke sistem
+               fs.writeFileSync(filePath, buffer);
 
 
-      // if (file.length > 0) {
-      //    file.map((v: any, index: any) => {
-      //       const f: any = file[index].get('file')
-      //       const fName = f.name
-      //       const fExt = fName.split(".").pop()
+               const dataFile = {
+                  idProject: data.id,
+                  idDivision: idDivision,
+                  idFile: insertToContainer.id,
+                  createdBy: user.id,
+               }
 
-      //       const dataFile = {
-      //          name: fName,
-      //          extension: fExt,
-      //          idDivision: idDivision,
-      //          idProject: data.id,
-      //       }
 
-      //       fileFix.push(dataFile)
-      //    })
+               fileFix.push(dataFile)
+            }
+            a++
+         }
 
-      //    const insertFile = await prisma.divisionProjectFile.createMany({
-      //       data: fileFix
-      //    })
-
-      // }
+         const insertFile = await prisma.divisionProjectFile.createMany({
+            data: fileFix
+         })
+      }
 
 
       return NextResponse.json({ success: true, message: "Berhasil membuat tugas divisi" }, { status: 200 });
