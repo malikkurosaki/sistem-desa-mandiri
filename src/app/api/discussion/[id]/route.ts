@@ -43,7 +43,8 @@ export async function GET(request: Request, context: { params: { id: string } })
                 createdAt: true,
                 User: {
                     select: {
-                        name: true
+                        name: true,
+                        img: true
                     }
                 },
                 DivisionDisscussionComment: {
@@ -53,7 +54,8 @@ export async function GET(request: Request, context: { params: { id: string } })
                         createdAt: true,
                         User: {
                             select: {
-                                name: true
+                                name: true,
+                                img: true
                             }
                         }
                     }
@@ -63,16 +65,17 @@ export async function GET(request: Request, context: { params: { id: string } })
 
         const { ...userMember } = data
         const username = data?.User.name
+        const user_img = data?.User.img
         const createdAt = moment(data?.createdAt).format("LL")
 
 
 
-        const result = { ...userMember, username, createdAt }
+        const result = { ...userMember, username, createdAt, user_img }
 
 
         const omitData = _.omit(result, ["User"])
         const comments = omitData.DivisionDisscussionComment.map((comment: any) => {
-            return { ...comment, username: comment.User.name };
+            return { ...comment, username: comment.User.name, img: comment.User.img };
         });
 
 

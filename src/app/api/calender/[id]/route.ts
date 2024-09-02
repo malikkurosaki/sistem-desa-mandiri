@@ -66,17 +66,17 @@ export async function GET(request: Request, context: { params: { id: string } })
                     select: {
                         id: true,
                         name: true,
-                        email: true
+                        email: true,
+                        img: true
                     }
                 }
             }
         })
         const fixMember = member.map((v: any) => ({
             ..._.omit(v, ["User"]),
-
             name: v.User.name,
             email: v.User.email,
-
+            img: v.User.img
         }))
 
 

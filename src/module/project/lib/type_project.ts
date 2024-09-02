@@ -46,7 +46,8 @@ export interface IFormDateProject {
 
 export interface IFormMemberProject {
   idUser: string,
-  name: string
+  name: string,
+  img: string
 }
 
 
@@ -65,7 +66,8 @@ export interface IDataMemberProjectDetail {
   id: string,
   idUser: string,
   isLeader: string,
-  name: string
+  name: string,
+  img: string
 }
 
 export interface IListFileTaskProject {

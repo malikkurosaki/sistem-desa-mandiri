@@ -112,7 +112,7 @@ export default function CreateAnggotaDivision() {
               </Box>
            ))
           :
-        <Box mt={20} mb={60}>
+          <Box mt={20} mb={100}>
           {dataMember.map((v: any, index: any) => {
             const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id)
             const found = memberDb.some((i: any) => i.idUser == v.id)
@@ -120,7 +120,7 @@ export default function CreateAnggotaDivision() {
               <Box my={10} key={index} onClick={() => (!found) ? handleFileClick(index) : null}>
                 <Group justify='space-between' align='center'>
                   <Group>
-                    <Avatar src={"v.img"} alt="it's me" size="lg" />
+                    <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
                     <Stack align="flex-start" justify="flex-start">
                       <Text>{v.name}</Text>
                       <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>

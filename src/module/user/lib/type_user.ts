@@ -8,5 +8,6 @@ export type TypeUser = {
    img:string
    isActive: boolean,
    group: string,
+   img: string
    position: string
 }[]

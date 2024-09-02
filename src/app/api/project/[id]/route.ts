@@ -116,7 +116,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                                 }
                             }
                         }
-                    }
+                    },
                 }
             })
 

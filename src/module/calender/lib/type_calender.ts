@@ -37,6 +37,7 @@ export interface IDataDetailByIdMember {
     idUser: string
     name: string
     email: string
+    img: string
 }
 
 export interface IFormCreateCalender {
@@ -56,6 +57,7 @@ export interface IFormMemberCalender {
     idUser: {
         id: string
         name: string
+        img: string
     }[]
 }
 

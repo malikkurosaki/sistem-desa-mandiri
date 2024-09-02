@@ -18,8 +18,8 @@ export default function NavbarCreateDivisionCalender() {
   const [value, setValue] = useState<Date | null>(null);
   const router = useRouter()
   const [isModal, setModal] = useState(false)
-  const memberUser = useHookstate(globalCalender)
-  const memberValue = memberUser.get() as IFormMemberCalender[]
+  const member = useHookstate(globalCalender)
+  const memberValue = member.get() as IFormMemberCalender[]
   const [openMember, setOpenMember] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
   const [touched, setTouched] = useState({
@@ -63,7 +63,7 @@ export default function NavbarCreateDivisionCalender() {
           setModal(false)
           router.push(`/division/${param.id}/calender`)
           toast.success(response.message)
-          memberUser.set([])
+          member.set([])
         } else {
           toast.error(response.message)
           setModal(false)
@@ -244,11 +244,11 @@ export default function NavbarCreateDivisionCalender() {
             </Group>
           </Box>
           {
-            memberUser.length > 0 &&
+            member.length > 0 &&
             <Box pt={30} mb={60}>
               <Group justify="space-between">
                 <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-                <Text c={WARNA.biruTua}>Total {memberUser.length} Anggota</Text>
+                <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
               </Group>
               <Box pt={10}>
                 <Box mb={20}>
@@ -260,28 +260,34 @@ export default function NavbarCreateDivisionCalender() {
                     px={20}
                     py={10}
                   >
-                    {memberUser.get().map((v: any, i: any) => {
-                      return (
-                        <Flex
-                          justify={"space-between"}
-                          align={"center"}
-                          mt={20}
-                          key={i}
-                        >
-                          <Group>
-                            <Avatar src={"v.image"} alt="it's me" size="lg" />
-                            <Box>
-                              <Text c={WARNA.biruTua} fw={"bold"}>
-                                {v.name}
-                              </Text>
-                            </Box>
-                          </Group>
-                          <Text c={WARNA.biruTua} fw={"bold"}>
-                            Anggota
-                          </Text>
-                        </Flex>
-                      );
-                    })}
+                    {member.length == 0 ?
+                      <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh' }}>
+                        <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Anggota</Text>
+                      </Box>
+                      :
+
+                      member.get().map((v: any, i: any) => {
+                        return (
+                          <Flex
+                            justify={"space-between"}
+                            align={"center"}
+                            mt={20}
+                            key={i}
+                          >
+                            <Group>
+                              <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                              <Box>
+                                <Text c={WARNA.biruTua} fw={"bold"}>
+                                  {v.name}
+                                </Text>
+                              </Box>
+                            </Group>
+                            <Text c={WARNA.biruTua} fw={"bold"}>
+                              Anggota
+                            </Text>
+                          </Flex>
+                        );
+                      })}
                   </Box>
                 </Box>
               </Box>
