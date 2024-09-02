@@ -146,7 +146,7 @@ export default function ListDivisionTask() {
                                  <Card.Section>
                                     <Box h={120} bg={WARNA.biruTua}>
                                        <Flex justify={'center'} align={'center'} h={"100%"}>
-                                          <Title order={3} c={"white"}>{v.title}</Title>
+                                          <Title order={3} c={"white"} lineClamp={1}>{v.title}</Title>
                                        </Flex>
                                     </Box>
                                  </Card.Section>

@@ -128,10 +128,16 @@ export default function ListTugasDetailTask() {
                                           padding: 10,
                                        }}
                                     >
-                                       <Group>
-                                          <AiOutlineFileSync size={25} />
-                                          <Text>{item.title}</Text>
-                                       </Group>
+                                       <Grid gutter={"sm"} justify='flex-start' align='flex-start'>
+                                          <Grid.Col span={"auto"}>
+                                             <Center >
+                                                <AiOutlineFileSync size={30} />
+                                             </Center>
+                                          </Grid.Col>
+                                          <Grid.Col span={10}>
+                                             <Text>{item.title}</Text>
+                                          </Grid.Col>
+                                       </Grid>
                                     </Box>
                                     <Box>
                                        <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>

@@ -74,11 +74,12 @@ export default function CreateTask() {
 
       if (response.success) {
         toast.success(response.message)
-        setTitle("")
+        // setTitle("")
         member.set([])
         setFileForm([])
         setListFile([])
         setDataTask([])
+        router.push(`/division/${param.id}/task/`)
       } else {
         toast.error(response.message)
       }
@@ -164,6 +165,7 @@ export default function CreateTask() {
             </Group>
           </Box>
         </Stack>
+        <Box pb={100}>
         {
           dataTask.length > 0 &&
           <Box pt={20}>
@@ -211,7 +213,7 @@ export default function CreateTask() {
 
         {
           member.length > 0 &&
-          <Box pt={30} mb={100}>
+          <Box pt={30}>
             <Group justify="space-between">
               <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
               <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
@@ -253,8 +255,7 @@ export default function CreateTask() {
             </Box>
           </Box>
         }
-
-
+        </Box>
       </Box>
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),

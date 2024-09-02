@@ -105,7 +105,7 @@ export default function ListTugasDetailProject() {
               isData.length === 0 ? <Text>Tidak ada tugas</Text> :
                 isData.map((item, index) => {
                   return (
-                    <Box key={index}>
+                    <Box key={index} mb={20}>
                       <Grid
                         onClick={() => {
                           setIdData(item.id)
@@ -126,9 +126,17 @@ export default function ListTugasDetailProject() {
                               padding: 10,
                             }}
                           >
-                            <Group>
-                              <AiOutlineFileSync size={25} />
+                            <Grid gutter={"sm"} justify='flex-start' align='flex-start'>
+                              <Grid.Col span={"auto"}>
+                                <Center>
+                              <AiOutlineFileSync size={30} />
+                                </Center>
+                              </Grid.Col>
+                              <Grid.Col span={10}>
                               <Text>{item.title}</Text>
+                              </Grid.Col>
+                            </Grid>
+                            <Group>
                             </Group>
                           </Box>
                           <Box>
@@ -148,7 +156,7 @@ export default function ListTugasDetailProject() {
                                 </Group>
                               </Box>
                               <Box>
-                                <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+                                <Text>Tanggal Berakhir</Text>
                                 <Group
                                   justify="center"
                                   bg={"white"}

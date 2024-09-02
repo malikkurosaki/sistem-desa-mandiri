@@ -22,7 +22,7 @@ export const LayoutNavbarNew = ({ back, title, menu }: { back?: string, title: s
                }
             </Grid.Col>
             <Grid.Col span={8}>
-               <Title c={WARNA.bgWhite} ta={'center'} order={5}>{_.startCase(title)}</Title>
+               <Title c={WARNA.bgWhite} ta={'center'} order={5} lineClamp={1}>{_.startCase(title)}</Title>
             </Grid.Col>
             <Grid.Col span="auto">
                <Group justify='flex-end'>
