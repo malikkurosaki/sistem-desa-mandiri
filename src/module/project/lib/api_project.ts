@@ -6,16 +6,10 @@ export const funGetAllProject = async (path?: string) => {
     return await response.json().catch(() => null);
 }
 
-export const funCreateProject = async (data: IFormProject) => {
-    if (data.title.length < 3)
-        return { success: false, message: 'Nama Kegiatan minimal 3 karakter' }
-    
+export const funCreateProject = async (data: FormData) => {
     const response = await fetch(`/api/project`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: data,
     });
     return await response.json().catch(() => null);
 }

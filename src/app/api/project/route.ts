@@ -3,7 +3,8 @@ import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
-
+import path from "path";
+import fs from "fs";
 
 
 // GET ALL DATA PROJECT
@@ -80,7 +81,11 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
 
-        const { idGroup, title, task, member, file } = (await request.json())
+        const body = await request.formData()
+        const dataBody = body.get("data")
+        const cekFile = body.has("file0")
+
+        const { idGroup, title, task, member } = JSON.parse(dataBody as string)
         const userId = user.id
 
 
@@ -112,7 +117,7 @@ export async function POST(request: Request) {
 
         if (member.length > 0) {
             const dataMember = member.map((v: any) => ({
-                ..._.omit(v, ["idUser", "name"]),
+                ..._.omit(v, ["idUser", "name", "img"]),
                 idProject: data.id,
                 idUser: v.idUser,
             }))
@@ -122,27 +127,36 @@ export async function POST(request: Request) {
             })
         }
 
-        let fileFix: any[] = []
+        if (cekFile) {
+            let a = 0
+            const root = path.join(process.cwd(), "./public/file/project/");
+            for (var pair of body.entries()) {
+                if (String(pair[0]) == "file" + a) {
+                    const file = body.get(pair[0]) as File
+                    const fExt = file.name.split(".").pop()
+                    const fName = file.name.replace("." + fExt, "")
 
-        if (file.length > 0) {
-            file.map((v: any, index: any) => {
-                const f: any = file[index].get('file')
-                const fName = f.name
-                const fExt = fName.split(".").pop()
 
-                const dataFile = {
-                    name: fName,
-                    extension: fExt,
-                    idProject: data.id,
+                    const insertToTable = await prisma.projectFile.create({
+                        data: {
+                            idProject: data.id,
+                            name: fName,
+                            extension: String(fExt)
+                        },
+                        select: {
+                            id: true
+                        }
+                    })
+
+                    const nameFix = insertToTable.id + '.' + fExt
+                    const filePath = path.join(root, nameFix)
+                    // Konversi ArrayBuffer ke Buffer
+                    const buffer = Buffer.from(await file.arrayBuffer());
+                    // Tulis file ke sistem
+                    fs.writeFileSync(filePath, buffer);
                 }
-
-                fileFix.push(dataFile)
-            })
-
-            const insertFile = await prisma.divisionProjectFile.createMany({
-                data: fileFix
-            })
-
+                a++
+            }
         }
 
 
