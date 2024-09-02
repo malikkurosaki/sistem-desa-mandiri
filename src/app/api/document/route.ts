@@ -181,7 +181,7 @@ export async function GET(request: Request) {
          allData.push(...formatDataShare)
       }
 
-      const formatData = _.orderBy(allData, ['category', 'name'])
+      const formatData = _.orderBy(allData, ['category', 'name'], ['desc', 'asc']);
 
       let pathNow = path
       let jalur = []
