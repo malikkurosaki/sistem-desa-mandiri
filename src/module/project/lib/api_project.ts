@@ -121,3 +121,30 @@ export const funEditProject = async (path: string, data: { name: string }) => {
     });
     return await response.json().catch(() => null);
 }
+
+
+export const funDeleteFileProject = async (path: string) => {
+    const response = await fetch(`/api/project/file/${path}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    return await response.json().catch(() => null);
+};
+
+export const funCekNamFileUploadProject = async (path: string, data: FormData) => {
+    const response = await fetch(`/api/project/file/${path}`, {
+        method: "PUT",
+        body: data,
+    });
+    return await response.json().catch(() => null);
+};
+
+export const funAddFileProject = async (path: string, data: FormData) => {
+    const response = await fetch(`/api/project/file/${path}`, {
+        method: "POST",
+        body: data,
+    });
+    return await response.json().catch(() => null);
+};

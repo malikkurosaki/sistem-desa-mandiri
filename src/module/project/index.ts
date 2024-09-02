@@ -21,6 +21,7 @@ import AddDetailTaskProject from "./ui/add_detail_task_project";
 import CancelProject from "./ui/cancel_project";
 import AddMemberDetailProject from "./ui/add_member_detail_project";
 import CreateProject from "./ui/create_project";
+import AddFileDetailProject from "./ui/add_file_detail_project";
 
 export { ViewProject }
 export { ViewDateEndTask }
@@ -44,3 +45,4 @@ export { AddDetailTaskProject }
 export { CancelProject }
 export { AddMemberDetailProject }
 export { CreateProject }
+export { AddFileDetailProject }

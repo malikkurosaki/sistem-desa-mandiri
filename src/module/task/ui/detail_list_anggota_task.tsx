@@ -102,13 +102,13 @@ export default function ListAnggotaDetailTask() {
                                     }}
                                  >
                                     <Group>
-                                       <Avatar src={""} alt="it's me" size="lg" />
+                                       <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
                                        <Box>
                                           <Text c={WARNA.biruTua} fw={"bold"}>
                                              {v.name}
                                           </Text>
                                           <Text c={"#5A687D"} fz={14}>
-                                             {v.position}
+                                             {v.email}
                                           </Text>
                                        </Box>
                                     </Group>
