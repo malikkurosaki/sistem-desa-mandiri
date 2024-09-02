@@ -2,7 +2,7 @@
 import { WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
-import { Box, Button, Select, Stack, Text, TextInput } from "@mantine/core";
+import { Box, Button, rem, Select, Stack, Text, TextInput } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -129,7 +129,7 @@ export default function CreateMember() {
 
   return (
     <Box>
-      <Stack align="center" justify="center" gap="xs" pt={30} px={20}>
+      <Stack align="center" justify="center" gap="xs" pt={30} px={20} pb={100}>
         <Box
           bg={WARNA.biruTua}
           py={30}
@@ -406,7 +406,11 @@ export default function CreateMember() {
           }
         />
       </Stack>
-      <Box mt={30} mx={20} pb={20}>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
         <Button
           c={"white"}
           bg={WARNA.biruTua}

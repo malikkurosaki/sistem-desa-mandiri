@@ -5,6 +5,7 @@ import {
    Button,
    Input,
    rem,
+   Skeleton,
    Stack,
    Textarea,
    TextInput,
@@ -22,6 +23,7 @@ export default function EditTask() {
    const [title, setTitle] = useState("")
    const [openModal, setOpenModal] = useState(false)
    const param = useParams<{ id: string, detail: string }>()
+   const [loading, setLoading] = useState(true)
    const [touched, setTouched] = useState({
       title: false,
    });
@@ -50,16 +52,19 @@ export default function EditTask() {
 
    async function getOneData() {
       try {
+         setLoading(true)
          const res = await funGetTaskDivisionById(param.detail, 'data');
          if (res.success) {
             setTitle(res.data.title);
          } else {
             toast.error(res.message);
          }
-
+         setLoading(false);
       } catch (error) {
          console.error(error);
          toast.error("Gagal mendapatkan data tugas divisi, coba lagi nanti");
+      } finally {
+         setLoading(false);
       }
    }
 
@@ -74,36 +79,43 @@ export default function EditTask() {
          <LayoutNavbarNew back="" title={"Edit Judul Tugas"} menu />
          <Box p={20}>
             <Stack pt={15}>
-               <TextInput
-                  styles={{
-                     input: {
-                        border: `1px solid ${"#D6D8F6"}`,
-                        borderRadius: 10,
-                     },
-                  }}
-                  required
-                  placeholder="Tugas"
-                  label="Judul Tugas"
-                  size="md"
-                  value={title}
-                  onChange={(e) => {
-                     setTitle(e.target.value)
-                     setTouched({ ...touched, title: false })
-                  }}
-                  error={
-                     touched.title && (
-                        title == "" ? "Error! harus memasukkan judul tugas" : null
-                     )
-                  }
-                  onBlur={() => setTouched({ ...touched, title: true })}
-               />
+               {loading ?
+                  <Skeleton height={40} mt={20} radius={10} />
+                  :
+                  <TextInput
+                     styles={{
+                        input: {
+                           border: `1px solid ${"#D6D8F6"}`,
+                           borderRadius: 10,
+                        },
+                     }}
+                     required
+                     placeholder="Tugas"
+                     label="Judul Tugas"
+                     size="md"
+                     value={title}
+                     onChange={(e) => {
+                        setTitle(e.target.value)
+                        setTouched({ ...touched, title: false })
+                     }}
+                     error={
+                        touched.title && (
+                           title == "" ? "Error! harus memasukkan judul tugas" : null
+                        )
+                     }
+                     onBlur={() => setTouched({ ...touched, title: true })}
+                  />
+               }
             </Stack>
          </Box>
-            <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-               maxWidth: rem(550),
-               zIndex: 999,
-               backgroundColor: `${WARNA.bgWhite}`,
-            }}>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${WARNA.bgWhite}`,
+         }}>
+            {loading ?
+               <Skeleton height={50} radius={30} />
+               :
                <Button
                   c={"white"}
                   bg={WARNA.biruTua}
@@ -114,7 +126,9 @@ export default function EditTask() {
                >
                   Simpan
                </Button>
-            </Box>
+            }
+
+         </Box>
 
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}

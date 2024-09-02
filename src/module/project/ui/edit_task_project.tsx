@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funEditProject, funGetOneProjectById } from '../lib/api_project';
 import { useShallowEffect } from '@mantine/hooks';
-import { Box, Button, Input, rem, Stack, TextInput } from '@mantine/core';
+import { Box, Button, Input, rem, Skeleton, Stack, TextInput } from '@mantine/core';
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 
@@ -13,6 +13,7 @@ export default function EditTaskProject() {
   const [name, setName] = useState("")
   const [openModal, setOpenModal] = useState(false)
   const param = useParams<{ id: string }>()
+  const [loading, setLoading] = useState(true)
   const [touched, setTouched] = useState({
     name: false,
   });
@@ -41,16 +42,19 @@ export default function EditTaskProject() {
 
   async function getOneData() {
     try {
+      setLoading(true)
       const res = await funGetOneProjectById(param.id, 'data');
       if (res.success) {
         setName(res.data.title);
       } else {
         toast.error(res.message);
       }
-
+      setLoading(false);
     } catch (error) {
       console.error(error);
       toast.error("Gagal mendapatkan data Kegiatan, coba lagi nanti");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -63,6 +67,9 @@ export default function EditTaskProject() {
       <LayoutNavbarNew back="" title={"Edit Judul Kegiatan"} menu />
       <Box p={20}>
         <Stack pt={15}>
+          {loading ? 
+             <Skeleton height={40} mt={20} radius={10} />
+            :
           <TextInput
             styles={{
               input: {
@@ -86,6 +93,7 @@ export default function EditTaskProject() {
             }
             onBlur={() => setTouched({ ...touched, name: true })}
           />
+          }
         </Stack>
       </Box>
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
@@ -93,6 +101,9 @@ export default function EditTaskProject() {
         zIndex: 999,
         backgroundColor: `${WARNA.bgWhite}`,
       }}>
+        {loading ?
+           <Skeleton height={50} radius={30} />
+      :  
         <Button
           c={"white"}
           bg={WARNA.biruTua}
@@ -103,6 +114,7 @@ export default function EditTaskProject() {
         >
           Simpan
         </Button>
+      }
       </Box>
 
 

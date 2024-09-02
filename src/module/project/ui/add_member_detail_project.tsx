@@ -5,8 +5,8 @@ import { IDataMemberProject, IDataMemberProjectDetail } from '../lib/type_projec
 import toast from 'react-hot-toast';
 import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
 import { useShallowEffect } from '@mantine/hooks';
-import { Avatar, Box, Button, Divider, Flex, Group, rem, Stack, Text } from '@mantine/core';
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { Avatar, Box, Button, Divider, Flex, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
+import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import { FaCheck } from 'react-icons/fa6';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 
@@ -17,27 +17,31 @@ export default function AddMemberDetailProject() {
   const [isData, setData] = useState<IDataMemberProjectDetail[]>([])
   const [isDataMember, setDataMember] = useState<IDataMemberProject[]>([])
   const [selectAll, setSelectAll] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [openModal, setOpenModal] = useState(false)
 
 
   async function getData() {
     try {
+      setLoading(true)
       const response = await funGetAllMemberById(param.id)
       if (response.success) {
         setData(response.data.member)
       } else {
         toast.error(response.message)
       }
-
       const res = await funGetOneProjectById(param.id, 'member');
       if (res.success) {
         setDataMember(res.data)
       } else {
         toast.error(res.message);
       }
+      setLoading(false)
     } catch (error) {
       console.log(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -112,6 +116,15 @@ export default function AddMemberDetailProject() {
           </Text>
           {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
         </Group>
+        {loading ? 
+          Array(8)
+          .fill(null)
+          .map((_, i) => (
+            <Box key={i} mb={10}>
+              <SkeletonSingle/>
+            </Box>
+          ))
+      :  
         <Box mt={15} mb={100}>
           {isData.map((v, i) => {
             const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
@@ -148,12 +161,16 @@ export default function AddMemberDetailProject() {
             );
           })}
         </Box>
+      }
       </Box>
         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
             backgroundColor: `${WARNA.bgWhite}`,
-         }}>
+      }}>
+        {loading ? 
+          <Skeleton height={50} radius={30} />
+        :
           <Button
             c={"white"}
             bg={WARNA.biruTua}
@@ -164,6 +181,7 @@ export default function AddMemberDetailProject() {
           >
             Simpan
           </Button>
+      }
         </Box>
 
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}

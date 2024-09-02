@@ -7,6 +7,7 @@ import {
    Flex,
    Group,
    Input,
+   rem,
    SimpleGrid,
    Stack,
    Text,
@@ -98,7 +99,7 @@ export default function AddDetailTask() {
                   </Group>
                </Box>
                <Box>
-                  <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+                  <Text >Tanggal Berakhir</Text>
                   <Group
                      justify="center"
                      bg={"white"}
@@ -109,7 +110,7 @@ export default function AddDetailTask() {
                   </Group>
                </Box>
             </SimpleGrid>
-            <Stack pt={15}>
+            <Stack pt={15} pb={100}>
                <TextInput
                   styles={{
                      input: {
@@ -125,13 +126,22 @@ export default function AddDetailTask() {
                   onChange={(e) => {
                      setTitle(e.target.value)
                      setTouched({ ...touched, title: false })
-                     }
+                  }
                   }
                   onBlur={() => setTouched({ ...touched, title: true })}
-                  error={touched.title ? "Tahapan wajib diisi" : undefined}
+                  error={
+                     touched.title && (
+                        title == "" ? "Tahapan Tidak Boleh Kosong" : null
+                     )
+                  }
                />
             </Stack>
-            <Box mt={"xl"}>
+         </Box>
+            <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+               maxWidth: rem(550),
+               zIndex: 999,
+               backgroundColor: `${WARNA.bgWhite}`,
+            }}>
                <Button
                   c={"white"}
                   bg={WARNA.biruTua}
@@ -143,8 +153,6 @@ export default function AddDetailTask() {
                   Simpan
                </Button>
             </Box>
-         </Box>
-
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menambahkan tugas?"
