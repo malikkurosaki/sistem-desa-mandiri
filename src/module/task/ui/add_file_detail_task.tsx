@@ -20,11 +20,11 @@ import { IListFileTask } from "../lib/type_task";
 import ResultsFile from "./results_file";
 import { FaTrash } from "react-icons/fa6";
 import { funAddFileTask, funCekNamFileUploadTask } from "../lib/api_task";
+import LayoutModal from "@/module/_global/layout/layout_modal";
 
 
 export default function AddFileDetailTask() {
    const router = useRouter()
-   const [title, setTitle] = useState("")
    const [openModal, setOpenModal] = useState(false)
    const [fileForm, setFileForm] = useState<any[]>([])
    const [listFile, setListFile] = useState<IListFileTask[]>([])
@@ -139,8 +139,6 @@ export default function AddFileDetailTask() {
                   </Box>
                </Box>
             }
-
-
          </Box>
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
@@ -153,12 +151,10 @@ export default function AddFileDetailTask() {
                size="lg" radius={30}
                fullWidth
                onClick={() => {
-                  if (
-                     title !== ""
-                  ) {
+                  if (fileForm.length > 0) {
                      setOpenModal(true)
                   } else {
-                     toast.error("Semua form harus diisi")
+                     toast.error("Silahkan pilih file yang akan diupload")
                   }
                }}>
                Simpan
@@ -183,6 +179,15 @@ export default function AddFileDetailTask() {
                </SimpleGrid>
             </Stack>
          </LayoutDrawer>
+
+         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+            description="Apakah Anda yakin ingin menambahkan file?"
+            onYes={(val) => {
+               if (val) {
+                  onSubmit()
+               }
+               setOpenModal(false)
+            }} />
 
       </Box>
    );

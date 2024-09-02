@@ -157,8 +157,8 @@ export async function POST(request: Request) {
          for (var pair of body.entries()) {
             if (String(pair[0]) == "file" + a) {
                const file = body.get(pair[0]) as File
-               const fName = file.name.split(".")[0]
                const fExt = file.name.split(".").pop()
+               const fName = file.name.replace("." + fExt, "")
 
 
                const insertToContainer = await prisma.containerFileDivision.create({

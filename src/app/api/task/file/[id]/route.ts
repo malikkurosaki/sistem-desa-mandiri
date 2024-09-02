@@ -116,8 +116,8 @@ export async function POST(request: Request, context: { params: { id: string } }
          for (var pair of body.entries()) {
             if (String(pair[0]) == "file" + a) {
                const file = body.get(pair[0]) as File
-               const fName = file.name.split(".")[0]
                const fExt = file.name.split(".").pop()
+               const fName = file.name.replace("." + fExt, "")
 
 
                const insertToContainer = await prisma.containerFileDivision.create({
@@ -218,14 +218,13 @@ export async function PUT(request: Request, context: { params: { id: string } })
          file: v.ContainerFileDivision.name + '.' + v.ContainerFileDivision.extension,
       }))
 
-
       const cek = dataOmit.some((i: any) => i.file == fileName)
 
 
       if (cek) {
-         return NextResponse.json({ success: true, message: "Cek berhasil" }, { status: 200 });
-      } else {
          return NextResponse.json({ success: false, message: "File sudah pernah diupload" }, { status: 400 });
+      } else {
+         return NextResponse.json({ success: true, message: "Cek berhasil" }, { status: 200 });
       }
 
    } catch (error) {

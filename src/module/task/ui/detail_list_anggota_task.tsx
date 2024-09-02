@@ -108,7 +108,7 @@ export default function ListAnggotaDetailTask() {
                                              {v.name}
                                           </Text>
                                           <Text c={"#5A687D"} fz={14}>
-                                             {v.email}
+                                             {v.position}
                                           </Text>
                                        </Box>
                                     </Group>

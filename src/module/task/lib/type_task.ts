@@ -60,6 +60,7 @@ export interface IDataMemberTaskDivision {
    idUser: string
    name: string
    email: string
+   position: string
 }
 
 export interface IDataFileTaskDivision {
