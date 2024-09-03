@@ -93,7 +93,7 @@ export default function AddDetailTaskProject() {
                   </Group>
                </Box>
             </SimpleGrid>
-            <Stack pt={15}>
+            <Stack pt={15} pb={100}>
                <TextInput
                   styles={{
                      input: {

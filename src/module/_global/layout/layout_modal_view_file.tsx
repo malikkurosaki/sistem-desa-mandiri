@@ -13,17 +13,18 @@ export default function LayoutModal({ opened, onClose, extension, fitur, file }:
             margin: 10,
          },
          content: {
-            border: `2px solid ${'#828AFC'}`,
-            borderRadius: 10
+            maxWidth: 550,
          }
-      }} opened={opened} onClose={onClose} withCloseButton={true} centered closeOnClickOutside={false}>
+      }} opened={opened} onClose={onClose} withCloseButton={true} centered closeOnClickOutside={false} fullScreen>
 
          {
             extension === 'pdf' ? <PdfToImage md={filePdf} /> :
                <Image
                   radius="md"
-                  h={200}
-                  w="auto"
+                  style={{
+                     maxWidth: '100%',
+                     maxHeight: '100%',
+                  }}
                   fit="contain"
                   src={`/api/file/img?cat=${fitur}&file=${file}&jenis=file`}
                />

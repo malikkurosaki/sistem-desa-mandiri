@@ -1,6 +1,6 @@
 "use client";
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Avatar, Box, Button, Center, Flex, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
@@ -230,24 +230,32 @@ export default function CreateTask() {
                 >
                   {member.get().map((v: any, i: any) => {
                     return (
-                      <Flex
-                        justify={"space-between"}
-                        align={"center"}
-                        mt={20}
-                        key={i}
-                      >
-                        <Group>
-                          <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                          <Box>
-                            <Text c={WARNA.biruTua} fw={"bold"}>
-                              {v.name}
+                      <Box key={i}>
+                      <Grid align='center' mt={10}
+                        >
+                          <Grid.Col span={9}>
+                            <Group>
+                              <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                              <Box w={{
+                                base: 140,
+                                xl: 270
+                              }}>
+                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                                  {v.name}
+                                </Text>
+                              </Box>
+                            </Group>
+                          </Grid.Col>
+                          <Grid.Col span={3}>
+                            <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
+                            Anggota
                             </Text>
-                          </Box>
-                        </Group>
-                        <Text c={WARNA.biruTua} fw={"bold"}>
-                          Anggota
-                        </Text>
-                      </Flex>
+                          </Grid.Col>
+                        </Grid>
+                        <Box mt={10}>
+                          <Divider size={"xs"} />
+                        </Box>
+                     </Box>
                     );
                   })}
                 </Box>

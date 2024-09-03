@@ -5,7 +5,7 @@ import { IDataMemberProject, IDataMemberProjectDetail } from '../lib/type_projec
 import toast from 'react-hot-toast';
 import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
 import { useShallowEffect } from '@mantine/hooks';
-import { Avatar, Box, Button, Divider, Flex, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
+import { Avatar, Box, Button, Divider, Flex, Grid, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
 import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import { FaCheck } from 'react-icons/fa6';
 import LayoutModal from '@/module/_global/layout/layout_modal';
@@ -116,22 +116,22 @@ export default function AddMemberDetailProject() {
           </Text>
           {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
         </Group>
-        {loading ? 
+        {loading ?
           Array(8)
-          .fill(null)
-          .map((_, i) => (
-            <Box key={i} mb={10}>
-              <SkeletonSingle/>
-            </Box>
-          ))
-      :  
-        <Box mt={15} mb={100}>
-          {isData.map((v, i) => {
-            const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
-            const found = isDataMember.some((i: any) => i.idUser == v.idUser)
-            return (
-              <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
-                <Flex justify={"space-between"} align={"center"}>
+            .fill(null)
+            .map((_, i) => (
+              <Box key={i} mb={10}>
+                <SkeletonSingle />
+              </Box>
+            ))
+          :
+          <Box mt={15} mb={100}>
+            {isData.map((v, i) => {
+              const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
+              const found = isDataMember.some((i: any) => i.idUser == v.idUser)
+              return (
+                <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
+                  {/* <Flex justify={"space-between"} align={"center"}>
                   <Group>
                     <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
                     <Stack align="flex-start" justify="flex-start">
@@ -156,21 +156,44 @@ export default function AddMemberDetailProject() {
                     {isSelected ? <FaCheck style={{ marginRight: 10 }} /> : ""}
                   </Text>
                 </Flex>
-                <Divider my={"md"} />
-              </Box>
-            );
-          })}
-        </Box>
-      }
+                <Divider my={"md"} /> */}
+                  <Grid align='center'>
+                    <Grid.Col span={{
+                      base: 3,
+                      xl: 2
+                    }}>
+                      <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                    </Grid.Col>
+                    <Grid.Col span={{
+                      base: 9,
+                      xl: 10
+                    }}>
+                      <Flex justify='space-between' align={"center"}>
+                        <Flex direction={'column'} align="flex-start" justify="flex-start">
+                          <Text lineClamp={1}>{v.name}</Text>
+                          <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota" : ""}</Text>
+                        </Flex>
+                        {isSelected ? <FaCheck /> : null}
+                      </Flex>
+                    </Grid.Col>
+                  </Grid>
+                  <Box mt={10}>
+                    <Divider size={"xs"} />
+                  </Box>
+                </Box>
+              );
+            })}
+          </Box>
+        }
       </Box>
-        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-            maxWidth: rem(550),
-            zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
       }}>
-        {loading ? 
+        {loading ?
           <Skeleton height={50} radius={30} />
-        :
+          :
           <Button
             c={"white"}
             bg={WARNA.biruTua}
@@ -181,8 +204,8 @@ export default function AddMemberDetailProject() {
           >
             Simpan
           </Button>
-      }
-        </Box>
+        }
+      </Box>
 
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
         description="Apakah Anda yakin ingin menambahkan anggota?"
