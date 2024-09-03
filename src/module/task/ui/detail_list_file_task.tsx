@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, SkeletonDetailListTugasTask, WARNA } from "@/module/_global";
+import { LayoutDrawer, LayoutModalViewFile, SkeletonDetailListTugasTask, WARNA } from "@/module/_global";
 import { Box, Center, Flex, Grid, Group, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
@@ -18,7 +18,11 @@ export default function ListFileDetailTask() {
    const [openDrawer, setOpenDrawer] = useState(false)
    const [isOpenModal, setOpenModal] = useState(false)
    const [idData, setIdData] = useState('')
+   const [nameStorage, setNameStorage] = useState('')
    const [nameData, setNameData] = useState('')
+   const [isOpenModalView, setOpenModalView] = useState(false)
+   const [isExtension, setExtension] = useState('')
+
    async function getOneData() {
       try {
          setLoading(true)
@@ -95,6 +99,8 @@ export default function ListFileDetailTask() {
 
                               onClick={() => {
                                  setNameData(item.name + '.' + item.extension)
+                                 setExtension(item.extension)
+                                 setNameStorage(item.nameInStorage)
                                  setIdData(item.id)
                                  setOpenDrawer(true)
                               }}
@@ -105,7 +111,7 @@ export default function ListFileDetailTask() {
                                        {item.extension == "pdf" && <BsFiletypePdf size={25} />}
                                        {item.extension == "csv" && <BsFiletypeCsv size={25} />}
                                        {item.extension == "png" && <BsFiletypePng size={25} />}
-                                       {item.extension == "jpg" || item.extension == "jpeg" && <BsFiletypeJpg size={25} />}
+                                       {(item.extension == "jpg" || item.extension == "jpeg") && <BsFiletypeJpg size={25} />}
                                        {item.extension == "heic" && <BsFiletypeHeic size={25} />}
                                     </Center>
                                  </Grid.Col>
@@ -129,7 +135,7 @@ export default function ListFileDetailTask() {
                   <SimpleGrid
                      cols={{ base: 3, sm: 3, lg: 3 }}
                   >
-                     <Flex onClick={() => { }} justify={'center'} align={'center'} direction={'column'} >
+                     <Flex onClick={() => { setOpenModalView(true) }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>
                            <BsFileTextFill size={30} color={WARNA.biruTua} />
                         </Box>
@@ -160,6 +166,8 @@ export default function ListFileDetailTask() {
                }
                setOpenModal(false)
             }} />
+
+         <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={nameStorage + '.' + isExtension} extension={isExtension} fitur='task' />
       </Box>
    )
 }
