@@ -9,6 +9,7 @@ import {
   Button,
   Divider,
   Flex,
+  Grid,
   Group,
   rem,
   Skeleton,
@@ -111,7 +112,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
             <Text c={WARNA.biruTua} fw={"bold"}>
               Pilih Semua Anggota
             </Text>
-            <BsListCheck size={25} style={{ marginRight: 5 }}  color={WARNA.biruTua}/>
+            <BsListCheck size={25} style={{ marginRight: 5 }} color={WARNA.biruTua} />
           </Group>
         }
         <Box mt={15} mb={100}>
@@ -120,7 +121,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
               .fill(null)
               .map((_, i) => (
                 <Box key={i} mb={15}>
-                  <SkeletonSingle/>
+                  <SkeletonSingle />
                 </Box>
               ))
             :
@@ -128,51 +129,50 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
               const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
               return (
                 <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
-                  <Flex justify={"space-between"} align={"center"}>
-                    <Group>
+                  <Grid align='center'>
+                    <Grid.Col span={{
+                      base: 3,
+                      xl: 2
+                    }}>
                       <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                      <Text style={{
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}>
-                        {v.name}
-                      </Text>
-                    </Group>
-                    <Text
-                      style={{
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingLeft: 20,
-                      }}
-                    >
-                      {isSelected ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-                    </Text>
-                  </Flex>
-                  <Divider my={"md"} />
+                    </Grid.Col>
+                    <Grid.Col span={{
+                      base: 9,
+                      xl: 10
+                    }}>
+                      <Flex justify='space-between' align={"center"}>
+                        <Flex direction={'column'} align="flex-start" justify="flex-start">
+                          <Text lineClamp={1}>{v.name}</Text>
+                        </Flex>
+                        {isSelected ? <FaCheck /> : null}
+                      </Flex>
+                    </Grid.Col>
+                  </Grid>
+                  <Box mt={10}>
+                    <Divider size={"xs"} />
+                  </Box>
                 </Box>
               );
             })
           }
         </Box>
       </Box>
-        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-            maxWidth: rem(550),
-            zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
-         }}>
-          <Button
-            c={"white"}
-            bg={WARNA.biruTua}
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => { onSubmit() }}
-          >
-            Simpan
-          </Button>
-        </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          c={"white"}
+          bg={WARNA.biruTua}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => { onSubmit() }}
+        >
+          Simpan
+        </Button>
+      </Box>
     </Box>
   );
 }
