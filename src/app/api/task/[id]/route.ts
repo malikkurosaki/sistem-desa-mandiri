@@ -87,6 +87,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                id: true,
                ContainerFileDivision: {
                   select: {
+                     id: true,
                      name: true,
                      extension: true
                   }
@@ -96,6 +97,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 
          const fix = dataFile.map((v: any) => ({
             ..._.omit(v, ["ContainerFileDivision"]),
+            nameInStorage: v.ContainerFileDivision.id,
             name: v.ContainerFileDivision.name,
             extension: v.ContainerFileDivision.extension,
          }))

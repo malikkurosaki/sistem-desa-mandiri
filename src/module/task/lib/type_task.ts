@@ -67,5 +67,6 @@ export interface IDataMemberTaskDivision {
 export interface IDataFileTaskDivision {
    id: string
    name: string
-   extension: string
+   extension: string,
+   nameInStorage: string
 }

@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutDrawer, LayoutModalViewFile, LayoutNavbarNew, WARNA } from '@/module/_global';
 import { ActionIcon, Anchor, Box, Breadcrumbs, Button, Checkbox, Divider, Flex, Grid, Group, Indicator, Modal, rem, Select, SimpleGrid, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
@@ -28,6 +28,9 @@ import { FaShare } from 'react-icons/fa6';
 export default function NavbarDocumentDivision() {
   const router = useRouter()
   const param = useParams<{ id: string }>()
+  const [isOpenModalView, setOpenModalView] = useState(false)
+  const [isExtension, setExtension] = useState('')
+  const [idData, setIdData] = useState('')
   const [name, setName] = useState('')
   const [isOpen, setOpen] = useState(false)
   const [isDelete, setIsDelete] = useState(false)
@@ -327,8 +330,14 @@ export default function NavbarDocumentDivision() {
                   <Grid align='center' >
                     <Grid.Col span={10}
                       onClick={() => {
-                        if (v.category == "FOLDER" && selectedFiles.length == 0 && !dariSelectAll)
+                        if (v.category == "FOLDER" && selectedFiles.length == 0 && !dariSelectAll) {
                           router.push('?path=' + v.id)
+                        } else if(v.category == "FILE" && selectedFiles.length == 0 && !dariSelectAll){
+                          setExtension(v.extension)
+                          setIdData(v.id)
+                          setOpenModalView(true)
+                        }
+
                       }}
                     >
                       <Group gap={20}>
@@ -452,6 +461,9 @@ export default function NavbarDocumentDivision() {
       <LayoutDrawer opened={more} title={''} onClose={() => setMore(false)}>
         <DrawerMore data={selectedFiles} />
       </LayoutDrawer>
+
+
+      <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idData + '.' + isExtension} extension={isExtension} fitur='dokumen' />
     </Box>
   );
 }
