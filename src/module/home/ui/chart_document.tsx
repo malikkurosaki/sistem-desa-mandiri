@@ -15,7 +15,6 @@ export default function ChartDocumentHome() {
    const color = ["#F3C96B", "#9EC97F", "#5971C0"]
 
    useShallowEffect(() => {
-      // loadData()
       fetchData()
    }, [])
 

@@ -58,3 +58,17 @@ export interface IDataMemberDivision {
    name: string,
    img: string
 }
+
+export interface IDataReportDivision{
+   id: string
+   idDivision: string
+   title: string
+   desc: string
+   status: number
+   timeStart: string
+   timeEnd: string
+   dateStart: string
+   dateEnd: string
+   createdAt: string
+   user_name: string
+}

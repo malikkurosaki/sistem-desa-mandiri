@@ -6,14 +6,14 @@ import * as echarts from 'echarts';
 import { Box } from '@mantine/core';
 import { WARNA } from '@/module/_global';
 
-export default function EchartPaiReport() {
+export default function EchartPaiReport({ data }: { data: any }) {
   const [options, setOptions] = useState<EChartsOption>({});
 
   useShallowEffect(() => {
-    loadData()
-  }, [])
+    loadData(data)
+  }, [data])
 
-  const loadData = () => {
+  const loadData = (value: any) => {
     const option: EChartsOption = {
       title: {
         text: "PROGRES TUGAS",
@@ -42,12 +42,7 @@ export default function EchartPaiReport() {
               return `${a.value + "%"}`;
             },
           },
-          data: [
-            { value: 25, name: 'Dikerjakan' },
-            { value: 35, name: 'Selesai dikerjakan' },
-            { value: 10, name: 'Segera dikerjakan' },
-            { value: 30, name: 'Batal dikerjakan' },
-          ],
+          data: value,
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
