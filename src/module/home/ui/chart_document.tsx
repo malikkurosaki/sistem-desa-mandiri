@@ -9,12 +9,12 @@ import toast from "react-hot-toast";
 import { funGetHome } from "../lib/api_home";
 
 export default function ChartDocumentHome() {
-   const [options, setOptions] = useState<EChartsOption>({});
+   const [options, setOptions] = useState<EChartsOption>({})
    const [isData, setData] = useState<any[]>([])
-   const [loading, setLoading] = useState(true);
+   const [loading, setLoading] = useState(true)
+   const color = ["#F3C96B", "#9EC97F", "#5971C0"]
 
    useShallowEffect(() => {
-      loadData()
       fetchData()
    }, [])
 
@@ -28,6 +28,7 @@ export default function ChartDocumentHome() {
 
          if (response.success) {
             setData(response.data)
+            loadData(response.data)
          } else {
             toast.error(response.message);
          }
@@ -40,7 +41,7 @@ export default function ChartDocumentHome() {
       }
    };
 
-   const loadData = () => {
+   const loadData = (value: any) => {
       const option: EChartsOption = {
          title: {
             text: "DOKUMEN",
@@ -65,7 +66,7 @@ export default function ChartDocumentHome() {
          xAxis: [
             {
                type: 'category',
-               data: ['File', 'Folder', 'Documen'],
+               data: value.map(({ name }: any) => name),
                axisLabel: {
                   fontSize: 14
                },
@@ -94,30 +95,16 @@ export default function ChartDocumentHome() {
                name: 'Direct',
                type: 'bar',
                barWidth: '70%',
-               data: [
-                  {
-                     value: 78,
-                     name: 'File',
+               data: value.map(
+                  (v: any, i: any) =>
+                  ({
+                     name: v.name,
+                     value: v.value,
                      itemStyle: {
-                        color: "#F3C96B"
-                     }
-                  },
-                  {
-                     value: 35,
-                     name: 'Folder',
-                     itemStyle: {
-                        color: "#9EC97F"
-                     }
-                  },
-                  {
-                     value: 58,
-                     name: 'Documen',
-                     itemStyle: {
-                        color: "#5971C0"
-                     }
-                  },
-
-               ],
+                        color: color[i]
+                     },
+                  })
+               ),
             }
          ]
       };

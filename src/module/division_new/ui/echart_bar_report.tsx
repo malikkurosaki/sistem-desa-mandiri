@@ -6,14 +6,15 @@ import * as echarts from 'echarts';
 import { Box } from '@mantine/core';
 import { WARNA } from '@/module/_global';
 
-export default function EchartBarReport() {
+export default function EchartBarReport({ data }: { data: any }) {
   const [options, setOptions] = useState<EChartsOption>({});
+  const color = ["#F3C96B", "#9EC97F", "#5971C0"]
 
   useShallowEffect(() => {
-    loadData()
-  }, [])
+    loadData(data)
+  }, [data])
 
-  const loadData = () => {
+  const loadData = (value: any) => {
     const option: EChartsOption = {
       title: {
         text: "DOKUMEN",
@@ -38,7 +39,7 @@ export default function EchartBarReport() {
       xAxis: [
         {
           type: 'category',
-          data: ['File', 'Dokumen'],
+          data: value.map(({ name }: any) => name),
           axisLabel: {
             fontSize: 14
           },
@@ -67,23 +68,16 @@ export default function EchartBarReport() {
           name: 'Dokumen',
           type: 'bar',
           barWidth: '70%',
-          data: [
-            {
-              value: 78,
-              name: 'File',
+          data: value.map(
+            (v: any, i: any) =>
+            ({
+              name: v.name,
+              value: v.value,
               itemStyle: {
-                color: "#F3C96B"
-              }
-            },
-            {
-              value: 58,
-              name: 'Dokumen',
-              itemStyle: {
-                color: "#5971C0"
-              }
-            },
-
-          ],
+                color: color[i]
+              },
+            })
+          ),
         }
       ]
     };
