@@ -9,6 +9,7 @@ import {
    Checkbox,
    Divider,
    Flex,
+   Grid,
    Group,
    rem,
    Stack,
@@ -148,32 +149,29 @@ export default function AddMemberDetailTask() {
                      const found = isDataMember.some((i: any) => i.idUser == v.idUser)
                      return (
                         <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
-                           <Flex justify={"space-between"} align={"center"}>
-                              <Group>
+                           <Grid align='center'>
+                              <Grid.Col span={{
+                                 base: 3,
+                                 xl: 2
+                              }}>
                                  <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                                 <Stack align="flex-start" justify="flex-start">
-                                    <Text style={{
-                                       cursor: 'pointer',
-                                       display: 'flex',
-                                       alignItems: 'center',
-                                    }}>
-                                       {v.name}
-                                    </Text>
-                                    <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota" : ""}</Text>
-                                 </Stack>
-                              </Group>
-                              <Text
-                                 style={{
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    paddingLeft: 20,
-                                 }}
-                              >
-                                 {isSelected ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-                              </Text>
-                           </Flex>
-                           <Divider my={"md"} />
+                              </Grid.Col>
+                              <Grid.Col span={{
+                                 base: 9,
+                                 xl: 10
+                              }}>
+                                 <Flex justify='space-between' align={"center"}>
+                                    <Flex direction={'column'} align="flex-start" justify="flex-start">
+                                       <Text lineClamp={1}>{v.name}</Text>
+                                       <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota" : ""}</Text>
+                                    </Flex>
+                                    {isSelected ? <FaCheck /> : null}
+                                 </Flex>
+                              </Grid.Col>
+                           </Grid>
+                           <Box mt={10}>
+                              <Divider size={"xs"} />
+                           </Box>
                         </Box>
                      );
                   })}

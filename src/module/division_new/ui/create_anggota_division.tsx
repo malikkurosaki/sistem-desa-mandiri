@@ -82,7 +82,7 @@ export default function CreateAnggotaDivision() {
 
   return (
     <Box>
-      <LayoutNavbarNew back="" title="tambah anggota"
+      <LayoutNavbarNew back={`/division/info/${param.id}`} title="tambah anggota"
         menu
       />
       <Box p={20}>

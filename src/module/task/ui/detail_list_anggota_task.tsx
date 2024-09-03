@@ -1,6 +1,6 @@
 'use client'
 import { LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
-import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack } from "@mantine/core";
+import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack, Grid } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -91,31 +91,34 @@ export default function ListAnggotaDetailTask() {
                         isData.length === 0 ? <Text>Tidak ada anggota</Text> :
                            isData.map((v, i) => {
                               return (
-                                 <Flex
-                                    justify={"space-between"}
-                                    align={"center"}
-                                    mt={20}
-                                    key={i}
-                                    onClick={() => {
-                                       setDataChoose({ id: v.idUser, name: v.name })
-                                       setOpenDrawer(true)
-                                    }}
-                                 >
-                                    <Group>
-                                       <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                                       <Box>
-                                          <Text c={WARNA.biruTua} fw={"bold"}>
-                                             {v.name}
+                                 <Box key={i}>
+                                    <Grid align='center' mt={10}
+                                       onClick={() => {
+                                          setDataChoose({ id: v.idUser, name: v.name })
+                                          setOpenDrawer(true)
+                                       }}
+                                    >
+                                       <Grid.Col span={9}>
+                                          <Group>
+                                             <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                                             <Box w={{
+                                                base: 140,
+                                                xl: 270
+                                             }}>
+                                                <Flex direction={'column'} align="flex-start" justify="flex-start">
+                                                   <Text lineClamp={1}>{v.name}</Text>
+                                                   <Text c={"#5A687D"} fz={14} lineClamp={1}>{v.email}</Text>
+                                                </Flex>
+                                             </Box>
+                                          </Group>
+                                       </Grid.Col>
+                                       <Grid.Col span={3}>
+                                          <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
+                                             Anggota
                                           </Text>
-                                          <Text c={"#5A687D"} fz={14}>
-                                             {v.email}
-                                          </Text>
-                                       </Box>
-                                    </Group>
-                                    <Text c={WARNA.biruTua} fw={"bold"}>
-                                       Anggota
-                                    </Text>
-                                 </Flex>
+                                       </Grid.Col>
+                                    </Grid>
+                                 </Box>
                               );
                            })}
                </Box>
@@ -123,11 +126,11 @@ export default function ListAnggotaDetailTask() {
          </Box>
 
 
-         <LayoutDrawer opened={openDrawer} title={dataChoose.name} onClose={() => setOpenDrawer(false)}>
+         <LayoutDrawer opened={openDrawer} title={<Text lineClamp={1}>{dataChoose.name}</Text>} onClose={() => setOpenDrawer(false)}>
             <Box>
                <Stack pt={10}>
                   <SimpleGrid
-                     cols={{ base: 3, sm: 3, lg: 3 }}
+                     cols={{ base: 2, sm: 3, lg: 3 }}
                   >
                      <Flex onClick={() => { router.push('/member/' + dataChoose.id) }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>

@@ -80,43 +80,62 @@ export default function ListDivisionTask() {
             </Grid.Col>
          </Grid>
          <Box pt={20}>
-            {loading ? 
+            {loading ?
                <Box>
                   <Skeleton width={"100%"} height={100} radius={"md"} />
                </Box>
-            :
-            <Box bg={"#DCEED8"} p={10} style={{ borderRadius: 10 }}>
-               <Text fw={'bold'} c={WARNA.biruTua}>Total Kegiatan</Text>
-               <Flex justify={'center'} align={'center'} h={'100%'}>
-                  <Text fz={40} fw={'bold'} c={WARNA.biruTua}>{isData.length}</Text>
-               </Flex>
-            </Box>
-         }
+               :
+               <Box bg={"#DCEED8"} p={10} style={{ borderRadius: 10 }}>
+                  <Text fw={'bold'} c={WARNA.biruTua}>Total Kegiatan</Text>
+                  <Flex justify={'center'} align={'center'} h={'100%'}>
+                     <Text fz={40} fw={'bold'} c={WARNA.biruTua}>{isData.length}</Text>
+                  </Flex>
+               </Box>
+            }
             {isList ? (
                <Box pt={20}>
                   {isData.map((v, i) => {
                      return (
                         <Box key={i}>
-                           <Group justify="space-between" mb={10} onClick={() => router.push(`task/${v.id}`)}>
-                              <Group>
-                                 <Center>
-                                    <ActionIcon
-                                       variant="gradient"
-                                       size={50}
-                                       aria-label="Gradient action icon"
-                                       radius={100}
-                                       gradient={{
-                                          from: '#DFDA7C',
-                                          to: '#F2AF46',
-                                          deg: 174
-                                       }}
-                                    >
-                                       <HiMiniPresentationChartBar size={25} color={WARNA.biruTua} />
-                                    </ActionIcon>
-                                 </Center>
-                                 <Text>{v.title}</Text>
-                              </Group>
-                           </Group>
+                           <Grid align='center'>
+                              <Grid.Col span={{
+                                 base: 2,
+                                 xl: 1
+                              }}>
+                                 <Group onClick={() => router.push(`task/${v.id}`)}>
+                                    <Center>
+                                       <ActionIcon
+                                          variant="gradient"
+                                          size={50}
+                                          aria-label="Gradient action icon"
+                                          radius={100}
+                                          gradient={{
+                                             from: '#DFDA7C',
+                                             to: '#F2AF46',
+                                             deg: 174
+                                          }}
+                                       >
+                                          <HiMiniPresentationChartBar size={25} color={WARNA.biruTua} />
+                                       </ActionIcon>
+                                    </Center>
+                                 </Group>
+                              </Grid.Col>
+                              <Grid.Col span={{
+                                 base: 10,
+                                 xl: 11
+                              }}>
+                                 <Box>
+                                    <Box w={{
+                                       base: 280,
+                                       xl: 430
+                                    }}>
+                                       <Text truncate="end" pl={20}>
+                                          {v.title}
+                                       </Text>
+                                    </Box>
+                                 </Box>
+                              </Grid.Col>
+                           </Grid>
                            <Divider my="sm" />
                         </Box>
                      );
@@ -124,52 +143,52 @@ export default function ListDivisionTask() {
                </Box>
             ) : (
                <Box pt={20}>
-                     {loading ? 
-                        Array(3)
+                  {loading ?
+                     Array(3)
                         .fill(null)
                         .map((_, i) => (
-                          <Box key={i} mb={20}>
-                            <Skeleton width={"100%"} height={200} radius={"md"} />
-                          </Box>
+                           <Box key={i} mb={20}>
+                              <Skeleton width={"100%"} height={200} radius={"md"} />
+                           </Box>
                         ))
-                        :
-                        _.isEmpty(isData)
+                     :
+                     _.isEmpty(isData)
                         ?
                         <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
                            <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Tugas</Text>
                         </Box>
                         :
-                     isData.map((v: any, i: any) => {
-                        return (
-                           <Box key={i} mb={20}>
-                              <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`task/${v.id}`)}>
-                                 <Card.Section>
-                                    <Box h={120} bg={WARNA.biruTua}>
-                                       <Flex justify={'center'} align={'center'} h={"100%"}>
-                                          <Title order={3} c={"white"} lineClamp={1}>{v.title}</Title>
-                                       </Flex>
+                        isData.map((v: any, i: any) => {
+                           return (
+                              <Box key={i} mb={20}>
+                                 <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`task/${v.id}`)}>
+                                    <Card.Section>
+                                       <Box h={120} bg={WARNA.biruTua}>
+                                          <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
+                                             <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.title}</Title>
+                                          </Flex>
+                                       </Box>
+                                    </Card.Section>
+                                    <Box pt={10}>
+                                       <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
+                                          <Progress.Section value={v.progress} color="yellow" striped >
+                                             <Progress.Label>{v.progress}%</Progress.Label>
+                                          </Progress.Section>
+                                       </Progress.Root>
+                                       <Text my={10}>{v.desc}</Text>
+                                       <Group align='center' pt={10} justify='space-between'>
+                                          <Avatar.Group>
+                                             <Avatar>
+                                                <MdAccountCircle size={32} color={WARNA.biruTua} />
+                                             </Avatar>
+                                             <Avatar>+{v.member - 1}</Avatar>
+                                          </Avatar.Group>
+                                       </Group>
                                     </Box>
-                                 </Card.Section>
-                                 <Box pt={10}>
-                                    <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
-                                       <Progress.Section value={v.progress} color="yellow" striped >
-                                          <Progress.Label>{v.progress}%</Progress.Label>
-                                       </Progress.Section>
-                                    </Progress.Root>
-                                    <Text my={10}>{v.desc}</Text>
-                                    <Group align='center' pt={10} justify='space-between'>
-                                       <Avatar.Group>
-                                          <Avatar>
-                                             <MdAccountCircle size={32} color={WARNA.biruTua} />
-                                          </Avatar>
-                                          <Avatar>+{v.member - 1}</Avatar>
-                                       </Avatar.Group>
-                                    </Group>
-                                 </Box>
-                              </Card>
-                           </Box>
-                        );
-                     })
+                                 </Card>
+                              </Box>
+                           );
+                        })
                   }
                </Box>
             )}

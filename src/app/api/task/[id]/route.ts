@@ -2,7 +2,9 @@ import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import moment from "moment";
+import "moment/locale/id"
 import { NextResponse } from "next/server";
+
 
 // GET DETAIL TASK DIVISI / GET ONE
 export async function GET(request: Request, context: { params: { id: string } }) {
