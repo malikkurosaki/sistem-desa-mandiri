@@ -3,7 +3,7 @@ import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { funGetUserByCookies } from '@/module/auth';
 import { funGetAllmember, TypeUser } from '@/module/user';
-import { Avatar, Box, Button, Divider, Group, rem, Stack, Text, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Divider, Flex, Grid, Group, rem, Stack, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -103,56 +103,63 @@ export default function CreateAnggotaDivision() {
           />
         </Stack>
 
-        {loading ? 
-           Array(8)
-           .fill(null)
-           .map((_, i) => (
+        {loading ?
+          Array(8)
+            .fill(null)
+            .map((_, i) => (
               <Box key={i}>
-                 <SkeletonSingle/>
+                <SkeletonSingle />
               </Box>
-           ))
+            ))
           :
           <Box mt={20} mb={100}>
-          {dataMember.map((v: any, index: any) => {
-            const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id)
-            const found = memberDb.some((i: any) => i.idUser == v.id)
-            return (
-              <Box my={10} key={index} onClick={() => (!found) ? handleFileClick(index) : null}>
-                <Group justify='space-between' align='center'>
-                  <Group>
-                    <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                    <Stack align="flex-start" justify="flex-start">
-                      <Text>{v.name}</Text>
-                      <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
-                    </Stack>
-                  </Group>
-                  {isSelected ? <FaCheck /> : null}
-                </Group>
-                <Box mt={10}>
-                  <Divider size={"xs"} />
+            {dataMember.map((v: any, index: any) => {
+              const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id)
+              const found = memberDb.some((i: any) => i.idUser == v.id)
+              return (
+                <Box my={10} key={index} onClick={() => (!found) ? handleFileClick(index) : null}>
+                  <Grid align='center' gutter={{
+                    base: 60,
+                    xl: "xs"
+                  }}>
+                    <Grid.Col span={2}>
+                      <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                    </Grid.Col>
+                    <Grid.Col span={10}>
+                      <Flex justify='space-between' align={"center"}>
+                        <Flex direction={'column'} align="flex-start" justify="flex-start">
+                          <Text lineClamp={1}>{v.name}</Text>
+                          <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
+                        </Flex>
+                        {isSelected ? <FaCheck/> : null}
+                      </Flex>
+                    </Grid.Col>
+                  </Grid>
+                  <Box mt={10}>
+                    <Divider size={"xs"} />
+                  </Box>
                 </Box>
-              </Box>
-            )
-          })}
-        </Box>
+              )
+            })}
+          </Box>
         }
       </Box>
-        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-            maxWidth: rem(550),
-            zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
-         }}>
-          <Button
-            color="white"
-            bg={WARNA.biruTua}
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => { setOpen(true) }}
-          >
-            Simpan
-          </Button>
-        </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          color="white"
+          bg={WARNA.biruTua}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => { setOpen(true) }}
+        >
+          Simpan
+        </Button>
+      </Box>
       <LayoutModal opened={isOpen} onClose={() => setOpen(false)}
         description="Apakah Anda yakin ingin menambahkan anggota divisi?"
         onYes={(val) => {

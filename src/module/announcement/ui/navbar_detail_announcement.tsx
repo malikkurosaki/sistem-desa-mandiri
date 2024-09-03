@@ -11,7 +11,7 @@ export default function NavbarDetailAnnouncement() {
    const router = useRouter()
    return (
       <Box>
-         <LayoutNavbarNew back="" title="Pengumuman"
+         <LayoutNavbarNew back="/announcement/" title="Pengumuman"
             menu={
                <ActionIcon onClick={() => setOpenDrawer(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
                   <HiMenu size={20} color='white' />

@@ -62,8 +62,8 @@ export default function ListProjects() {
                               <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/project/${v.id}`)}>
                                  <Card.Section>
                                     <Box h={120} bg={WARNA.biruTua}>
-                                       <Flex justify={'center'} align={'center'} h={"100%"}>
-                                          <Title order={3} c={"white"}>{v.title}</Title>
+                                       <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
+                                          <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.title}</Title>
                                        </Flex>
                                     </Box>
                                  </Card.Section>

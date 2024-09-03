@@ -83,12 +83,22 @@ export default function ListAnnouncement() {
                                  </Center>
                               </Grid.Col>
                               <Grid.Col span={10}>
-                                 <Group justify='space-between' mb={5} onClick={() => {
+                                 <Grid onClick={() => {
                                     router.push(`/announcement/${v.id}`)
-                                 }}>
-                                    <Text fw={'bold'} c={WARNA.biruTua}>{v.title}</Text>
-                                    <Text fw={'lighter'} c={WARNA.biruTua} fz={13}>{v.createdAt}</Text>
-                                 </Group>
+                                 }}  mb={10}>
+                                    <Grid.Col span={{
+                                       base: 7,
+                                       xl: 8
+                                    }}>
+                                       <Text fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{v.title}</Text>
+                                    </Grid.Col>
+                                    <Grid.Col span={{
+                                       base: 5,
+                                       xl: 4
+                                    }}>
+                                       <Text ta={"end"} fw={'lighter'} c={WARNA.biruTua} fz={13}>{v.createdAt}</Text>
+                                    </Grid.Col>
+                                 </Grid>
                                  {/* <Text c={WARNA.biruTua} lineClamp={2}>{v.desc}</Text> */}
                                  <Spoiler maxHeight={50} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
                                     <Text c={WARNA.biruTua} onClick={() => {

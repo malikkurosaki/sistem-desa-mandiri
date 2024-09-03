@@ -121,35 +121,50 @@ export default function ListProject() {
             {isData.map((v, i) => {
               return (
                 <Box key={i}>
-                  <Group justify="space-between" mb={10} onClick={() => router.push(`/project/${v.id}`)}>
-                    <Group>
-                      <Center>
-                        <ActionIcon
-                          variant="gradient"
-                          size={50}
-                          aria-label="Gradient action icon"
-                          radius={100}
-                          gradient={{
-                            from: '#DFDA7C',
-                            to: '#F2AF46',
-                            deg: 174
-                          }}
-                        >
-                          <HiMiniPresentationChartBar size={25} color={WARNA.biruTua} />
-                        </ActionIcon>
-                      </Center>
-                      <Text>{v.title}</Text>
-                    </Group>
-                    <Box>
-                      <RiCircleFill size={12} color={
-                        v.status === 0 ? '#1372C4' :
-                          v.status === 1 ? '#C5771A' :
-                            v.status === 2 ? '#0B6025' :
-                              v.status === 3 ? '#BB1F1F' :
-                                ""
-                      } />
-                    </Box>
-                  </Group>
+                <Grid align='center' gutter={10}>
+                    <Grid.Col span={1}>
+                      <Group onClick={() => router.push(`/project/${v.id}`)}>
+                        <Center>
+                          <ActionIcon
+                            variant="gradient"
+                            size={50}
+                            aria-label="Gradient action icon"
+                            radius={100}
+                            gradient={{
+                              from: '#DFDA7C',
+                              to: '#F2AF46',
+                              deg: 174
+                            }}
+                          >
+                            <HiMiniPresentationChartBar size={25} color={WARNA.biruTua} />
+                          </ActionIcon>
+                        </Center>
+                      </Group>
+                    </Grid.Col>
+                    <Grid.Col span={11}>
+                      <Group justify='space-between' align='center'>
+                        <Box>
+                          <Box w={{
+                            base: 280,
+                            xl: 430
+                          }}>
+                            <Text truncate="end" pl={20}>
+                              {v.title}
+                            </Text>
+                          </Box>
+                          {/* <Text lineClamp={1}></Text> */}
+
+                        </Box>
+                          <RiCircleFill size={12} color={
+                            v.status === 0 ? '#1372C4' :
+                              v.status === 1 ? '#C5771A' :
+                                v.status === 2 ? '#0B6025' :
+                                  v.status === 3 ? '#BB1F1F' :
+                                    ""
+                          } />
+                      </Group>
+                    </Grid.Col>
+                  </Grid>
                   <Divider my="sm" />
                 </Box>
               );
@@ -163,8 +178,8 @@ export default function ListProject() {
                   <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/project/${v.id}`)}>
                     <Card.Section>
                       <Box h={120} bg={WARNA.biruTua}>
-                        <Flex justify={'center'} align={'center'} h={"100%"}>
-                          <Title order={3} c={"white"}>{v.title}</Title>
+                        <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
+                          <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.title}</Title>
                         </Flex>
                       </Box>
                     </Card.Section>

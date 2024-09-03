@@ -1,7 +1,7 @@
 "use client";
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { funGetGroupDivision } from '@/module/group/lib/api_group';
-import { Box, Button, Divider, Flex, Group, Stack, Text } from '@mantine/core';
+import { Box, Button, Divider, Flex, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import React, { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
@@ -22,6 +22,7 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
   const [selectAll, setSelectAll] = useState(false);
   const [isData, setIsData] = useState<GroupData[]>([])
   const memberGroup = useHookstate(globalMemberAnnouncement)
+  const [loading, setLoading] = useState(false)
 
   const handleCheck = (groupId: string, divisionId: string) => {
     const newChecked = { ...checked };
@@ -70,6 +71,7 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
   };
 
   async function getData() {
+    setLoading(true)
     const response = await funGetGroupDivision()
     setIsData(response.data)
 
@@ -81,6 +83,8 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
 
       setChecked(formatArray)
     }
+
+    setLoading(false)
   }
 
   const handleSubmit = () => {
@@ -121,75 +125,89 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
             Pilih Semua
           </Text>
         </Group>
-        {isData.map((item) => (
-          <Stack mb={30} key={item.id}>
-            <Group onClick={() => handleGroupCheck(item.id)} justify='space-between' align='center'>
-              <Text
-                style={{
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-                fw={checked[item.id] && checked[item.id].length === item.Division.length ? 'bold' : 'normal'}
-              >
-                {item.name}
-              </Text>
-              <Text
-              >
-                {checked[item.id] && checked[item.id].length === item.Division.length ? <FaCheck style={{ marginRight: 10 }} />
-                  : (checked[item.id] && checked[item.id].length > 0 && checked[item.id].length < item.Division.length) ? <FaMinus style={{ marginRight: 10 }} /> : ""}
-              </Text>
-            </Group>
-            <Divider />
-            {item.Division.map((division) => (
-              <Box key={division.id}>
-                <Group onClick={() => handleCheck(item.id, division.id)} justify='space-between' align='center'>
-                  <Text
-                    style={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      paddingLeft: 20,
-                    }}
-                  >
-                    {division.name}
-                  </Text>
-                  <Text
-                    style={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      paddingLeft: 20,
-                    }}
-                  >
-                    {checked[item.id] && checked[item.id].includes(division.id) ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-                  </Text>
-                </Group>
-                <Box pt={15}>
-                  <Divider />
+        {loading ? 
+          Array(6)
+          .fill(null)
+          .map((_, i) => (
+             <Box key={i}>
+                <Skeleton mt={20} h={20}/>
+                <Skeleton mt={20} h={20} ml={20}/>
+                <Skeleton mt={20} h={20} ml={20}/>
+                <Skeleton mt={20} h={20} ml={20}/>
+             </Box>
+          ))
+          :
+          isData.map((item) => (
+            <Stack mb={30} key={item.id}>
+              <Group onClick={() => handleGroupCheck(item.id)} justify='space-between' align='center'>
+                <Text
+                  style={{
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  fw={checked[item.id] && checked[item.id].length === item.Division.length ? 'bold' : 'normal'}
+                  lineClamp={1}
+                >
+                  {item.name}
+                </Text>
+                <Text
+                >
+                  {checked[item.id] && checked[item.id].length === item.Division.length ? <FaCheck style={{ marginRight: 10 }} />
+                    : (checked[item.id] && checked[item.id].length > 0 && checked[item.id].length < item.Division.length) ? <FaMinus style={{ marginRight: 10 }} /> : ""}
+                </Text>
+              </Group>
+              <Divider />
+              {item.Division.map((division) => (
+                <Box key={division.id}>
+                  <Group onClick={() => handleCheck(item.id, division.id)} justify='space-between' align='center'>
+                    <Box w={{
+                      base: 280,
+                      xl: 430
+                    }}>
+                      <Text truncate="end" pl={20}>
+                        {division.name}
+                      </Text>
+                    </Box>
+                    <Text
+                      style={{
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        paddingLeft: 20,
+                      }}
+                    >
+                      {checked[item.id] && checked[item.id].includes(division.id) ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+                    </Text>
+                  </Group>
+                  <Box pt={15}>
+                    <Divider />
+                  </Box>
                 </Box>
-              </Box>
 
-            ))}
-          </Stack>
-        ))}
+              ))}
+            </Stack>
+          ))
+        }
+      </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          color="white"
+          bg={WARNA.biruTua}
 
-        <Box mt="xl">
-          <Button
-            color="white"
-            bg={WARNA.biruTua}
-
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => {
-              handleSubmit()
-            }}
-          >
-            Simpan
-          </Button>
-        </Box>
-
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => {
+            handleSubmit()
+          }}
+        >
+          Simpan
+        </Button>
       </Box>
     </div>
   );

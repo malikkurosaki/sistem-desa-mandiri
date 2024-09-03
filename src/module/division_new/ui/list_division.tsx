@@ -150,26 +150,45 @@ export default function ListDivision() {
               data?.map((v: any, i: any) => {
                 return (
                   <Box key={i}>
-                    <Group justify="space-between" mb={10} onClick={() => router.push(`/division/${v.id}`)}>
-                      <Group>
-                        <Center>
-                          <ActionIcon
-                            variant="gradient"
-                            size={50}
-                            aria-label="Gradient action icon"
-                            radius={100}
-                            gradient={{
-                              from: '#DFDA7C',
-                              to: '#F2AF46',
-                              deg: 174
-                            }}
-                          >
-                            <HiMiniUserGroup size={25} color={WARNA.biruTua} />
-                          </ActionIcon>
-                        </Center>
-                        <Text>{v.name}</Text>
-                      </Group>
-                    </Group>
+                    <Grid align='center'>
+                      <Grid.Col span={{
+                        base: 2,
+                        xl: 1
+                      }}>
+                        <Group onClick={() => router.push(`/division/${v.id}`)}>
+                          <Center>
+                            <ActionIcon
+                              variant="gradient"
+                              size={50}
+                              aria-label="Gradient action icon"
+                              radius={100}
+                              gradient={{
+                                from: '#DFDA7C',
+                                to: '#F2AF46',
+                                deg: 174
+                              }}
+                            >
+                              <HiMiniUserGroup size={25} color={WARNA.biruTua} />
+                            </ActionIcon>
+                          </Center>
+                        </Group>
+                      </Grid.Col>
+                      <Grid.Col span={{
+                        base: 10,
+                        xl: 11
+                      }}>
+                      <Box>
+                          <Box w={{
+                            base: 280,
+                            xl: 430
+                          }}>
+                            <Text truncate="end" pl={20}>
+                            {v.name}
+                            </Text>
+                          </Box>
+                        </Box>
+                      </Grid.Col>
+                    </Grid>
                     <Divider my="sm" />
                   </Box>
                 );
@@ -193,8 +212,8 @@ export default function ListDivision() {
                     <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
                       <Card.Section>
                         <Box h={120} bg={WARNA.biruTua}>
-                          <Flex justify={'center'} align={'center'} h={"100%"}>
-                            <Title order={3} c={"white"}>{v.name}</Title>
+                          <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
+                            <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.name}</Title>
                           </Flex>
                         </Box>
                       </Card.Section>

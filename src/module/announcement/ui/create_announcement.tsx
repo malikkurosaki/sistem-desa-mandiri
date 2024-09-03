@@ -75,7 +75,7 @@ export default function CreateAnnouncement() {
 
    return (
       <Box>
-         <LayoutNavbarNew back="" title="Tambah Pengumuman" menu={<></>} />
+         <LayoutNavbarNew back="/announcement/" title="Tambah Pengumuman" menu={<></>} />
          <Stack
             p={20}
          >
