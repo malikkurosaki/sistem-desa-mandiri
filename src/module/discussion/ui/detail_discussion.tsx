@@ -103,7 +103,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                         >
                            {isData?.username ?
                               <Group>
-                                 <Avatar src={`/api/file/img?cat=user&file=${isData?.user_img}`} alt="it's me" size="lg" />
+                                 <Avatar src={`/api/file/img?jenis=image&cat=user&file=${isData?.user_img}`} alt="it's me" size="lg" />
                                  <Box>
                                     <Text c={WARNA.biruTua} fw={"bold"}>
                                        {isData?.username}
@@ -142,7 +142,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                         >
                            {isData?.username ?
                               <Group>
-                                 <Avatar src={`/api/file/img?cat=user&file=${isData?.user_img}`} alt="it's me" size="lg" />
+                                 <Avatar src={`/api/file/img?jenis=image&cat=user&file=${isData?.user_img}`} alt="it's me" size="lg" />
                                  <Box>
                                     <Text c={WARNA.biruTua} fw={"bold"}>
                                        {isData?.username}
@@ -216,7 +216,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                               align={"center"}
                            >
                               <Group>
-                                 <Avatar alt="it's me" size="md" src={`/api/file/img?cat=user&file=${v.img}`} />
+                                 <Avatar alt="it's me" size="md" src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} />
                                  <Box>
                                     <Text c={WARNA.biruTua} fw={"bold"} fz={15}>
                                        {v.username}

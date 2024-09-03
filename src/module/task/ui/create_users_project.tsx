@@ -134,7 +134,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
                       base: 3,
                       xl: 2
                     }}>
-                      <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                      <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
                     </Grid.Col>
                     <Grid.Col span={{
                       base: 9,

@@ -110,7 +110,7 @@ export default function ListDiscussion({ id }: { id: string }) {
                            }}
                         >
                            <Group>
-                              <Avatar alt="it's me" src={`/api/file/img?cat=user&file=${v.img}`} size="lg" />
+                              <Avatar alt="it's me" src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} size="lg" />
                               <Box>
                                  <Text c={WARNA.biruTua} fw={"bold"}>
                                     {v.user_name}

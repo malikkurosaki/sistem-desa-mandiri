@@ -27,7 +27,7 @@ export default function Profile() {
       setLoading(true)
       const res = await funGetProfileByCookies()
       setData(res.data)
-      setIMG(`/api/file/img?cat=user&file=${res.data.img}`)
+      setIMG(`/api/file/img?jenis=image&cat=user&file=${res.data.img}`)
       setLoading(false)
     } catch (error) {
       console.error(error);
