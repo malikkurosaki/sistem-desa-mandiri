@@ -150,7 +150,7 @@ export default function AddMemberDetailTask() {
                         <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
                            <Flex justify={"space-between"} align={"center"}>
                               <Group>
-                                 <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                                 <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
                                  <Stack align="flex-start" justify="flex-start">
                                     <Text style={{
                                        cursor: 'pointer',

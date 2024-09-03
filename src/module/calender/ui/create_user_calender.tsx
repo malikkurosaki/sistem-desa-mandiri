@@ -111,7 +111,7 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
             <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
               <Flex justify={"space-between"} align={"center"}>
                 <Group>
-                  <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                  <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
                   <Text style={{
                     cursor: 'pointer',
                     display: 'flex',

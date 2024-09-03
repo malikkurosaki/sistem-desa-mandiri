@@ -10,6 +10,7 @@ import LayoutDrawer from "./layout/layout_drawer";
 import LayoutIconBack from "./layout/layout_icon_back";
 import LoadingPage from "./layout/layout_loading_page";
 import LayoutLogin from "./layout/layout_login";
+import LayoutModalViewFile from "./layout/layout_modal_view_file";
 import LayoutNavbarHome from "./layout/layout_navbar_home";
 import LayoutNavbarNew from "./layout/layout_navbar_new";
 import ViewFilter from "./view/view_filter";
@@ -29,3 +30,4 @@ export { SkeletonDetailDiscussionComment }
 export { SkeletonDetailDiscussionMember }
 export { SkeletonDetailProfile }
 export { SkeletonDetailListTugasTask }
+export { LayoutModalViewFile }

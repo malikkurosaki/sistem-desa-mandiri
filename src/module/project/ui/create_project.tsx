@@ -297,7 +297,7 @@ export default function CreateProject() {
                         key={i}
                       >
                         <Group>
-                          <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                          <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
                           <Box>
                             <Text c={WARNA.biruTua} fw={"bold"}>
                               {v.name}

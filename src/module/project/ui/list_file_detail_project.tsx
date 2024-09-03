@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, WARNA } from '@/module/_global';
+import { LayoutDrawer, LayoutModalViewFile, WARNA } from '@/module/_global';
 import { Box, Center, Flex, Grid, Group, SimpleGrid, Skeleton, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -19,6 +19,8 @@ export default function ListFileDetailProject() {
   const [nameData, setNameData] = useState('')
   const [openDrawer, setOpenDrawer] = useState(false)
   const [isOpenModal, setOpenModal] = useState(false)
+  const [isOpenModalView, setOpenModalView] = useState(false)
+  const [isExtension, setExtension] = useState('')
 
   async function getOneData() {
     try {
@@ -98,6 +100,7 @@ export default function ListFileDetailProject() {
 
                       onClick={() => {
                         setNameData(item.name + '.' + item.extension)
+                        setExtension(item.extension)
                         setIdData(item.id)
                         setOpenDrawer(true)
                       }}
@@ -105,15 +108,15 @@ export default function ListFileDetailProject() {
                       <Grid gutter={"sm"} justify='flex-start' align='flex-start'>
                         <Grid.Col span={"auto"}>
                           <Center >
-                        {item.extension == "pdf" && <BsFiletypePdf size={30} />}
-                        {item.extension == "csv" && <BsFiletypeCsv size={30} />}
-                        {item.extension == "png" && <BsFiletypePng size={30} />}
-                        {item.extension == "jpg" || item.extension == "jpeg" && <BsFiletypeJpg size={30} />}
-                        {item.extension == "heic" && <BsFiletypeHeic size={30} />}
+                            {item.extension == "pdf" && <BsFiletypePdf size={30} />}
+                            {item.extension == "csv" && <BsFiletypeCsv size={30} />}
+                            {item.extension == "png" && <BsFiletypePng size={30} />}
+                            {item.extension == "jpg" || item.extension == "jpeg" && <BsFiletypeJpg size={30} />}
+                            {item.extension == "heic" && <BsFiletypeHeic size={30} />}
                           </Center>
                         </Grid.Col>
                         <Grid.Col span={10}>
-                        <Text>{item.name + '.' + item.extension}</Text>
+                          <Text>{item.name + '.' + item.extension}</Text>
                         </Grid.Col>
                       </Grid>
                       <Group>
@@ -132,7 +135,7 @@ export default function ListFileDetailProject() {
               <SimpleGrid
                 cols={{ base: 3, sm: 3, lg: 3 }}
               >
-                <Flex onClick={() => { }} justify={'center'} align={'center'} direction={'column'} >
+                <Flex onClick={() => { setOpenModalView(true) }} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
                     <BsFileTextFill size={30} color={WARNA.biruTua} />
                   </Box>
@@ -163,6 +166,8 @@ export default function ListFileDetailProject() {
             }
             setOpenModal(false)
           }} />
+
+        <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idData + '.' + isExtension} extension={isExtension} fitur='project' />
       </Box>
     </>
   );
