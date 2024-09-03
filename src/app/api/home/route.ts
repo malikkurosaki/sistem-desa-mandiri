@@ -150,7 +150,7 @@ export async function GET(request: Request) {
          for (let index = 0; index < dataStatus.length; index++) {
             const cek = data.some((i: any) => i.status == dataStatus[index].status)
             if (cek) {
-               const find = ((Number(data.find((i: any) => i.status == dataStatus[index].status)?._count) * 100)/ data.reduce((n, {_count}) => n + _count, 0)).toFixed(2)
+               const find = ((Number(data.find((i: any) => i.status == dataStatus[index].status)?._count) * 100) / data.reduce((n, { _count }) => n + _count, 0)).toFixed(2)
                input = {
                   name: dataStatus[index].name,
                   value: find
@@ -195,14 +195,39 @@ export async function GET(request: Request) {
             where: kondisi,
          })
 
-         allData = _.map(_.groupBy(data, "extension"), (v: any) => ({
+         const groupData = _.map(_.groupBy(data, "extension"), (v: any) => ({
             file: v[0].extension,
             jumlah: v.length,
          }))
 
-         // console.log(allData)
+         const image = ['jpg', 'jpeg', 'png', 'heic']
 
 
+         let hasilImage = {
+            name: 'Gambar',
+            value: 0
+         }
+
+         let hasilFile = {
+            name: 'Dokumen',
+            value: 0
+         }
+
+         groupData.map((v: any) => {
+            if (image.some((i: any) => i == v.file)) {
+               hasilImage = {
+                  name: 'Gambar',
+                  value: hasilImage.value + v.jumlah
+               }
+            } else {
+               hasilFile = {
+                  name: 'Dokumen',
+                  value: hasilFile.value + v.jumlah
+               }
+            }
+         })
+
+         allData = [hasilImage, hasilFile]
 
       } else if (kategori == "event") {
          let kondisi
