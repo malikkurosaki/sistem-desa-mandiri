@@ -8,7 +8,8 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const kategori = searchParams.get('cat');
         const file = searchParams.get('file');
-        fl = fs.readFileSync(`./public/image/${kategori}/${file}`)
+        const jenis = searchParams.get('jenis');
+        fl = fs.readFileSync(`./public/${jenis}/${kategori}/${file}`)
     } catch (err: any) {
         throw err;
     }

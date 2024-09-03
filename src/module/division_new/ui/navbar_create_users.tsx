@@ -114,7 +114,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
                           onClick={() => handleFileClick(index)}
                         >
                           <Center>
-                            <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="xl" />
+                            <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="xl" />
                           </Center>
                           <Text mt={20} ta="center">
                             {v.name}

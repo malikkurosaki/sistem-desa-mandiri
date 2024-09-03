@@ -123,7 +123,7 @@ export default function CreateAnggotaDivision() {
                     xl: "xs"
                   }}>
                     <Grid.Col span={2}>
-                      <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                      <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
                     </Grid.Col>
                     <Grid.Col span={10}>
                       <Flex justify='space-between' align={"center"}>
