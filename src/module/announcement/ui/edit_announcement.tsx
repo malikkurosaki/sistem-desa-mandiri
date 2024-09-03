@@ -1,23 +1,25 @@
 'use client'
 import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { Box, Button, Flex, List, rem, Skeleton, Stack, Text, Textarea, TextInput } from "@mantine/core";
+import { Box, Button, Flex, Group, List, rem, Skeleton, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import { funEditAnnouncement, funGetAnnouncementById } from "../lib/api_announcement";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useHookstate } from "@hookstate/core";
 import { globalMemberEditAnnouncement } from "../lib/val_announcement";
 import { GroupData, GroupDataEditAnnouncement } from "../lib/type_announcement";
 import EditChooseMember from "./edit_choose_member";
+import { IoIosArrowForward } from "react-icons/io";
 
 export default function EditAnnouncement() {
    const [isOpen, setOpen] = useState(false)
    const [isChooseDivisi, setChooseDivisi] = useState(false)
    const param = useParams<{ id: string }>()
    const [loading, setLoading] = useState(true)
+   const router = useRouter()
    const [touched, setTouched] = useState({
       title: false,
       desc: false
@@ -89,6 +91,7 @@ export default function EditAnnouncement() {
 
          if (response.success) {
             toast.success(response.message)
+            router.push(`/announcement/${param.id}`)
          } else {
             toast.error(response.message)
          }
@@ -121,7 +124,7 @@ export default function EditAnnouncement() {
                <>
                   <Skeleton height={40} mt={20} radius={30} />
                   <Skeleton height={75} mt={20} radius={10} />
-                  <Skeleton height={40} mt={10} radius={30} />
+                  <Skeleton height={40} mt={10} radius={10} />
                </>
                :
                <>
@@ -173,9 +176,22 @@ export default function EditAnnouncement() {
                      }
 
                   />
-                  <Button onClick={() => { setChooseDivisi(true) }} rightSection={<HiOutlineChevronRight size={14} />} variant="default" fullWidth radius={30} size="md" mt={10}>
-                     Pilih Divisi
-                  </Button>
+                  <Box pt={10}  w={"100%"}>
+                     <Group justify="space-between" style={{
+                     border: `1px solid ${WARNA.biruTua}`,
+                     maxWidth: rem(550),
+                        padding: 10,
+                        borderRadius: 10
+                  }}
+                 
+                     onClick={() => { setChooseDivisi(true) }}
+                     >
+                        <Text size="sm">
+                           Tambah divisi penerima pengumuman
+                        </Text>
+                        <IoIosArrowForward />
+                     </Group>
+                  </Box>
                </>
             }
 
@@ -197,11 +213,17 @@ export default function EditAnnouncement() {
                   return (
                      <Box key={i} mt={10}>
                         <Text fw={"bold"}>{v.name}</Text>
-                        <Box pl={20}>
+                        <Box pl={20} pr={10}>
                            <Flex direction={"column"} gap={"md"}>
-                              {v.Division.map((division: any) => (
-                                 <li key={division.id}>{division.name}</li>
-                              ))}
+                              <List>
+                                 {
+                                    v.Division.map((division: any) => {
+                                       return <List.Item key={division.id}>
+                                          <Text lineClamp={1}>{division.name}</Text>
+                                       </List.Item>
+                                    })
+                                 }
+                              </List>
                            </Flex>
                         </Box>
                      </Box>

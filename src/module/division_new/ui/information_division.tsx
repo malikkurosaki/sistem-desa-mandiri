@@ -1,6 +1,6 @@
 "use client"
 import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, Button, Divider, Flex, Group, Skeleton, Stack, Text } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Button, Divider, Flex, Grid, Group, Skeleton, Stack, Text } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -184,24 +184,28 @@ export default function InformationDivision() {
                   : member.map((v, i) => {
                     return (
                       <Box key={i}>
-                        <Flex
-                          justify={"space-between"}
-                          align={"center"}
-                          mt={10}
+                        <Grid align='center' mt={10}
                           onClick={() => { onClickMember(v.id, (v.isAdmin) ? true : false), setChooseMemberName(v.name) }}
                         >
-                          <Group>
-                            <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                            <Box>
-                              <Text c={WARNA.biruTua} fw={"bold"}>
-                                {v.name}
-                              </Text>
-                            </Box>
-                          </Group>
-                          <Text c={WARNA.biruTua} fw={"bold"}>
-                            {(v.isAdmin) ? 'Admin' : 'Anggota'}
-                          </Text>
-                        </Flex>
+                          <Grid.Col span={9}>
+                            <Group>
+                              <Avatar src={`/api/file/img?cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                              <Box w={{
+                                base: 140,
+                                xl: 270
+                              }}>
+                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                                  {v.name}
+                                </Text>
+                              </Box>
+                            </Group>
+                          </Grid.Col>
+                          <Grid.Col span={3}>
+                            <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
+                              {(v.isAdmin) ? 'Admin' : 'Anggota'}
+                            </Text>
+                          </Grid.Col>
+                        </Grid>
                         <Box mt={10}>
                           <Divider size={"xs"} />
                         </Box>

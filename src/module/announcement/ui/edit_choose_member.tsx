@@ -145,6 +145,7 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
                               alignItems: 'center',
                            }}
                            fw={checked[item.id] && checked[item.id].length === item.Division.length ? 'bold' : 'normal'}
+                           lineClamp={1}
                         >
                            {item.name}
                         </Text>
@@ -158,16 +159,14 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
                      {item.Division.map((division) => (
                         <Box key={division.id}>
                            <Group onClick={() => handleCheck(item.id, division.id)} justify='space-between' align='center'>
-                              <Text
-                                 style={{
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    paddingLeft: 20,
-                                 }}
-                              >
-                                 {division.name}
-                              </Text>
+                              <Box w={{
+                                 base: 280,
+                                 xl: 430
+                              }}>
+                                 <Text truncate="end" pl={20}>
+                                    {division.name}
+                                 </Text>
+                              </Box>
                               <Text
                                  style={{
                                     cursor: 'pointer',

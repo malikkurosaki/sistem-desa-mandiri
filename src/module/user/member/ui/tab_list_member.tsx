@@ -1,6 +1,6 @@
 
 import { SkeletonSingle, WARNA } from "@/module/_global"
-import { Box, Group, ActionIcon, Text, TextInput, Divider, Avatar } from "@mantine/core"
+import { Box, Group, ActionIcon, Text, TextInput, Divider, Avatar, Grid } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -104,17 +104,18 @@ export default function TabListMember() {
                               <Box onClick={() => {
                                  router.push(`/member/${v.id}`)
                               }}>
-                                 <Group align='center' style={{
-                                    padding: 10,
-                                 }} >
-                                    <Box>
+                                 <Grid p={10} gutter={{
+                                    base: 60,
+                                    xl: "xs"
+                                 }}  align="center">
+                                    <Grid.Col span={2}>
                                        <Avatar src={`/api/file/img?cat=user&file=${v.img}`} size={50} alt="image" />
-                                    </Box>
-                                    <Box>
+                                    </Grid.Col>
+                                    <Grid.Col span={9}>
                                        <Text fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{_.startCase(v.name)}</Text>
                                        <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
-                                    </Box>
-                                 </Group>
+                                    </Grid.Col>
+                                 </Grid>
                               </Box>
                               <Divider my={10} />
                            </Box>
