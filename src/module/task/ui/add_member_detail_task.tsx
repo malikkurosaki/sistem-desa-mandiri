@@ -143,7 +143,7 @@ export default function AddMemberDetailTask() {
                   </Box>
                ))
                :
-               <Box mt={15} mb={60}>
+               <Box mt={15} mb={100}>
                   {isData.map((v, i) => {
                      const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
                      const found = isDataMember.some((i: any) => i.idUser == v.idUser)

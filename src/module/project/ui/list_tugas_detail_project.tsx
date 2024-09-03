@@ -106,77 +106,61 @@ export default function ListTugasDetailProject() {
                 isData.map((item, index) => {
                   return (
                     <Box key={index} mb={20}>
-                      <Grid
-                        onClick={() => {
-                          setIdData(item.id)
-                          setStatusData(item.status)
-                          setOpenDrawer(true)
-                        }}
-                      >
-                        <Grid.Col span={"auto"}>
-                          <Center>
-                            <Checkbox color="teal" size="md" checked={(item.status === 1) ? true : false} disabled />
-                          </Center>
-                        </Grid.Col>
-                        <Grid.Col span={10}>
-                          <Box
-                            style={{
-                              borderRadius: 10,
-                              border: `1px solid ${"#D6D8F6"}`,
-                              padding: 10,
-                            }}
-                          >
-                            <Grid gutter={"sm"} justify='flex-start' align='flex-start'>
+                      <Box onClick={() => {
+                        setIdData(item.id)
+                        setStatusData(item.status)
+                        setOpenDrawer(true)
+                      }}>
+                        <Checkbox color="teal" size="md" checked={(item.status === 1) ? true : false} disabled
+                          label={item.status === 1 ? 'Sudah Selesai' : 'Belum Selesai'}
+                        />
+                        <Box mt={20}>
+                          <Box style={{
+                            borderRadius: 10,
+                            border: `1px solid ${"#D6D8F6"}`,
+                            padding: 10
+                          }}>
+                            <Grid gutter={"sm"} justify='flex-start' align='flex-start'
+                            >
                               <Grid.Col span={"auto"}>
-                                <Center>
-                              <AiOutlineFileSync size={30} />
+                                <Center >
+                                  <AiOutlineFileSync size={30} />
                                 </Center>
                               </Grid.Col>
                               <Grid.Col span={10}>
-                              <Text>{item.title}</Text>
+                                <Text>{item.title}</Text>
                               </Grid.Col>
                             </Grid>
-                            <Group>
-                            </Group>
                           </Box>
                           <Box>
-                            <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
+                            <SimpleGrid cols={{ base: 1, sm: 2, lg: 2 }} mt={20}>
                               <Box>
                                 <Text>Tanggal Mulai</Text>
                                 <Group
                                   justify="center"
                                   bg={"white"}
                                   h={45}
-                                  style={{
-                                    borderRadius: 10,
-                                    border: `1px solid ${"#D6D8F6"}`,
-                                  }}
+                                  style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
                                 >
                                   <Text>{item.dateStart}</Text>
                                 </Group>
                               </Box>
                               <Box>
-                                <Text>Tanggal Berakhir</Text>
+                                <Text >Tanggal Berakhir</Text>
                                 <Group
                                   justify="center"
                                   bg={"white"}
                                   h={45}
-                                  style={{
-                                    borderRadius: 10,
-                                    border: `1px solid ${"#D6D8F6"}`,
-                                  }}
+                                  style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
                                 >
                                   <Text>{item.dateEnd}</Text>
                                 </Group>
                               </Box>
                             </SimpleGrid>
                           </Box>
-                        </Grid.Col>
-                      </Grid>
-                      {isData.length >= 1
-                        ? "" :
-                        <Divider my={"lg"} />
-                      }
+                        </Box>
+                      </Box>
+                      <Divider my={"lg"} />
                     </Box>
                   )
                 })

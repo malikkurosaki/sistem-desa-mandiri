@@ -116,7 +116,7 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
                         <Center>
                           <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="xl" />
                         </Center>
-                        <Text mt={20} ta="center">
+                        <Text mt={20} ta="center" lineClamp={1}>
                           {v.name}
                         </Text>
                       </Box>

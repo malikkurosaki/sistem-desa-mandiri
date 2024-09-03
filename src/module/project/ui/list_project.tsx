@@ -121,8 +121,11 @@ export default function ListProject() {
             {isData.map((v, i) => {
               return (
                 <Box key={i}>
-                <Grid align='center' gutter={10}>
-                    <Grid.Col span={1}>
+                <Grid align='center'>
+                    <Grid.Col span={{
+                      base: 2,
+                      xl: 1
+                    }}>
                       <Group onClick={() => router.push(`/project/${v.id}`)}>
                         <Center>
                           <ActionIcon
@@ -141,18 +144,20 @@ export default function ListProject() {
                         </Center>
                       </Group>
                     </Grid.Col>
-                    <Grid.Col span={11}>
+                    <Grid.Col span={{
+                      base: 10,
+                      xl: 11
+                    }}>
                       <Group justify='space-between' align='center'>
                         <Box>
                           <Box w={{
-                            base: 280,
+                            base: 230,
                             xl: 430
                           }}>
                             <Text truncate="end" pl={20}>
                               {v.title}
                             </Text>
                           </Box>
-                          {/* <Text lineClamp={1}></Text> */}
 
                         </Box>
                           <RiCircleFill size={12} color={

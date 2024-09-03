@@ -1,6 +1,6 @@
 "use client";
 import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Avatar, Box, Button, Center, Flex, Group, rem, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { Avatar, Box, Button, Center, Divider, Flex, Grid, Group, rem, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
@@ -227,166 +227,174 @@ export default function CreateProject() {
         </Stack>
         <Box pb={100}>
 
-        {
-          dataTask.length > 0 &&
-          <Box pt={20}>
-            <Text fw={'bold'} c={WARNA.biruTua}>Tanggal & Tugas</Text>
-            {
-              dataTask.map((v, i) => {
-                return (
-                  <Box key={i} onClick={() => {
-                    setIndexDelTask(i)
-                    setOpenDrawerTask(true)
-                  }}>
-                    <ResultsDateAndTask dateStart={v.dateStart} dateEnd={v.dateEnd} title={v.title} />
-                  </Box>
-                )
-              })
-            }
-          </Box>
-        }
-
-        {
-          listFile.length > 0 &&
-          <Box pt={20}>
-            <Text fw={'bold'} c={WARNA.biruTua}>File</Text>
-            <Box bg={"white"} style={{
-              borderRadius: 10,
-              border: `1px solid ${"#D6D8F6"}`,
-              padding: 20
-            }}>
+          {
+            dataTask.length > 0 &&
+            <Box pt={20}>
+              <Text fw={'bold'} c={WARNA.biruTua}>Tanggal & Tugas</Text>
               {
-                listFile.map((v, i) => {
+                dataTask.map((v, i) => {
                   return (
                     <Box key={i} onClick={() => {
-                      setIndexDelFile(i)
-                      setOpenDrawerFile(true)
+                      setIndexDelTask(i)
+                      setOpenDrawerTask(true)
                     }}>
-                      <ResultsFile name={v.name} extension={v.extension} />
+                      <ResultsDateAndTask dateStart={v.dateStart} dateEnd={v.dateEnd} title={v.title} />
                     </Box>
                   )
                 })
               }
             </Box>
-          </Box>
-        }
+          }
 
-        {
-          member.length > 0 &&
-          <Box pt={30}>
-            <Group justify="space-between">
-              <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-              <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
-            </Group>
-            <Box pt={10}>
-              <Box mb={20}>
-                <Box
-                  style={{
-                    border: `1px solid ${"#C7D6E8"}`,
-                    borderRadius: 10,
-                  }}
-                  px={20}
-                  py={10}
-                >
-                  {member.get().map((v: any, i: any) => {
+          {
+            listFile.length > 0 &&
+            <Box pt={20}>
+              <Text fw={'bold'} c={WARNA.biruTua}>File</Text>
+              <Box bg={"white"} style={{
+                borderRadius: 10,
+                border: `1px solid ${"#D6D8F6"}`,
+                padding: 20
+              }}>
+                {
+                  listFile.map((v, i) => {
                     return (
-                      <Flex
-                        justify={"space-between"}
-                        align={"center"}
-                        mt={20}
-                        key={i}
-                      >
-                        <Group>
-                          <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                          <Box>
-                            <Text c={WARNA.biruTua} fw={"bold"}>
-                              {v.name}
+                      <Box key={i} onClick={() => {
+                        setIndexDelFile(i)
+                        setOpenDrawerFile(true)
+                      }}>
+                        <ResultsFile name={v.name} extension={v.extension} />
+                      </Box>
+                    )
+                  })
+                }
+              </Box>
+            </Box>
+          }
+
+          {
+            member.length > 0 &&
+            <Box pt={30}>
+              <Group justify="space-between">
+                <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
+                <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
+              </Group>
+              <Box pt={10}>
+                <Box mb={20}>
+                  <Box
+                    style={{
+                      border: `1px solid ${"#C7D6E8"}`,
+                      borderRadius: 10,
+                    }}
+                    px={20}
+                    py={10}
+                  >
+                    {member.get().map((v: any, i: any) => {
+                      return (
+                     <Box key={i}>
+                      <Grid align='center' mt={10}
+                        >
+                          <Grid.Col span={9}>
+                            <Group>
+                              <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                              <Box w={{
+                                base: 140,
+                                xl: 270
+                              }}>
+                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                                  {v.name}
+                                </Text>
+                              </Box>
+                            </Group>
+                          </Grid.Col>
+                          <Grid.Col span={3}>
+                            <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
+                            Anggota
                             </Text>
-                          </Box>
-                        </Group>
-                        <Text c={WARNA.biruTua} fw={"bold"}>
-                          Anggota
-                        </Text>
-                      </Flex>
+                          </Grid.Col>
+                        </Grid>
+                        <Box mt={10}>
+                          <Divider size={"xs"} />
+                        </Box>
+                     </Box>
                     );
                   })}
                 </Box>
               </Box>
-            </Box>
-          </Box>
+                </Box>
+              </Box>
         }
+            </Box>
+
+      </Box>
+        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+          maxWidth: rem(550),
+          zIndex: 999,
+          backgroundColor: `${WARNA.bgWhite}`,
+        }}>
+          <Button
+            color="white"
+            bg={WARNA.biruTua}
+            size="lg"
+            radius={30}
+            fullWidth
+            onClick={() => {
+              if (
+                body.title !== "" &&
+                body.idGroup !== ""
+              ) {
+                setModal(true)
+              } else {
+                toast.error("Mohon lengkapi data terlebih dahulu");
+              }
+            }}>
+            Simpan
+          </Button>
         </Box>
 
-      </Box>
-      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-        maxWidth: rem(550),
-        zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
-      }}>
-        <Button
-          color="white"
-          bg={WARNA.biruTua}
-          size="lg"
-          radius={30}
-          fullWidth
-          onClick={() => {
-            if (
-              body.title !== "" &&
-              body.idGroup !== ""
-            ) {
-              setModal(true)
-            } else {
-              toast.error("Mohon lengkapi data terlebih dahulu");
-            }
-          }}>
-          Simpan
-        </Button>
-      </Box>
 
 
-
-      {/* Drawer pilih file */}
-      <LayoutDrawer
-        opened={openDrawer}
-        onClose={() => setOpenDrawer(false)}
-        title={"Pilih File"}
-      >
-        <Flex justify={"flex-start"} px={20}>
-          <Dropzone
-            openRef={openRef}
-            onDrop={async (files) => {
-              if (!files || _.isEmpty(files))
-                return toast.error('Tidak ada file yang dipilih')
-              setFileForm([...fileForm, files[0]])
-              setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
-            }}
-            activateOnClick={false}
-            maxSize={3 * 1024 ** 2}
-            accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
-            onReject={(files) => {
-              return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
-            }}
-          >
-            <Box onClick={() => openRef.current?.()}>
-              <Box
-                bg={"#DCEED8"}
-                style={{
-                  border: `1px solid ${"#D6D8F6"}`,
-                  padding: 20,
-                  borderRadius: 10,
-                }}
-              >
-                <Center>
-                  <BsFiletypeCsv size={40} />
-                </Center>
+        {/* Drawer pilih file */}
+        <LayoutDrawer
+          opened={openDrawer}
+          onClose={() => setOpenDrawer(false)}
+          title={"Pilih File"}
+        >
+          <Flex justify={"flex-start"} px={20}>
+            <Dropzone
+              openRef={openRef}
+              onDrop={async (files) => {
+                if (!files || _.isEmpty(files))
+                  return toast.error('Tidak ada file yang dipilih')
+                setFileForm([...fileForm, files[0]])
+                setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
+              }}
+              activateOnClick={false}
+              maxSize={3 * 1024 ** 2}
+              accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+              onReject={(files) => {
+                return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+              }}
+            >
+              <Box onClick={() => openRef.current?.()}>
+                <Box
+                  bg={"#DCEED8"}
+                  style={{
+                    border: `1px solid ${"#D6D8F6"}`,
+                    padding: 20,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Center>
+                    <BsFiletypeCsv size={40} />
+                  </Center>
+                </Box>
+                <Text mt={10} ta={"center"}>
+                  Pilih file
+                </Text>
+                <Text ta={"center"}>diperangkat</Text>
               </Box>
-              <Text mt={10} ta={"center"}>
-                Pilih file
-              </Text>
-              <Text ta={"center"}>diperangkat</Text>
-            </Box>
-          </Dropzone>
-          {/* <Box onClick={() => router.push("/project/create?page=file-save")}>
+            </Dropzone>
+            {/* <Box onClick={() => router.push("/project/create?page=file-save")}>
             <Box
               bg={"#DCEED8"}
               style={{
@@ -404,61 +412,61 @@ export default function CreateProject() {
             </Text>
             <Text ta={"center"}>sudah ada</Text>
           </Box> */}
-        </Flex>
-      </LayoutDrawer>
+          </Flex>
+        </LayoutDrawer>
 
 
 
-      {/* Drawer hapus file */}
-      <LayoutDrawer
-        opened={openDrawerFile}
-        onClose={() => setOpenDrawerFile(false)}
-        title={""}
-      >
-        <Stack pt={10}>
-          <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
-            <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteFile(indexDelFile)}>
-              <Box>
-                <FaTrash size={30} color={WARNA.biruTua} />
-              </Box>
-              <Box>
-                <Text c={WARNA.biruTua} ta='center'>Hapus File</Text>
-              </Box>
-            </Flex>
-          </SimpleGrid>
-        </Stack>
-      </LayoutDrawer>
+        {/* Drawer hapus file */}
+        <LayoutDrawer
+          opened={openDrawerFile}
+          onClose={() => setOpenDrawerFile(false)}
+          title={""}
+        >
+          <Stack pt={10}>
+            <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
+              <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteFile(indexDelFile)}>
+                <Box>
+                  <FaTrash size={30} color={WARNA.biruTua} />
+                </Box>
+                <Box>
+                  <Text c={WARNA.biruTua} ta='center'>Hapus File</Text>
+                </Box>
+              </Flex>
+            </SimpleGrid>
+          </Stack>
+        </LayoutDrawer>
 
 
-      {/* Drawer hapus tugas */}
-      <LayoutDrawer
-        opened={openDrawerTask}
-        onClose={() => setOpenDrawerTask(false)}
-        title={""}
-      >
-        <Stack pt={10}>
-          <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
-            <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteTask(indexDelTask)}>
-              <Box>
-                <FaTrash size={30} color={WARNA.biruTua} />
-              </Box>
-              <Box>
-                <Text c={WARNA.biruTua} ta='center'>Hapus Tugas</Text>
-              </Box>
-            </Flex>
-          </SimpleGrid>
-        </Stack>
-      </LayoutDrawer>
+        {/* Drawer hapus tugas */}
+        <LayoutDrawer
+          opened={openDrawerTask}
+          onClose={() => setOpenDrawerTask(false)}
+          title={""}
+        >
+          <Stack pt={10}>
+            <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
+              <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteTask(indexDelTask)}>
+                <Box>
+                  <FaTrash size={30} color={WARNA.biruTua} />
+                </Box>
+                <Box>
+                  <Text c={WARNA.biruTua} ta='center'>Hapus Tugas</Text>
+                </Box>
+              </Flex>
+            </SimpleGrid>
+          </Stack>
+        </LayoutDrawer>
 
 
-      <LayoutModal opened={isModal} onClose={() => setModal(false)}
-        description="Apakah Anda yakin ingin menambahkan data?"
-        onYes={(val) => {
-          if (val) {
-            onSubmit()
-          }
-          setModal(false)
-        }} />
-    </Box >
-  );
+        <LayoutModal opened={isModal} onClose={() => setModal(false)}
+          description="Apakah Anda yakin ingin menambahkan data?"
+          onYes={(val) => {
+            if (val) {
+              onSubmit()
+            }
+            setModal(false)
+          }} />
+      </Box >
+      );
 }
