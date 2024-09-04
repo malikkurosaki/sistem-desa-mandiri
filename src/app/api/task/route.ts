@@ -152,10 +152,9 @@ export async function POST(request: Request) {
       let fileFix: any[] = []
 
       if (cekFile) {
-         let a = 0
          const root = path.join(process.cwd(), "./public/file/task/");
          for (var pair of body.entries()) {
-            if (String(pair[0]) == "file" + a) {
+            if (String(pair[0]).substring(0, 4) == "file") {
                const file = body.get(pair[0]) as File
                const fExt = file.name.split(".").pop()
                const fName = file.name.replace("." + fExt, "")
@@ -190,7 +189,6 @@ export async function POST(request: Request) {
 
                fileFix.push(dataFile)
             }
-            a++
          }
 
          const insertFile = await prisma.divisionProjectFile.createMany({

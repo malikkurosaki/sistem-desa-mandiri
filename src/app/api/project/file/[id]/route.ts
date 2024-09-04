@@ -162,10 +162,9 @@ export async function POST(request: Request, context: { params: { id: string } }
 
 
       if (cekFile) {
-         let a = 0
          const root = path.join(process.cwd(), "./public/file/project/");
          for (var pair of body.entries()) {
-            if (String(pair[0]) == "file" + a) {
+            if (String(pair[0]).substring(0, 4) == "file") {
                const file = body.get(pair[0]) as File
                const fExt = file.name.split(".").pop()
                const fName = file.name.replace("." + fExt, "")
@@ -189,7 +188,6 @@ export async function POST(request: Request, context: { params: { id: string } }
                // Tulis file ke sistem
                fs.writeFileSync(filePath, buffer);
             }
-            a++
          }
       }
 
