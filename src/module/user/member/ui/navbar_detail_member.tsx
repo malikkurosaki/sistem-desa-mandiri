@@ -1,8 +1,7 @@
 'use client'
-import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, SkeletonDetailProfile } from "@/module/_global";
+import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, SkeletonDetailProfile, globalRole } from "@/module/_global";
 import { Box, Group, ActionIcon, Stack, Text, Center, Avatar, Skeleton, Grid } from "@mantine/core";
 import { HiMenu } from "react-icons/hi";
-import { HiUser } from "react-icons/hi2";
 import DrawerDetailMember from "./drawer_detail_member";
 import { useState } from "react";
 import { RiIdCardFill } from "react-icons/ri";
@@ -10,7 +9,6 @@ import { FaSquarePhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { IoMaleFemale } from "react-icons/io5";
 import { useShallowEffect } from "@mantine/hooks";
-import Link from "next/link";
 import { funGetOneMember } from "../lib/api_member";
 import toast from "react-hot-toast";
 import { IListMember, IMember } from "../lib/type_member";
