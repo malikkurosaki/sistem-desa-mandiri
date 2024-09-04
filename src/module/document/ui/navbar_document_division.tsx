@@ -308,7 +308,7 @@ export default function NavbarDocumentDivision() {
         }
       />
       <Box>
-        <Box p={20} pb={60}>
+        <Box p={20} pb={100}>
           <Box>
             <Breadcrumbs separator={<GoChevronRight />} separatorMargin="md" mt="xs" style={{ cursor: 'pointer' }}>
               {
@@ -327,12 +327,14 @@ export default function NavbarDocumentDivision() {
             return (
               <Box key={i}>
                 <Box mt={10} mb={10}>
-                  <Grid align='center' >
-                    <Grid.Col span={10}
+                  <Grid align='center'
+
+                  >
+                    <Grid.Col span={2}
                       onClick={() => {
                         if (v.category == "FOLDER" && selectedFiles.length == 0 && !dariSelectAll) {
                           router.push('?path=' + v.id)
-                        } else if(v.category == "FILE" && selectedFiles.length == 0 && !dariSelectAll){
+                        } else if (v.category == "FILE" && selectedFiles.length == 0 && !dariSelectAll) {
                           setExtension(v.extension)
                           setIdData(v.id)
                           setOpenModalView(true)
@@ -340,41 +342,60 @@ export default function NavbarDocumentDivision() {
 
                       }}
                     >
-                      <Group gap={20}>
+                      <Group>
                         <Box>
                           {
                             (v.share) ?
                               <Indicator offset={15} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaShare />} size={25}>
                                 {
                                   (v.category == "FOLDER") ?
-                                    <FcFolder size={60} /> :
+                                    <FcFolder size={50} /> :
                                     (v.extension == "pdf" || v.extension == "csv") ?
-                                      <FcDocument size={60} /> :
-                                      <FcImageFile size={60} />
+                                      <FcDocument size={50} /> :
+                                      <FcImageFile size={50} />
                                 }
                               </Indicator>
                               :
                               <>
                                 {
                                   (v.category == "FOLDER") ?
-                                    <FcFolder size={60} /> :
+                                    <FcFolder size={50} /> :
                                     (v.extension == "pdf" || v.extension == "csv") ?
-                                      <FcDocument size={60} /> :
-                                      <FcImageFile size={60} />
+                                      <FcDocument size={50} /> :
+                                      <FcImageFile size={50} />
                                 }
                               </>
 
                           }
 
                         </Box>
-                        <Flex direction={'column'}>
-                          <Text>{(v.category == "FOLDER") ? v.name : v.name + '.' + v.extension}</Text>
-                          <Text fz={10}>{v.updatedAt}</Text>
-                        </Flex>
                       </Group>
                     </Grid.Col>
-                    <Grid.Col span={2}>
-                      <Group justify='flex-end'>
+                    <Grid.Col span={10}>
+                      <Group justify='space-between' align='center'>
+                        <Flex direction={'column'}
+                          onClick={() => {
+                            if (v.category == "FOLDER" && selectedFiles.length == 0 && !dariSelectAll) {
+                              router.push('?path=' + v.id)
+                            } else if (v.category == "FILE" && selectedFiles.length == 0 && !dariSelectAll) {
+                              setExtension(v.extension)
+                              setIdData(v.id)
+                              setOpenModalView(true)
+                            }
+
+                          }}
+                        >
+                          <Box w={{
+                            base: 230,
+                            xl: 380,
+                            md: 380,
+                            sm: 380,
+                            xs: 380
+                          }}>
+                            <Text lineClamp={1}>{(v.category == "FOLDER") ? v.name : v.name + '.' + v.extension}</Text>
+                            <Text fz={10}>{v.updatedAt}</Text>
+                          </Box>
+                        </Flex>
                         <Checkbox
                           color="teal"
                           radius="lg"
