@@ -7,6 +7,7 @@ import { useState } from "react"
 import toast from "react-hot-toast"
 import { funEditDiscussion, funGetDiscussionById } from "../lib/api_discussion"
 import { useShallowEffect } from "@mantine/hooks"
+import { funGetProfileByCookies } from "@/module/user/profile/lib/api_profile"
 
 export default function FormEditDiscussion() {
    const [isValModal, setValModal] = useState(false)
@@ -14,6 +15,7 @@ export default function FormEditDiscussion() {
    const param = useParams<{ id: string, detail: string }>()
    const [isDataOne, setDataOne] = useState("")
    const [loading, setLoading] = useState(true)
+   const [img, setIMG] = useState<any | null>()
    const [touched, setTouched] = useState({
       desc: false,
    });
@@ -55,19 +57,35 @@ export default function FormEditDiscussion() {
       }
    }
 
+   async function getData() {
+      try {
+        setLoading(true)
+        const res = await funGetProfileByCookies()
+        setIMG(`/api/file/img?jenis=image&cat=user&file=${res.data.img}`)
+        setLoading(false)
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false)
+      }
+    }
+   
    useShallowEffect(() => {
       fetchGetOneDiscussion()
+      getData()
    }, [])
+
+
 
    return (
       <Box >
          <Box p={20}>
             <Grid gutter={0} pt={10}>
-               <Grid.Col span={"auto"}>
+               <Grid.Col span={2}>
                   {loading ? 
                     <Skeleton height={60} width={60} radius={100} />  
                :   
-                  <Avatar src={'https://i.pravatar.cc/1000?img=32'} alt="it's me" size="lg" />
+                  <Avatar src={img} alt="it's me" size="lg" />
                }
                </Grid.Col>
                <Grid.Col span={10}>
@@ -87,7 +105,7 @@ export default function FormEditDiscussion() {
                            input: {
                               border: 'none',
                               backgroundColor: 'transparent',
-                              height: "60vh"
+                              height: "70vh"
                            }
                         }}
                         value={isDataOne}

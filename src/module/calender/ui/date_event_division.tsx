@@ -1,5 +1,5 @@
 import { WARNA } from '@/module/_global';
-import { Box, Divider, Group, Indicator, Skeleton, Text } from '@mantine/core';
+import { Box, Divider, Flex, Group, Indicator, Skeleton, Text } from '@mantine/core';
 import { DatePicker, DatePickerProps } from '@mantine/dates';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -82,7 +82,7 @@ export default function DateEventDivision() {
     const muncul = isListTgl.includes(coba)
 
     return (
-      <Indicator color="red" offset={-3} disabled={!muncul} position='top-end' inline  size={6} >
+      <Indicator color="red" offset={-3} disabled={!muncul} position='top-end' inline size={6} >
         <div>{day}</div>
       </Indicator>
     );
@@ -136,11 +136,25 @@ export default function DateEventDivision() {
                   }} h={113}>
                     <Group>
                       <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
-                      <Box>
+                      <Flex direction={'column'}>
                         <Text>{event.timeStart} - {event.timeEnd}</Text>
-                        <Text fw={"bold"}>{event.title}</Text>
-                        <Text>Dibuat oleh : {event.user_name}</Text>
-                      </Box>
+                        <Box w={{
+                          base: 280,
+                          xl: 430
+                        }}>
+                          <Text  fw={"bold"} lineClamp={1}>
+                          {_.startCase(event.title)}
+                          </Text>
+                        </Box>
+                        <Box w={{
+                          base: 280,
+                          xl: 420
+                        }}>
+                          <Text  lineClamp={1}>
+                          Dibuat oleh : {event.user_name}
+                          </Text>
+                        </Box>
+                      </Flex>
                     </Group>
                   </Box>
                 </Box>

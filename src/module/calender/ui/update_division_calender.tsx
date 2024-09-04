@@ -1,6 +1,6 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Avatar, Box, Button, Flex, Group, Input, rem, Select, SimpleGrid, Skeleton, Stack, Text, Textarea, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Divider, Flex, Grid, Group, Input, rem, Select, SimpleGrid, Skeleton, Stack, Text, Textarea, TextInput } from '@mantine/core';
 import { DateInput, TimeInput } from '@mantine/dates';
 import React, { useState } from 'react';
 import { IoIosArrowDropright } from 'react-icons/io';
@@ -305,7 +305,7 @@ export default function UpdateDivisionCalender() {
                     borderRadius: 10,
                   }}
                 >
-                  <Text>Tambah Anggota *</Text>
+                  <Text>Tambah Anggota</Text>
                   <IoIosArrowDropright size={25} />
                 </Group>
               </Box>
@@ -332,24 +332,22 @@ export default function UpdateDivisionCalender() {
 
                         memberUser.get().map((v: any, i: any) => {
                           return (
-                            <Flex
-                              justify={"space-between"}
-                              align={"center"}
-                              mt={20}
-                              key={i}
-                            >
-                              <Group>
-                                <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                                <Box>
-                                  <Text c={WARNA.biruTua} fw={"bold"}>
+                            <Box key={i}>
+                              <Grid align='center' mt={10}
+                              >
+                                <Grid.Col span={3}>
+                                    <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                                </Grid.Col>
+                                <Grid.Col span={9}>
+                                  <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
                                     {v.name}
                                   </Text>
-                                </Box>
-                              </Group>
-                              <Text c={WARNA.biruTua} fw={"bold"}>
-                                Anggota
-                              </Text>
-                            </Flex>
+                                </Grid.Col>
+                              </Grid>
+                              <Box mt={10}>
+                                <Divider size={"xs"} />
+                              </Box>
+                            </Box>
                           );
                         })}
                     </Box>
