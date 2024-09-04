@@ -1,6 +1,6 @@
 'use client'
-import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, SkeletonDetailProfile, globalRole } from "@/module/_global";
-import { Box, Group, ActionIcon, Stack, Text, Center, Avatar, Skeleton } from "@mantine/core";
+import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, SkeletonDetailProfile } from "@/module/_global";
+import { Box, Group, ActionIcon, Stack, Text, Center, Avatar, Skeleton, Grid } from "@mantine/core";
 import { HiMenu } from "react-icons/hi";
 import { HiUser } from "react-icons/hi2";
 import DrawerDetailMember from "./drawer_detail_member";
@@ -90,38 +90,57 @@ export default function NavbarDetailMember({ id }: IMember) {
                ?
                <SkeletonDetailProfile />
                :
-               <Box p={20}>
+               <Stack p={20}>
                   <Group justify="space-between" grow py={5}>
-                     <Group>
-                        <RiIdCardFill size={28} />
-                        <Text fz={18}>NIK</Text>
-                     </Group>
-                     <Text fz={18} fw={'bold'} ta={"right"}>{dataOne?.nik}</Text>
+                     <Text fw={'bold'} fz={20}>Informasi</Text>
                   </Group>
-                  <Group justify="space-between" grow py={5}>
-                     <Group>
-                        <FaSquarePhone size={28} />
-                        <Text fz={18}>No Telepon</Text>
-                     </Group>
-                     <Text fz={18} fw={'bold'} ta={"right"}>+{dataOne?.phone}</Text>
-                  </Group>
-                  <Group justify="space-between" grow py={5}>
-                     <Group>
-                        <MdEmail size={28} />
-                        <Text fz={18}>Email</Text>
-                     </Group>
-                     <Text fz={18} fw={'bold'} ta={"right"}>{dataOne?.email}</Text>
-                  </Group>
-                  <Group justify="space-between" grow py={5}>
-                     <Group>
-                        <IoMaleFemale size={28} />
-                        <Text fz={18}>Gender</Text>
-                     </Group>
-                     <Text fz={18} fw={'bold'} ta={"right"}>
-                        {dataOne?.gender === 'M' ? 'Laki-laki' : dataOne?.gender === 'F' ? 'Perempuan' : ''}
-                     </Text>
-                  </Group>
-               </Box>
+                  <Grid>
+                     <Grid.Col span={4}>
+                        <Group>
+                           <RiIdCardFill size={25} />
+                           <Text fz={15}>NIK</Text>
+                        </Group>
+                     </Grid.Col>
+                     <Grid.Col span={8}>
+                        <Text fz={15} fw={'bold'} ta={"right"}>{dataOne?.nik}</Text>
+                     </Grid.Col>
+                  </Grid>
+                  <Grid>
+                     <Grid.Col span={5}>
+                        <Group>
+                           <FaSquarePhone size={25} />
+                           <Text fz={15}>No Telpon</Text>
+                        </Group>
+                     </Grid.Col>
+                     <Grid.Col span={7}>
+                        <Text fz={15} fw={'bold'} ta={"right"}>+62{dataOne?.phone}</Text>
+                     </Grid.Col>
+                  </Grid>
+                  <Grid>
+                     <Grid.Col span={4}>
+                        <Group>
+                           <MdEmail size={25} />
+                           <Text fz={15}>Email</Text>
+                        </Group>
+                     </Grid.Col>
+                     <Grid.Col span={8}>
+                        <Text fz={15} fw={'bold'} ta={"right"} lineClamp={1}>{dataOne?.email}</Text>
+                     </Grid.Col>
+                  </Grid>
+                  <Grid>
+                     <Grid.Col span={6}>
+                        <Group>
+                           <IoMaleFemale size={25} />
+                           <Text fz={15}>Jenis Kelamin</Text>
+                        </Group>
+                     </Grid.Col>
+                     <Grid.Col span={6}>
+                        <Text fz={15} fw={'bold'} ta={"right"}>
+                           {dataOne?.gender === 'M' ? 'Laki-laki' : dataOne?.gender === 'F' ? 'Perempuan' : ''}
+                        </Text>
+                     </Grid.Col>
+                  </Grid>
+               </Stack>
             }
             <LayoutDrawer opened={isOpen} title={'Menu'} onClose={() => setOpen(false)}>
                <DrawerDetailMember id={selectId} status={active} onDeleted={() => setOpen(false)} />
