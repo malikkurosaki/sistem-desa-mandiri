@@ -1,6 +1,6 @@
 'use client'
 import { WARNA } from "@/module/_global";
-import { Box, Group, Skeleton, Text } from "@mantine/core";
+import { Box, Grid, Group, SimpleGrid, Skeleton, Text } from "@mantine/core";
 import { GoDiscussionClosed } from "react-icons/go";
 import { CiClock2, CiUser } from "react-icons/ci";
 import { useRouter } from "next/navigation";
@@ -48,7 +48,7 @@ export default function ListDiscussion() {
          <Box bg={"white"} style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,
-            padding: 20
+            padding: 10
          }}>
 
             {
@@ -71,11 +71,12 @@ export default function ListDiscussion() {
                         {
                            isData.map((v, i) => {
                               return (
-                                 <Box key={i} style={{
+                                 <Box key={i} p={10}>
+                                 <Box  style={{
                                     borderRadius: 10,
                                     border: `1px solid ${"#D6D8F6"}`,
                                     padding: 10
-                                 }} mb={10} onClick={() => router.push(`/division/${v.idDivision}/discussion/${v.id}`)}>
+                                 }}  onClick={() => router.push(`/division/${v.idDivision}/discussion/${v.id}`)}>
                                     <Group>
                                        <GoDiscussionClosed size={25} />
                                        <Box w={{ base: 230, md: 400 }}>
@@ -84,16 +85,34 @@ export default function ListDiscussion() {
                                           </Text>
                                        </Box>
                                     </Group>
-                                    <Group justify="space-between" mt={20} c={"#8C8C8C"}>
-                                       <Group gap={5} align="center">
-                                          <CiUser size={18} />
-                                          <Text fz={13}>{v.user}</Text>
-                                       </Group>
-                                       <Group gap={5} align="center">
-                                          <CiClock2 size={18} />
-                                          <Text fz={13}>{v.date}</Text>
-                                       </Group>
-                                    </Group>
+                                    <Grid align="center" mt={20}>
+                                          <Grid.Col span={{
+                                             base: 7,
+                                             xl: 9
+                                       }}>
+                                          <Group gap={5} align="center">
+                                             <CiUser size={18} />
+                                             <Box w={{
+                                                base: 125,
+                                                xl: 300
+                                             }}>
+                                                <Text fz={13} lineClamp={1}>
+                                                {v.user}
+                                                </Text>
+                                             </Box>
+                                          </Group>
+                                       </Grid.Col>
+                                          <Grid.Col span={{
+                                             base: 5,
+                                             xl: 3
+                                       }}>
+                                          <Group gap={5} align="center" justify="flex-end">
+                                             <CiClock2 size={18} />
+                                             <Text fz={13}>{v.date}</Text>
+                                          </Group>
+                                       </Grid.Col>
+                                    </Grid>
+                                 </Box>
                                  </Box>
                               )
                            })
