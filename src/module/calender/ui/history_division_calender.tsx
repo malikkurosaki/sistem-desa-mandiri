@@ -91,20 +91,20 @@ export default function HistoryDivisionCalender() {
               :
               isData.map((v, i) => {
                 return (
-                  <Grid key={i}>
-                    <Grid.Col span={2}>
+                  <Grid key={i} align='center'>
+                    <Grid.Col span={3}>
                       <Flex justify={"center"} direction={'column'}>
                         <Text ta={"center"} fz={20} fw={'bold'}>{moment(v.dateStart).format('D MMM')}</Text>
                         <Text ta={"center"} fz={15}>{moment(v.dateStart).format('dddd')}</Text>
                       </Flex>
                     </Grid.Col>
-                    <Grid.Col span={'auto'}>
+                    <Grid.Col span={9}>
                       {v.data.map((d, x) => {
                         return (
-                          <Box mb={10} key={x}
+                          <Box mb={9} key={x}
                           onClick={() => router.push(`/division/${param.id}/calender/${d.id}`)}
                           >
-                            <Text fw={"bold"}>{d.title}</Text>
+                            <Text fw={"bold"} lineClamp={1}>{d.title}</Text>
                             <Text>{d.timeStart} | {d.timeEnd}</Text>
                           </Box>
                         )

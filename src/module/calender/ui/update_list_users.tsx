@@ -2,7 +2,7 @@
 import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import { funGetDivisionById, IDataMemberDivision } from '@/module/division_new';
 import { useHookstate } from '@hookstate/core';
-import { Avatar, Box, Button, Center, Divider, Flex, Group, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Center, Divider, Flex, Grid, Group, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
@@ -11,38 +11,6 @@ import toast from 'react-hot-toast';
 import { useShallowEffect } from '@mantine/hooks';
 import { FaCheck } from 'react-icons/fa6';
 
-const dataUser = [
-  {
-    id: 1,
-    img: "https://i.pravatar.cc/500?img=3",
-    name: "Doni Setiawan",
-  },
-  {
-    id: 2,
-    img: "https://i.pravatar.cc/500?img=10",
-    name: "Ilham Udin",
-  },
-  {
-    id: 3,
-    img: "https://i.pravatar.cc/500?img=11",
-    name: "Didin Anang",
-  },
-  {
-    id: 4,
-    img: "https://i.pravatar.cc/500?img=1",
-    name: "Angga Saputra",
-  },
-  {
-    id: 5,
-    img: "https://i.pravatar.cc/500?img=2",
-    name: "Marcel Widianto",
-  },
-  {
-    id: 6,
-    img: "https://i.pravatar.cc/500?img=7",
-    name: "Bagas Nusantara",
-  },
-];
 
 export default function UpdateListUsers({ onClose }: { onClose: (val: any) => void }) {
   const router = useRouter()
@@ -83,7 +51,7 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
     if (selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
       setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != isData[index].idUser))
     } else {
-      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name }])
+      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name, img: isData[index].img  }])
     }
   };
 
@@ -95,7 +63,7 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
       for (let index = 0; index < isData.length; index++) {
         if (!selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
           const newArr = {
-            idUser: isData[index].idUser, name: isData[index].name
+            idUser: isData[index].idUser, name: isData[index].name, img: isData[index].img
           }
           setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
         }
@@ -138,34 +106,30 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
              </Box>
           ))
           :
-          <Box mt={20}>
+          <Box mt={20} mb={100}>
             {isData.map((v, i) => {
               const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
               return (
                 <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
-                  <Flex justify={"space-between"} align={"center"}>
-                    <Group>
+                  <Grid align='center' gutter={{
+                    base: 60,
+                    xl: "xs"
+                  }}>
+                    <Grid.Col span={2}>
                       <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                      <Text style={{
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}>
-                        {v.name}
-                      </Text>
-                    </Group>
-                    <Text
-                      style={{
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingLeft: 20,
-                      }}
-                    >
-                      {isSelected ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-                    </Text>
-                  </Flex>
-                  <Divider my={"md"} />
+                    </Grid.Col>
+                    <Grid.Col span={10}>
+                      <Flex justify='space-between' align={"center"}>
+                        <Flex direction={'column'} align="flex-start" justify="flex-start">
+                          <Text lineClamp={1}>{v.name}</Text>
+                        </Flex>
+                        {isSelected ? <FaCheck /> : null}
+                      </Flex>
+                    </Grid.Col>
+                  </Grid>
+                  <Box mt={10}>
+                    <Divider size={"xs"} />
+                  </Box>
                 </Box>
               );
             })}

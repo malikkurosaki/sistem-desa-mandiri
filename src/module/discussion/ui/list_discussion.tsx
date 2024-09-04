@@ -1,6 +1,6 @@
 'use client'
 import { WARNA } from "@/module/_global";
-import { Avatar, Badge, Box, Divider, Flex, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
+import { Avatar, Badge, Box, Divider, Flex, Grid, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { GrChatOption } from "react-icons/gr";
@@ -63,7 +63,7 @@ export default function ListDiscussion({ id }: { id: string }) {
                .fill(null)
                .map((_, i) => (
                   <Box key={i}>
-                     <Box pl={10} pr={10}>
+                     <Box pl={5} pr={5}>
                         <Flex
                            justify={"space-between"}
                            align={"center"}
@@ -100,26 +100,31 @@ export default function ListDiscussion({ id }: { id: string }) {
                :
                isData.map((v, i) => {
                   return (
-                     <Box key={i} pl={10} pr={10}>
-                        <Flex
-                           justify={"space-between"}
-                           align={"center"}
-                           mt={20}
-                           onClick={() => {
-                              router.push(`/division/${param.id}/discussion/${v.id}`)
-                           }}
-                        >
-                           <Group>
+                     <Box key={i} pl={5} pr={5}>
+                        <Grid align="center" mt={20} onClick={() => {
+                           router.push(`/division/${param.id}/discussion/${v.id}`)
+                        }}>
+                           <Grid.Col span={2}>
                               <Avatar alt="it's me" src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} size="lg" />
-                              <Box>
-                                 <Text c={WARNA.biruTua} fw={"bold"}>
+                           </Grid.Col>
+                           <Grid.Col span={6}>
+                              <Box pl={{
+                                 sm: 0,
+                                 lg: 0,
+                                 xl: 0,
+                                 md: 0,
+                                 base: 10
+                              }}>
+                                 <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
                                     {v.user_name}
                                  </Text>
                                  <Badge color={v.status === 1 ? "green" : "red"} size="sm">{v.status === 1 ? "BUKA" : "TUTUP"}</Badge>
                               </Box>
-                           </Group>
-                           <Text c={"grey"} fz={13}>{v.createdAt}</Text>
-                        </Flex>
+                           </Grid.Col>
+                           <Grid.Col span={4}>
+                              <Text c={"grey"} ta={"end"} fz={13}>{v.createdAt}</Text>
+                           </Grid.Col>
+                        </Grid>
                         <Box mt={10}>
                            <Spoiler maxHeight={50} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
                               <Text

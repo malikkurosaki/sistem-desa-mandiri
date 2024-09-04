@@ -66,7 +66,7 @@ export async function GET(request: Request, context: { params: { id: string } })
         const { ...userMember } = data
         const username = data?.User.name
         const user_img = data?.User.img
-        const createdAt = moment(data?.createdAt).format("LL")
+        const createdAt = moment(data?.createdAt).format("ll")
 
 
 

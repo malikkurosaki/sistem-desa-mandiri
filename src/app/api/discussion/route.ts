@@ -72,7 +72,7 @@ export async function GET(request: Request) {
             user_name: v.User.name,
             img: v.User.img,
             total_komentar: v.DivisionDisscussionComment.length,
-            createdAt: moment(v.createdAt).format("LL")
+            createdAt: moment(v.createdAt).format("ll")
          }))
 
          return NextResponse.json({ success: true, message: "Berhasil mendapatkan diskusi", data: fixData, }, { status: 200 });

@@ -1,6 +1,6 @@
 'use client'
 import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, CopyButton, Flex, Group, Skeleton, Stack, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Avatar, Box, CopyButton, Divider, Flex, Grid, Group, Skeleton, Spoiler, Stack, Text, Tooltip } from '@mantine/core';
 import React, { useState } from 'react';
 import { BsCalendar2Event, BsCalendarDate } from 'react-icons/bs';
 import { MdEventNote, MdOutlineFormatListBulleted } from "react-icons/md";
@@ -61,63 +61,130 @@ export default function DetailEventDivision() {
             padding: 20,
             borderRadius: 10
           }}>
-            <Stack ml={10}>
-              <Group mb={10} gap={30}>
-                <BsCalendar2Event size={25} color={WARNA.biruTua} />
-                <Text>{isDataCalender?.title}</Text>
-              </Group>
-              <Group mb={10} gap={30}>
-                <BsCalendarDate size={25} color={WARNA.biruTua} />
-                <Text>{moment(isDataCalender?.dateStart).format('LL')}</Text>
-              </Group>
-              <Group mb={10} gap={30}>
-                <LuClock size={25} color={WARNA.biruTua} />
-                <Text>{isDataCalender?.timeStart}  | {isDataCalender?.timeEnd} </Text>
-              </Group>
-              <Group mb={10} gap={30}>
-                <BsCalendarDate size={25} color={WARNA.biruTua} />
-                <Text>
-                  {isDataCalender?.repeatEventTyper.toString() === '1' ? 'Acara 1 Kali' :
-                    isDataCalender?.repeatEventTyper.toString() === '2' ? 'Hari Kerja (senin - jumat)' :
-                      isDataCalender?.repeatEventTyper.toString() === '3' ? 'Minggu' :
-                        isDataCalender?.repeatEventTyper.toString() === '4' ? 'Bulanan' :
-                          isDataCalender?.repeatEventTyper.toString() === '5' ? 'Tahunan' :
-                            ''}
-                </Text>
-              </Group>
-              <Group mb={10} gap={30}>
-                <LuLink size={25} color={WARNA.biruTua} />
-                {isDataCalender?.linkMeet ? (
-                  <Group justify='space-between'>
-                    <Text>{isDataCalender?.linkMeet}</Text>
-                    <CopyButton value={String(isDataCalender?.linkMeet)} timeout={2000}>
-                      {({ copied, copy }) => (
-                        <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
-                          <ActionIcon color={copied ? 'teal' : WARNA.biruTua} variant="subtle" onClick={copy}>
-                            {copied ? (
-                              <FaCheck size={20} />
-                            ) : (
-                              <TbCopy size={20} />
-                            )}
-                          </ActionIcon>
-                        </Tooltip>
-                      )}
-                    </CopyButton>
-                  </Group>
-                ) : (
-                  <Text>-</Text>
-                )
-                }
-              </Group>
-              <Group gap={30}>
-                <MdOutlineFormatListBulleted size={25} color={WARNA.biruTua} />
-                {isDataCalender?.desc ? (
-                  <Text>{isDataCalender?.desc}</Text>
-                ) : (
-                  <Text>-</Text>
-                )
-                }
-              </Group>
+            <Stack>
+              <Grid gutter={"lg"}>
+                <Grid.Col span={{
+                  base: 2,
+                  xl: 1
+                }}>
+                  <BsCalendar2Event size={25} color={WARNA.biruTua} />
+                </Grid.Col>
+                <Grid.Col span={{
+                  base: 10,
+                  xl: 11
+                }}>
+                  <Text>{isDataCalender?.title}</Text>
+                </Grid.Col>
+              </Grid>
+              <Grid gutter={"lg"}>
+                <Grid.Col span={{
+                  base: 2,
+                  xl: 1
+                }}>
+                  <BsCalendarDate size={25} color={WARNA.biruTua} />
+                </Grid.Col>
+                <Grid.Col span={{
+                  base: 10,
+                  xl: 11
+                }}>
+                  <Text>{moment(isDataCalender?.dateStart).format('LL')}</Text>
+                </Grid.Col>
+              </Grid>
+              <Grid gutter={"lg"}>
+                <Grid.Col span={{
+                  base: 2,
+                  xl: 1
+                }}>
+                  <LuClock size={25} color={WARNA.biruTua} />
+                </Grid.Col>
+                <Grid.Col span={{
+                  base: 10,
+                  xl: 11
+                }}>
+                  <Text>{isDataCalender?.timeStart}  | {isDataCalender?.timeEnd} </Text>
+                </Grid.Col>
+              </Grid>
+              <Grid gutter={"lg"}>
+                <Grid.Col span={{
+                  base: 2,
+                  xl: 1
+                }}>
+                  <BsCalendarDate size={25} color={WARNA.biruTua} />
+                </Grid.Col>
+                <Grid.Col span={{
+                  base: 10,
+                  xl: 11
+                }}>
+                  <Text>
+                    {isDataCalender?.repeatEventTyper.toString() === '1' ? 'Acara 1 Kali' :
+                      isDataCalender?.repeatEventTyper.toString() === '2' ? 'Hari Kerja (senin - jumat)' :
+                        isDataCalender?.repeatEventTyper.toString() === '3' ? 'Minggu' :
+                          isDataCalender?.repeatEventTyper.toString() === '4' ? 'Bulanan' :
+                            isDataCalender?.repeatEventTyper.toString() === '5' ? 'Tahunan' :
+                              ''}
+                  </Text>
+                </Grid.Col>
+              </Grid>
+              <Grid gutter={"lg"}>
+                <Grid.Col span={{
+                  base: 2,
+                  xl: 1
+                }}>
+                  <LuLink size={25} color={WARNA.biruTua} />
+                </Grid.Col>
+                <Grid.Col span={{
+                  base: 10,
+                  xl: 11
+                }}>
+                  {isDataCalender?.linkMeet ? (
+                    <Group justify='space-between'>
+                      <Box w={{
+                        base: 170,
+                        xl: 380
+                      }}>
+                        <Text lineClamp={1}>{isDataCalender?.linkMeet}</Text>
+                      </Box>
+                      <CopyButton value={String(isDataCalender?.linkMeet)} timeout={2000}>
+                        {({ copied, copy }) => (
+                          <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                            <ActionIcon color={copied ? 'teal' : WARNA.biruTua} variant="subtle" onClick={copy}>
+                              {copied ? (
+                                <FaCheck size={20} />
+                              ) : (
+                                <TbCopy size={20} />
+                              )}
+                            </ActionIcon>
+                          </Tooltip>
+                        )}
+                      </CopyButton>
+                    </Group>
+                  ) : (
+                    <Text>-</Text>
+                  )
+                  }
+                </Grid.Col>
+              </Grid>
+              <Grid gutter={"lg"}>
+                <Grid.Col span={{
+                  base: 2,
+                  xl: 1
+                }}>
+                  <MdOutlineFormatListBulleted size={25} color={WARNA.biruTua} />
+                </Grid.Col>
+                <Grid.Col span={{
+                  base: 10,
+                  xl: 11
+                }}>
+                  {isDataCalender?.desc ? (
+                    <Spoiler maxHeight={80} showLabel="Lebih banyak" hideLabel="Lebih dikit">
+                      <Text>{isDataCalender?.desc}</Text>
+                    </Spoiler>
+                  ) : (
+                    <Text>-</Text>
+                  )
+                  }
+                </Grid.Col>
+              </Grid>
             </Stack>
           </Box>
         }
@@ -157,7 +224,7 @@ export default function DetailEventDivision() {
                 px={20}
                 pt={20}
               >
-                {isLengthMember == 0? (
+                {isLengthMember == 0 ? (
                   <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh' }}>
                     <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
                   </Box>
@@ -165,24 +232,32 @@ export default function DetailEventDivision() {
                   <Box>
                     {isDataAnggota.map((v, i) => {
                       return (
-                        <Flex
-                          justify={"space-between"}
-                          align={"center"}
-                          mb={20}
-                          key={i}
-                        >
-                          <Group>
-                            <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                            <Box>
-                              <Text c={WARNA.biruTua} fw={"bold"}>
-                                {v.name}
-                              </Text>
-                              <Text c={"#5A687D"} fz={14}>
-                                {v.email}
-                              </Text>
-                            </Box>
-                          </Group>
-                        </Flex>
+                        <Box my={10} key={i}>
+                          <Grid align='center' gutter={"lg"}>
+                            <Grid.Col span={{
+                              base: 3,
+                              xl: 2
+                            }}>
+                              <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                            </Grid.Col>
+                            <Grid.Col span={{
+                              base: 9,
+                              xl: 10
+                            }}>
+                              <Flex justify='space-between' align={"center"}>
+                                <Flex direction={'column'} align="flex-start" justify="flex-start">
+                                  <Text lineClamp={1}>{v.name}</Text>
+                                  <Text c={"#5A687D"} fz={14} lineClamp={1}>
+                                    {v.email}
+                                  </Text>
+                                </Flex>
+                              </Flex>
+                            </Grid.Col>
+                          </Grid>
+                          <Box mt={10}>
+                            <Divider size={"xs"} />
+                          </Box>
+                        </Box>
                       );
                     })}
                   </Box>
