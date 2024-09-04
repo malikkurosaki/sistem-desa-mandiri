@@ -67,14 +67,14 @@ export default function ListDocumentOnDetailDivision() {
                data.map((v) =>
                   <Carousel.Slide key={v.id}>
                      <UnstyledButton onClick={() => router.push(`/document`)}>
-                        <Stack gap={0}>
+                        <Stack gap={0} w={200}>
                            <Paper withBorder shadow="sm" radius={12} >
                               <Center p={"md"}>
                                  <Image w={"75"} src={(v.extension == "pdf") ? iconContainer(ICON.PDF) : iconContainer(ICON.IMAGE)} alt="image" />
                               </Center>
                            </Paper>
-                           <Box p={"sm"}>
-                              <Text c={"dimmed"} truncate="end" ta={"center"}>{v.name + '.' + v.extension}</Text>
+                           <Box>
+                              <Text c={"dimmed"}ta={"center"} lineClamp={1}>{v.name + '.' + v.extension}</Text>
                            </Box>
                         </Stack>
                      </UnstyledButton>

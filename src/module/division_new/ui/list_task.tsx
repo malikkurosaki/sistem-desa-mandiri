@@ -9,6 +9,7 @@ import { CiClock2 } from "react-icons/ci";
 import { funGetDetailDivisionById } from "../lib/api_division";
 import { useState } from "react";
 import { IDataTaskOnDetailDivision } from "../lib/type_division";
+import _ from "lodash";
 
 
 export default function ListTaskOnDetailDivision() {
@@ -65,20 +66,12 @@ export default function ListTaskOnDetailDivision() {
             {data.map((v, i) =>
                <Carousel.Slide key={v.id}>
                   <Box p={20} w={{ base: 300, md: 400 }} onClick={() => router.push(`/task/${v.id}`)} bg={WARNA.biruTua} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
-                     <Text fw={'bold'} c={WARNA.bgWhite} truncate="end">{v.title}</Text>
-                     <Group justify="space-between" mt={20} c={'#aeaeae'}>
-                        <Group gap={5} align="center">
+                     <Text fw={'bold'} c={WARNA.bgWhite} lineClamp={1}>{_.startCase(v.title)}</Text>
+                     <Group justify="space-between" mt={20}>
+                        <Group gap={5} align="center" c={"#CFCDCD"}>
                            <CiClock2 size={18} />
                            <Text fz={13}>{v.dateStart}</Text>
                         </Group >
-                        <Group gap={5} align="center">
-                           {/* <Avatar.Group>
-                              <Avatar>
-                                 <MdAccountCircle size={32} color={WARNA.biruTua} />
-                              </Avatar>
-                              <Avatar>+{v.jumlah}</Avatar>
-                           </Avatar.Group> */}
-                        </Group>
                      </Group>
                   </Box>
                </Carousel.Slide>
