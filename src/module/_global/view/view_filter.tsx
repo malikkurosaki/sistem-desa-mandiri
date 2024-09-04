@@ -1,23 +1,21 @@
 'use client'
 import { Box, Group, Divider, Button, Text, Skeleton, rem } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaCheck } from "react-icons/fa6";
 import { WARNA } from "../fun/WARNA";
 import LayoutNavbarNew from "../layout/layout_navbar_new";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { useShallowEffect } from "@mantine/hooks";
 import toast from "react-hot-toast";
 
 export default function ViewFilter({ linkFilter }: { linkFilter: string }) {
-   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+   const [selectedFilter, setSelectedFilter] = useState<any>('');
    const [checked, setChecked] = useState<IDataGroup[]>([]);
-   const [searchParams, setSearchParams] = useState({ groupId: '' });
    const [loading, setLoading] = useState(true)
+   const searchParams = useSearchParams()
+   const group = searchParams.get('group')
 
-   const handleFilterClick = (id: string) => {
-      setSelectedFilter(id);
-   };
 
    async function getAllGroupFilter() {
       try {
@@ -37,15 +35,14 @@ export default function ViewFilter({ linkFilter }: { linkFilter: string }) {
       }
    }
 
-   useEffect(() => {
-      if (selectedFilter) {
-         setSearchParams({ groupId: selectedFilter });
-      }
-   }, [selectedFilter]);
+   useShallowEffect(() => {
+      setSelectedFilter(group)
+   }, [group]);
+
 
    useShallowEffect(() => {
       getAllGroupFilter();
-   }, [searchParams.groupId]);
+   }, []);
 
    const router = useRouter()
 
@@ -71,7 +68,7 @@ export default function ViewFilter({ linkFilter }: { linkFilter: string }) {
                            justify="space-between"
                            align="center"
                            mb={10}
-                           onClick={() => handleFilterClick(filter.id)}
+                           onClick={() => setSelectedFilter(filter.id)}
                         >
                            <Text fw={selectedFilter === filter.id ? 'bold' : 'normal'}>
                               {filter.name}
