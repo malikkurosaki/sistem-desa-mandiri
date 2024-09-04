@@ -22,6 +22,16 @@ export async function GET(request: Request) {
       fixGroup = idGroup
     }
 
+    const filter = await prisma.group.findUnique({
+      where: {
+        id: fixGroup
+      },
+      select: {
+        id: true,
+        name: true
+      }
+    })
+
 
     const users = await prisma.user.findMany({
       where: {
@@ -60,7 +70,7 @@ export async function GET(request: Request) {
       position: v.Position.name
     }))
 
-    return NextResponse.json({ success: true, message: "Berhasil member", data: allData, }, { status: 200 });
+    return NextResponse.json({ success: true, message: "Berhasil member", data: allData, filter }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ success: false, message: "Gagal mendapatkan member, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
@@ -77,7 +87,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
     }
     const data = await request.json();
-    const village = "desa1"
+    const village = String(user.idVillage)
+
+    let groupFix = data.idGroup
+
+    if (groupFix == null || groupFix == undefined || groupFix == "") {
+      groupFix = user.idGroup
+    }
 
     const cek = await prisma.user.count({
       where: {
@@ -95,18 +111,13 @@ export async function POST(request: Request) {
           phone: data.phone,
           email: data.email,
           gender: data.gender,
-          idGroup: data.idGroup,
+          idGroup: groupFix,
           idVillage: village,
           idPosition: data.idPosition,
           idUserRole: data.idUserRole,
         },
         select: {
-          id: true,
-          nik: true,
-          name: true,
-          phone: true,
-          email: true,
-          gender: true,
+          id: true
         },
       });
 

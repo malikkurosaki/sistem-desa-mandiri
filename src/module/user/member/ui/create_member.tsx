@@ -1,5 +1,5 @@
 "use client";
-import { WARNA } from "@/module/_global";
+import { globalRole, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { Box, Button, rem, Select, Stack, Text, TextInput } from "@mantine/core";
@@ -11,6 +11,9 @@ import { IDataPositionMember, IDataROleMember } from "../lib/type_member";
 import { funGetAllPosition } from "@/module/position/lib/api_position";
 import { funCreateMember, funGetRoleUser } from "../lib/api_member";
 import _ from "lodash";
+import { useHookstate } from "@hookstate/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { funGetUserByCookies } from "@/module/auth";
 
 export default function CreateMember() {
   const router = useRouter();
@@ -18,6 +21,8 @@ export default function CreateMember() {
   const [listGroup, setListGorup] = useState<IDataGroup[]>([]);
   const [listPosition, setListPosition] = useState<IDataPositionMember[]>([]);
   const [listUserRole, setListUserRole] = useState<IDataROleMember[]>([]);
+  const roleLogin = useHookstate(globalRole)
+  const [groupLogin, setGroupLogin] = useState("");
   const [touched, setTouched] = useState({
     nik: false,
     name: false,
@@ -54,12 +59,20 @@ export default function CreateMember() {
     }
   }
 
+  async function getLogin() {
+    try {
+      const res = await funGetUserByCookies();
+      setGroupLogin(String(res.idGroup));
+      getAllPosition(res.idGroup);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async function getAllPosition(val: any) {
     try {
       if (val != null) {
-        const res = await funGetAllPosition(
-          "?active=true" + "&group=" + `${val}`
-        );
+        const res = await funGetAllPosition("?active=true" + "&group=" + `${val}`);
         setListPosition(res.data);
       } else {
         setListPosition([]);
@@ -121,9 +134,13 @@ export default function CreateMember() {
     }
   }
 
-  useEffect(() => {
+  useShallowEffect(() => {
     getAllGroup();
     getAllUserRole();
+
+    if (roleLogin.get() != "supadmin") {
+      getLogin()
+    }
   }, []);
 
 
@@ -140,40 +157,43 @@ export default function CreateMember() {
         >
           <HiUser size={100} color={WARNA.bgWhite} />
         </Box>
-        <Select
-          placeholder="Pilih Grup"
-          label="Grup"
-          w={"100%"}
-          size="md"
-          required
-          withAsterisk
-          radius={30}
-          styles={{
-            input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
-            },
-          }}
-          data={
-            listGroup
-              ? listGroup.map((data) => ({
-                value: data.id,
-                label: data.name,
-              }))
-              : []
-          }
-          onChange={(val: any) => {
-            changeGrup(val);
-            setTouched({ ...touched, idGroup: false })
-          }}
-          onBlur={() => setTouched({ ...touched, idGroup: true })}
-          error={
-            touched.idGroup && (
-              listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
-            )
-          }
-        />
+        {
+          roleLogin.get() == "supadmin" &&
+          <Select
+            placeholder="Pilih Grup"
+            label="Grup"
+            w={"100%"}
+            size="md"
+            required
+            withAsterisk
+            radius={30}
+            styles={{
+              input: {
+                color: WARNA.biruTua,
+                borderRadius: WARNA.biruTua,
+                borderColor: WARNA.biruTua,
+              },
+            }}
+            data={
+              listGroup
+                ? listGroup.map((data) => ({
+                  value: data.id,
+                  label: data.name,
+                }))
+                : []
+            }
+            onChange={(val: any) => {
+              changeGrup(val);
+              setTouched({ ...touched, idGroup: false })
+            }}
+            onBlur={() => setTouched({ ...touched, idGroup: true })}
+            error={
+              touched.idGroup && (
+                listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+              )
+            }
+          />
+        }
         <Select
           placeholder="Pilih Jabatan"
           label="Jabatan"
@@ -274,7 +294,7 @@ export default function CreateMember() {
           error={
             touched.nik && (
               listData.nik === "" ? "NIK Tidak Boleh Kosong" :
-              listData.nik.length !== 16 ? "NIK Harus 16 Karakter" : null
+                listData.nik.length !== 16 ? "NIK Harus 16 Karakter" : null
             )
           }
         />

@@ -1,15 +1,16 @@
 
-import { SkeletonSingle, WARNA } from "@/module/_global"
-import { Box, Group, ActionIcon, Text, TextInput, Divider, Avatar, Grid } from "@mantine/core"
+import { globalRole, SkeletonSingle, WARNA } from "@/module/_global"
+import { Box, Text, TextInput, Divider, Avatar, Grid } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
-import { HiMagnifyingGlass, HiMiniUser } from "react-icons/hi2"
+import { useState } from "react"
+import { HiMagnifyingGlass } from "react-icons/hi2"
 import { IListMember } from "../lib/type_member"
 import { funGetAllmember } from "../lib/api_member"
 import { funGetAllGroup, IDataGroup } from "@/module/group"
 import toast from "react-hot-toast"
 import _ from "lodash"
+import { useHookstate } from "@hookstate/core"
 
 
 export default function TabListMember() {
@@ -20,13 +21,20 @@ export default function TabListMember() {
    const [searchQuery, setSearchQuery] = useState('')
    const group = searchParams.get('group')
    const status = searchParams.get('active')
+   const roleLogin = useHookstate(globalRole)
+   const [nameGroup, setNameGroup] = useState('')
 
 
    async function getAllUser() {
       try {
          setLoading(true)
          const res = await funGetAllmember('?active=' + status + '&group=' + group + '&search=' + searchQuery)
-         setDataMember(res.data)
+         if (res.success) {
+            setDataMember(res.data)
+            setNameGroup(res.filter.name)
+         } else {
+            toast.error(res.message)
+         }
       } catch (error) {
          console.error(error)
          throw new Error("Error")
@@ -38,31 +46,6 @@ export default function TabListMember() {
    useShallowEffect(() => {
       getAllUser()
    }, [status, searchQuery])
-
-   const [checked, setChecked] = useState<IDataGroup[]>([]);
-
-   const groupNameMap = (groupId: string) => {
-      const groupName = checked.find((group) => group.id === groupId)?.name;
-      return groupName || '-';
-   };
-
-   async function getAllGroupFilter() {
-      try {
-         const response = await funGetAllGroup('?active=true')
-         if (response.success) {
-            setChecked(response.data);
-         } else {
-            toast.error(response.message);
-         }
-      } catch (error) {
-         console.error(error);
-         toast.error("Gagal mendapatkan grup, coba lagi nanti");
-      }
-   }
-
-   useShallowEffect(() => {
-      getAllGroupFilter();
-   }, []);
 
    return (
       <>
@@ -92,7 +75,7 @@ export default function TabListMember() {
                   ))
                :
                <Box>
-                  {group && <Text>Filter by: {groupNameMap(group)}</Text>}
+                  {roleLogin.get() == 'supadmin' && <Text>Filter by: {nameGroup}</Text>}
                   {dataMember.length == 0 ?
                      <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
                         <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
@@ -107,7 +90,7 @@ export default function TabListMember() {
                                  <Grid p={10} gutter={{
                                     base: 60,
                                     xl: "xs"
-                                 }}  align="center">
+                                 }} align="center">
                                     <Grid.Col span={2}>
                                        <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} size={50} alt="image" />
                                     </Grid.Col>
