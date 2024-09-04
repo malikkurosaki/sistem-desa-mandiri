@@ -159,7 +159,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                   </Box>
                   :
                   <Box>
-                     <Select
+                     {/* <Select
                         label="Grup"
                         placeholder="Pilih grup"
                         size="md"
@@ -192,7 +192,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                            )
                         }
                         onBlur={() => setTouched({ ...touched, idGroup: true })}
-                     />
+                     /> */}
                      <TextInput
                         label="Jabatan"
                         styles={{

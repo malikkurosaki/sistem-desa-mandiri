@@ -1,8 +1,8 @@
-import { WARNA, LayoutDrawer } from "@/module/_global";
+import { WARNA, LayoutDrawer, globalRole } from "@/module/_global";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { Box, Stack, SimpleGrid, Flex, TextInput, Button, Text, Select } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { IoAddCircle } from "react-icons/io5";
@@ -13,14 +13,17 @@ import { globalRefreshPosition } from "../lib/val_posisition";
 
 
 export default function DrawerListPosition({ onCreated }: { onCreated: (val: boolean) => void }) {
+   const roleLogin = useHookstate(globalRole)
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const router = useRouter()
    const [listGroup, setListGorup] = useState<IDataGroup[]>([])
    const refresh = useHookstate(globalRefreshPosition)
+   const searchParams = useSearchParams()
+   const group = searchParams.get('group')
    const [touched, setTouched] = useState({
       name: false,
       idGroup: false
-    });
+   });
 
    const [listData, setListData] = useState({
       name: "",
@@ -60,6 +63,8 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
             onCreated(true)
          } else {
             toast.error(res.message)
+            setOpenDrawerGroup(false)
+            onCreated(true)
          }
 
       } catch (error) {
@@ -82,55 +87,61 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      <Text ta={'center'} c={WARNA.biruTua}>Tambah Jabatan</Text>
                   </Box>
                </Flex>
-               <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => router.push('/position?active=true&page=filter')}>
-                  <Box>
-                     <RiFilter2Line size={30} color={WARNA.biruTua} />
-                  </Box>
-                  <Box>
-                     <Text ta={'center'} c={WARNA.biruTua}>Filter</Text>
-                  </Box>
-               </Flex>
+               {
+                  roleLogin.get() == "supadmin" &&
+                  <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => router.push('/position?page=filter&group=' + group)}>
+                     <Box>
+                        <RiFilter2Line size={30} color={WARNA.biruTua} />
+                     </Box>
+                     <Box>
+                        <Text ta={'center'} c={WARNA.biruTua}>Filter</Text>
+                     </Box>
+                  </Flex>
+               }
             </SimpleGrid>
          </Stack>
          <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Tambah Jabatan'} size="lg">
             <Box pt={10} pos={"relative"} h={"70vh"}>
-               <Select
-                  label="Grup"
-                  placeholder="Pilih grup"
-                  data={
-                     listGroup
-                        ? listGroup.map((data) => ({
-                           value: data.id,
-                           label: data.name,
-                        }))
-                        : []
-                  }
-                  size="md"
-                  radius={10}
-                  mb={5}
-                  withAsterisk
-                  onChange={(val: any) => {
-                     setListData({
-                        ...listData,
-                        idGroup: val
-                     })
-                     setTouched({ ...touched, idGroup: false })
-                  }}
-                  styles={{
-                     input: {
-                        color: WARNA.biruTua,
-                        borderRadius: WARNA.biruTua,
-                        borderColor: WARNA.biruTua,
-                     },
-                  }}
-                  error={
-                     touched.idGroup && (
-                      listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
-                     )
-                   }
-                  onFocus={() => setTouched({ ...touched, idGroup: true })}
-                  onBlur={() => setTouched({ ...touched, idGroup: true })}
-               />
+               {
+                  roleLogin.get() == "supadmin" &&
+                  <Select
+                     label="Grup"
+                     placeholder="Pilih grup"
+                     data={
+                        listGroup
+                           ? listGroup.map((data) => ({
+                              value: data.id,
+                              label: data.name,
+                           }))
+                           : []
+                     }
+                     size="md"
+                     radius={10}
+                     mb={5}
+                     withAsterisk
+                     onChange={(val: any) => {
+                        setListData({
+                           ...listData,
+                           idGroup: val
+                        })
+                        setTouched({ ...touched, idGroup: false })
+                     }}
+                     styles={{
+                        input: {
+                           color: WARNA.biruTua,
+                           borderRadius: WARNA.biruTua,
+                           borderColor: WARNA.biruTua,
+                        },
+                     }}
+                     error={
+                        touched.idGroup && (
+                           listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                        )
+                     }
+                     onFocus={() => setTouched({ ...touched, idGroup: true })}
+                     onBlur={() => setTouched({ ...touched, idGroup: true })}
+                  />
+               }
                <TextInput
                   label="Jabatan"
                   styles={{
@@ -153,9 +164,9 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                   placeholder="Nama Jabatan"
                   error={
                      touched.name && (
-                      listData.name == "" ? "Nama Jabatan Tidak Boleh Kosong" : null
+                        listData.name == "" ? "Nama Jabatan Tidak Boleh Kosong" : null
                      )
-                   }
+                  }
                   onFocus={() => setTouched({ ...touched, name: true })}
                   onBlur={() => setTouched({ ...touched, name: true })}
                   required
@@ -169,7 +180,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      fullWidth
                      onClick={onSubmit}
                   >
-                     MASUK
+                     SIMPAN
                   </Button>
                </Box>
             </Box>

@@ -1,6 +1,6 @@
-import { LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
+import { globalRole, LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
 import { ActionIcon, Box, Group, Text, TextInput } from "@mantine/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaUserTie } from "react-icons/fa6";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import DrawerDetailPosition from "./drawer_detail_position";
@@ -12,7 +12,6 @@ import { funGetAllPosition } from "../lib/api_position";
 import { IDataPosition } from "../lib/type_position";
 import { useHookstate } from "@hookstate/core";
 import { globalRefreshPosition } from "../lib/val_posisition";
-import { funGetAllGroup, IDataGroup } from "@/module/group";
 
 
 export default function ListPositionActive() {
@@ -27,14 +26,16 @@ export default function ListPositionActive() {
   const group = searchParams.get('group')
   const status = searchParams.get('active')
   const refresh = useHookstate(globalRefreshPosition)
+  const roleLogin = useHookstate(globalRole)
+  const [nameGroup, setNameGroup] = useState('')
 
   async function getAllPosition() {
     try {
-      // setDataPosition([]);
       setLoading(true)
       const res = await funGetAllPosition('?active=' + status + '&group=' + group + '&search=' + searchQuery)
       setDataPosition(res.data);
-      setLoading(false);
+      setNameGroup(res.filter.name)
+      setLoading(false)
     } catch (error) {
       toast.error("Gagal mendapatkan position, coba lagi nanti");
       console.error(error);
@@ -47,30 +48,6 @@ export default function ListPositionActive() {
     getAllPosition();
   }, [status, group, searchQuery, refresh.get()])
 
-  const [checked, setChecked] = useState<IDataGroup[]>([]);
-
-  const groupNameMap = (groupId: string) => {
-    const groupName = checked.find((group) => group.id === groupId)?.name;
-    return groupName || '-';
-  };
-
-  async function getAllGroupFilter() {
-    try {
-      const response = await funGetAllGroup('?active=true')
-      if (response.success) {
-        setChecked(response.data);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Gagal mendapatkan grup, coba lagi nanti");
-    }
-  }
-
-  useShallowEffect(() => {
-    getAllGroupFilter();
-  }, []);
 
   return (
     <Box pt={20}>
@@ -94,7 +71,7 @@ export default function ListPositionActive() {
         </Box>
       )) :
         <Box pt={20}>
-          {group && <Text>Filter by: {groupNameMap(group)}</Text>}
+          {roleLogin.get() == 'supadmin' && <Text>Filter by: {nameGroup}</Text>}
           {isDataPosition.length == 0 ?
             <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
               <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada jabatan</Text>
@@ -112,10 +89,12 @@ export default function ListPositionActive() {
                         borderRadius: 10,
                       }}
                       onClick={() => {
-                        setData(v.name);
-                        setOpenDrawer(true);
-                        setSelectId(v.id);
-                        setActive(v.isActive);
+                        if (roleLogin.get() != 'user') {
+                          setData(v.name);
+                          setOpenDrawer(true);
+                          setSelectId(v.id);
+                          setActive(v.isActive);
+                        }
                       }}
                     >
                       <Box>
