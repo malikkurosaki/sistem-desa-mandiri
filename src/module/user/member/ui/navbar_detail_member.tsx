@@ -1,5 +1,5 @@
 'use client'
-import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, SkeletonDetailProfile } from "@/module/_global";
+import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, SkeletonDetailProfile, globalRole } from "@/module/_global";
 import { Box, Group, ActionIcon, Stack, Text, Center, Avatar, Skeleton } from "@mantine/core";
 import { HiMenu } from "react-icons/hi";
 import { HiUser } from "react-icons/hi2";
@@ -14,6 +14,7 @@ import Link from "next/link";
 import { funGetOneMember } from "../lib/api_member";
 import toast from "react-hot-toast";
 import { IListMember, IMember } from "../lib/type_member";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function NavbarDetailMember({ id }: IMember) {
@@ -22,6 +23,7 @@ export default function NavbarDetailMember({ id }: IMember) {
    const [selectId, setSelectId] = useState<string>('');
    const [active, setActive] = useState<boolean>(false)
    const [loading, setLoading] = useState(true)
+   const roleLogin = useHookstate(globalRole)
 
    useShallowEffect(() => {
       featchGetOne()
@@ -56,9 +58,12 @@ export default function NavbarDetailMember({ id }: IMember) {
             <LayoutNavbarHome>
                <Group justify="space-between">
                   <LayoutIconBack />
-                  <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
-                     <HiMenu size={20} color='white' />
-                  </ActionIcon>
+                  {
+                     (roleLogin.get() != "user") &&
+                     <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
+                        <HiMenu size={20} color='white' />
+                     </ActionIcon>
+                  }
                </Group>
                <Stack
                   align="center"
@@ -68,12 +73,12 @@ export default function NavbarDetailMember({ id }: IMember) {
                   <Center>
                      <Avatar src={`/api/file/img?jenis=image&cat=user&file=${dataOne?.img}`} alt="it's me" size="xl" />
                   </Center>
-                  {loading ? 
+                  {loading ?
                      <>
-                     <Skeleton height={25} mt={10} width={"40%"} />
-                     <Skeleton height={15} mt={12} width={"30%"} />
+                        <Skeleton height={25} mt={10} width={"40%"} />
+                        <Skeleton height={15} mt={12} width={"30%"} />
                      </>
-                  :
+                     :
                      <>
                         <Text c={'white'} fw={'bold'} fz={25}>{dataOne?.name}</Text>
                         <Text c={'white'} fw={'lighter'} fz={15}>{dataOne?.group} - {dataOne?.position}</Text>
@@ -82,7 +87,7 @@ export default function NavbarDetailMember({ id }: IMember) {
                </Stack>
             </LayoutNavbarHome>
             {loading
-               ? 
+               ?
                <SkeletonDetailProfile />
                :
                <Box p={20}>
