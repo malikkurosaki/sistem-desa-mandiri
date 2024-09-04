@@ -128,10 +128,9 @@ export async function POST(request: Request) {
         }
 
         if (cekFile) {
-            let a = 0
             const root = path.join(process.cwd(), "./public/file/project/");
             for (var pair of body.entries()) {
-                if (String(pair[0]) == "file" + a) {
+                if (String(pair[0]).substring(0, 4) == "file") {
                     const file = body.get(pair[0]) as File
                     const fExt = file.name.split(".").pop()
                     const fName = file.name.replace("." + fExt, "")
@@ -155,12 +154,11 @@ export async function POST(request: Request) {
                     // Tulis file ke sistem
                     fs.writeFileSync(filePath, buffer);
                 }
-                a++
             }
         }
 
 
-        return NextResponse.json({ success: true, message: "Berhasil membuat kegiatan", data: data, }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil membuat kegiatan" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
