@@ -1,6 +1,6 @@
 "use client"
 import { WARNA } from "@/module/_global";
-import { Box, Group, Skeleton, Stack, Text } from "@mantine/core";
+import { Box, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -50,7 +50,7 @@ export default function ListDiscussionOnDetailDivision() {
           style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,
-            padding: 20,
+            padding: 10,
           }}
         >
 
@@ -76,35 +76,52 @@ export default function ListDiscussionOnDetailDivision() {
           }
           {data.map((v, i) => {
             return (
-              <Box
-                key={i}
-                style={{
-                  borderRadius: 10,
-                  border: `1px solid ${"#D6D8F6"}`,
-                  padding: 10,
-                }}
-                mb={10}
-                onClick={() => router.push(`${param.id}/discussion/${v.id}`)}
-              >
-                <Group>
-                  <GoDiscussionClosed size={25} />
-                  <Box w={{ base: 230, md: 400 }}>
-                    <Text fw={"bold"} truncate="end">
-                      {v.desc}
-                    </Text>
-                  </Box>
-                </Group>
-                <Group justify="space-between" mt={20} c={"#8C8C8C"}>
-                  <Group gap={5} align="center">
-                    <CiUser size={18} />
-                    <Text fz={13}>{v.user}</Text>
+              <Box key={i} p={10}>
+                <Box style={{
+                    borderRadius: 10,
+                    border: `1px solid ${"#D6D8F6"}`,
+                    padding: 10,
+                  }}
+                  onClick={() => router.push(`${param.id}/discussion/${v.id}`)}
+                >
+                  <Group>
+                    <GoDiscussionClosed size={25} />
+                    <Box w={{ base: 230, md: 400 }}>
+                      <Text fw={"bold"} truncate="end">
+                        {v.desc}
+                      </Text>
+                    </Box>
                   </Group>
-                  <Group gap={5} align="center">
-                    <CiClock2 size={18} />
-                    <Text fz={13}>{v.date}</Text>
-                  </Group>
-                </Group>
+                  <Grid align="center" mt={20}>
+                    <Grid.Col span={{
+                      base: 7,
+                      xl: 9
+                    }}>
+                      <Group gap={5} align="center">
+                        <CiUser size={18} />
+                        <Box w={{
+                          base: 125,
+                          xl: 300
+                        }}>
+                          <Text fz={13} lineClamp={1}>
+                            {v.user}
+                          </Text>
+                        </Box>
+                      </Group>
+                    </Grid.Col>
+                    <Grid.Col span={{
+                      base: 5,
+                      xl: 3
+                    }}>
+                      <Group gap={5} align="center" justify="flex-end">
+                        <CiClock2 size={18} />
+                        <Text fz={13}>{v.date}</Text>
+                      </Group>
+                    </Grid.Col>
+                  </Grid>
+                </Box>
               </Box>
+
             );
           })}
         </Box>

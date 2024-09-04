@@ -142,7 +142,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 
          allData = diskusi.map((v: any) => ({
             ..._.omit(v, ["createdAt", "User"]),
-            date: moment(v.dateStart).format("LL"),
+            date: moment(v.dateStart).format("ll"),
             user: v.User.name
          }))
       }

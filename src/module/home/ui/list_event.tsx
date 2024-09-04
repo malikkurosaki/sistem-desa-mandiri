@@ -1,6 +1,6 @@
 'use client'
 import { WARNA } from "@/module/_global"
-import { Box, Divider, Group, Skeleton, Text } from "@mantine/core"
+import { Box, Divider, Flex, Group, Skeleton, Text } from "@mantine/core"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { IDataHomeEvent } from "../lib/type_home"
@@ -68,16 +68,30 @@ export default function ListEventHome() {
                      const colorDivider = ['#535FCA', '#A7A7A7'][index % 2]
                      return (
                         <Box key={event.id} mt={10}>
-                           <Box onClick={() => router.push(`/division/${event.idDivision}/calender/${event.id}`)} bg={bgColor} pl={15} p={10} style={{
+                           <Box onClick={() => router.push(`/division/${event.idDivision}/calender/${event.id}`)}  bg={bgColor} pl={15} p={10} style={{
                               borderRadius: 10
                            }} h={113}>
                               <Group>
                                  <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
-                                 <Box>
+                                 <Flex direction={'column'}>
                                     <Text>{event.timeStart} - {event.timeEnd}</Text>
-                                    <Text fw={"bold"}>{event.title}</Text>
-                                    <Text>Dibuat oleh : {event.user_name}</Text>
-                                 </Box>
+                                    <Box w={{
+                                       base: 260,
+                                       xl: 430
+                                    }}>
+                                       <Text fw={"bold"} lineClamp={1}>
+                                          {_.startCase(event.title)}
+                                       </Text>
+                                    </Box>
+                                    <Box w={{
+                                       base: 260,
+                                       xl: 420
+                                    }}>
+                                       <Text lineClamp={1}>
+                                          Dibuat oleh : {event.user_name}
+                                       </Text>
+                                    </Box>
+                                 </Flex>
                               </Group>
                            </Box>
                         </Box>
