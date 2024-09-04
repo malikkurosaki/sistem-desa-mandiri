@@ -2,18 +2,20 @@
 import { globalRole, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
-import { Box, Button, rem, Select, Stack, Text, TextInput } from "@mantine/core";
+import { Avatar, Box, Button, Indicator, rem, Select, Stack, Text, TextInput } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { HiUser } from "react-icons/hi2";
 import { IDataPositionMember, IDataROleMember } from "../lib/type_member";
 import { funGetAllPosition } from "@/module/position/lib/api_position";
-import { funCreateMember, funGetRoleUser } from "../lib/api_member";
+import { funCreateMember } from "../lib/api_member";
 import _ from "lodash";
 import { useHookstate } from "@hookstate/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { funGetUserByCookies } from "@/module/auth";
+import { valueRoleUser } from "../../lib/val_user";
+import { FaCamera } from "react-icons/fa6";
+import { Dropzone } from "@mantine/dropzone";
 
 export default function CreateMember() {
   const router = useRouter();
@@ -22,7 +24,9 @@ export default function CreateMember() {
   const [listPosition, setListPosition] = useState<IDataPositionMember[]>([]);
   const [listUserRole, setListUserRole] = useState<IDataROleMember[]>([]);
   const roleLogin = useHookstate(globalRole)
-  const [groupLogin, setGroupLogin] = useState("");
+  const [img, setIMG] = useState<any | null>()
+  const [imgForm, setImgForm] = useState<any>()
+  const openRef = useRef<() => void>(null)
   const [touched, setTouched] = useState({
     nik: false,
     name: false,
@@ -62,8 +66,10 @@ export default function CreateMember() {
   async function getLogin() {
     try {
       const res = await funGetUserByCookies();
-      setGroupLogin(String(res.idGroup));
-      getAllPosition(res.idGroup);
+      if (roleLogin.get() != "supadmin") {
+        getAllPosition(res.idGroup)
+      }
+
     } catch (error) {
       console.error(error);
     }
@@ -84,8 +90,7 @@ export default function CreateMember() {
 
   async function getAllUserRole() {
     try {
-      const res = await funGetRoleUser();
-      setListUserRole(res.data);
+      setListUserRole(valueRoleUser.filter((v) => v.login == roleLogin.get())[0]?.data);
     } catch (error) {
       console.error(error);
     }
@@ -108,16 +113,21 @@ export default function CreateMember() {
         return;
       }
       if (val) {
-        const res = await funCreateMember({
-          nik: listData.nik,
-          name: listData.name,
-          phone: listData.phone,
-          email: listData.email,
-          gender: listData.gender,
-          idGroup: listData.idGroup,
-          idPosition: listData.idPosition,
-          idUserRole: listData.idUserRole,
-        });
+        const fd = new FormData()
+        fd.append("file", imgForm)
+        fd.append("data", JSON.stringify(
+          {
+            nik: listData.nik,
+            name: listData.name,
+            phone: listData.phone,
+            email: listData.email,
+            gender: listData.gender,
+            idGroup: listData.idGroup,
+            idPosition: listData.idPosition,
+            idUserRole: listData.idUserRole,
+          }
+        ))
+        const res = await funCreateMember(fd);
         if (res.success) {
           toast.success(res.message);
           setModal(false);
@@ -137,26 +147,37 @@ export default function CreateMember() {
   useShallowEffect(() => {
     getAllGroup();
     getAllUserRole();
-
-    if (roleLogin.get() != "supadmin") {
-      getLogin()
-    }
+    getLogin()
   }, []);
 
 
   return (
     <Box>
       <Stack align="center" justify="center" gap="xs" pt={30} px={20} pb={100}>
-        <Box
-          bg={WARNA.biruTua}
-          py={30}
-          px={50}
-          style={{
-            borderRadius: 10,
+        <Dropzone
+          openRef={openRef}
+          onDrop={async (files) => {
+            if (!files || _.isEmpty(files))
+              return toast.error('Tidak ada gambar yang dipilih')
+            setImgForm(files[0])
+            const buffer = URL.createObjectURL(new Blob([new Uint8Array(await files[0].arrayBuffer())]))
+            setIMG(buffer)
+          }}
+          activateOnClick={false}
+          maxSize={1 * 1024 ** 2}
+          accept={['image/png', 'image/jpeg', 'image/heic']}
+          onReject={(files) => {
+            return toast.error('File yang diizinkan: .png, .jpg, dan .heic  dengan ukuran maksimal 1 MB')
           }}
         >
-          <HiUser size={100} color={WARNA.bgWhite} />
-        </Box>
+        </Dropzone>
+        <Indicator offset={20} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
+          <Avatar
+            size="150"
+            radius={"100"}
+            src={img}
+          />
+        </Indicator>
         {
           roleLogin.get() == "supadmin" &&
           <Select

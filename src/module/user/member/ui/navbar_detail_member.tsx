@@ -14,6 +14,7 @@ import Link from "next/link";
 import { funGetOneMember } from "../lib/api_member";
 import toast from "react-hot-toast";
 import { IListMember, IMember } from "../lib/type_member";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function NavbarDetailMember({ id }: IMember) {
@@ -22,6 +23,7 @@ export default function NavbarDetailMember({ id }: IMember) {
    const [selectId, setSelectId] = useState<string>('');
    const [active, setActive] = useState<boolean>(false)
    const [loading, setLoading] = useState(true)
+   const roleLogin = useHookstate(globalRole)
 
    useShallowEffect(() => {
       featchGetOne()
@@ -56,9 +58,12 @@ export default function NavbarDetailMember({ id }: IMember) {
             <LayoutNavbarHome>
                <Group justify="space-between">
                   <LayoutIconBack />
-                  <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
-                     <HiMenu size={20} color='white' />
-                  </ActionIcon>
+                  {
+                     (roleLogin.get() != "user") &&
+                     <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
+                        <HiMenu size={20} color='white' />
+                     </ActionIcon>
+                  }
                </Group>
                <Stack
                   align="center"

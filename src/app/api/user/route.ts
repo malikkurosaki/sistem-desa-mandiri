@@ -3,6 +3,8 @@ import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs";
 
 // GET ALL MEMBER / USER
 export async function GET(request: Request) {
@@ -86,7 +88,9 @@ export async function POST(request: Request) {
     if (user.id == undefined) {
       return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
     }
-    const data = await request.json();
+    const body = await request.formData()
+    const data = JSON.parse(body.get("data") as string)
+    const file = body.get("file") as File
     const village = String(user.idVillage)
 
     let groupFix = data.idGroup
@@ -95,15 +99,26 @@ export async function POST(request: Request) {
       groupFix = user.idGroup
     }
 
-    const cek = await prisma.user.count({
+    const cekNIK = await prisma.user.count({
       where: {
-        nik: data.nik,
-        email: data.email,
+        nik: data.nik
+      },
+    });
+
+    const cekEmail = await prisma.user.count({
+      where: {
+        email: data.email
+      },
+    });
+
+    const cekPhone = await prisma.user.count({
+      where: {
         phone: data.phone
       },
     });
 
-    if (cek == 0) {
+
+    if (cekNIK == 0 && cekEmail == 0 && cekPhone == 0) {
       const users = await prisma.user.create({
         data: {
           nik: data.nik,
@@ -121,6 +136,28 @@ export async function POST(request: Request) {
         },
       });
 
+      if (String(file) != "undefined" && String(file) != "null") {
+        const root = path.join(process.cwd(), "./public/image/user/");
+        const fExt = file.name.split(".").pop()
+        const fileName = users.id + '.' + fExt;
+        const filePath = path.join(root, fileName);
+
+        // Konversi ArrayBuffer ke Buffer
+        const buffer = Buffer.from(await file.arrayBuffer());
+
+        // Tulis file ke sistem
+        fs.writeFileSync(filePath, buffer);
+
+        await prisma.user.update({
+          where: {
+            id: users.id
+          },
+          data: {
+            img: fileName
+          }
+        })
+      }
+
       // create log user
       const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data user baru', table: 'user', data: users.id })
 
@@ -128,8 +165,6 @@ export async function POST(request: Request) {
     } else {
       return Response.json({ success: false, message: "User sudah ada" }, { status: 400 });
     }
-
-
 
   } catch (error) {
     console.error(error);
