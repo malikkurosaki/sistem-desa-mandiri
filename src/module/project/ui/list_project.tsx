@@ -1,5 +1,5 @@
 "use client"
-import { WARNA } from '@/module/_global';
+import { globalRole, WARNA } from '@/module/_global';
 import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import { useShallowEffect } from '@mantine/hooks';
 import { IDataProject } from '../lib/type_project';
 import { funGetAllGroup, IDataGroup } from '@/module/group';
+import { useHookstate } from '@hookstate/core';
 
 export default function ListProject() {
   const [isList, setIsList] = useState(false)
@@ -21,23 +22,22 @@ export default function ListProject() {
   const status = searchParams.get('status')
   const group = searchParams.get('group')
   const [searchQuery, setSearchQuery] = useState('')
+  const roleLogin = useHookstate(globalRole)
+  const [nameGroup, setNameGroup] = useState('')
 
   const fetchData = async () => {
     try {
-      setData([]);
-      setLoading(true);
-
+      setLoading(true)
       const response = await funGetAllProject('?status=' + status + '&search=' + searchQuery + '&group=' + group)
-
       if (response.success) {
         setData(response?.data)
+        setNameGroup(response.filter.name)
       } else {
         toast.error(response.message);
       }
-
       setLoading(false);
     } catch (error) {
-      toast.error("Gagal mendapatkan Kegiatan, coba lagi nanti");
+      toast.error("Gagal mendapatkan kegiatan, coba lagi nanti");
       console.error(error);
     } finally {
       setLoading(false);
@@ -52,31 +52,6 @@ export default function ListProject() {
   const handleList = () => {
     setIsList(!isList)
   }
-
-  const [checked, setChecked] = useState<IDataGroup[]>([]);
-
-  const groupNameMap = (groupId: string) => {
-    const groupName = checked.find((group) => group.id === groupId)?.name;
-    return groupName || '-';
-  };
-
-  async function getAllGroupFilter() {
-    try {
-       const response = await funGetAllGroup('?active=true')
-       if (response.success) {
-          setChecked(response.data);
-       } else {
-          toast.error(response.message);
-       }
-    } catch (error) {
-       console.error(error);
-       toast.error("Gagal mendapatkan grup, coba lagi nanti");
-    }
-  }
-  
-  useShallowEffect(() => {
-    getAllGroupFilter();
-  }, []);
 
   return (
     <Box mt={20}>
@@ -109,7 +84,7 @@ export default function ListProject() {
         </Grid.Col>
       </Grid>
       <Box pt={20}>
-      {group && <Text>Filter by: {groupNameMap(group)}</Text>}
+        {roleLogin.get() == 'supadmin' && <Text>Filter by: {nameGroup}</Text>}
         <Box bg={"#DCEED8"} p={10} style={{ borderRadius: 10 }}>
           <Text fw={'bold'} c={WARNA.biruTua}>Total Kegiatan</Text>
           <Flex justify={'center'} align={'center'} h={'100%'}>
@@ -121,7 +96,7 @@ export default function ListProject() {
             {isData.map((v, i) => {
               return (
                 <Box key={i}>
-                <Grid align='center'>
+                  <Grid align='center'>
                     <Grid.Col span={{
                       base: 2,
                       xl: 1
@@ -160,13 +135,13 @@ export default function ListProject() {
                           </Box>
 
                         </Box>
-                          <RiCircleFill size={12} color={
-                            v.status === 0 ? '#1372C4' :
-                              v.status === 1 ? '#C5771A' :
-                                v.status === 2 ? '#0B6025' :
-                                  v.status === 3 ? '#BB1F1F' :
-                                    ""
-                          } />
+                        <RiCircleFill size={12} color={
+                          v.status === 0 ? '#1372C4' :
+                            v.status === 1 ? '#C5771A' :
+                              v.status === 2 ? '#0B6025' :
+                                v.status === 3 ? '#BB1F1F' :
+                                  ""
+                        } />
                       </Group>
                     </Grid.Col>
                   </Grid>
