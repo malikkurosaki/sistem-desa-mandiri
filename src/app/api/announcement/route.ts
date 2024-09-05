@@ -1,10 +1,10 @@
-import { Group } from '@mantine/core';
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import moment from "moment";
 import "moment/locale/id";
 import { NextResponse } from "next/server";
+import { createLogUser } from '@/module/user';
 
 export const dynamic = 'force-dynamic'
 
@@ -19,17 +19,63 @@ export async function GET(request: Request) {
         }
 
         const villageId = user.idVillage
+        const roleUser = user.idUserRole
+        const groupId = user.idGroup
         const { searchParams } = new URL(request.url);
         const name = searchParams.get('search');
-        const announcements = await prisma.announcement.findMany({
-            where: {
-                idVillage: String(villageId),
-                isActive: true,
-                title: {
-                    contains: (name == undefined || name == null) ? "" : name,
-                    mode: "insensitive"
+
+        let kondisi: any = {
+            idVillage: String(villageId),
+            isActive: true,
+            title: {
+                contains: (name == undefined || name == null) ? "" : name,
+                mode: "insensitive"
+            }
+        }
+
+        if (roleUser != "supadmin") {
+            if (roleUser == "cosupadmin" || roleUser == "admin") {
+                kondisi = {
+                    idVillage: String(villageId),
+                    isActive: true,
+                    title: {
+                        contains: (name == undefined || name == null) ? "" : name,
+                        mode: "insensitive"
+                    },
+                    AnnouncementMember: {
+                        some: {
+                            idGroup: String(groupId)
+                        }
+                    }
+
                 }
-            },
+            } else {
+                kondisi = {
+                    idVillage: String(villageId),
+                    isActive: true,
+                    title: {
+                        contains: (name == undefined || name == null) ? "" : name,
+                        mode: "insensitive"
+                    },
+                    AnnouncementMember: {
+                        some: {
+                            idGroup: String(groupId),
+                            Division: {
+                                DivisionMember: {
+                                    some: {
+                                        idUser: String(user.id)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        const announcements = await prisma.announcement.findMany({
+            where: kondisi,
             select: {
                 id: true,
                 title: true,
@@ -97,6 +143,9 @@ export async function POST(request: Request) {
         const announcementMember = await prisma.announcementMember.createMany({
             data: memberDivision,
         });
+
+        // create log user
+        const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data pengumuman baru', table: 'announcement', data: data.id })
 
         return NextResponse.json({ success: true, message: "Berhasil membuat pengumuman" }, { status: 200 });
 
