@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
@@ -30,7 +31,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                 },
                 { status: 404 }
             );
-        } 
+        }
 
         const announcement = await prisma.announcement.findUnique({
             where: {
@@ -126,6 +127,9 @@ export async function DELETE(request: Request, context: { params: { id: string }
             },
         });
 
+        // create log user
+        const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus data pengumuman', table: 'announcement', data: id })
+
         return NextResponse.json(
             {
                 success: true,
@@ -206,11 +210,14 @@ export async function PUT(request: Request, context: { params: { id: string } })
             data: memberDivision,
         });
 
-        return NextResponse.json({ success: true, message: "Berhasil mengedit pengumuman" }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data pengumuman', table: 'announcement', data: id })
+
+        return NextResponse.json({ success: true, message: "Berhasil mengupdate pengumuman" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengedit pengumuman, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengeupdate pengumuman, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 

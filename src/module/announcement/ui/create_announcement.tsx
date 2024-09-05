@@ -11,6 +11,7 @@ import CreateUsersAnnouncement from "./create_users_announcement";
 import { globalMemberAnnouncement } from "../lib/val_announcement";
 import { funCreateAnnouncement } from "../lib/api_announcement";
 import { GroupData, ICreateData, IGroupData } from "../lib/type_announcement";
+import { useRouter } from "next/navigation";
 
 
 
@@ -19,6 +20,7 @@ export default function CreateAnnouncement() {
    const memberGroup = useHookstate(globalMemberAnnouncement)
    const memberValue = memberGroup.get() as GroupData[]
    const [selectedFiles, setSelectedFiles] = useState<any>([])
+   const router = useRouter()
 
 
    const [isChooseMember, setIsChooseMember] = useState(false)
@@ -42,12 +44,13 @@ export default function CreateAnnouncement() {
 
          if (response.success) {
             toast.success(response.message)
-            setisData({
-               ...isData,
-               title: "",
-               desc: "",
-            })
+            // setisData({
+            //    ...isData,
+            //    title: "",
+            //    desc: "",
+            // })
             memberGroup.set([])
+            router.push('/announcement')
          } else {
             toast.error(response.message)
          }
