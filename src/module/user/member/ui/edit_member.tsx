@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { globalRole, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { funGetAllPosition } from "@/module/position/lib/api_position";
@@ -14,6 +14,8 @@ import { funEditMember, funGetOneMember, funGetRoleUser } from "../lib/api_membe
 import _ from "lodash";
 import { Dropzone } from "@mantine/dropzone";
 import { FaCamera } from "react-icons/fa6";
+import { useHookstate } from "@hookstate/core";
+import { valueRoleUser } from "../../lib/val_user";
 
 
 export default function EditMember({ id }: { id: string }) {
@@ -26,6 +28,7 @@ export default function EditMember({ id }: { id: string }) {
    const openRef = useRef<() => void>(null)
    const [img, setIMG] = useState<any | null>()
    const [loading, setLoading] = useState(true)
+   const roleLogin = useHookstate(globalRole)
    const [touched, setTouched] = useState({
       nik: false,
       name: false,
@@ -91,8 +94,7 @@ export default function EditMember({ id }: { id: string }) {
 
    async function getAllUserRole() {
       try {
-         const res = await funGetRoleUser();
-         setListUserRole(res.data)
+         setListUserRole(valueRoleUser.filter((v) => v.login == roleLogin.get())[0]?.data);
       } catch (error) {
          console.error(error)
       }
@@ -191,7 +193,7 @@ export default function EditMember({ id }: { id: string }) {
                :
                <>
 
-                  <Select
+                  {/* <Select
                      placeholder="Pilih Grup" label="Grup" w={"100%"} size="md" required withAsterisk radius={30}
                      styles={{
                         input: {
@@ -219,7 +221,7 @@ export default function EditMember({ id }: { id: string }) {
                            data.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
                         )
                      }
-                  />
+                  /> */}
                   <Select
                      placeholder="Pilih Jabatan" label="Jabatan" w={"100%"} size="md" required withAsterisk radius={30}
                      styles={{

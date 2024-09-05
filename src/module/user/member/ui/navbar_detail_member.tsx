@@ -13,6 +13,7 @@ import { funGetOneMember } from "../lib/api_member";
 import toast from "react-hot-toast";
 import { IListMember, IMember } from "../lib/type_member";
 import { useHookstate } from "@hookstate/core";
+import { valueRoleUser } from "../../lib/val_user";
 
 
 export default function NavbarDetailMember({ id }: IMember) {
@@ -21,6 +22,7 @@ export default function NavbarDetailMember({ id }: IMember) {
    const [selectId, setSelectId] = useState<string>('');
    const [active, setActive] = useState<boolean>(false)
    const [loading, setLoading] = useState(true)
+   const [isEdit, setEdit] = useState(false)
    const roleLogin = useHookstate(globalRole)
 
    useShallowEffect(() => {
@@ -36,6 +38,7 @@ export default function NavbarDetailMember({ id }: IMember) {
             setDataOne(respose.data)
             setActive(respose.data?.isActive)
             setSelectId(respose.data?.id)
+            setEdit(valueRoleUser.filter((v) => v.login == roleLogin.get())[0]?.data.some((i: any) => i.id == respose.data.idUserRole))
          } else {
             toast.error(respose.message)
          }
@@ -57,7 +60,7 @@ export default function NavbarDetailMember({ id }: IMember) {
                <Group justify="space-between">
                   <LayoutIconBack />
                   {
-                     (roleLogin.get() != "user") &&
+                     (roleLogin.get() != "user") && isEdit &&
                      <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
                         <HiMenu size={20} color='white' />
                      </ActionIcon>
@@ -78,7 +81,7 @@ export default function NavbarDetailMember({ id }: IMember) {
                      </>
                      :
                      <>
-                        <Text c={'white'} fw={'bold'} fz={25}>{dataOne?.name}</Text>
+                        <Text c={'white'} fw={'bold'} fz={25} ta={"center"}>{dataOne?.name}</Text>
                         <Text c={'white'} fw={'lighter'} fz={15}>{dataOne?.group} - {dataOne?.position}</Text>
                      </>
                   }
