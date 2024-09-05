@@ -3,7 +3,7 @@ import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { funGetUserByCookies } from '@/module/auth';
 import { funGetAllmember, TypeUser } from '@/module/user';
-import { Avatar, Box, Button, Divider, Flex, Grid, Group, rem, Stack, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Stack, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -12,6 +12,7 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { useShallowEffect } from '@mantine/hooks';
 import { IDataMemberDivision } from '../lib/type_division';
 import { funAddDivisionMember, funGetDivisionById } from '../lib/api_division';
+import { IoArrowBackOutline } from 'react-icons/io5';
 
 
 export default function CreateAnggotaDivision() {
@@ -23,6 +24,7 @@ export default function CreateAnggotaDivision() {
   const [isOpen, setOpen] = useState(false)
   const param = useParams<{ id: string }>()
   const [loading, setLoading] = useState(true)
+  const [onClickSearch, setOnClickSearch] = useState(false)
 
   const handleFileClick = (index: number) => {
     if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
@@ -80,28 +82,82 @@ export default function CreateAnggotaDivision() {
     loadFirst()
   }, []);
 
+  const handleSearchClick = () => {
+    setOnClickSearch(true);
+  };
+
+  const handleClose = () => {
+    setOnClickSearch(false);
+  };
+
   return (
     <Box>
       <LayoutNavbarNew back={`/division/info/${param.id}`} title="tambah anggota"
-        menu
+        menu={<ActionIcon onClick={handleSearchClick} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="search">
+          <HiMagnifyingGlass size={20} color='white' />
+        </ActionIcon>}
       />
+      {onClickSearch
+        ? (
+          <Box
+            pos={'fixed'} top={0} p={rem(20)} w={"100%"} style={{
+              maxWidth: rem(550),
+              zIndex: 9999,
+              backgroundColor: `${WARNA.biruTua}`,
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 20,
+            }}>
+            <Grid justify='center' align='center' gutter={'lg'}>
+              <Grid.Col span={1}>
+                <ActionIcon onClick={handleClose} variant="subtle" color='white' size="lg" mt={5} radius="lg" aria-label="search">
+                  <IoArrowBackOutline size={30} />
+                </ActionIcon>
+              </Grid.Col>
+              <Grid.Col span={11}>
+                <TextInput
+                  styles={{
+                    input: {
+                      color: "white",
+                      borderRadius: '#A3A3A3',
+                      borderColor: `${WARNA.biruTua}`,
+                      backgroundColor: `${WARNA.biruTua}`,
+                    },
+                  }}
+                  size="md"
+                  radius={30}
+                  placeholder="Pencarian"
+                  onChange={(e: any) => loadMember(group, e.target.value)}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
+        )
+        : null
+      }
+      <Box pos={'fixed'} top={80} pl={rem(20)} pr={rem(20)} pt={rem(20)} pb={rem(5)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 100,
+        backgroundColor: `${WARNA.bgWhite}`,
+        borderBottom: `1px solid ${"#E0DFDF"}`
+      }}>
+        <Box w={{
+          base: 60,
+          xl: 60
+        }}>
+          <Center>
+            <Indicator inline size={16} offset={7} position="bottom-end" color="red" withBorder>
+              <Avatar
+                size="lg"
+                radius="xl"
+                src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png"
+              />
+            </Indicator>
+          </Center>
+          <Text ta={"center"} lineClamp={1}>Anggota</Text>
+        </Box>
+      </Box>
       <Box p={20}>
-        <Stack>
-          <TextInput
-            styles={{
-              input: {
-                color: WARNA.biruTua,
-                borderRadius: '#A3A3A3',
-                borderColor: '#A3A3A3',
-              },
-            }}
-            size="md"
-            radius={30}
-            leftSection={<HiMagnifyingGlass size={20} />}
-            placeholder="Pencarian"
-            onChange={(e: any) => loadMember(group, e.target.value)}
-          />
-        </Stack>
+        {/* <pre>{JSON.stringify(memberDb, null, 1)}</pre> */}
 
         {loading ?
           Array(8)
@@ -112,26 +168,23 @@ export default function CreateAnggotaDivision() {
               </Box>
             ))
           :
-          <Box mt={20} mb={100}>
+          <Box pt={90} mb={100}>
             {dataMember.map((v: any, index: any) => {
               const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id)
               const found = memberDb.some((i: any) => i.idUser == v.id)
               return (
                 <Box my={10} key={index} onClick={() => (!found) ? handleFileClick(index) : null}>
-                  <Grid align='center' gutter={{
-                    base: 60,
-                    xl: "xs"
-                  }}>
+                  <Grid align='center' >
                     <Grid.Col span={2}>
                       <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
                     </Grid.Col>
                     <Grid.Col span={10}>
                       <Flex justify='space-between' align={"center"}>
                         <Flex direction={'column'} align="flex-start" justify="flex-start">
-                          <Text lineClamp={1}>{v.name}</Text>
-                          <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
+                          <Text pl={{base: 10, xl:0}} lineClamp={1}>{v.name}</Text>
+                          <Text pl={{base: 10, xl:0}} c={"dimmed"} lineClamp={1}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
                         </Flex>
-                        {isSelected ? <FaCheck/> : null}
+                        {isSelected ? <FaCheck /> : null}
                       </Flex>
                     </Grid.Col>
                   </Grid>
