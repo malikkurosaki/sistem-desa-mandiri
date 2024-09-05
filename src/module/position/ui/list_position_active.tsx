@@ -1,5 +1,5 @@
 import { globalRole, LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
-import { ActionIcon, Box, Group, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Box, Flex, Grid, Group, Text, TextInput } from "@mantine/core";
 import React, { useState } from "react";
 import { FaUserTie } from "react-icons/fa6";
 import { HiMagnifyingGlass } from "react-icons/hi2";
@@ -97,25 +97,42 @@ export default function ListPositionActive() {
                         }
                       }}
                     >
-                      <Box>
-                        <ActionIcon
-                          variant="light"
-                          bg={"#DCEED8"}
-                          size={50}
-                          radius={100}
-                          aria-label="icon"
-                        >
-                          <FaUserTie color={WARNA.biruTua} size={25} />
-                        </ActionIcon>
-                      </Box>
-                      <Box>
-                        <Text fw={"bold"} c={WARNA.biruTua}>
-                          {v.name}
-                        </Text>
-                        <Text fw={"lighter"} fz={12}>
-                          {v.group}
-                        </Text>
-                      </Box>
+                      <Grid justify='center' align='center' >
+                        <Grid.Col span={{
+                          base: 3,
+                          xl: 2
+                        }}>
+                          <Flex justify={{ base: "center", xl: "flex-start" }}>
+                            <ActionIcon
+                              variant="light"
+                              bg={"#DCEED8"}
+                              size={50}
+                              radius={100}
+                              aria-label="icon"
+                            >
+                              <FaUserTie color={WARNA.biruTua} size={25} />
+                            </ActionIcon>
+                          </Flex>
+                        </Grid.Col>
+                        <Grid.Col span={{
+                          base: 9,
+                          xl: 10
+                        }}>
+                          <Box
+                            w={{
+                              base: 220,
+                              xl: 400
+                            }}
+                          >
+                            <Text fw={"bold"} c={WARNA.biruTua} lineClamp={1}>
+                              {v.name}
+                            </Text>
+                            <Text fw={"lighter"} fz={12} lineClamp={1}>
+                              {v.group}
+                            </Text>
+                          </Box>
+                        </Grid.Col>
+                      </Grid>
                     </Group>
                   </Box>
                 );
@@ -126,7 +143,7 @@ export default function ListPositionActive() {
       <LayoutDrawer
         opened={openDrawer}
         onClose={() => setOpenDrawer(false)}
-        title={isData}
+        title={<Text lineClamp={1}>{isData}</Text>}
       >
         <DrawerDetailPosition
           id={selectId}
