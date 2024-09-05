@@ -12,7 +12,8 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { useShallowEffect } from '@mantine/hooks';
 import { IDataMemberDivision } from '../lib/type_division';
 import { funAddDivisionMember, funGetDivisionById } from '../lib/api_division';
-import { IoArrowBackOutline } from 'react-icons/io5';
+import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
+import { Carousel } from '@mantine/carousel';
 
 
 export default function CreateAnggotaDivision() {
@@ -30,9 +31,13 @@ export default function CreateAnggotaDivision() {
     if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
       setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != dataMember[index].id))
     } else {
-      setSelectedFiles([...selectedFiles, { idUser: dataMember[index].id, name: dataMember[index].name }])
+      setSelectedFiles([...selectedFiles, { idUser: dataMember[index].id, name: dataMember[index].name, img: dataMember[index].img }])
     }
   };
+
+  function handleXMember(id: number) {
+    setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != id))
+  }
 
 
   async function loadMember(group: string, search: string) {
@@ -140,25 +145,56 @@ export default function CreateAnggotaDivision() {
         backgroundColor: `${WARNA.bgWhite}`,
         borderBottom: `1px solid ${"#E0DFDF"}`
       }}>
-        <Box w={{
-          base: 60,
-          xl: 60
-        }}>
-          <Center>
-            <Indicator inline size={16} offset={7} position="bottom-end" color="red" withBorder>
-              <Avatar
-                size="lg"
-                radius="xl"
-                src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png"
-              />
-            </Indicator>
-          </Center>
-          <Text ta={"center"} lineClamp={1}>Anggota</Text>
-        </Box>
+        {/* <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
+          {selectedFiles.map((v: any, i: any) => {
+            return (
+              <Carousel.Slide key={i}>
+                <Box w={{
+                  base: 60,
+                  xl: 60
+                }}
+                  onClick={() => { handleXMember(v.idUser) }}
+                >
+                  <Center>
+                    <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
+                      <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                    </Indicator>
+                  </Center>
+                  <Text ta={"center"} lineClamp={1}>{v.name}</Text>
+                </Box>
+              </Carousel.Slide>
+            )
+          })}
+        </Carousel> */}
+        {selectedFiles.length > 0 ? (
+          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
+            {selectedFiles.map((v: any, i: any) => {
+              return (
+                <Carousel.Slide key={i}>
+                  <Box w={{
+                    base: 60,
+                    xl: 60
+                  }}
+                    onClick={() => { handleXMember(v.idUser) }}
+                  >
+                    <Center>
+                      <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
+                        <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                      </Indicator>
+                    </Center>
+                    <Text ta={"center"} lineClamp={1}>{v.name}</Text>
+                  </Box>
+                </Carousel.Slide>
+              )
+            })}
+          </Carousel>
+        ) : (
+          <Box>
+            <Text ta={'center'} fz={14}>Tidak ada anggota yang dipilih</Text>
+          </Box>
+        )}
       </Box>
       <Box p={20}>
-        {/* <pre>{JSON.stringify(memberDb, null, 1)}</pre> */}
-
         {loading ?
           Array(8)
             .fill(null)
@@ -181,8 +217,8 @@ export default function CreateAnggotaDivision() {
                     <Grid.Col span={10}>
                       <Flex justify='space-between' align={"center"}>
                         <Flex direction={'column'} align="flex-start" justify="flex-start">
-                          <Text pl={{base: 10, xl:0}} lineClamp={1}>{v.name}</Text>
-                          <Text pl={{base: 10, xl:0}} c={"dimmed"} lineClamp={1}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
+                          <Text pl={{ base: 10, xl: 0 }} lineClamp={1}>{v.name}</Text>
+                          <Text pl={{ base: 10, xl: 0 }} c={"dimmed"} lineClamp={1}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
                         </Flex>
                         {isSelected ? <FaCheck /> : null}
                       </Flex>
