@@ -7,6 +7,7 @@ import { funGetSearchAll } from '../lib/api_search';
 import { useShallowEffect } from '@mantine/hooks';
 import { IDataDivisionSearch, IDataProjectSearch, IDataUserSearch } from '../lib/type_search';
 import { useRouter } from 'next/navigation';
+import _ from 'lodash';
 
 export default function ViewSearch() {
   const [search, setSearch] = useState('');
@@ -73,21 +74,27 @@ export default function ViewSearch() {
                 borderRadius: 5
               }}>
                 {dataUser.length > 0 ? (
-                  <Box>
+                  <Box mt={5}>
                     {dataUser.map((v, i) => {
                       return (
-                        <Box key={i} onClick={() => router.push(`/member/${v.id}`)}>
-                          <Group align='center' style={{
-                            padding: 5,
-                            paddingLeft: 0,
-                          }} >
-                            <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} size="lg" />
-                            <Box>
-                              <Text fw={'bold'} c={WARNA.biruTua}>{v.name}</Text>
-                              <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
-                            </Box>
-                          </Group>
-                          <Divider my={5} />
+                        <Box key={i}>
+                          <Box onClick={() => {
+                            router.push(`/member/${v.id}`)
+                          }}>
+                            <Grid gutter={{
+                              base: 60,
+                              xl: "xs"
+                            }} align="center">
+                              <Grid.Col span={2}>
+                                <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} size={50} alt="image" />
+                              </Grid.Col>
+                              <Grid.Col span={9}>
+                                <Text fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{_.startCase(v.name)}</Text>
+                                <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
+                              </Grid.Col>
+                            </Grid>
+                          </Box>
+                          <Divider my={10} />
                         </Box>
                       )
                     })}
@@ -112,18 +119,25 @@ export default function ViewSearch() {
                       {dataDivision.map((v, i) => {
                         return (
                           <Box key={i} onClick={() => router.push(`/division/${v.id}`)}>
-                            <Grid justify='center' align='center' mt={15}>
-                              <Grid.Col span={"auto"}>
+                            <Grid justify='center' align='center' mt={15} >
+                              <Grid.Col span={2}>
                                 <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
                                   <HiMiniUserGroup color={'white'} size={25} />
                                 </ActionIcon>
                               </Grid.Col>
                               <Grid.Col span={10}>
-                                <Text fw={'bold'} c={WARNA.biruTua}>{v.name.toUpperCase()}</Text>
-                                <Text fw={'lighter'} fz={12}>{v.group}</Text>
+                                <Box
+                                  w={{
+                                    base: 220,
+                                    xl: 380
+                                  }}
+                                >
+                                <Text pl={{base: 10, xl:0}} fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{v.name.toUpperCase()}</Text>
+                                </Box>
+                                <Text pl={{base: 10, xl:0}} fw={'lighter'} fz={12} lineClamp={1}>{v.group}</Text>
                               </Grid.Col>
                             </Grid>
-                            <Text fw={'lighter'} mt={5} mb={10} lineClamp={2}>{v.desc}</Text>
+                            <Text fw={'lighter'} mt={10} mb={10} lineClamp={2}>{v.desc}</Text>
                             <Divider my={5} />
                           </Box>
                         )
@@ -150,14 +164,21 @@ export default function ViewSearch() {
                         return (
                           <Box key={i} onClick={() => router.push(`/project/${v.id}`)}>
                             <Grid justify='center' align='center' mt={10}>
-                              <Grid.Col span={"auto"}>
+                              <Grid.Col span={2}>
                                 <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
                                   <HiMiniPresentationChartBar color={'white'} size={25} />
                                 </ActionIcon>
                               </Grid.Col>
                               <Grid.Col span={10}>
-                                <Text fw={'bold'} c={WARNA.biruTua}>{v.title.toUpperCase()}</Text>
-                                <Text fw={'lighter'} fz={12}>{v.group}</Text>
+                              <Box
+                                  w={{
+                                    base: 220,
+                                    xl: 380
+                                  }}
+                                >
+                                <Text pl={{base: 10, xl:0}} fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{v.title.toUpperCase()}</Text>
+                                </Box>
+                                <Text pl={{base: 10, xl:0}} fw={'lighter'} fz={12} lineClamp={1}>{v.group}</Text>
                               </Grid.Col>
                             </Grid>
                             <Divider mt={10} />

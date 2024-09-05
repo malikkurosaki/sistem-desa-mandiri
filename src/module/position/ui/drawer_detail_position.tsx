@@ -150,8 +150,8 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
             </SimpleGrid>
          </Stack>
 
-         <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Edit Jabatan'} size="lg">
-            <Box pt={10} pos={"relative"} h={"70vh"}>
+         <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Edit Jabatan'} >
+            <Box pt={10} pos={"relative"} h={"28.5vh"}>
                {loading ?
                   <Box>
                      <Skeleton height={40} mt={6} radius={10} />
@@ -159,40 +159,6 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                   </Box>
                   :
                   <Box>
-                     {/* <Select
-                        label="Grup"
-                        placeholder="Pilih grup"
-                        size="md"
-                        radius={10}
-                        data={
-                           listGroup
-                              ? listGroup.map((data) => ({
-                                 value: data.id,
-                                 label: data.name,
-                              }))
-                              : []
-                        }
-                        value={String(data.idGroup)}
-                        mb={5}
-                        onChange={(val) => {
-                           setData({ ...data, idGroup: val })
-                           setTouched({ ...touched, idGroup: false })
-                        }}
-                        withAsterisk
-                        styles={{
-                           input: {
-                              color: WARNA.biruTua,
-                              borderRadius: WARNA.biruTua,
-                              borderColor: WARNA.biruTua,
-                           },
-                        }}
-                        error={
-                           touched.idGroup && (
-                              data.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
-                           )
-                        }
-                        onBlur={() => setTouched({ ...touched, idGroup: true })}
-                     /> */}
                      <TextInput
                         label="Jabatan"
                         styles={{
@@ -203,7 +169,6 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                            },
                         }}
                         required
-                        my={15}
                         size="md"
                         value={String(data.name)}
                         onChange={(e) => {

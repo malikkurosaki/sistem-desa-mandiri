@@ -80,7 +80,7 @@ export default function Profile() {
               <Skeleton height={62} mt={10} width={"40%"} />
               :
               <>
-                <Text c={'white'} fw={'bold'} fz={25}>{isData?.name}</Text>
+                <Text c={'white'} fw={'bold'} fz={25} ta={"center"}>{isData?.name}</Text>
                 <Text c={'white'} fw={'lighter'} fz={15}>{isData?.group} - {isData?.position}</Text>
               </>
             }

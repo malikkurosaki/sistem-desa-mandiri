@@ -176,7 +176,7 @@ export default function DetailEventDivision() {
                   xl: 11
                 }}>
                   {isDataCalender?.desc ? (
-                    <Spoiler maxHeight={80} showLabel="Lebih banyak" hideLabel="Lebih dikit">
+                    <Spoiler maxHeight={80} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
                       <Text>{isDataCalender?.desc}</Text>
                     </Spoiler>
                   ) : (

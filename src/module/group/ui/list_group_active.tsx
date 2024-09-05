@@ -2,6 +2,8 @@ import { LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
 import {
   ActionIcon,
   Box,
+  Flex,
+  Grid,
   Group,
   Skeleton,
   Text,
@@ -85,7 +87,7 @@ export default function ListGroupActive() {
         _.isEmpty(isData)
           ?
           <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-             <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada grup</Text>
+            <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada grup</Text>
           </Box>
           :
           isData.map((v, i) => {
@@ -106,25 +108,42 @@ export default function ListGroupActive() {
                     setActive(v.isActive);
                   }}
                 >
-                  <Box>
-                    <ActionIcon
-                      variant="light"
-                      bg={"#DCEED8"}
-                      size={50}
-                      radius={100}
-                      aria-label="icon"
-                    >
-                      <HiOutlineOfficeBuilding
-                        color={WARNA.biruTua}
-                        size={25}
-                      />
-                    </ActionIcon>
-                  </Box>
-                  <Box>
-                    <Text fw={"bold"} c={WARNA.biruTua}>
+                  <Grid justify='center' align='center' >
+                    <Grid.Col span={{
+                      base: 3,
+                      xl: 2
+                    }}>
+                      <Flex justify={{base: "center", xl: "flex-start"}}>
+                        <ActionIcon
+                          variant="light"
+                          bg={"#DCEED8"}
+                          size={50}
+                          radius={100}
+                          aria-label="icon"
+                        >
+                          <HiOutlineOfficeBuilding
+                            color={WARNA.biruTua}
+                            size={25}
+                          />
+                        </ActionIcon>
+                      </Flex>
+                    </Grid.Col>
+                    <Grid.Col span={{
+                      base: 9,
+                      xl: 10
+                    }}>
+                      <Box
+                        w={{
+                          base: 220,
+                          xl: 400
+                        }}
+                      >
+                        <Text fw={"bold"} c={WARNA.biruTua} lineClamp={1}>
                       {v.name}
                     </Text>
-                  </Box>
+                      </Box>
+                    </Grid.Col>
+                  </Grid>
                 </Group>
               </Box>
             );
@@ -133,7 +152,7 @@ export default function ListGroupActive() {
       <LayoutDrawer
         opened={openDrawer}
         onClose={() => setOpenDrawer(false)}
-        title={valChoose}
+        title={<Text lineClamp={1}>{valChoose}</Text>}
       >
         <EditDrawerGroup
           id={selectId}

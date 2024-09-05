@@ -27,6 +27,7 @@ export default function LayoutModal({ opened, onClose, extension, fitur, file }:
                   }}
                   fit="contain"
                   src={`/api/file/img?cat=${fitur}&file=${file}&jenis=file`}
+                  alt={file}
                />
          }
       </Modal>
