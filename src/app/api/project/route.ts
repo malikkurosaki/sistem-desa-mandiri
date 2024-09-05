@@ -5,6 +5,7 @@ import moment from "moment";
 import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
+import { createLogUser } from "@/module/user";
 
 
 // GET ALL DATA PROJECT
@@ -14,7 +15,7 @@ export async function GET(request: Request) {
         if (user.id == undefined) {
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
-
+        const roleUser = user.idUserRole
         const { searchParams } = new URL(request.url);
 
         let grup
@@ -30,19 +31,49 @@ export async function GET(request: Request) {
             grup = idGroup
         }
 
-
-        const data = await prisma.project.findMany({
+        const cek = await prisma.group.count({
             where: {
+                id: grup,
+                isActive: true
+            }
+        })
+
+        if (cek == 0) {
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan data kegiatan, data tidak ditemukan", }, { status: 404 });
+        }
+
+        let kondisi: any = {
+            isActive: true,
+            idVillage: String(villageId),
+            idGroup: grup,
+            title: {
+                contains: (name == undefined || name == "null") ? "" : name,
+                mode: "insensitive"
+            },
+            status: (status == "0" || status == "1" || status == "2" || status == "3") ? Number(status) : 0
+        }
+
+        if (roleUser != "supadmin" && roleUser != "cosupadmin" && roleUser != "admin") {
+            kondisi = {
                 isActive: true,
                 idVillage: String(villageId),
                 idGroup: grup,
-                createdBy: String(userId),
                 title: {
                     contains: (name == undefined || name == "null") ? "" : name,
                     mode: "insensitive"
                 },
-                status: (status == "0" || status == "1" || status == "2" || status == "3") ? Number(status) : 0
-            },
+                status: (status == "0" || status == "1" || status == "2" || status == "3") ? Number(status) : 0,
+                ProjectMember: {
+                    some: {
+                        idUser: String(userId)
+                    }
+                }
+            }
+        }
+
+
+        const data = await prisma.project.findMany({
+            where: kondisi,
             select: {
                 id: true,
                 title: true,
@@ -64,12 +95,22 @@ export async function GET(request: Request) {
             member: v.ProjectMember.length
         }))
 
+        const filter = await prisma.group.findUnique({
+            where: {
+                id: grup
+            },
+            select: {
+                id: true,
+                name: true
+            }
+        })
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan project", data: omitData, }, { status: 200 });
+
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kegiatan", data: omitData, filter }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -158,6 +199,8 @@ export async function POST(request: Request) {
         }
 
 
+        // create log user
+        const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data kegiatan', table: 'project', data: data.id })
         return NextResponse.json({ success: true, message: "Berhasil membuat kegiatan" }, { status: 200 });
 
     } catch (error) {

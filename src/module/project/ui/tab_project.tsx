@@ -1,17 +1,16 @@
 "use client"
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
-import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, rem, Tabs, Text, TextInput, Title } from '@mantine/core';
-import React, { useEffect, useState } from 'react';
+import { globalRole, LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { ActionIcon, Box, rem, Tabs } from '@mantine/core';
+import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
-import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
-import { MdAccountCircle } from 'react-icons/md';
-import { RiCircleFill, RiProgress3Line } from "react-icons/ri";
+import { RiProgress3Line } from "react-icons/ri";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { TbClockPause } from 'react-icons/tb';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import ListProject from './list_project';
 import MenuDrawerProject from './menu_drawer_project';
+import { useHookstate } from '@hookstate/core';
 
 export default function TabProject() {
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -20,13 +19,17 @@ export default function TabProject() {
   const status = searchParams.get('status')
   const group = searchParams.get("group");
   const iconStyle = { width: rem(20), height: rem(20) };
+  const roleLogin = useHookstate(globalRole)
 
   return (
     <Box>
       <LayoutNavbarNew back='/home' title='Kegiatan'
-        menu={<ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
-          <HiMenu size={20} color='white' />
-        </ActionIcon>} />
+        menu={(roleLogin.get() != "user"  && roleLogin.get() != "coadmin") ?
+          <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+            <HiMenu size={20} color='white' />
+          </ActionIcon>
+          : <></>
+        } />
 
       <Box p={20}>
         <Tabs variant="pills" radius="xl" defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}>
