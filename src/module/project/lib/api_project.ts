@@ -19,8 +19,8 @@ export const funGetOneProjectById = async (path: string, kategori: string) => {
     return await response.json().catch(() => null);
 }
 
-export const funGetAllMemberById = async (path?: string) => {
-    const response = await fetch(`/api/project/${path}/member`);
+export const funGetAllMemberById = async (path?: string, id?:string) => {
+    const response = await fetch(`/api/project/${id}/member/${path}`);
     return await response.json().catch(() => null);
 }
 

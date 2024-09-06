@@ -33,7 +33,7 @@ export async function POST(request: Request, context: { params: { id: string } }
 
         if (member.length > 0) {
             const dataMember = member.map((v: any) => ({
-                ..._.omit(v, ["idUser", "name"]),
+                ..._.omit(v, ["idUser", "name", "img"]),
                 idProject: id,
                 idUser: v.idUser
             }))
@@ -110,6 +110,8 @@ export async function GET(request: Request, context: { params: { id: string } })
         const { id } = context.params
         const groupId = user.idGroup
         const userId = user.id
+        const { searchParams } = new URL(request.url);
+        const name = searchParams.get('search');
 
         const data = await prisma.project.findUnique({
             where: {
@@ -128,39 +130,18 @@ export async function GET(request: Request, context: { params: { id: string } })
             );
         }
 
-
-        // const member = await prisma.projectMember.findMany({
-        //     where: {
-        //         idProject: String(id),
-        //         isActive: true
-        //     },
-        //     select: {
-        //         id: true,
-        //         isLeader: true,
-        //         idUser: true,
-        //         User: {
-        //             select: {
-        //                 name: true
-        //             }
-        //         }
-        //     },
-        //     orderBy: {
-        //         isLeader: 'desc',
-        //     }
-        // })
-
-        // const fixMember = member.map((v: any) => ({
-        //     ..._.omit(v, ["User"]),
-        //     name: v.User.name
-        // }))
-
         const member = await prisma.user.findMany({
             where: {
                 idGroup: String(groupId),
                 id: {
                     not: String(userId)
                 },
-                isActive: true
+                isActive: true,
+                name: {
+                    contains: (name == undefined || name == "null") ? "" : name,
+                    mode: 'insensitive'
+                }
+                
             },
             select: {
                 id: true,

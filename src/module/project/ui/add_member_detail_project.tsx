@@ -5,10 +5,13 @@ import { IDataMemberProject, IDataMemberProjectDetail } from '../lib/type_projec
 import toast from 'react-hot-toast';
 import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
 import { useShallowEffect } from '@mantine/hooks';
-import { Avatar, Box, Button, Divider, Flex, Grid, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Skeleton, Stack, Text, TextInput } from '@mantine/core';
 import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import { FaCheck } from 'react-icons/fa6';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
+import { Carousel } from '@mantine/carousel';
 
 export default function AddMemberDetailProject() {
   const router = useRouter()
@@ -19,12 +22,14 @@ export default function AddMemberDetailProject() {
   const [selectAll, setSelectAll] = useState(false)
   const [loading, setLoading] = useState(true)
   const [openModal, setOpenModal] = useState(false)
+  const [onClickSearch, setOnClickSearch] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
 
   async function getData() {
     try {
       setLoading(true)
-      const response = await funGetAllMemberById(param.id)
+      const response = await funGetAllMemberById('?search=' + searchQuery, param.id )
       if (response.success) {
         setData(response.data.member)
       } else {
@@ -49,7 +54,7 @@ export default function AddMemberDetailProject() {
     if (selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
       setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != isData[index].idUser))
     } else {
-      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name }])
+      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name, img: isData[index].img  }])
     }
   };
 
@@ -62,7 +67,7 @@ export default function AddMemberDetailProject() {
         if (!isDataMember.some((i: any) => i.idUser == isData[index].idUser)) {
           if (!selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
             const newArr = {
-              idUser: isData[index].idUser, name: isData[index].name
+              idUser: isData[index].idUser, name: isData[index].name, img: isData[index].img
             }
             setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
           }
@@ -85,7 +90,7 @@ export default function AddMemberDetailProject() {
 
   useShallowEffect(() => {
     getData()
-  }, []);
+  }, [searchQuery]);
 
   async function onSubmit() {
     try {
@@ -102,15 +107,107 @@ export default function AddMemberDetailProject() {
     }
   }
 
+  const handleSearchClick = () => {
+    setOnClickSearch(true);
+  };
+
+  const handleClose = () => {
+    setOnClickSearch(false);
+  };
+
+  function handleXMember(id: number) {
+    setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != id))
+  }
+
   return (
     <Box>
       <LayoutNavbarNew
         back=""
         title="Pilih Anggota"
-        menu
+        menu={<ActionIcon onClick={handleSearchClick} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="search">
+          <HiMagnifyingGlass size={20} color='white' />
+        </ActionIcon>}
       />
+      {/* SEARCH */}
+      {onClickSearch
+        ? (
+          <Box
+            pos={'fixed'} top={0} p={rem(20)} w={"100%"} style={{
+              maxWidth: rem(550),
+              zIndex: 9999,
+              backgroundColor: `${WARNA.biruTua}`,
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 20,
+            }}>
+            <Grid justify='center' align='center' gutter={'lg'}>
+              <Grid.Col span={1}>
+                <ActionIcon onClick={handleClose} variant="subtle" color='white' size="lg" mt={5} radius="lg" aria-label="search">
+                  <IoArrowBackOutline size={30} />
+                </ActionIcon>
+              </Grid.Col>
+              <Grid.Col span={11}>
+                <TextInput
+                  styles={{
+                    input: {
+                      color: "white",
+                      borderRadius: '#A3A3A3',
+                      borderColor: `${WARNA.biruTua}`,
+                      backgroundColor: `${WARNA.biruTua}`,
+                    },
+                  }}
+                  size="md"
+                  radius={30}
+                  placeholder="Pencarian"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
+        )
+        : null
+      }
+      {/* Close User */}
+      <Box pos={'fixed'} top={80} pl={rem(20)} pr={rem(20)} pt={rem(20)} pb={rem(5)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 100,
+        backgroundColor: `${WARNA.bgWhite}`,
+        borderBottom: `1px solid ${"#E0DFDF"}`
+      }}>
+        {selectedFiles.length > 0 ? (
+          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
+            {selectedFiles.map((v: any, i: any) => {
+              return (
+                <Carousel.Slide key={i}>
+                  <Box w={{
+                    base: 70,
+                    xl: 70
+                  }}
+                    onClick={() => { handleXMember(v.idUser) }}
+                  >
+                    <Center>
+                      <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
+                        <Avatar style={{
+                          border: `2px solid ${WARNA.biruTua}`
+                        }} src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                      </Indicator>
+                    </Center>
+                    <Text ta={"center"} lineClamp={1}>{v.name}</Text>
+                  </Box>
+                </Carousel.Slide>
+              )
+            })}
+          </Carousel>
+        ) : (
+          <Box h={rem(81)}>
+            <Flex justify={"center"} align={'center'} h={"100%"}>
+              <Text ta={'center'} fz={14}>Tidak ada anggota yang dipilih</Text>
+            </Flex>
+          </Box>
+        )}
+      </Box>
+
       <Box p={20}>
-        <Group justify="space-between" mt={20} onClick={handleSelectAll}>
+        <Group justify="space-between" mt={100} onClick={handleSelectAll}>
           <Text c={WARNA.biruTua} fw={"bold"}>
             Pilih Semua Anggota
           </Text>
@@ -131,32 +228,6 @@ export default function AddMemberDetailProject() {
               const found = isDataMember.some((i: any) => i.idUser == v.idUser)
               return (
                 <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
-                  {/* <Flex justify={"space-between"} align={"center"}>
-                  <Group>
-                    <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                    <Stack align="flex-start" justify="flex-start">
-                      <Text style={{
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}>
-                        {v.name}
-                      </Text>
-                      <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota" : ""}</Text>
-                    </Stack>
-                  </Group>
-                  <Text
-                    style={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      paddingLeft: 20,
-                    }}
-                  >
-                    {isSelected ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-                  </Text>
-                </Flex>
-                <Divider my={"md"} /> */}
                   <Grid align='center'>
                     <Grid.Col span={{
                       base: 3,
