@@ -32,7 +32,7 @@ export async function POST(request: Request, context: { params: { id: string } }
 
       if (member.length > 0) {
          const dataMember = member.map((v: any) => ({
-            ..._.omit(v, ["idUser", "name"]),
+            ..._.omit(v, ["idUser", "name", "img"]),
             idDivision: idDivision,
             idProject: id,
             idUser: v.idUser,

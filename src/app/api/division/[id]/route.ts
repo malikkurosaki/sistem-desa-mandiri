@@ -27,7 +27,7 @@ export async function GET(request: Request, context: { params: { id: string } })
       const member = await prisma.divisionMember.findMany({
          where: {
             idDivision: String(id),
-            isActive: true
+            isActive: true,
          },
          select: {
             id: true,

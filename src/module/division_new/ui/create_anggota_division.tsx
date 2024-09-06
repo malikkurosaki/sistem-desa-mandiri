@@ -145,41 +145,22 @@ export default function CreateAnggotaDivision() {
         backgroundColor: `${WARNA.bgWhite}`,
         borderBottom: `1px solid ${"#E0DFDF"}`
       }}>
-        {/* <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
-          {selectedFiles.map((v: any, i: any) => {
-            return (
-              <Carousel.Slide key={i}>
-                <Box w={{
-                  base: 60,
-                  xl: 60
-                }}
-                  onClick={() => { handleXMember(v.idUser) }}
-                >
-                  <Center>
-                    <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
-                      <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                    </Indicator>
-                  </Center>
-                  <Text ta={"center"} lineClamp={1}>{v.name}</Text>
-                </Box>
-              </Carousel.Slide>
-            )
-          })}
-        </Carousel> */}
         {selectedFiles.length > 0 ? (
           <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
             {selectedFiles.map((v: any, i: any) => {
               return (
                 <Carousel.Slide key={i}>
                   <Box w={{
-                    base: 60,
-                    xl: 60
+                    base: 70,
+                    xl: 70
                   }}
                     onClick={() => { handleXMember(v.idUser) }}
                   >
                     <Center>
                       <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
-                        <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                        <Avatar style={{
+                          border: `2px solid ${WARNA.biruTua}`
+                        }} src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
                       </Indicator>
                     </Center>
                     <Text ta={"center"} lineClamp={1}>{v.name}</Text>
@@ -189,8 +170,10 @@ export default function CreateAnggotaDivision() {
             })}
           </Carousel>
         ) : (
-          <Box>
-            <Text ta={'center'} fz={14}>Tidak ada anggota yang dipilih</Text>
+          <Box h={rem(81)}>
+            <Flex justify={"center"} align={'center'} h={"100%"}>
+              <Text ta={'center'} fz={14}>Tidak ada anggota yang dipilih</Text>
+            </Flex>
           </Box>
         )}
       </Box>
