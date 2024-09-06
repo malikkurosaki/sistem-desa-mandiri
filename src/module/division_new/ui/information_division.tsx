@@ -40,7 +40,7 @@ export default function InformationDivision() {
         setName(res.data.division.name);
         setDeskripsi(res.data.division.desc);
         setMember(res.data.member)
-        const cek = res.data.member.some((i: any) => i.id == login.id && i.isAdmin == true)
+        const cek = res.data.member.some((i: any) => i.idUser == login.id && i.isAdmin == true)
         setAdmin(cek)
       } else {
         toast.error(res.message);
@@ -106,11 +106,14 @@ export default function InformationDivision() {
     <Box>
       <LayoutNavbarNew back={"/division/" + param.id} title={name}
         menu={
-          <ActionIcon variant="light" onClick={() => {
-            router.push('/division/edit/' + param.id)
-          }} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
-            <LuClipboardEdit size={20} color='white' />
-          </ActionIcon>}
+          ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
+            <ActionIcon variant="light" onClick={() => {
+              router.push('/division/edit/' + param.id)
+            }} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+              <LuClipboardEdit size={20} color='white' />
+            </ActionIcon>
+            : <></>
+        }
       />
       <Box p={20}>
         <Box>
@@ -195,7 +198,12 @@ export default function InformationDivision() {
                     return (
                       <Box key={i}>
                         <Grid align='center' mt={10}
-                          onClick={() => { onClickMember(v.id, (v.isAdmin) ? true : false), setChooseMemberName(v.name) }}
+                          onClick={() => {
+                            if ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) {
+                              onClickMember(v.id, (v.isAdmin) ? true : false)
+                              setChooseMemberName(v.name)
+                            }
+                          }}
                         >
                           <Grid.Col span={9}>
                             <Group>

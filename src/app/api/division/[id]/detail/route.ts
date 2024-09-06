@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
 import "moment/locale/id";
@@ -195,6 +196,9 @@ export async function DELETE(request: Request, context: { params: { id: string }
          },
       });
 
+      // create log user
+      const log = await createLogUser({ act: 'DELETE', desc: 'User mengeluarkan anggota divisi', table: 'division', data: idDivision })
+
       return NextResponse.json(
          {
             success: true,
@@ -245,6 +249,9 @@ export async function PUT(request: Request, context: { params: { id: string } })
             isAdmin: !isAdmin
          }
       });
+
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate status anggota divisi', table: 'division', data: idDivision })
 
       return NextResponse.json(
          {
@@ -299,6 +306,9 @@ export async function POST(request: Request, context: { params: { id: string } }
       const insertMember = await prisma.divisionMember.createMany({
          data: dataMember
       })
+
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User menambah anggota divisi', table: 'division', data: idDivision })
 
       return NextResponse.json({ success: true, message: "Berhasil menambahkan anggota divisi" }, { status: 200 });
    } catch (error) {

@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
@@ -103,6 +104,9 @@ export async function PUT(request: Request, context: { params: { id: string } })
             desc: desc
          },
       });
+
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data divisi', table: 'division', data: id })
 
       return NextResponse.json(
          {

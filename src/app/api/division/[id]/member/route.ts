@@ -1,11 +1,10 @@
-// GET MEMBER BY ID
-
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
 
+// GET MEMBER BY ID
 export async function GET(request: Request, context: { params: { id: string } }) {
     try {
         const { id } = context.params;
