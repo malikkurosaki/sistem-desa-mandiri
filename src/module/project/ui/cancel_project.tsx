@@ -33,7 +33,7 @@ export default function CancelProject() {
         toast.error(res.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal membatalkan Kegiatan, coba lagi nanti")
     }
   }

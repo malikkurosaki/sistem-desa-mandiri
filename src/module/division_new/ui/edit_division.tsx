@@ -62,7 +62,7 @@ export default function EditDivision() {
       }
       setOpenModal(false)
     } catch (error) {
-      console.log(error)
+      console.error(error)
       setOpenModal(false)
       toast.error("Gagal mengedit divisi, coba lagi nanti");
     }

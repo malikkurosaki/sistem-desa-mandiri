@@ -48,7 +48,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
       }
       setLoading(false)
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
     } finally {
       setLoading(false)

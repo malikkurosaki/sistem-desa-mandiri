@@ -140,7 +140,6 @@ export async function PUT(request: Request, context: { params: { id: string } })
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
         const { id } = context.params;
-        console.log(id)
 
         const body = await request.formData()
         const file = body.get("file") as File

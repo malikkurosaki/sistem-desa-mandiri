@@ -70,7 +70,7 @@ export default function NavbarCreateDivisionCalender() {
         }
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       setModal(false)
       toast.error("Gagal menambahkan pengumuman, coba lagi nanti");
     } finally {

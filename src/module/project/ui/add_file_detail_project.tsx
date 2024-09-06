@@ -52,7 +52,7 @@ export default function AddFileDetailProject() {
             toast.error(res.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal menambahkan file, coba lagi nanti")
       }
    }
@@ -75,7 +75,7 @@ export default function AddFileDetailProject() {
             toast.error(response.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal menambahkan file, coba lagi nanti");
       }
    }

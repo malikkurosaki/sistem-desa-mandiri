@@ -84,7 +84,7 @@ export default function CreateTask() {
         toast.error(response.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal menambahkan tugas divisi, coba lagi nanti");
     }
   }

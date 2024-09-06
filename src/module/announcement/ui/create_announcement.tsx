@@ -55,7 +55,7 @@ export default function CreateAnnouncement() {
             toast.error(response.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal menambahkan pengumuman, coba lagi nanti");
       }
 

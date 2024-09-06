@@ -139,7 +139,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
             { status: 200 }
         );
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return NextResponse.json({ success: false, message: "Gagal mendapatkan pengumuman, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

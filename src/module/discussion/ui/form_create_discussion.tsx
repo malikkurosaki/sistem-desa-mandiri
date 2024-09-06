@@ -58,7 +58,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
             }
          }
       } catch (error) {
-         console.log(error);
+         console.error(error);
          toast.error("Gagal menambahkan diskusi, coba lagi nanti");
       } finally {
          setValModal(false)

@@ -110,7 +110,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
          }
          setModal(false);
       } catch (error) {
-         console.log(error);
+         console.error(error);
          setModal(false);
          toast.error("Edit jabatan gagal, coba lagi nanti");
          onUpdated(false);

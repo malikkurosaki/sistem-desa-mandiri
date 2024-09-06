@@ -61,7 +61,7 @@ export async function GET(request: Request, context: { params: { id: string } })
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: dataFix, }, { status: 200 });
 
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -112,7 +112,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
          { status: 200 }
       );
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengedit divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }

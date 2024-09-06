@@ -36,7 +36,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
       }
 
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Gagal menambahkan grup, coba lagi nanti");
     }
   }

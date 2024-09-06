@@ -55,7 +55,7 @@ export default function AddMemberDetailTask() {
 
          setLoading(false)
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal mendapatkan anggota, coba lagi nanti");
       } finally {
          setLoading(false)
@@ -115,7 +115,7 @@ export default function AddMemberDetailTask() {
             toast.error(res.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal menambahkan anggota, coba lagi nanti");
       }
    }

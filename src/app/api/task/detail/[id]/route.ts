@@ -76,7 +76,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
          { status: 200 }
       );
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal menghapus tugas divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -155,7 +155,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
          { status: 200 }
       );
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengupdate status detail tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -186,7 +186,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 
    }
    catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mendapatkan detail tugas divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -239,7 +239,7 @@ export async function POST(request: Request, context: { params: { id: string } }
          { status: 200 }
       );
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengedit detail tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }

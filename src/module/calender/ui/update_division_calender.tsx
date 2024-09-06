@@ -40,7 +40,7 @@ export default function UpdateDivisionCalender() {
       setDataCalender(response.data.calender)
       memberUser.set(response.data.member)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     } finally {
       setLoading(false)
     }
@@ -76,7 +76,7 @@ export default function UpdateDivisionCalender() {
       }
       setModal(false)
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Terjadi kesalahan! Silahkan coba kembali");
       setModal(false)
     } finally {

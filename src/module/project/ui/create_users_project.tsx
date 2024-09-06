@@ -1,11 +1,11 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
-import { Avatar, Box, Button, Center, Input, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Button, Center, Input, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { HiChevronLeft, HiMagnifyingGlass } from 'react-icons/hi2';
 import { funGetAllmember, TypeUser } from '@/module/user';
 import { funGetUserByCookies } from '@/module/auth';
 import toast from 'react-hot-toast';
@@ -62,7 +62,13 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
 
   return (
     <Box>
-      <LayoutNavbarNew title="Pilih Anggota" menu />
+      <LayoutNavbarNew state={
+        <Box>
+          <ActionIcon variant="light" onClick={() => { onClose(true) }} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+            <HiChevronLeft size={20} color='white' />
+          </ActionIcon>
+        </Box>
+      } title="Pilih Anggota" menu />
       <Box p={20}>
         <Stack>
           <TextInput
@@ -128,22 +134,22 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
           </Box>
         </Stack>
       </Box>
-        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-            maxWidth: rem(550),
-            zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
-         }}>
-          <Button
-            color="white"
-            bg={WARNA.biruTua}
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => { onSubmit() }}
-          >
-            Simpan
-          </Button>
-        </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          color="white"
+          bg={WARNA.biruTua}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => { onSubmit() }}
+        >
+          Simpan
+        </Button>
+      </Box>
     </Box>
   );
 }

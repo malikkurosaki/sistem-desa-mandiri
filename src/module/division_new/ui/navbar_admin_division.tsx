@@ -33,7 +33,7 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
       }
 
     } catch (error) {
-      console.log(error);
+      console.error(error);
       onSuccess(false)
       toast.error("Gagal menambahkan divisi, coba lagi nanti");
     }

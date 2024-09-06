@@ -183,7 +183,11 @@ export default function ListProject() {
                           <Avatar>
                             <MdAccountCircle size={32} color={WARNA.biruTua} />
                           </Avatar>
-                          <Avatar>+{v.member - 1}</Avatar>
+                          <Avatar>
+                            {
+                              v.member > 0 ? '+' + (v.member - 1) : "0"
+                            }
+                          </Avatar>
                         </Avatar.Group>
                       </Group>
                     </Box>
