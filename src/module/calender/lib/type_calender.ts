@@ -94,3 +94,8 @@ export interface IDetailByIdCalender {
     linkMeet?: string
     repeatEventTyper?: string
 }
+
+export interface IFormMemberCalenderNew {
+    idUser: string
+    name: string
+}

@@ -1,4 +1,4 @@
-import { IEditCalender, IFormCreateCalender } from "./type_calender";
+import { IEditCalender, IFormCreateCalender, IFormMemberCalenderNew } from "./type_calender";
 
 export const funGetAllCalender = async (path?: string) => {
     const response = await fetch(`/api/calender${(path) ? path : ''}`, { next: { tags: ['calender'] } });
@@ -48,3 +48,14 @@ export const funGetIndicatorCalender = async (path?: string) => {
     const response = await fetch(`/api/calender/indicator${(path) ? path : ''}`, { next: { tags: ['hostory'] } });
     return await response.json().catch(() => null);
 }
+
+export const funAddMemberCalender = async (path: string, data: IFormMemberCalenderNew) => {
+    const response = await fetch(`/api/calender/${path}/member`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+    return await response.json().catch(() => null);
+};

@@ -193,131 +193,96 @@ export default function DetailEventDivision() {
             </Stack>
           </Box>
         }
-        {/* {loading ?
-          <Box pt={20}>
-            <Box
-              style={{
-                border: `1px solid ${"#C7D6E8"}`,
-                borderRadius: 10,
-              }}
-              px={20}
-              pb={20}
-            >
-              {Array(4)
-                .fill(null)
-                .map((_, i) => (
-                  <Box
-                    key={i}
-                  >
-                    <SkeletonSingle />
-                  </Box>
-                ))}
-            </Box>
-          </Box>
-          :
-          <Box pt={20}>
-            <Group justify='space-between'>
-              <Text fw={"bold"}>Total Anggota</Text>
-              <Text>{isLengthMember} Anggota</Text>
-            </Group>
-            <Box mb={20}>
+
+        {
+          loading ?
+            <Box pt={20}>
               <Box
                 style={{
                   border: `1px solid ${"#C7D6E8"}`,
                   borderRadius: 10,
                 }}
                 px={20}
-                pt={20}
+                pb={20}
               >
-                {isLengthMember == 0 ? (
-                  <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh' }}>
-                    <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
-                  </Box>
-                ) :
-                  <Box>
-                    {isDataAnggota.map((v, i) => {
-                      return (
-                        <Box my={10} key={i}>
-                          <Grid align='center' gutter={"lg"}>
-                            <Grid.Col span={{
-                              base: 3,
-                              xl: 2
-                            }}>
-                              <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                            </Grid.Col>
-                            <Grid.Col span={{
-                              base: 9,
-                              xl: 10
-                            }}>
-                              <Flex justify='space-between' align={"center"}>
-                                <Flex direction={'column'} align="flex-start" justify="flex-start">
-                                  <Text lineClamp={1}>{v.name}</Text>
-                                  <Text c={"#5A687D"} fz={14} lineClamp={1}>
-                                    {v.email}
-                                  </Text>
-                                </Flex>
-                              </Flex>
-                            </Grid.Col>
-                          </Grid>
-                          <Box mt={10}>
-                            <Divider size={"xs"} />
-                          </Box>
-                        </Box>
-                      );
-                    })}
-                  </Box>
-                }
+                {Array(4)
+                  .fill(null)
+                  .map((_, i) => (
+                    <Box
+                      key={i}
+                    >
+                      <SkeletonSingle />
+                    </Box>
+                  ))}
               </Box>
             </Box>
-          </Box>
-        } */}
+            :
 
-        <Box pt={20}>
-          <Group justify='space-between'>
-            <Text fw={"bold"}>Total Anggota</Text>
-            <Text>{isLengthMember} Anggota</Text>
-          </Group>
-          <Box mb={20}>
-            <Box
-              style={{
-                border: `1px solid ${"#C7D6E8"}`,
-                borderRadius: 10,
-              }}
-              px={20}
-              pt={20}
-            >
-              <Box onClick={() => setOpenDrawerUser(true)}>
-                <Box my={10}>
-                  <Grid align='center' gutter={"lg"}>
-                    <Grid.Col span={{
-                      base: 3,
-                      xl: 2
-                    }}>
-                      <Avatar src={''} alt="it's me" size="lg" />
-                    </Grid.Col>
-                    <Grid.Col span={{
-                      base: 9,
-                      xl: 10
-                    }}>
-                      <Flex justify='space-between' align={"center"}>
-                        <Flex direction={'column'} align="flex-start" justify="flex-start">
-                          <Text lineClamp={1}>Nama</Text>
-                          <Text c={"#5A687D"} fz={14} lineClamp={1}>
-                            email.com
-                          </Text>
-                        </Flex>
-                      </Flex>
-                    </Grid.Col>
-                  </Grid>
-                  <Box mt={10}>
-                    <Divider size={"xs"} />
-                  </Box>
+            <Box pt={20}>
+              <Group justify='space-between'>
+                <Text fw={"bold"}>Total Anggota</Text>
+                <Text>{isLengthMember} Anggota</Text>
+              </Group>
+              <Box mb={20}>
+                <Box
+                  style={{
+                    border: `1px solid ${"#C7D6E8"}`,
+                    borderRadius: 10,
+                  }}
+                  px={20}
+                  pt={20}
+                >
+                  {
+                    isLengthMember == 0 ? (
+                      <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh' }}>
+                        <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
+                      </Box>
+                    ) :
+                      <Box>
+                        {
+                          isDataAnggota.map((v, i) => {
+                            return (
+                              <Box onClick={() => setOpenDrawerUser(true)} key={i}>
+                                <Box my={10}>
+                                  <Grid align='center' gutter={"lg"}>
+                                    <Grid.Col span={{
+                                      base: 3,
+                                      xl: 2
+                                    }}>
+                                      <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                                    </Grid.Col>
+                                    <Grid.Col span={{
+                                      base: 9,
+                                      xl: 10
+                                    }}>
+                                      <Flex justify='space-between' align={"center"}>
+                                        <Flex direction={'column'} align="flex-start" justify="flex-start">
+                                          <Text lineClamp={1}>{v.name}</Text>
+                                          <Text c={"#5A687D"} fz={14} lineClamp={1}>
+                                            {v.email}
+                                          </Text>
+                                        </Flex>
+                                      </Flex>
+                                    </Grid.Col>
+                                  </Grid>
+                                  <Box mt={10}>
+                                    <Divider size={"xs"} />
+                                  </Box>
+                                </Box>
+                              </Box>
+                            )
+                          })
+                        }
+                      </Box>
+                  }
                 </Box>
               </Box>
             </Box>
-          </Box>
-        </Box>
+        }
       </Box>
+
+
+
       <LayoutDrawer opened={openDrawerUser} title={<Text lineClamp={1}>Menu</Text>} onClose={() => setOpenDrawerUser(false)}>
         <Box>
           <Stack pt={10}>

@@ -1,9 +1,7 @@
 "use client"
 import React, { useState } from 'react';
-import { globalCalender } from '../lib/val_calender';
 import { useParams, useRouter } from 'next/navigation';
-import { funGetDivisionById, funGetSearchMemberDivision, IDataMemberDivision } from '@/module/division_new';
-import { useHookstate } from '@hookstate/core';
+import { funGetSearchMemberDivision, IDataMemberDivision } from '@/module/division_new';
 import toast from 'react-hot-toast';
 import { useShallowEffect } from '@mantine/hooks';
 import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
@@ -12,13 +10,15 @@ import { FaCheck } from 'react-icons/fa6';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
 import { Carousel } from '@mantine/carousel';
+import { funAddMemberCalender, funGetOneCalender } from '../lib/api_calender';
+import { IDataDetailByIdMember } from '../lib/type_calender';
 
 export default function CreateUserDetailCalender() {
   const router = useRouter()
-  const param = useParams<{ id: string }>()
+  const param = useParams<{ id: string, detail: string }>()
   const [selectedFiles, setSelectedFiles] = useState<any>([])
   const [isData, setData] = useState<IDataMemberDivision[]>([])
-  const member = useHookstate(globalCalender)
+  const [isDataAnggota, setDataAnggota] = useState<IDataDetailByIdMember[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const [loading, setLoading] = useState(true)
   const [onClickSearch, setOnClickSearch] = useState(false)
@@ -28,11 +28,10 @@ export default function CreateUserDetailCalender() {
     try {
       setLoading(true)
       const response = await funGetSearchMemberDivision("?search=", param.id)
+      const res = await funGetOneCalender(param.detail)
       if (response.success) {
+        setDataAnggota(res.data.member)
         setData(response.data)
-        if (member.length > 0) {
-          setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
-        }
         setLoading(false)
       } else {
         toast.error(response.message)
@@ -79,12 +78,23 @@ export default function CreateUserDetailCalender() {
   };
 
 
-  function onSubmit() {
-    if (selectedFiles.length == 0) {
-      return toast.error("Error! silahkan pilih anggota")
+  async function onSubmit() {
+    try {
+      if (selectedFiles.length == 0) {
+        return toast.error("Error! silahkan pilih anggota")
+      }
+
+      const res = await funAddMemberCalender(param.detail, selectedFiles)
+      if (res.success) {
+        toast.success(res.message)
+        router.push('./')
+      } else {
+        toast.error(res.message)
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal menambahkan anggota, coba lagi nanti");
     }
-    member.set(selectedFiles)
-    // onClose(true)
   }
 
   const handleSearchClick = () => {
@@ -161,8 +171,8 @@ export default function CreateUserDetailCalender() {
         )
         : null
       }
-            {/* Close User */}
-            <Box pos={'fixed'} top={80} pl={rem(20)} pr={rem(20)} pt={rem(20)} pb={rem(5)} w={"100%"} style={{
+      {/* Close User */}
+      <Box pos={'fixed'} top={80} pl={rem(20)} pr={rem(20)} pt={rem(20)} pb={rem(5)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 100,
         backgroundColor: `${WARNA.bgWhite}`,
@@ -220,8 +230,9 @@ export default function CreateUserDetailCalender() {
           <Box mt={20} mb={100}>
             {isData.map((v, i) => {
               const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
+              const found = isDataAnggota.some((i: any) => i.idUser == v.idUser)
               return (
-                <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
+                <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
                   <Grid align='center' gutter={{
                     base: 60,
                     xl: "xs"
@@ -233,6 +244,7 @@ export default function CreateUserDetailCalender() {
                       <Flex justify='space-between' align={"center"}>
                         <Flex direction={'column'} align="flex-start" justify="flex-start">
                           <Text lineClamp={1}>{v.name}</Text>
+                          <Text c={"dimmed"} lineClamp={1}>{(found) ? "sudah menjadi anggota" : ""}</Text>
                         </Flex>
                         {isSelected ? <FaCheck /> : null}
                       </Flex>
