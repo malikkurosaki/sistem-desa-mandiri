@@ -35,7 +35,7 @@ export default function DrawerShareDocument({ data }: { data: IShareDivision[]})
             toast.error(respon.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal membagikan item, coba lagi nanti");
       }
    }

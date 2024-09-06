@@ -96,7 +96,7 @@ export default function EditAnnouncement() {
             toast.error(response.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal mengedit pengumuman, coba lagi nanti");
       }
 

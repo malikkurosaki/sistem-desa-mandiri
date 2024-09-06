@@ -26,7 +26,7 @@ export default function HistoryDivisionCalender() {
       setData(response.data)
       setLoading(false)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     } finally {
       setLoading(false)
     }

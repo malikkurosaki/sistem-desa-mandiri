@@ -33,7 +33,7 @@ export default function DateEventDivision() {
       }
       setLoading(false)
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal mendapatkan list acara")
     } finally {
       setLoading(false)
@@ -50,7 +50,7 @@ export default function DateEventDivision() {
         toast.error(response.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal mendapatkan list acara")
     }
   }
