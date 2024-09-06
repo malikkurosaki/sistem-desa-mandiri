@@ -30,7 +30,7 @@ export default function ListDiscussion({ id }: { id: string }) {
          }
          setLoading(false)
       } catch (error) {
-         console.log(error)
+         console.error(error)
       } finally {
          setLoading(false)
       }

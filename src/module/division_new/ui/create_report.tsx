@@ -52,7 +52,7 @@ export default function CreateReport() {
         toast.error(res.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal mendapatkan data, coba lagi nanti");
     } finally {
       setLoading(false)

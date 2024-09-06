@@ -30,7 +30,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
          setData(response.data)
          setIsLoad(false)
       } catch (error) {
-         console.log(error)
+         console.error(error)
       } finally {
          setIsLoad(false)
       }
@@ -57,7 +57,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
             toast.error(response.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
       }
    }
 

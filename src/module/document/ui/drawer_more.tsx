@@ -27,7 +27,7 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
         toast.error(res.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal memindahkan item, coba lagi nanti")
     }
     setIsCut(false)
@@ -44,7 +44,7 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
         toast.error(res.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal memindahkan item, coba lagi nanti")
     }
     setIsCopy(false)

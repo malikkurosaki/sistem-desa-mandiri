@@ -60,7 +60,7 @@ export default function AddDetailTask() {
             toast.error(res.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal menambahkan tugas, coba lagi nanti")
       }
    }

@@ -31,7 +31,7 @@ export default function DrawerDetailEvent() {
       }
       setModal(false)
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setModal(false)
       toast.error("Gagal hapus calender, coba lagi nanti");
     }

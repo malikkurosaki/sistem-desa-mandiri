@@ -26,7 +26,7 @@ export default function FormEditDiscussion() {
          const response = await funGetDiscussionById(param.detail)
          setDataOne(response.data.desc)
       } catch (error) {
-         console.log(error);
+         console.error(error);
          toast.error("Gagal menampilkan discussion, coba lagi nanti");
       } finally {
          setLoading(false)
@@ -49,7 +49,7 @@ export default function FormEditDiscussion() {
          }
          setValModal(false)
       } catch (error) {
-         console.log(error);
+         console.error(error);
          setValModal(false)
          toast.error("Gagal menambahkan diskusi, coba lagi nanti");
       } finally {

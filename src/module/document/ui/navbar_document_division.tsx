@@ -129,7 +129,7 @@ export default function NavbarDocumentDivision() {
           toast.error(respon.message)
         }
       } catch (error) {
-        console.log(error)
+        console.error(error)
         toast.error("Gagal menghapus item, coba lagi nanti")
       }
 
@@ -151,7 +151,7 @@ export default function NavbarDocumentDivision() {
         toast.error(res.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal mengganti nama item, coba lagi nanti")
     }
 

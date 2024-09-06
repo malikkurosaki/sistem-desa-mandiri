@@ -345,7 +345,7 @@ export async function GET(request: Request) {
 
    }
    catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mendapatkan data, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }

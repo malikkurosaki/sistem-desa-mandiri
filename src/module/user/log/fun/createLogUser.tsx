@@ -25,7 +25,7 @@ export default async function createLogUser({ act, desc, table, data }: { act: s
       return { success: true, message: "Success" }
 
    } catch (error) {
-      console.log(error)
+      console.error(error)
       return { success: false, message: "Internal Server Error" }
    }
 }

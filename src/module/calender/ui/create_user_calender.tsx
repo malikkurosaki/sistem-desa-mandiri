@@ -38,7 +38,7 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
       }
 
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
     } finally {
       setLoading(false)

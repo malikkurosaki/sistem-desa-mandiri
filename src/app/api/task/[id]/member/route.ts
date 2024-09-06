@@ -52,7 +52,7 @@ export async function POST(request: Request, context: { params: { id: string } }
          { status: 200 }
       );
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal menambah anggota tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -85,9 +85,6 @@ export async function DELETE(request: Request, context: { params: { id: string }
          );
       }
 
-      console.log(id, idUser)
-
-
       const del = await prisma.divisionProjectMember.deleteMany({
          where: {
             idUser: idUser,
@@ -104,7 +101,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
          { status: 200 }
       );
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }

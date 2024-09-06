@@ -35,7 +35,7 @@ export default function DetailEventDivision() {
       setLengthMember(response.data.total)
       setLoading(false)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     } finally {
       setLoading(false)
     }

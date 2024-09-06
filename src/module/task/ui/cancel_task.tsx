@@ -40,7 +40,7 @@ export default function CancelTask() {
             toast.error(res.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal membatalkan tugas, coba lagi nanti")
       }
    }

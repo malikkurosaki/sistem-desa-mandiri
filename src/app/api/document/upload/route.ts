@@ -94,7 +94,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({ success: true, message: "Berhasil upload file" }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal upload file, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };

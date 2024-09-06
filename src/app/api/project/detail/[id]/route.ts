@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import moment from "moment";
 import { NextResponse } from "next/server";
 
@@ -24,7 +25,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Hapus project gagal, data tidak ditemukan",
+                    message: "Hapus tahapan kegiatan gagal, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -67,18 +68,21 @@ export async function DELETE(request: Request, context: { params: { id: string }
             }
         })
 
+        // create log user
+        const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus tahapan kegiatan', table: 'projectTask', data: String(id) })
+
 
         return NextResponse.json(
             {
                 success: true,
-                message: "Project berhasil dihapus",
+                message: "Tahapan kegiatan berhasil dihapus",
                 data,
             },
             { status: 200 }
         );
     } catch (error) {
-        console.log(error);
-        return NextResponse.json({ success: false, message: "Gagal menghapus project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        console.error(error);
+        return NextResponse.json({ success: false, message: "Gagal menghapus tahapan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -103,7 +107,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
         if (data == 0) {
             return NextResponse.json(
                 {
-                    success: false, message: "Gagal mendapatkan project, data tidak ditemukan",
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -148,12 +152,14 @@ export async function PUT(request: Request, context: { params: { id: string } })
             }
         })
 
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate status tahapan kegiatan', table: 'projectTask', data: String(id) })
 
-        return NextResponse.json({ success: true, message: "Status detail Project berhasil diupdate", data }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Status tahapan kegiatan berhasil diupdate", data }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal membatalkan project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate status tahapan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -202,6 +208,21 @@ export async function POST(request: Request, context: { params: { id: string } }
         const { id } = context.params;
         const { name, dateStart, dateEnd } = (await request.json());
 
+        const dataTask = await prisma.projectTask.count({
+            where: {
+                id
+            }
+        })
+
+        if (dataTask == 0) {
+            return NextResponse.json(
+                {
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
+                },
+                { status: 404 }
+            );
+        }
+
         const data = await prisma.projectTask.update({
             where: {
                 id
@@ -213,10 +234,13 @@ export async function POST(request: Request, context: { params: { id: string } }
             }
         })
 
-        return NextResponse.json({ success: true, message: "Detail project berhasil diupdate", data }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate tahapan kegiatan', table: 'projectTask', data: String(id) })
+
+        return NextResponse.json({ success: true, message: "Detail tahapan kegiatan berhasil diupdate", data }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal membatalkan project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate detail tahapan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

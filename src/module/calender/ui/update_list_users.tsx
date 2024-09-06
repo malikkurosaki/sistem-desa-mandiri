@@ -39,7 +39,7 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
         toast.error(response.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
     } finally {
       setLoading(false)

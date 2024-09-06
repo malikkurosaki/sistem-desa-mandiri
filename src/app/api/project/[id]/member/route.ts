@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
@@ -24,7 +25,7 @@ export async function POST(request: Request, context: { params: { id: string } }
         if (data == 0) {
             return NextResponse.json(
                 {
-                    success: false, message: "Gagal mendapatkan project, data tidak ditemukan",
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -42,11 +43,13 @@ export async function POST(request: Request, context: { params: { id: string } }
             })
         }
 
-        return NextResponse.json({ success: true, message: "Berhasil menambahkan anggota project" }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'CREATE', desc: 'User menambah anggota kegiatan', table: 'project', data: String(id) })
+        return NextResponse.json({ success: true, message: "Berhasil menambahkan anggota kegiatan" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal menambah anggota project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal menambah anggota kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -85,11 +88,14 @@ export async function DELETE(request: Request, context: { params: { id: string }
             }
         })
 
-        return NextResponse.json({ success: true, message: "Berhasil mengeluarkan anggota project" }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'DELETE', desc: 'User mengeluarkan anggota kegiatan', table: 'project', data: String(id) })
+
+        return NextResponse.json({ success: true, message: "Berhasil mengeluarkan anggota kegiatan" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 

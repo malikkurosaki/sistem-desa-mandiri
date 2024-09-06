@@ -215,7 +215,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: formatData, jalur }, { status: 200 });
 
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mendapatkan item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -285,7 +285,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({ success: true, message: "Berhasil membuat folder baru" }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal membuat folder, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
@@ -342,7 +342,7 @@ export async function PUT(request: Request) {
 
       return NextResponse.json({ success: true, message: "Berhasil mengubah nama item" }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengubah nama item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
@@ -373,7 +373,7 @@ export async function DELETE(request: Request) {
 
       return NextResponse.json({ success: true, message: "Berhasil menghapus item" }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal menghapus item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };

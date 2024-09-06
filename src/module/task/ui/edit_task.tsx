@@ -45,7 +45,7 @@ export default function EditTask() {
             toast.error(res.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal mengedit tugas, coba lagi nanti")
       }
    }

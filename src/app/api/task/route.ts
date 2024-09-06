@@ -75,7 +75,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: formatData, }, { status: 200 });
 
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -200,7 +200,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil membuat tugas divisi" }, { status: 200 });
 
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal membuat tugas divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }

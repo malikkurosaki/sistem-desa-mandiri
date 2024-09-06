@@ -38,7 +38,7 @@ export default function AddMemberDetailProject() {
       }
       setLoading(false)
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
     } finally {
       setLoading(false)
@@ -97,7 +97,7 @@ export default function AddMemberDetailProject() {
         toast.error(res.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal menambahkan anggota, coba lagi nanti");
     }
   }

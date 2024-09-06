@@ -76,7 +76,7 @@ export default function CreateAnggotaDivision() {
       setOpen(false)
     } catch (error) {
       setOpen(false)
-      console.log(error);
+      console.error(error);
       toast.error("Gagal menambahkan anggota divisi, coba lagi nanti");
 
     }

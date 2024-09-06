@@ -35,7 +35,7 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
          }
          setValModalStatus(false)
       } catch (error) {
-         console.log(error);
+         console.error(error);
          setValModalStatus(false)
          toast.error("Gagal menambahkan diskusi, coba lagi nanti");
       } finally {
@@ -58,7 +58,7 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
          }
          setValModal(false)
       } catch (error) {
-         console.log(error);
+         console.error(error);
          setValModal(false)
          toast.error("Gagal hapus diskusi, coba lagi nanti");
       } finally {
