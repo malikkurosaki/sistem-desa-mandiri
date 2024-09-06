@@ -14,7 +14,7 @@ import CreateAnggotaDivision from './ui/create_anggota_division';
 import EditDivision from './ui/edit_division';
 import CreateReport from './ui/create_report';
 import ReportDivisionId from './ui/report_division_id';
-import { funGetDivisionById, funGetListDivisionByIdDivision } from './lib/api_division';
+import { funGetDivisionById, funGetListDivisionByIdDivision, funGetSearchMemberDivision } from './lib/api_division';
 
 export { CreateUsers };
 export { CreateAdminDivision };
@@ -34,3 +34,4 @@ export { CreateReport }
 export { ReportDivisionId }
 export { funGetDivisionById }
 export { funGetListDivisionByIdDivision }
+export { funGetSearchMemberDivision }

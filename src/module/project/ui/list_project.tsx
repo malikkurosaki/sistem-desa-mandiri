@@ -1,6 +1,6 @@
 "use client"
 import { globalRole, WARNA } from '@/module/_global';
-import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Text, TextInput, Title } from '@mantine/core';
+import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
@@ -12,6 +12,7 @@ import { useShallowEffect } from '@mantine/hooks';
 import { IDataProject } from '../lib/type_project';
 import { funGetAllGroup, IDataGroup } from '@/module/group';
 import { useHookstate } from '@hookstate/core';
+import _ from 'lodash';
 
 export default function ListProject() {
   const [isList, setIsList] = useState(false)
@@ -85,12 +86,18 @@ export default function ListProject() {
       </Grid>
       <Box pt={20}>
         {roleLogin.get() == 'supadmin' && <Text>Filter by: {nameGroup}</Text>}
-        <Box bg={"#DCEED8"} p={10} style={{ borderRadius: 10 }}>
-          <Text fw={'bold'} c={WARNA.biruTua}>Total Kegiatan</Text>
-          <Flex justify={'center'} align={'center'} h={'100%'}>
-            <Text fz={40} fw={'bold'} c={WARNA.biruTua}>{isData.length}</Text>
-          </Flex>
-        </Box>
+        {loading ?
+          <Box>
+            <Skeleton width={"100%"} height={100} radius={"md"} />
+          </Box>
+          :
+          <Box bg={"#DCEED8"} p={10} style={{ borderRadius: 10 }}>
+            <Text fw={'bold'} c={WARNA.biruTua}>Total Kegiatan</Text>
+            <Flex justify={'center'} align={'center'} h={'100%'}>
+              <Text fz={40} fw={'bold'} c={WARNA.biruTua}>{isData.length}</Text>
+            </Flex>
+          </Box>
+        }
         {isList ? (
           <Box pt={20}>
             {isData.map((v, i) => {
@@ -152,45 +159,61 @@ export default function ListProject() {
           </Box>
         ) : (
           <Box pt={20}>
-            {isData.map((v, i) => {
-              return (
-                <Box key={i} mb={20}>
-                  <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/project/${v.id}`)}>
-                    <Card.Section>
-                      <Box h={120} bg={WARNA.biruTua}>
-                        <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
-                          <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.title}</Title>
-                        </Flex>
-                      </Box>
-                    </Card.Section>
-                    <Box pt={10}>
-                      <Text>{v.desc}</Text>
-                      <Group align='center' pt={10} justify='space-between'>
-                        <Badge color={
-                          v.status === 0 ? '#1372C4' :
-                            v.status === 1 ? '#C5771A' :
-                              v.status === 2 ? '#0B6025' :
-                                v.status === 3 ? '#BB1F1F' :
-                                  ""
-                        }>{
-                            v.status === 0 ? 'Segera' :
-                              v.status === 1 ? 'Dikerjakan' :
-                                v.status === 2 ? 'Selesai' :
-                                  v.status === 3 ? 'Dibatalkan' :
-                                    ""
-                          }</Badge>
-                        <Avatar.Group>
-                          <Avatar>
-                            <MdAccountCircle size={32} color={WARNA.biruTua} />
-                          </Avatar>
-                          <Avatar>+{v.member - 1}</Avatar>
-                        </Avatar.Group>
-                      </Group>
-                    </Box>
-                  </Card>
+            {loading ?
+              Array(3)
+                .fill(null)
+                .map((_, i) => (
+                  <Box key={i} mb={20}>
+                    <Skeleton width={"100%"} height={200} radius={"md"} />
+                  </Box>
+                ))
+              :
+              _.isEmpty(isData)
+                ?
+                <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                  <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Kegiatan</Text>
                 </Box>
-              );
-            })}
+                :
+                isData.map((v, i) => {
+                  return (
+                    <Box key={i} mb={20}>
+                      <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/project/${v.id}`)}>
+                        <Card.Section>
+                          <Box h={120} bg={WARNA.biruTua}>
+                            <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
+                              <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.title}</Title>
+                            </Flex>
+                          </Box>
+                        </Card.Section>
+                        <Box pt={10}>
+                          <Text>{v.desc}</Text>
+                          <Group align='center' pt={10} justify='space-between'>
+                            <Badge color={
+                              v.status === 0 ? '#1372C4' :
+                                v.status === 1 ? '#C5771A' :
+                                  v.status === 2 ? '#0B6025' :
+                                    v.status === 3 ? '#BB1F1F' :
+                                      ""
+                            }>{
+                                v.status === 0 ? 'Segera' :
+                                  v.status === 1 ? 'Dikerjakan' :
+                                    v.status === 2 ? 'Selesai' :
+                                      v.status === 3 ? 'Dibatalkan' :
+                                        ""
+                              }</Badge>
+                            <Avatar.Group>
+                              <Avatar>
+                                <MdAccountCircle size={32} color={WARNA.biruTua} />
+                              </Avatar>
+                              <Avatar>+{v.member - 1}</Avatar>
+                            </Avatar.Group>
+                          </Group>
+                        </Box>
+                      </Card>
+                    </Box>
+                  );
+                })
+            }
           </Box>
         )}
       </Box>
