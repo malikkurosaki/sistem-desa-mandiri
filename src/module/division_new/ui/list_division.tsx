@@ -1,17 +1,17 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
+import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
-import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiMiniUserGroup, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
+import { HiMagnifyingGlass, HiMiniUserGroup, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
 import { MdAccountCircle } from 'react-icons/md';
 import DrawerDivision from './drawer_division';
 import { useShallowEffect } from '@mantine/hooks';
 import { IDataDivison } from '../lib/type_division';
 import { funGetAllDivision } from '../lib/api_division';
 import toast from 'react-hot-toast';
-import { funGetAllGroup, IDataGroup } from '@/module/group';
+import { useHookstate } from '@hookstate/core';
 
 export default function ListDivision() {
   const [isList, setIsList] = useState(false)
@@ -23,6 +23,8 @@ export default function ListDivision() {
   const searchParams = useSearchParams()
   const group = searchParams.get('group')
   const [loading, setLoading] = useState(true)
+  const [nameGroup, setNameGroup] = useState('')
+  const roleLogin = useHookstate(globalRole)
 
 
   const handleList = () => {
@@ -34,10 +36,10 @@ export default function ListDivision() {
       setData([]);
       setLoading(true);
       const response = await funGetAllDivision('?search=' + search + '&group=' + group)
-
       if (response.success) {
         setData(response.data)
         setJumlah(response.data.length)
+        setNameGroup(response.filter.name)
       } else {
         toast.error(response.message);
       }
@@ -59,38 +61,17 @@ export default function ListDivision() {
     fetchData(searchQuery)
   }, [searchQuery])
 
-  const [checked, setChecked] = useState<IDataGroup[]>([]);
-
-  const groupNameMap = (groupId: string) => {
-    const groupName = checked.find((group) => group.id === groupId)?.name;
-    return groupName || '-';
-  };
-
-  async function getAllGroupFilter() {
-    try {
-       const response = await funGetAllGroup('?active=true')
-       if (response.success) {
-          setChecked(response.data);
-       } else {
-          toast.error(response.message);
-       }
-    } catch (error) {
-       console.error(error);
-       toast.error("Gagal mendapatkan grup, coba lagi nanti");
-    }
-  }
-  
-  useShallowEffect(() => {
-    getAllGroupFilter();
-  }, []);
 
   return (
     <Box>
       <LayoutNavbarNew back='/home' title='Divisi'
-        menu={<ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
-          <HiMenu size={20} color='white' />
-        </ActionIcon>} />
-       
+        menu={
+          (roleLogin.get() != "user" && roleLogin.get() != "coadmin") &&
+          <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+            <HiMenu size={20} color='white' />
+          </ActionIcon>
+        } />
+
       <Box p={20}>
         <Grid justify='center' align='center'>
           <Grid.Col span={10}>
@@ -121,8 +102,7 @@ export default function ListDivision() {
           </Grid.Col>
         </Grid>
         <Box pt={20}>
-          {/* {group && <Text>Filter by: {group}</Text>} */}
-          {group && <Text>Filter by: {groupNameMap(group)}</Text>}
+          {roleLogin.get() == 'supadmin' && <Text>Filter by: {nameGroup}</Text>}
           {loading ?
             <>
               <Skeleton width={"100%"} height={100} radius={"md"} />
@@ -177,13 +157,13 @@ export default function ListDivision() {
                         base: 10,
                         xl: 11
                       }}>
-                      <Box>
+                        <Box>
                           <Box w={{
                             base: 280,
                             xl: 430
                           }}>
                             <Text truncate="end" pl={20}>
-                            {v.name}
+                              {v.name}
                             </Text>
                           </Box>
                         </Box>
@@ -224,7 +204,11 @@ export default function ListDivision() {
                             <Avatar>
                               <MdAccountCircle size={32} color={WARNA.biruTua} />
                             </Avatar>
-                            <Avatar>+{v.jumlah_member - 1}</Avatar>
+                            <Avatar>
+                              {
+                                (v.jumlah_member == 0) ? "0" : "+" + (v.jumlah_member - 1)
+                              }
+                            </Avatar>
                           </Avatar.Group>
                         </Group>
                       </Box>

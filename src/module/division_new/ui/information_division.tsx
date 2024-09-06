@@ -1,5 +1,5 @@
 "use client"
-import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
+import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Button, Divider, Flex, Grid, Group, Skeleton, Stack, Text } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
@@ -12,6 +12,8 @@ import { LuClipboardEdit } from 'react-icons/lu';
 import { funDeleteMemberDivision, funEditStatusAdminDivision, funGetDivisionById } from '../lib/api_division';
 import { IDataMemberDivision } from '../lib/type_division';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
+import { funGetUserByCookies } from '@/module/auth';
 
 
 export default function InformationDivision() {
@@ -26,15 +28,20 @@ export default function InformationDivision() {
   const [valChooseMemberStatus, setChooseMemberStatus] = useState<boolean>(false)
   const [valChooseMemberName, setChooseMemberName] = useState("")
   const [isOpenModal, setOpenModal] = useState(false)
+  const roleLogin = useHookstate(globalRole)
+  const [isAdmin, setAdmin] = useState(false)
 
   async function getOneData() {
     try {
       setLoading(true);
       const res = await funGetDivisionById(param.id);
+      const login = await funGetUserByCookies()
       if (res.success) {
         setName(res.data.division.name);
         setDeskripsi(res.data.division.desc);
         setMember(res.data.member)
+        const cek = res.data.member.some((i: any) => i.id == login.id && i.isAdmin == true)
+        setAdmin(cek)
       } else {
         toast.error(res.message);
       }
@@ -163,12 +170,15 @@ export default function InformationDivision() {
                   </Box>
                 </Group>
                 :
-                <Group align='center' onClick={() => router.push('/division/add-member/' + param.id)}>
-                  <Avatar size="lg">
-                    <AiOutlineUserAdd size={30} color={WARNA.biruTua} />
-                  </Avatar>
-                  <Text>Tambah Anggota</Text>
-                </Group>
+
+                ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
+                  <Group align='center' onClick={() => router.push('/division/add-member/' + param.id)}>
+                    <Avatar size="lg">
+                      <AiOutlineUserAdd size={30} color={WARNA.biruTua} />
+                    </Avatar>
+                    <Text>Tambah Anggota</Text>
+                  </Group>
+                  : <></>
               }
             </Box>
             <Box pt={10}>

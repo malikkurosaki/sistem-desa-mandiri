@@ -10,7 +10,6 @@ import { funGetAllProject } from '../lib/api_project';
 import toast from 'react-hot-toast';
 import { useShallowEffect } from '@mantine/hooks';
 import { IDataProject } from '../lib/type_project';
-import { funGetAllGroup, IDataGroup } from '@/module/group';
 import { useHookstate } from '@hookstate/core';
 import _ from 'lodash';
 
