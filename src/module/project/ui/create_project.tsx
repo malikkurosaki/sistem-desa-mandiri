@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
+import { globalRole, LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
 import { Avatar, Box, Button, Center, Divider, Flex, Grid, Group, rem, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useRef, useState } from "react";
@@ -29,7 +29,6 @@ export default function CreateProject() {
   const [openDrawerTask, setOpenDrawerTask] = useState(false)
   const [isModal, setModal] = useState(false)
   const [dataGroup, setDataGroup] = useState<IDataGroup[]>([]);
-  const [roleUser, setRoleUser] = useState<any>("")
   const [isChooseAnggota, setChooseAnggota] = useState(false)
   const member = useHookstate(globalMemberProject)
   const memberValue = member.get() as IFormMemberProject[]
@@ -40,6 +39,8 @@ export default function CreateProject() {
   const [listFile, setListFile] = useState<IListFileTaskProject[]>([])
   const [indexDelFile, setIndexDelFile] = useState<number>(0)
   const [indexDelTask, setIndexDelTask] = useState<number>(0)
+  const roleLogin = useHookstate(globalRole)
+
   const [body, setBody] = useState<any>({
     idGroup: "",
     title: "",
@@ -69,12 +70,15 @@ export default function CreateProject() {
       toast.error(loadGroup.message);
     }
 
-    const loadUser = await funGetUserByCookies();
-    setRoleUser(loadUser.idUserRole)
+    if (roleLogin.get() != "supadmin") {
+      const loadUser = await funGetUserByCookies();
+      setBody({ ...body, idGroup: loadUser.idGroup })
+    }
+
   }
 
   function onToChooseAnggota() {
-    if (roleUser == "supadmin" && body.idGroup == "")
+    if (roleLogin.get() == "supadmin" && body.idGroup == "")
       return toast.error("Error! grup harus diisi")
     setChooseAnggota(true)
   }
@@ -116,7 +120,7 @@ export default function CreateProject() {
         toast.error(response.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal menambahkan kegiatan, coba lagi nanti");
     }
   }
@@ -137,7 +141,7 @@ export default function CreateProject() {
       <Box p={20}>
         <Stack>
           {
-            (roleUser == "supadmin") && (
+            (roleLogin.get() == "supadmin") && (
               <Select
                 placeholder="Grup"
                 label="Grup"
@@ -206,7 +210,10 @@ export default function CreateProject() {
               border: `1px solid ${"#D6D8F6"}`,
               borderRadius: 10,
             }}
-            onClick={() => setOpenDrawer(true)}
+            onClick={() =>
+              // setOpenDrawer(true)
+              openRef.current?.()
+            }
           >
             <Text>Upload File</Text>
             <IoIosArrowDropright size={25} />
@@ -290,111 +297,127 @@ export default function CreateProject() {
                   >
                     {member.get().map((v: any, i: any) => {
                       return (
-                     <Box key={i}>
-                      <Grid align='center' mt={10}
-                        >
-                          <Grid.Col span={9}>
-                            <Group>
-                              <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                              <Box w={{
-                                base: 140,
-                                xl: 270
-                              }}>
-                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
-                                  {v.name}
-                                </Text>
-                              </Box>
-                            </Group>
-                          </Grid.Col>
-                          <Grid.Col span={3}>
-                            <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
-                            Anggota
-                            </Text>
-                          </Grid.Col>
-                        </Grid>
-                        <Box mt={10}>
-                          <Divider size={"xs"} />
+                        <Box key={i}>
+                          <Grid align='center' mt={10}
+                          >
+                            <Grid.Col span={9}>
+                              <Group>
+                                <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                                <Box w={{
+                                  base: 140,
+                                  xl: 270
+                                }}>
+                                  <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                                    {v.name}
+                                  </Text>
+                                </Box>
+                              </Group>
+                            </Grid.Col>
+                            <Grid.Col span={3}>
+                              <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
+                                Anggota
+                              </Text>
+                            </Grid.Col>
+                          </Grid>
+                          <Box mt={10}>
+                            <Divider size={"xs"} />
+                          </Box>
                         </Box>
-                     </Box>
-                    );
-                  })}
+                      );
+                    })}
+                  </Box>
                 </Box>
               </Box>
-                </Box>
-              </Box>
-        }
             </Box>
-
-      </Box>
-        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-          maxWidth: rem(550),
-          zIndex: 999,
-          backgroundColor: `${WARNA.bgWhite}`,
-        }}>
-          <Button
-            color="white"
-            bg={WARNA.biruTua}
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => {
-              if (
-                body.title !== "" &&
-                body.idGroup !== ""
-              ) {
-                setModal(true)
-              } else {
-                toast.error("Mohon lengkapi data terlebih dahulu");
-              }
-            }}>
-            Simpan
-          </Button>
+          }
         </Box>
 
+      </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          color="white"
+          bg={WARNA.biruTua}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => {
+            if (
+              body.title !== "" &&
+              body.idGroup !== ""
+            ) {
+              setModal(true)
+            } else {
+              toast.error("Mohon lengkapi data terlebih dahulu");
+            }
+          }}>
+          Simpan
+        </Button>
+      </Box>
+
+      <Dropzone
+        openRef={openRef}
+        onDrop={async (files) => {
+          if (!files || _.isEmpty(files))
+            return toast.error('Tidak ada file yang dipilih')
+          setFileForm([...fileForm, files[0]])
+          setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
+        }}
+        activateOnClick={false}
+        maxSize={3 * 1024 ** 2}
+        accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+        onReject={(files) => {
+          return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+        }}
+      ></Dropzone>
 
 
-        {/* Drawer pilih file */}
-        <LayoutDrawer
-          opened={openDrawer}
-          onClose={() => setOpenDrawer(false)}
-          title={"Pilih File"}
-        >
-          <Flex justify={"flex-start"} px={20}>
-            <Dropzone
-              openRef={openRef}
-              onDrop={async (files) => {
-                if (!files || _.isEmpty(files))
-                  return toast.error('Tidak ada file yang dipilih')
-                setFileForm([...fileForm, files[0]])
-                setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
-              }}
-              activateOnClick={false}
-              maxSize={3 * 1024 ** 2}
-              accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
-              onReject={(files) => {
-                return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
-              }}
-            >
-              <Box onClick={() => openRef.current?.()}>
-                <Box
-                  bg={"#DCEED8"}
-                  style={{
-                    border: `1px solid ${"#D6D8F6"}`,
-                    padding: 20,
-                    borderRadius: 10,
-                  }}
-                >
-                  <Center>
-                    <BsFiletypeCsv size={40} />
-                  </Center>
-                </Box>
-                <Text mt={10} ta={"center"}>
-                  Pilih file
-                </Text>
-                <Text ta={"center"}>diperangkat</Text>
+
+      {/* Drawer pilih file */}
+      {/* <LayoutDrawer
+        opened={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        title={"Pilih File"}
+      >
+        <Flex justify={"flex-start"} px={20}>
+          <Dropzone
+            openRef={openRef}
+            onDrop={async (files) => {
+              if (!files || _.isEmpty(files))
+                return toast.error('Tidak ada file yang dipilih')
+              setFileForm([...fileForm, files[0]])
+              setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
+            }}
+            activateOnClick={false}
+            maxSize={3 * 1024 ** 2}
+            accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+            onReject={(files) => {
+              return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+            }}
+          >
+            <Box onClick={() => openRef.current?.()}>
+              <Box
+                bg={"#DCEED8"}
+                style={{
+                  border: `1px solid ${"#D6D8F6"}`,
+                  padding: 20,
+                  borderRadius: 10,
+                }}
+              >
+                <Center>
+                  <BsFiletypeCsv size={40} />
+                </Center>
               </Box>
-            </Dropzone>
-            {/* <Box onClick={() => router.push("/project/create?page=file-save")}>
+              <Text mt={10} ta={"center"}>
+                Pilih file
+              </Text>
+              <Text ta={"center"}>diperangkat</Text>
+            </Box>
+          </Dropzone>
+          <Box onClick={() => router.push("/project/create?page=file-save")}>
             <Box
               bg={"#DCEED8"}
               style={{
@@ -411,62 +434,62 @@ export default function CreateProject() {
               Pilih file yang
             </Text>
             <Text ta={"center"}>sudah ada</Text>
-          </Box> */}
-          </Flex>
-        </LayoutDrawer>
+          </Box>
+        </Flex>
+      </LayoutDrawer> */}
 
 
 
-        {/* Drawer hapus file */}
-        <LayoutDrawer
-          opened={openDrawerFile}
-          onClose={() => setOpenDrawerFile(false)}
-          title={""}
-        >
-          <Stack pt={10}>
-            <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
-              <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteFile(indexDelFile)}>
-                <Box>
-                  <FaTrash size={30} color={WARNA.biruTua} />
-                </Box>
-                <Box>
-                  <Text c={WARNA.biruTua} ta='center'>Hapus File</Text>
-                </Box>
-              </Flex>
-            </SimpleGrid>
-          </Stack>
-        </LayoutDrawer>
+      {/* Drawer hapus file */}
+      <LayoutDrawer
+        opened={openDrawerFile}
+        onClose={() => setOpenDrawerFile(false)}
+        title={""}
+      >
+        <Stack pt={10}>
+          <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
+            <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteFile(indexDelFile)}>
+              <Box>
+                <FaTrash size={30} color={WARNA.biruTua} />
+              </Box>
+              <Box>
+                <Text c={WARNA.biruTua} ta='center'>Hapus File</Text>
+              </Box>
+            </Flex>
+          </SimpleGrid>
+        </Stack>
+      </LayoutDrawer>
 
 
-        {/* Drawer hapus tugas */}
-        <LayoutDrawer
-          opened={openDrawerTask}
-          onClose={() => setOpenDrawerTask(false)}
-          title={""}
-        >
-          <Stack pt={10}>
-            <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
-              <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteTask(indexDelTask)}>
-                <Box>
-                  <FaTrash size={30} color={WARNA.biruTua} />
-                </Box>
-                <Box>
-                  <Text c={WARNA.biruTua} ta='center'>Hapus Tugas</Text>
-                </Box>
-              </Flex>
-            </SimpleGrid>
-          </Stack>
-        </LayoutDrawer>
+      {/* Drawer hapus tugas */}
+      <LayoutDrawer
+        opened={openDrawerTask}
+        onClose={() => setOpenDrawerTask(false)}
+        title={""}
+      >
+        <Stack pt={10}>
+          <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
+            <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteTask(indexDelTask)}>
+              <Box>
+                <FaTrash size={30} color={WARNA.biruTua} />
+              </Box>
+              <Box>
+                <Text c={WARNA.biruTua} ta='center'>Hapus Tugas</Text>
+              </Box>
+            </Flex>
+          </SimpleGrid>
+        </Stack>
+      </LayoutDrawer>
 
 
-        <LayoutModal opened={isModal} onClose={() => setModal(false)}
-          description="Apakah Anda yakin ingin menambahkan data?"
-          onYes={(val) => {
-            if (val) {
-              onSubmit()
-            }
-            setModal(false)
-          }} />
-      </Box >
-      );
+      <LayoutModal opened={isModal} onClose={() => setModal(false)}
+        description="Apakah Anda yakin ingin menambahkan data?"
+        onYes={(val) => {
+          if (val) {
+            onSubmit()
+          }
+          setModal(false)
+        }} />
+    </Box >
+  );
 }

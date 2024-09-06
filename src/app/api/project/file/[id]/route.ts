@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import _ from "lodash";
+import { createLogUser } from "@/module/user";
 
 // HAPUS FILE PROJECT BUKAN PAKE ISACTIVE
 export async function DELETE(request: Request, context: { params: { id: string } }) {
@@ -44,6 +45,9 @@ export async function DELETE(request: Request, context: { params: { id: string }
          },
       });
 
+      // create log user
+      const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus file kegiatan', table: 'project', data: String(dataRelasi?.idProject) })
+
 
       return NextResponse.json(
          {
@@ -55,7 +59,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
       );
 
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal menghapus file, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -118,7 +122,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
       }
 
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Upload file gagal, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -191,11 +195,12 @@ export async function POST(request: Request, context: { params: { id: string } }
          }
       }
 
-
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User menambah file kegiatan', table: 'project', data: String(id) })
       return NextResponse.json({ success: true, message: "Berhasil mengupload file kegiatan" }, { status: 200 });
 
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal  mengupload file, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }

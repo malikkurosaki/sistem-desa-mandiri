@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
@@ -159,7 +160,7 @@ export async function POST(request: Request, context: { params: { id: string } }
         if (data == 0) {
             return NextResponse.json(
                 {
-                    success: false, message: "Gagal mendapatkan project, data tidak ditemukan",
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -171,14 +172,20 @@ export async function POST(request: Request, context: { params: { id: string } }
                 idProject: id,
                 dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
                 dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
+            },
+            select: {
+                id: true
             }
         })
 
-        return NextResponse.json({ success: true, message: "Detail project berhasil ditambahkan", data: dataCreate, }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data tahapan kegiatan', table: 'projectTask', data: String(dataCreate.id) })
+
+        return NextResponse.json({ success: true, message: "Detail tahapan kegiatan berhasil ditambahkan", data: dataCreate, }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal tambah detail project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal tambah tahapan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -218,11 +225,13 @@ export async function DELETE(request: Request, context: { params: { id: string }
             }
         })
 
-        return NextResponse.json({ success: true, message: "Project berhasil dibatalkan" }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User membatalkan data kegiatan', table: 'project', data: String(id) })
+        return NextResponse.json({ success: true, message: "Kegiatan berhasil dibatalkan" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal membatalkan project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membatalkan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -246,7 +255,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
         if (data == 0) {
             return NextResponse.json(
                 {
-                    success: false, message: "Gagal mendapatkan project, data tidak ditemukan",
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -261,10 +270,13 @@ export async function PUT(request: Request, context: { params: { id: string } })
             }
         })
 
-        return NextResponse.json({ success: true, message: "Project berhasil diubah" }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data kegiatan', table: 'project', data: String(id) })
+
+        return NextResponse.json({ success: true, message: "Kegiatan berhasil diupdate" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengubah project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

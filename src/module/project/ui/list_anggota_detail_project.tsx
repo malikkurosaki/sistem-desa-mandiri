@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, SkeletonSingle, WARNA } from '@/module/_global';
+import { globalRole, LayoutDrawer, SkeletonSingle, WARNA } from '@/module/_global';
 import { Avatar, Box, Flex, Grid, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import { funDeleteMemberProject, funGetOneProjectById } from '../lib/api_project';
@@ -10,6 +10,7 @@ import { IDataMemberProject } from '../lib/type_project';
 import { FaUser } from 'react-icons/fa6';
 import { IoIosCloseCircle } from 'react-icons/io';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
 
 
 export default function ListAnggotaDetailProject() {
@@ -20,6 +21,7 @@ export default function ListAnggotaDetailProject() {
   const [isOpenModal, setOpenModal] = useState(false)
   const [dataChoose, setDataChoose] = useState({ id: '', name: '' })
   const router = useRouter()
+  const roleLogin = useHookstate(globalRole)
 
   async function getOneData() {
     try {
@@ -93,7 +95,7 @@ export default function ListAnggotaDetailProject() {
                         <Grid align='center' mt={10}
                           onClick={() => {
                             setDataChoose({ id: v.idUser, name: v.name })
-                          setOpenDrawer(true)
+                            setOpenDrawer(true)
                           }}
                         >
                           <Grid.Col span={9}>
@@ -138,14 +140,17 @@ export default function ListAnggotaDetailProject() {
                 </Box>
               </Flex>
 
-              <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
-                <Box>
-                  <IoIosCloseCircle size={30} color={WARNA.biruTua} />
-                </Box>
-                <Box>
-                  <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
-                </Box>
-              </Flex>
+              {
+                (roleLogin.get() != "user" && roleLogin.get() != "coadmin") &&
+                <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
+                  <Box>
+                    <IoIosCloseCircle size={30} color={WARNA.biruTua} />
+                  </Box>
+                  <Box>
+                    <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
+                  </Box>
+                </Flex>
+              }
             </SimpleGrid>
           </Stack>
         </Box>
