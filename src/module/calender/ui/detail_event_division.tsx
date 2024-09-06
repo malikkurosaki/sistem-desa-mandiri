@@ -1,29 +1,34 @@
 'use client'
 import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, CopyButton, Divider, Flex, Grid, Group, Skeleton, Spoiler, Stack, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Avatar, Box, CopyButton, Divider, Flex, Grid, Group, SimpleGrid, Skeleton, Spoiler, Stack, Text, Tooltip } from '@mantine/core';
 import React, { useState } from 'react';
 import { BsCalendar2Event, BsCalendarDate } from 'react-icons/bs';
 import { MdEventNote, MdOutlineFormatListBulleted } from "react-icons/md";
 import { LuClock, LuCopy, LuLink } from "react-icons/lu";
-import { FaCheck } from 'react-icons/fa6';
+import { FaCheck, FaUser } from 'react-icons/fa6';
 import { TbCopy } from 'react-icons/tb';
 import { HiMenu } from 'react-icons/hi';
 import DrawerDetailEvent from './drawer_detail_event';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { funGetOneCalender } from '../lib/api_calender';
 import { useShallowEffect } from '@mantine/hooks';
 import moment from "moment";
 import "moment/locale/id";
 import { IDataDetailByIdCalender, IDataDetailByIdMember } from '../lib/type_calender';
 import SkeletonDetailEvent from './skeleton_detail_event';
+import { IoIosCloseCircle } from 'react-icons/io';
+import LayoutModal from '@/module/_global/layout/layout_modal';
 
 export default function DetailEventDivision() {
-  const [openDrawer, setOpenDrawer] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
   const [isDataCalender, setDataCalender] = useState<IDataDetailByIdCalender>()
   const [isDataAnggota, setDataAnggota] = useState<IDataDetailByIdMember[]>([])
   const [isLengthMember, setLengthMember] = useState()
   const [loading, setLoading] = useState(true)
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const [openDrawerUser, setOpenDrawerUser] = useState(false)
+  const [isOpenModal, setOpenModal] = useState(false)
+  const router = useRouter()
 
 
   const getData = async () => {
@@ -47,7 +52,7 @@ export default function DetailEventDivision() {
 
   return (
     <Box>
-      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Detail Event"
+      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Detail Kalender"
         menu={<ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
           <HiMenu size={20} color='white' />
         </ActionIcon>} />
@@ -188,7 +193,7 @@ export default function DetailEventDivision() {
             </Stack>
           </Box>
         }
-        {loading ?
+        {/* {loading ?
           <Box pt={20}>
             <Box
               style={{
@@ -265,8 +270,92 @@ export default function DetailEventDivision() {
               </Box>
             </Box>
           </Box>
-        }
+        } */}
+
+        <Box pt={20}>
+          <Group justify='space-between'>
+            <Text fw={"bold"}>Total Anggota</Text>
+            <Text>{isLengthMember} Anggota</Text>
+          </Group>
+          <Box mb={20}>
+            <Box
+              style={{
+                border: `1px solid ${"#C7D6E8"}`,
+                borderRadius: 10,
+              }}
+              px={20}
+              pt={20}
+            >
+              <Box onClick={() => setOpenDrawerUser(true)}>
+                <Box my={10}>
+                  <Grid align='center' gutter={"lg"}>
+                    <Grid.Col span={{
+                      base: 3,
+                      xl: 2
+                    }}>
+                      <Avatar src={''} alt="it's me" size="lg" />
+                    </Grid.Col>
+                    <Grid.Col span={{
+                      base: 9,
+                      xl: 10
+                    }}>
+                      <Flex justify='space-between' align={"center"}>
+                        <Flex direction={'column'} align="flex-start" justify="flex-start">
+                          <Text lineClamp={1}>Nama</Text>
+                          <Text c={"#5A687D"} fz={14} lineClamp={1}>
+                            email.com
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    </Grid.Col>
+                  </Grid>
+                  <Box mt={10}>
+                    <Divider size={"xs"} />
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       </Box>
+      <LayoutDrawer opened={openDrawerUser} title={<Text lineClamp={1}>Menu</Text>} onClose={() => setOpenDrawerUser(false)}>
+        <Box>
+          <Stack pt={10}>
+            <SimpleGrid
+              cols={{ base: 2, sm: 3, lg: 3 }}
+            >
+              <Flex
+                // onClick={() => { router.push('/member/' + ) }}
+                justify={'center'} align={'center'} direction={'column'} >
+                <Box>
+                  <FaUser size={30} color={WARNA.biruTua} />
+                </Box>
+                <Box>
+                  <Text c={WARNA.biruTua}>Lihat profil</Text>
+                </Box>
+              </Flex>
+
+              <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
+                <Box>
+                  <IoIosCloseCircle size={30} color={WARNA.biruTua} />
+                </Box>
+                <Box>
+                  <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
+                </Box>
+              </Flex>
+            </SimpleGrid>
+          </Stack>
+        </Box>
+      </LayoutDrawer>
+
+      <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+        description="Apakah Anda yakin ingin mengeluarkan anggota?"
+        onYes={(val) => {
+          if (val) {
+            // onSubmit()
+          }
+          setOpenModal(false)
+        }} />
       <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
         <DrawerDetailEvent />
       </LayoutDrawer>

@@ -9,6 +9,7 @@ import { AiOutlineFileSearch } from 'react-icons/ai';
 import { IoAddCircle } from 'react-icons/io5';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { funDeleteCalenderById } from '../lib/api_calender';
+import { FaUsers } from 'react-icons/fa6';
 
 export default function DrawerDetailEvent() {
   const router = useRouter()
@@ -56,7 +57,15 @@ export default function DrawerDetailEvent() {
               <MdEdit size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Edit</Text>
+              <Text c={WARNA.biruTua}>Edit Kalender</Text>
+            </Box>
+          </Flex>
+          <Flex onClick={() => router.push(`/division/${param.id}/calender/${param.detail}/add-member`)} justify={'center'} align={'center'} direction={'column'} >
+            <Box>
+              <FaUsers size={30} color={WARNA.biruTua} />
+            </Box>
+            <Box>
+              <Text c={WARNA.biruTua} ta={"center"}>Tambah Anggota</Text>
             </Box>
           </Flex>
         </SimpleGrid>

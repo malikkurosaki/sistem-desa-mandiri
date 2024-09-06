@@ -296,7 +296,7 @@ export default function UpdateDivisionCalender() {
                   }
                 }
               />
-              <Box mt={5} onClick={() => setOpenMember(true)}>
+              {/* <Box mt={5} onClick={() => setOpenMember(true)}>
                 <Group
                   justify="space-between"
                   p={10}
@@ -308,8 +308,8 @@ export default function UpdateDivisionCalender() {
                   <Text>Tambah Anggota</Text>
                   <IoIosArrowDropright size={25} />
                 </Group>
-              </Box>
-              <Box pt={30}>
+              </Box> */}
+              {/* <Box pt={30}>
                 <Group justify="space-between">
                   <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
                   <Text c={WARNA.biruTua}>Total {memberUser.length} Anggota</Text>
@@ -353,7 +353,7 @@ export default function UpdateDivisionCalender() {
                     </Box>
                   </Box>
                 </Box>
-              </Box>
+              </Box> */}
             </>
           }
         </Stack>
