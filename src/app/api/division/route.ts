@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
@@ -139,6 +140,9 @@ export async function POST(request: Request) {
       revalidatePath('/api/divisi/', "page")
       revalidatePath('/divisi', 'page')
       revalidateTag('divisi')
+
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data divisi', table: 'division', data: data.id })
 
       return NextResponse.json({ success: true, message: "Berhasil menambahkan divisi", data, }, { status: 200 });
    } catch (error) {
