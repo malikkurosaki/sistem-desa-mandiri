@@ -1,5 +1,6 @@
 export interface IDataCalender {
     id: string
+    idCalendar: string
     title: string
     desc: string
     status: number
@@ -23,6 +24,7 @@ export interface IHistoryCalender {
 
 export interface IDataDetailByIdCalender {
     id: string
+    idCalendar: string
     title: string
     desc: string
     timeStart: string
@@ -31,6 +33,7 @@ export interface IDataDetailByIdCalender {
     createdAt: string
     linkMeet: string
     repeatEventTyper: string
+    repeatValue: string
 }
 export interface IDataDetailByIdMember {
     id: string
@@ -49,6 +52,7 @@ export interface IFormCreateCalender {
     linkMeet: string
     repeatEventTyper: string
     desc: string,
+    repeatValue: string,
     member: IFormMemberCalender[]
 }
 
@@ -73,6 +77,7 @@ export interface IEditCalender {
     linkMeet?: string
     repeatEventTyper?: string
     desc?: string,
+    repeatValue?: string
     // member?: IFormMemberCalender[]
 }
 
@@ -93,6 +98,7 @@ export interface IDetailByIdCalender {
     createdAt?: string
     linkMeet?: string
     repeatEventTyper?: string
+    repeatValue?: string
 }
 
 export interface IFormMemberCalenderNew {

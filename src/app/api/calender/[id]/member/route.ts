@@ -2,7 +2,73 @@ import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
+import moment from "moment";
 import { NextResponse } from "next/server";
+
+
+// GET ONE DATA KALENDER BY ID KALENDER 
+export async function GET(request: Request, context: { params: { id: string } }) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+      const { id } = context.params
+
+      const cek = await prisma.divisionCalendar.count({
+         where: {
+            id: id
+         }
+      })
+
+      if (cek == 0) {
+         return NextResponse.json(
+            {
+               success: false,
+               message: "Gagal mendapatkan calender, data tidak ditemukan",
+            },
+            { status: 404 }
+         );
+      }
+
+      const data = await prisma.divisionCalendar.findUnique({
+         where: {
+            id: id
+         },
+         select: {
+            id: true,
+            title: true,
+            desc: true,
+            timeStart: true,
+            dateStart: true,
+            timeEnd: true,
+            createdAt: true,
+            linkMeet: true,
+            repeatValue: true,
+            repeatEventTyper: true,
+         }
+      });
+
+      const { ...dataCalender } = data
+      const timeStart = moment.utc(dataCalender?.timeStart).format("HH:mm")
+      const timeEnd = moment.utc(dataCalender?.timeEnd).format("HH:mm")
+
+      const result = { ...dataCalender, timeStart, timeEnd }
+
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender", data: result }, { status: 200 });
+
+   } catch (error) {
+      return NextResponse.json(
+         {
+            success: false,
+            message: "Gagal mendapatkan calender, data tidak ditemukan",
+         },
+         { status: 404 }
+      );
+   }
+}
+
 
 // TAMBAH MEMBER KALENDER
 export async function POST(request: Request, context: { params: { id: string } }) {

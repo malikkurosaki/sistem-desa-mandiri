@@ -11,12 +11,13 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
 import { Carousel } from '@mantine/carousel';
 import { funAddMemberCalender, funGetOneCalender } from '../lib/api_calender';
-import { IDataDetailByIdMember } from '../lib/type_calender';
+import { IDataDetailByIdCalender, IDataDetailByIdMember } from '../lib/type_calender';
 
 export default function CreateUserDetailCalender() {
   const router = useRouter()
   const param = useParams<{ id: string, detail: string }>()
   const [selectedFiles, setSelectedFiles] = useState<any>([])
+  const [isDataCalender, setDataCalender] = useState<IDataDetailByIdCalender>()
   const [isData, setData] = useState<IDataMemberDivision[]>([])
   const [isDataAnggota, setDataAnggota] = useState<IDataDetailByIdMember[]>([])
   const [selectAll, setSelectAll] = useState(false)
@@ -30,6 +31,7 @@ export default function CreateUserDetailCalender() {
       const response = await funGetSearchMemberDivision("?search=", param.id)
       const res = await funGetOneCalender(param.detail)
       if (response.success) {
+        setDataCalender(res.data.calender)
         setDataAnggota(res.data.member)
         setData(response.data)
         setLoading(false)
@@ -84,7 +86,7 @@ export default function CreateUserDetailCalender() {
         return toast.error("Error! silahkan pilih anggota")
       }
 
-      const res = await funAddMemberCalender(param.detail, selectedFiles)
+      const res = await funAddMemberCalender(String(isDataCalender?.idCalendar), selectedFiles)
       if (res.success) {
         toast.success(res.message)
         router.push('./')

@@ -1,26 +1,21 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Avatar, Box, Button, Divider, Flex, Grid, Group, Input, rem, Select, SimpleGrid, Skeleton, Stack, Text, Textarea, TextInput } from '@mantine/core';
+import { Box, Button, Group, rem, Select, SimpleGrid, Skeleton, Stack, Text, Textarea, TextInput } from '@mantine/core';
 import { DateInput, TimeInput } from '@mantine/dates';
 import React, { useState } from 'react';
-import { IoIosArrowDropright } from 'react-icons/io';
 import { useParams, useRouter } from 'next/navigation';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import toast from 'react-hot-toast';
-import { funEditCalenderById, funGetOneCalender } from '../lib/api_calender';
+import { funEditCalenderById, funGetOneCalender, funGetOneCalenderByIdCalendar, } from '../lib/api_calender';
 import { useShallowEffect } from '@mantine/hooks';
-import { IDataDetailByIdCalender, IDataDetailByIdMember, IDetailByIdCalender, IEditMemberCalender, IFormMemberCalender } from '../lib/type_calender';
+import { IDetailByIdCalender } from '../lib/type_calender';
 import moment from 'moment';
 import "moment/locale/id";
-import { useHookstate } from '@hookstate/core';
-import { globalCalender } from '../lib/val_calender';
 import UpdateListUsers from './update_list_users';
 
 export default function UpdateDivisionCalender() {
   const [isModal, setModal] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
-  // const memberUser = useHookstate(globalCalender)
-  // const memberValue = memberUser.get() as IFormMemberCalender[]
   const [isDataCalender, setDataCalender] = useState<IDetailByIdCalender>()
   const [openMember, setOpenMember] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -30,17 +25,22 @@ export default function UpdateDivisionCalender() {
     timeStart: false,
     timeEnd: false,
     repeatEventTyper: false,
-    desc: false
+    desc: false,
+    repeatValue: false
   })
 
   const fetchGetOne = async () => {
     try {
       setLoading(true)
-      const response = await funGetOneCalender(param.detail)
-      setDataCalender(response.data.calender)
-      // memberUser.set(response.data.member)
+      const response = await funGetOneCalenderByIdCalendar(param.detail)
+      if (response.success) {
+        setDataCalender(response.data)
+      } else {
+        toast.error(response.message)
+      }
     } catch (error) {
       console.error(error)
+      toast.error("Terjadi kesalahan! Silahkan coba kembali");
     } finally {
       setLoading(false)
     }
@@ -63,7 +63,7 @@ export default function UpdateDivisionCalender() {
           linkMeet: isDataCalender?.linkMeet,
           repeatEventTyper: isDataCalender?.repeatEventTyper,
           desc: isDataCalender?.desc,
-          // member: memberValue
+          repeatValue: isDataCalender?.repeatValue
         })
 
         if (response.success) {
@@ -88,7 +88,7 @@ export default function UpdateDivisionCalender() {
 
   return (
     <Box>
-      <LayoutNavbarNew back={`/division/${param.id}/calender/${param.detail}`} title="Edit acara" menu />
+      <LayoutNavbarNew back='' title="Edit acara" menu />
       <Box p={20}>
         <Stack>
           {loading ?
@@ -229,7 +229,6 @@ export default function UpdateDivisionCalender() {
                 size="md"
                 placeholder="Link Meet"
                 label="Link Meet"
-                // value={isDataCalender?.linkMeet}
                 defaultValue={isDataCalender?.linkMeet}
                 onChange={
                   (event) => {
@@ -251,11 +250,12 @@ export default function UpdateDivisionCalender() {
                 placeholder="Ulangi Acara"
                 label="Ulangi Acara"
                 data={[
-                  { value: '1', label: 'Acara 1 Kali' },
-                  { value: '2', label: 'Hari Kerja (Sen - Jum)' },
-                  { value: '3', label: 'Mingguan' },
-                  { value: '4', label: 'Bulanan' },
-                  { value: '5', label: 'Tahunan' },
+                  { value: 'once', label: 'Acara 1 Kali' },
+                  { value: 'daily', label: 'Setiap Hari' },
+                  // { value: 'weekdays', label: 'Hari Kerja (Sen - Jum)' },
+                  { value: 'weekly', label: 'Mingguan' },
+                  { value: 'monthly', label: 'Bulanan' },
+                  { value: 'yearly', label: 'Tahunan' },
                 ]}
                 value={isDataCalender?.repeatEventTyper}
                 defaultValue={isDataCalender?.repeatEventTyper}
@@ -276,6 +276,30 @@ export default function UpdateDivisionCalender() {
                 }
                 required
               />
+              <TextInput styles={{
+                input: {
+                  border: `1px solid ${"#D6D8F6"}`,
+                  borderRadius: 10,
+                },
+              }}
+                type='number'
+                required
+                label="Jumlah pengulangan"
+                size="md"
+                placeholder='Jumlah pengulangan'
+                defaultValue={isDataCalender?.repeatValue}
+                onChange={(event) => {
+                  setDataCalender({ ...isDataCalender, repeatValue: String(event.currentTarget.value) })
+                  setTouched({ ...touched, repeatValue: false })
+                }}
+                onBlur={() => setTouched({ ...touched, repeatValue: true })}
+                error={
+                  touched.repeatValue && (
+                    isDataCalender?.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : null ||
+                      Number(isDataCalender?.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh dibawah 1" : null
+                  )
+                }
+              />
               <Textarea styles={{
                 input: {
                   border: `1px solid ${"#D6D8F6"}`,
@@ -283,7 +307,6 @@ export default function UpdateDivisionCalender() {
                 },
               }}
                 size="md" placeholder='Deskripsi' label="Deskripsi"
-                // value={isDataCalender?.desc}
                 defaultValue={isDataCalender?.desc}
                 onChange={
                   (event) => {
@@ -294,64 +317,6 @@ export default function UpdateDivisionCalender() {
                   }
                 }
               />
-              {/* <Box mt={5} onClick={() => setOpenMember(true)}>
-                <Group
-                  justify="space-between"
-                  p={10}
-                  style={{
-                    border: `1px solid ${"#D6D8F6"}`,
-                    borderRadius: 10,
-                  }}
-                >
-                  <Text>Tambah Anggota</Text>
-                  <IoIosArrowDropright size={25} />
-                </Group>
-              </Box> */}
-              {/* <Box pt={30}>
-                <Group justify="space-between">
-                  <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-                  <Text c={WARNA.biruTua}>Total {memberUser.length} Anggota</Text>
-                </Group>
-                <Box pt={10} >
-                  <Box mb={100}>
-                    <Box
-                      style={{
-                        border: `1px solid ${"#C7D6E8"}`,
-                        borderRadius: 10,
-                      }}
-                      px={20}
-                      py={10}
-                    >
-                      {memberUser.length == 0 ?
-                        <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh' }}>
-                          <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Anggota</Text>
-                        </Box>
-                        :
-
-                        memberUser.get().map((v: any, i: any) => {
-                          return (
-                            <Box key={i}>
-                              <Grid align='center' mt={10}
-                              >
-                                <Grid.Col span={3}>
-                                    <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
-                                </Grid.Col>
-                                <Grid.Col span={9}>
-                                  <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
-                                    {v.name}
-                                  </Text>
-                                </Grid.Col>
-                              </Grid>
-                              <Box mt={10}>
-                                <Divider size={"xs"} />
-                              </Box>
-                            </Box>
-                          );
-                        })}
-                    </Box>
-                  </Box>
-                </Box>
-              </Box> */}
             </>
           }
         </Stack>
@@ -377,7 +342,7 @@ export default function UpdateDivisionCalender() {
         }
       </Box>
       <LayoutModal opened={isModal} onClose={() => setModal(false)}
-        description="Apakah Anda yakin ingin mengubah data?"
+        description="Apakah Anda yakin ingin mengubah data acara ini? Data ini akan mempengaruhi semua data yang terkait"
         onYes={(val) => { onSubmit(val) }} />
     </Box>
   );

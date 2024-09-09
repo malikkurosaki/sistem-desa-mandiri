@@ -54,7 +54,7 @@ export default function DetailEventDivision() {
 
   async function onSubmit() {
     try {
-      const res = await funDeleteMemberCalender(param.detail, { idUser: dataChoose.id });
+      const res = await funDeleteMemberCalender(String(isDataCalender?.idCalendar), { idUser: dataChoose.id });
       if (res.success) {
         toast.success(res.message)
         setDataChoose({ id: '', name: '' })
@@ -141,11 +141,12 @@ export default function DetailEventDivision() {
                   xl: 11
                 }}>
                   <Text>
-                    {isDataCalender?.repeatEventTyper.toString() === '1' ? 'Acara 1 Kali' :
-                      isDataCalender?.repeatEventTyper.toString() === '2' ? 'Hari Kerja (senin - jumat)' :
-                        isDataCalender?.repeatEventTyper.toString() === '3' ? 'Minggu' :
-                          isDataCalender?.repeatEventTyper.toString() === '4' ? 'Bulanan' :
-                            isDataCalender?.repeatEventTyper.toString() === '5' ? 'Tahunan' :
+                    {isDataCalender?.repeatEventTyper.toString() === 'once' ? 'Acara 1 Kali' :
+                      isDataCalender?.repeatEventTyper.toString() === 'daily' ? 'Setiap Hari' :
+                        // isDataCalender?.repeatEventTyper.toString() === 'weekdays' ? 'Hari Kerja (senin - jumat)' :
+                        isDataCalender?.repeatEventTyper.toString() === 'weekly' ? 'Mingguan' :
+                          isDataCalender?.repeatEventTyper.toString() === 'monthly' ? 'Bulanan' :
+                            isDataCalender?.repeatEventTyper.toString() === 'yearly' ? 'Tahunan' :
                               ''}
                   </Text>
                 </Grid.Col>
@@ -345,7 +346,7 @@ export default function DetailEventDivision() {
           setOpenModal(false)
         }} />
       <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
-        <DrawerDetailEvent />
+        <DrawerDetailEvent idCalendar={String(isDataCalender?.idCalendar)} />
       </LayoutDrawer>
     </Box>
   );

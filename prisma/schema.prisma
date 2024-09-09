@@ -397,7 +397,8 @@ model DivisionCalendar {
   dateEnd                  DateTime?                  @db.Date
   timeStart                DateTime                   @db.Time()
   timeEnd                  DateTime                   @db.Time()
-  repeatEventTyper         String // 1 = Acara 1 Kali, 2 = hari Kerja (senin - jumat), 3 = Minggu, 4 = Bulanan, 5 = Tahunan
+  repeatEventTyper         String // once = Acara 1 Kali, weekdays = hari Kerja (senin - jumat), daily=setiap hari , weekly = setiap minggu, monthly = setiap bulan, yearly = setiap tahun
+  repeatValue              Int                        @default(1)
   reminderInterval         String?
   status                   Int                        @default(0)
   isActive                 Boolean                    @default(true)
@@ -415,7 +416,7 @@ model DivisionCalendarReminder {
   DivisionCalendar DivisionCalendar @relation(fields: [idCalendar], references: [id])
   idCalendar       String
   dateStart        DateTime         @db.Date
-  dateEnd          DateTime         @db.Date
+  dateEnd          DateTime?        @db.Date
   timeStart        DateTime         @db.Time()
   timeEnd          DateTime         @db.Time()
   status           Int              @default(0)

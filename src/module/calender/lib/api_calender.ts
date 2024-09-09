@@ -14,6 +14,11 @@ export const funGetOneCalender = async (path: string) => {
     return await response.json().catch(() => null);
 }
 
+export const funGetOneCalenderByIdCalendar = async (path: string) => {
+    const response = await fetch(`/api/calender/${path}/member`);
+    return await response.json().catch(() => null);
+}
+
 export const funCreateCalender = async (data: IFormCreateCalender) => {
     const response = await fetch("/api/calender", {
         method: "POST",

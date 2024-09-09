@@ -5,13 +5,11 @@ import { Box, Flex, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { AiOutlineFileSearch } from 'react-icons/ai';
-import { IoAddCircle } from 'react-icons/io5';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { funDeleteCalenderById } from '../lib/api_calender';
 import { FaUsers } from 'react-icons/fa6';
 
-export default function DrawerDetailEvent() {
+export default function DrawerDetailEvent({ idCalendar }: { idCalendar: string }) {
   const router = useRouter()
   const [isModal, setModal] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
@@ -19,9 +17,7 @@ export default function DrawerDetailEvent() {
   async function fetchDeleteCalender(val: boolean) {
     try {
       if (val) {
-        const response = await funDeleteCalenderById(
-          param.detail
-        )
+        const response = await funDeleteCalenderById(idCalendar)
         if (response.success) {
           toast.success(response.message)
           setModal(false)
@@ -34,7 +30,7 @@ export default function DrawerDetailEvent() {
     } catch (error) {
       console.error(error);
       setModal(false)
-      toast.error("Gagal hapus calender, coba lagi nanti");
+      toast.error("Gagal hapus acara, coba lagi nanti");
     }
   }
 
@@ -52,7 +48,7 @@ export default function DrawerDetailEvent() {
               <Text ta={"center"} c={WARNA.biruTua}>Hapus Acara</Text>
             </Box>
           </Flex>
-          <Flex onClick={() => router.push(`/division/${param.id}/calender/update/${param.detail}`)} justify={'center'} align={'center'} direction={'column'} >
+          <Flex onClick={() => router.push(`/division/${param.id}/calender/update/${idCalendar}`)} justify={'center'} align={'center'} direction={'column'} >
             <Box>
               <MdEdit size={30} color={WARNA.biruTua} />
             </Box>
@@ -71,7 +67,7 @@ export default function DrawerDetailEvent() {
         </SimpleGrid>
       </Stack>
       <LayoutModal opened={isModal} onClose={() => setModal(false)}
-        description="Apakah Anda yakin ingin menghapus data?"
+        description="Apakah Anda yakin ingin menghapus data acara ini? Data ini akan mempengaruhi semua data yang terkait"
         onYes={(val) => { fetchDeleteCalender(val) }} />
     </Box>
   );
