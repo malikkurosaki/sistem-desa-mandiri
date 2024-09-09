@@ -58,12 +58,15 @@ export async function GET(request: Request, context: { params: { id: string } })
             }
          })
 
-         const kalender = await prisma.divisionCalendar.count({
+         const kalender = await prisma.divisionCalendarReminder.count({
             where: {
                idDivision: String(id),
                isActive: true,
                dateStart: {
                   lte: new Date()
+               },
+               DivisionCalendar: {
+                  isActive: true
                }
             }
          })

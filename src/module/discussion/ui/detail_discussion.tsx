@@ -1,6 +1,6 @@
 "use client"
 import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Input, rem, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
-import { SkeletonDetailDiscussionComment, SkeletonDetailDiscussionMember, SkeletonSingle, WARNA } from "@/module/_global";
+import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonDetailDiscussionComment, SkeletonDetailDiscussionMember, SkeletonSingle, WARNA } from "@/module/_global";
 import { GrChatOption } from "react-icons/gr";
 import { LuSendHorizonal } from "react-icons/lu";
 import NavbarDetailDiscussion from "@/module/discussion/ui/navbar_detail_discussion";
@@ -14,6 +14,10 @@ import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useHookstate } from "@hookstate/core";
 import { globalRefreshDiscussion } from "../lib/val_discussion";
+import { HiMenu } from "react-icons/hi";
+import DrawerDetailDiscussion from "./drawer_detail_discussion";
+import { funGetUserByCookies } from "@/module/auth";
+import { funGetDivisionById } from "@/module/division_new";
 
 export default function DetailDiscussion({ id, idDivision }: { id: string, idDivision: string }) {
    const [isData, setData] = useState<IDetailDiscussion>()
@@ -22,13 +26,21 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    const [isLoad, setIsLoad] = useState(true)
    const router = useRouter()
    const refresh = useHookstate(globalRefreshDiscussion)
+   const roleLogin = useHookstate(globalRole)
+   const [isAdmin, setAdmin] = useState(false)
+   const [isCreator, setCreator] = useState(false)
 
    const getData = async () => {
       try {
          setIsLoad(true)
          const response = await funGetDiscussionById(id)
+         const res = await funGetDivisionById(param.id);
+         const login = await funGetUserByCookies()
+         const cek = res.data.member.some((i: any) => i.idUser == login.id && i.isAdmin == true)
+         setAdmin(cek)
          setData(response.data)
          setIsLoad(false)
+         setCreator(response.data.createdBy == login.id)
       } catch (error) {
          console.error(error)
       } finally {
@@ -61,11 +73,27 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
       }
    }
 
+   const [openDrawer, setOpenDrawer] = useState(false)
+
 
 
    return (
       <Box>
-         <NavbarDetailDiscussion id={id} status={Number(isData?.status)} idDivision={idDivision} />
+         {/* <NavbarDetailDiscussion id={id} status={Number(isData?.status)} idDivision={idDivision} /> */}
+         <LayoutNavbarNew back={`/division/${param.id}/discussion/`} title="Diskusi "
+            menu={
+               ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin || isCreator) ?
+                  <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+                     <HiMenu size={20} color='white' />
+                  </ActionIcon>
+                  : <></>
+            }
+         />
+         <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
+            <DrawerDetailDiscussion onSuccess={(val) => setOpenDrawer(false)} id={id} status={Number(isData?.status)} idDivision={idDivision} />
+         </LayoutDrawer>
+
+
          <Box p={20}>
             {isLoad ?
                Array(1)
@@ -217,12 +245,12 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                         <Box key={i} p={10} >
                            <Grid align="center">
                               <Grid.Col span={2}>
-                              <Avatar alt="it's me" size="md" src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} />
+                                 <Avatar alt="it's me" size="md" src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} />
                               </Grid.Col>
                               <Grid.Col span={6}>
                                  <Box>
                                     <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1} fz={15}>
-                                    {v.username}
+                                       {v.username}
                                     </Text>
                                  </Box>
                               </Grid.Col>

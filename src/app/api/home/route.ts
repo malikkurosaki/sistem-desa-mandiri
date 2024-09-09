@@ -242,7 +242,10 @@ export async function GET(request: Request) {
                   Group: {
                      isActive: true,
                   }
-               }
+               },
+               DivisionCalendar: {
+                  isActive: true
+               },
             }
          } else {
             kondisi = {
@@ -250,35 +253,50 @@ export async function GET(request: Request) {
                dateStart: new Date(),
                Division: {
                   idGroup: idGroup
-               }
+               },
+               DivisionCalendar: {
+                  isActive: true
+               },
             }
          }
 
 
-         const data = await prisma.divisionCalendar.findMany({
+         const data = await prisma.divisionCalendarReminder.findMany({
             skip: 0,
             take: 5,
             where: kondisi,
             select: {
                id: true,
-               idDivision: true,
-               title: true,
-               desc: true,
-               status: true,
+               idCalendar: true,
                timeStart: true,
                dateStart: true,
                timeEnd: true,
                dateEnd: true,
                createdAt: true,
-               User: {
+               status: true,
+               DivisionCalendar: {
                   select: {
-                     name: true
+                     title: true,
+                     desc: true,
+                     User: {
+                        select: {
+                           name: true
+                        }
+                     }
                   }
                }
             },
-            orderBy: {
-               createdAt: 'desc'
-            }
+            orderBy: [
+               {
+                  dateStart: 'asc'
+               },
+               {
+                  timeStart: 'asc'
+               },
+               {
+                  timeEnd: 'asc'
+               }
+            ]
          })
 
          allData = data.map((v: any) => ({

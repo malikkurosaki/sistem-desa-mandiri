@@ -37,7 +37,7 @@ export async function GET(request: Request) {
                     isActive: true,
                     idDivision: idDivision,
                     dateStart: new Date(String(isDate)),
-                    DivisionCalendar:{
+                    DivisionCalendar: {
                         isActive: true
                     }
                 },
@@ -62,9 +62,17 @@ export async function GET(request: Request) {
                         }
                     }
                 },
-                orderBy: {
-                    createdAt: 'desc'
-                }
+                orderBy: [
+                    {
+                        dateStart: 'asc'
+                    },
+                    {
+                        timeStart: 'asc'
+                    },
+                    {
+                        timeEnd: 'asc'
+                    }
+                ]
             });
 
             const allOmit = data.map((v: any) => ({

@@ -42,7 +42,7 @@ export default function ListEventHome() {
 
    return (
       <Box pt={10}>
-         <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Event Hari Ini</Text>
+         <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Acara Hari Ini</Text>
          <Box bg={"white"} style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,
@@ -60,7 +60,7 @@ export default function ListEventHome() {
                _.isEmpty(isData)
                   ?
                   <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '20vh' }}>
-                     <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada event</Text>
+                     <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada acara</Text>
                   </Box>
                   :
                   isData.map((event, index) => {

@@ -52,7 +52,6 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                toast.success(response.message)
                router.push(`/division/${param.id}/discussion/`)
                setValModal(false)
-               router.back()
             } else {
                toast.error(response.message)
             }
@@ -123,8 +122,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
          </Box>
 
          <LayoutModal opened={isValModal} onClose={() => setValModal(false)}
-            description="Apakah Anda yakin ingin
-        menambah data?"
+            description="Apakah Anda yakin ingin menambah data?"
             onYes={(val) => { createDiscussion(val) }} />
       </Box>
    )
