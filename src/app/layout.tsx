@@ -30,12 +30,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <ColorSchemeScript />
       </head>
       <body className={`${LatoFont.className}`} suppressHydrationWarning>
         <MantineProvider>
           <Box bg={'#252A2F'} pos={"fixed"} w={"100%"} h={"100%"} style={{
-            overflowY: "auto"
+            overflowY: "auto",
+            touchAction: "manipulation"
           }}>
             <Toaster/>
             <Container mih={'100vh'} p={0} size={rem(550)} bg={WARNA.bgWhite}>

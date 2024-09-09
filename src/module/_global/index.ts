@@ -14,6 +14,7 @@ import LayoutLogin from "./layout/layout_login";
 import LayoutModalViewFile from "./layout/layout_modal_view_file";
 import LayoutNavbarHome from "./layout/layout_navbar_home";
 import LayoutNavbarNew from "./layout/layout_navbar_new";
+import NoZoom from "./layout/no_zoom";
 import ViewFilter from "./view/view_filter";
 
 export { WARNA };
@@ -34,3 +35,4 @@ export { SkeletonDetailListTugasTask }
 export { LayoutModalViewFile }
 export { globalRole }
 export { WrapLayout }
+export { NoZoom }

@@ -127,7 +127,7 @@ export async function POST(request: Request) {
 
 
       const dataMember = sent.member.map((v: any) => ({
-         ..._.omit(v, ["idUser", "name"]),
+         ..._.omit(v, ["idUser", "name", "img"]),
          idUser: v.idUser,
          idDivision: data.id,
          isAdmin: sent.admin.some((i: any) => i == v.idUser)

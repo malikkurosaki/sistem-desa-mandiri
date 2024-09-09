@@ -25,22 +25,22 @@ export default function TabProject() {
   const dataStatus = [
     {
       id: "0",
-      title: "Semua",
+      title: "Segera",
       icon: <RiProgress3Line style={iconStyle} />
     },
     {
       id: "1",
-      title: "Segera",
+      title: "Dikerjakan",
       icon: <TbClockPause style={iconStyle} />
     },
     {
       id: "2",
-      title: "Dikerjakan",
+      title: "Selesai",
       icon: <IoIosCheckmarkCircleOutline style={iconStyle} />
     },
     {
       id: "3",
-      title: "Selesai",
+      title: "Batal",
       icon: <IoCloseCircleOutline style={iconStyle} />
     }
   ]

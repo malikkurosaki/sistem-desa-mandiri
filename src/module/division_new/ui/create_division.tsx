@@ -5,7 +5,9 @@ import {
     Avatar,
     Box,
     Button,
+    Divider,
     Flex,
+    Grid,
     Group,
     rem,
     Select,
@@ -96,12 +98,12 @@ export default function CreateDivision() {
     if (isChooseAdmin) return <NavbarAdminDivision data={body} onSuccess={(val) => {
         if (val) {
             member.set([])
-            setBody({
-                ...body,
-                idGroup: "",
-                name: "",
-                desc: "",
-            })
+            // setBody({
+            //     ...body,
+            //     idGroup: "",
+            //     name: "",
+            //     desc: "",
+            // })
         }
 
         setChooseAdmin(false)
@@ -187,24 +189,32 @@ export default function CreateDivision() {
                                         <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada anggota</Text>
                                     ) : member.get().map((v: any, i: any) => {
                                         return (
-                                            <Flex
-                                                justify={"space-between"}
-                                                align={"center"}
-                                                mt={20}
-                                                key={i}
-                                            >
-                                                <Group>
-                                                    <Avatar src={v.img} alt="it's me" size="lg" />
-                                                    <Box>
-                                                        <Text c={WARNA.biruTua} fw={"bold"}>
-                                                            {v.name}
+                                            <Box key={i}>
+                                                <Grid align='center' mt={10}
+                                                >
+                                                    <Grid.Col span={9}>
+                                                        <Group>
+                                                            <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                                                            <Box w={{
+                                                                base: 140,
+                                                                xl: 270
+                                                            }}>
+                                                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                                                                    {v.name}
+                                                                </Text>
+                                                            </Box>
+                                                        </Group>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={3}>
+                                                        <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
+                                                            Anggota
                                                         </Text>
-                                                    </Box>
-                                                </Group>
-                                                <Text c={WARNA.biruTua} fw={"bold"}>
-                                                    Anggota
-                                                </Text>
-                                            </Flex>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Box mt={10}>
+                                                    <Divider size={"xs"} />
+                                                </Box>
+                                            </Box>
                                         );
                                     })}
                                 </Box>

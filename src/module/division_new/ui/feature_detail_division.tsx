@@ -53,7 +53,7 @@ export default function FeatureDetailDivision() {
           border: `1px solid ${WARNA.bgHijauMuda}`,
           borderRadius: 10,
           padding: 10
-        }} onClick={() => router.push(param.id + '/task')}>
+        }} onClick={() => router.push(param.id + '/task?status=0')}>
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"

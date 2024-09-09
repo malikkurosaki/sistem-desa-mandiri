@@ -1,11 +1,13 @@
 'use client'
-import { Box, rem, Tabs } from "@mantine/core";
+import { Box, Button, rem, Tabs } from "@mantine/core";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { RiProgress3Line } from "react-icons/ri";
 import { TbClockPause } from "react-icons/tb";
 import ListDivisionTask from "./list_division_task";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Carousel } from "@mantine/carousel";
+import { WARNA } from "@/module/_global";
 
 export default function TabsDivisionTask() {
    const iconStyle = { width: rem(20), height: rem(20) };
@@ -13,9 +15,32 @@ export default function TabsDivisionTask() {
    const searchParams = useSearchParams()
    const status = searchParams.get('status')
 
+   const dataStatus = [
+      {
+        id: "0",
+        title: "Segera",
+        icon: <RiProgress3Line style={iconStyle} />
+      },
+      {
+        id: "1",
+        title: "Dikerjakan",
+        icon: <TbClockPause style={iconStyle} />
+      },
+      {
+        id: "2",
+        title: "Selesai",
+        icon: <IoIosCheckmarkCircleOutline style={iconStyle} />
+      },
+      {
+        id: "3",
+        title: "Batal",
+        icon: <IoCloseCircleOutline style={iconStyle} />
+      }
+    ]
+
    return (
       <Box p={20}>
-         <Tabs variant="pills" color='#FF9861' radius="xl" defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}>
+         {/* <Tabs variant="pills" color='#FF9861' radius="xl" defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}>
             <Tabs.List grow bg={"white"} style={{
                border: `1px solid ${"#EDEDED"}`,
                padding: 5,
@@ -43,7 +68,33 @@ export default function TabsDivisionTask() {
                </Tabs.Tab>
             </Tabs.List>
             <ListDivisionTask />
-         </Tabs>
+         </Tabs> */}
+         <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
+            {dataStatus.map((item, index) => (
+               <Carousel.Slide key={index}>
+                  <Button
+                     variant="subtle"
+                     color={
+                        status == item.id
+                           ? "white"
+                           : WARNA.biruTua
+                     }
+                     onClick={() => { router.push("?status=" + item.id) }}
+                     defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}
+                     radius={"xl"}
+                     bg={
+                        status == item.id
+                           ? "#FF9861"
+                           : "transparent"
+                     }
+                  >
+                     {item.icon}
+                     <Box ml={10}>{item.title}</Box>
+                  </Button>
+               </Carousel.Slide>
+            ))}
+         </Carousel>
+         <ListDivisionTask />
       </Box>
    )
 }

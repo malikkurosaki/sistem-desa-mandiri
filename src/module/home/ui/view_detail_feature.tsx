@@ -33,7 +33,7 @@ export default function ViewDetailFeature() {
                 <Text fz={15} c={WARNA.biruTua}>Divisi</Text>
               </Center>
             </Box>
-            <Box onClick={() => router.push('/project')}>
+            <Box onClick={() => router.push('/project?status=0&group=null')}>
               <Center>
                 <ActionIcon variant="gradient"
                   size={68}
