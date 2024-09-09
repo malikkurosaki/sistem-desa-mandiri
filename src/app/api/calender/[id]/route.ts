@@ -1,7 +1,7 @@
-
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
-import _, { result } from "lodash";
+import { createLogUser } from "@/module/user";
+import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
 
@@ -52,7 +52,7 @@ export async function GET(request: Request, context: { params: { id: string } })
         const timeStart = moment.utc(dataCalender?.timeStart).format("HH:mm")
         const timeEnd = moment.utc(dataCalender?.timeEnd).format("HH:mm")
 
-        const result = { ...dataCalender, timeStart, timeEnd  }
+        const result = { ...dataCalender, timeStart, timeEnd }
 
 
         const member = await prisma.divisionCalendarMember.findMany({
@@ -135,6 +135,9 @@ export async function DELETE(request: Request, context: { params: { id: string }
             }
         });
 
+        // create log user
+        const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus data acara kalender', table: 'divisionCalendar', data: id })
+
         return NextResponse.json({ success: true, message: "Berhasil menghapus calender", data }, { status: 200 });
 
     } catch (error) {
@@ -159,7 +162,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
         const { id } = context.params
         const userId = user.id
-        const { title, desc, timeStart, dateStart, timeEnd, linkMeet, repeatEventTyper, member } = await request.json()
+        const { title, desc, timeStart, dateStart, timeEnd, linkMeet, repeatEventTyper } = await request.json()
 
         const cek = await prisma.divisionCalendar.count({
             where: {
@@ -171,7 +174,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Gagal mengedit calender, data tidak ditemukan",
+                    message: "Gagal mengedit acara, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -199,31 +202,17 @@ export async function PUT(request: Request, context: { params: { id: string } })
             }
         });
 
-       const del =  await prisma.divisionCalendarMember.deleteMany({
-            where: {
-                idCalendar: id
-            }
-        })
-        
-        const omitMember = member.map((v: any) => ({
-            ..._.omit(v, ["name", "idUser"]),
-            idCalendar: data.id,
-            idUser: v.idUser
-        }))
 
-        const insertMember = await prisma.divisionCalendarMember.createMany({
-            data: omitMember
-        });
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data acara kalender', table: 'divisionCalendar', data: id })
 
-
-
-        return NextResponse.json({ success: true, message: "Berhasil mengedit calender" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mengedit acara" }, { status: 200 });
 
     } catch (error) {
         return NextResponse.json(
             {
                 success: false,
-                message: "Gagal mengedit calender, coba lagi nanti",
+                message: "Gagal mengedit acara, coba lagi nanti",
             },
             { status: 500 }
         );

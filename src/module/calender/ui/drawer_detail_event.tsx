@@ -49,7 +49,7 @@ export default function DrawerDetailEvent() {
               <MdDelete size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
-              <Text ta={"center"} c={WARNA.biruTua}>Hapus</Text>
+              <Text ta={"center"} c={WARNA.biruTua}>Hapus Acara</Text>
             </Box>
           </Flex>
           <Flex onClick={() => router.push(`/division/${param.id}/calender/update/${param.detail}`)} justify={'center'} align={'center'} direction={'column'} >
@@ -57,7 +57,7 @@ export default function DrawerDetailEvent() {
               <MdEdit size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Edit Kalender</Text>
+              <Text c={WARNA.biruTua}>Edit Acara</Text>
             </Box>
           </Flex>
           <Flex onClick={() => router.push(`/division/${param.id}/calender/${param.detail}/add-member`)} justify={'center'} align={'center'} direction={'column'} >

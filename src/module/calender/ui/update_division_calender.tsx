@@ -19,8 +19,8 @@ import UpdateListUsers from './update_list_users';
 export default function UpdateDivisionCalender() {
   const [isModal, setModal] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
-  const memberUser = useHookstate(globalCalender)
-  const memberValue = memberUser.get() as IFormMemberCalender[]
+  // const memberUser = useHookstate(globalCalender)
+  // const memberValue = memberUser.get() as IFormMemberCalender[]
   const [isDataCalender, setDataCalender] = useState<IDetailByIdCalender>()
   const [openMember, setOpenMember] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -38,7 +38,7 @@ export default function UpdateDivisionCalender() {
       setLoading(true)
       const response = await funGetOneCalender(param.detail)
       setDataCalender(response.data.calender)
-      memberUser.set(response.data.member)
+      // memberUser.set(response.data.member)
     } catch (error) {
       console.error(error)
     } finally {
@@ -63,7 +63,7 @@ export default function UpdateDivisionCalender() {
           linkMeet: isDataCalender?.linkMeet,
           repeatEventTyper: isDataCalender?.repeatEventTyper,
           desc: isDataCalender?.desc,
-          member: memberValue
+          // member: memberValue
         })
 
         if (response.success) {
@@ -88,12 +88,11 @@ export default function UpdateDivisionCalender() {
 
   return (
     <Box>
-      <LayoutNavbarNew back={`/division/${param.id}/calender/${param.detail}`} title="Edit kalender" menu />
+      <LayoutNavbarNew back={`/division/${param.id}/calender/${param.detail}`} title="Edit acara" menu />
       <Box p={20}>
         <Stack>
           {loading ?
             <>
-              <Skeleton height={40} mt={25} radius={10} />
               <Skeleton height={40} mt={25} radius={10} />
               <Group justify='space-between'>
                 <Skeleton height={40} width={"47%"} mt={20} radius={10} />
@@ -102,7 +101,6 @@ export default function UpdateDivisionCalender() {
               <Skeleton height={40} mt={25} radius={10} />
               <Skeleton height={40} mt={25} radius={10} />
               <Skeleton height={80} mt={25} radius={10} />
-              <Skeleton height={40} mt={20} radius={10} />
             </>
             :
             <>
@@ -114,8 +112,8 @@ export default function UpdateDivisionCalender() {
                   },
                 }}
                 size="md"
-                placeholder="Event Nama"
-                label="Event Nama"
+                placeholder="Acara"
+                label="Acara"
                 defaultValue={isDataCalender?.title}
                 onChange={
                   (event) => {
@@ -250,8 +248,8 @@ export default function UpdateDivisionCalender() {
                   },
                 }}
                 size="md"
-                placeholder="Ulangi Event"
-                label="Ulangi Event"
+                placeholder="Ulangi Acara"
+                label="Ulangi Acara"
                 data={[
                   { value: '1', label: 'Acara 1 Kali' },
                   { value: '2', label: 'Hari Kerja (Sen - Jum)' },
@@ -273,7 +271,7 @@ export default function UpdateDivisionCalender() {
                 onBlur={() => setTouched({ ...touched, repeatEventTyper: true })}
                 error={
                   touched.repeatEventTyper && (
-                    isDataCalender?.repeatEventTyper == "" ? "Ulangi Event Tidak Boleh Kosong" : null
+                    isDataCalender?.repeatEventTyper == "" ? "Ulangi Acara Tidak Boleh Kosong" : null
                   )
                 }
                 required
@@ -379,7 +377,7 @@ export default function UpdateDivisionCalender() {
         }
       </Box>
       <LayoutModal opened={isModal} onClose={() => setModal(false)}
-        description="Apakah Anda yakin ingin menambahkan data?"
+        description="Apakah Anda yakin ingin mengubah data?"
         onYes={(val) => { onSubmit(val) }} />
     </Box>
   );

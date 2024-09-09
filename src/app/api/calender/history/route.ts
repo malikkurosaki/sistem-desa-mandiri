@@ -80,15 +80,15 @@ export async function GET(request: Request) {
                 }
             })
 
-            return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender", data: result }, { status: 200 });
+            return NextResponse.json({ success: true, message: "Berhasil mendapatkan riwayat acara kalender", data: result }, { status: 200 });
 
         } else {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, data tidak ditemukan" }, { status: 404 });
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan riwayat acara kalender, coba lagi nanti" }, { status: 404 });
 
         }
 
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, data tidak ditemukan" }, { status: 404 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan riwayat acara kalender, coba lagi nanti" }, { status: 404 });
     }
 }

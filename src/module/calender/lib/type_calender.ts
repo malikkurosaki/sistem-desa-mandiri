@@ -73,7 +73,7 @@ export interface IEditCalender {
     linkMeet?: string
     repeatEventTyper?: string
     desc?: string,
-    member?: IFormMemberCalender[]
+    // member?: IFormMemberCalender[]
 }
 
 export interface IEditMemberCalender {

@@ -18,7 +18,7 @@ export default function DawerDivisionCalender() {
               <IoAddCircle size={30} color={WARNA.biruTua} />
             </Box>
             <Box>
-              <Text ta={"center"} c={WARNA.biruTua}>Tambah Kalender</Text>
+              <Text ta={"center"} c={WARNA.biruTua}>Tambah Acara</Text>
             </Box>
           </Flex>
           <Flex onClick={() => window.location.href = `/division/${param.id}/calender/history`} justify={'center'} align={'center'} direction={'column'} >

@@ -5,6 +5,7 @@ import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
 import "moment/locale/id";
+import { createLogUser } from '@/module/user';
 
 //GET ALL CALENDER
 export async function GET(request: Request) {
@@ -139,11 +140,13 @@ export async function POST(request: Request) {
         });
 
 
+        // create log user
+        const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data acara kalender', table: 'divisionCalendar', data: data.id })
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil membuat acara kalender" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membuat acara kalender, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
