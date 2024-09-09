@@ -17,7 +17,7 @@ export interface IFormDiscussion {
 export interface IStatusDiscussion {
    status: number
 }
- 
+
 
 export interface IDetailDiscussion {
    id: string
@@ -29,25 +29,26 @@ export interface IDetailDiscussion {
    username: string
    user_img: string
    totalComments: number
- }
- 
- export interface IAllComents {
+   createdBy: string
+}
+
+export interface IAllComents {
    id: string
    comment: string
    createdAt: string
-    User: User
-    img: string
+   User: User
+   img: string
    username: string
- }
- 
- export interface User {
-   name: string
- }
- 
-export interface IDeleteDicussion {
-    id: string
 }
- 
+
+export interface User {
+   name: string
+}
+
+export interface IDeleteDicussion {
+   id: string
+}
+
 export interface IEditDiscussion {
    desc: string
 }
