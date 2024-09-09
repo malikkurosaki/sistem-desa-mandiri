@@ -66,7 +66,7 @@ export default function ListDocumentOnDetailDivision() {
             {
                data.map((v) =>
                   <Carousel.Slide key={v.id}>
-                     <UnstyledButton onClick={() => router.push(`/document`)}>
+                     <UnstyledButton onClick={() => router.push(`/division/${param.id}/document`)}>
                         <Stack gap={0} w={200}>
                            <Paper withBorder shadow="sm" radius={12} >
                               <Center p={"md"}>

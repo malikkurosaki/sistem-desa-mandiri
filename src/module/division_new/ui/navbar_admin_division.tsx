@@ -1,10 +1,10 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
-import { Avatar, Box, Button, Checkbox, Divider, Flex, Group, Stack, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Button, Checkbox, Divider, Flex, Grid, Group, rem, Stack, Text, TextInput } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { HiChevronLeft, HiMagnifyingGlass } from 'react-icons/hi2';
 import toast from 'react-hot-toast';
 import { globalMemberDivision } from '../lib/val_division';
 import { funCreateDivision } from '../lib/api_division';
@@ -26,6 +26,7 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
 
       if (response.success) {
         toast.success(response.message);
+        router.push("/division")
         onSuccess(true)
       } else {
         toast.error(response.message)
@@ -41,7 +42,10 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
 
   return (
     <Box>
-      <LayoutNavbarNew title="Pilih Admin Divisi" menu />
+      <LayoutNavbarNew title="Pilih Admin Divisi" menu state={
+        <Box>
+        </Box>
+      } />
       <Box p={20}>
         <TextInput
           styles={{
@@ -64,39 +68,52 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
               ) : member.get().map((v: any, i: any) => {
                 return (
                   <Box key={i}>
-                    <Flex
-                      justify={"space-between"}
-                      align={"center"}
+                    <Grid align='center' mt={10}
                     >
-                      <Group>
-                        <Avatar src={v.img} alt="it's me" size="lg" />
-                        <Box>
-                          <Text c={WARNA.biruTua} fw={"bold"}>
-                            {v.name}
-                          </Text>
-                        </Box>
-                      </Group>
-                      <Checkbox value={v.idUser} />
-                    </Flex>
-                    <Divider my={20} />
+                      <Grid.Col span={10}>
+                        <Group>
+                          <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                          <Box w={{
+                            base: 200,
+                            xl: 270
+                          }}>
+                            <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                              {v.name}
+                            </Text>
+                          </Box>
+                        </Group>
+                      </Grid.Col>
+                      <Grid.Col span={2}>
+                        <Flex justify={'end'}>
+                          <Checkbox value={v.idUser} />
+                        </Flex>
+                      </Grid.Col>
+                    </Grid>
+                    <Box mt={10}>
+                      <Divider size={"xs"} />
+                    </Box>
                   </Box>
                 );
               })
             }
           </Checkbox.Group>
         </Box>
-        <Box mt="xl">
-          <Button
-            color="white"
-            bg={WARNA.biruTua}
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => { onSubmit() }}
-          >
-            Simpan
-          </Button>
-        </Box>
+      </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${WARNA.bgWhite}`,
+      }}>
+        <Button
+          color="white"
+          bg={WARNA.biruTua}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => { onSubmit() }}
+        >
+          Simpan
+        </Button>
       </Box>
     </Box>
   );
