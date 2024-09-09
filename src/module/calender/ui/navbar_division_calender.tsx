@@ -12,7 +12,7 @@ export default function NavbarDivisionCalender() {
   const param = useParams<{ id: string }>()
   return (
     <div>
-      <LayoutNavbarNew back={`/division/${param.id}`} title="Divisi - kalender"
+      <LayoutNavbarNew back={`/division/${param.id}`} title="Kalender"
         menu={
           <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
             <HiMenu size={20} color='white' />

@@ -14,6 +14,11 @@ export const funGetOneCalender = async (path: string) => {
     return await response.json().catch(() => null);
 }
 
+export const funGetOneCalenderByIdCalendar = async (path: string) => {
+    const response = await fetch(`/api/calender/${path}/member`);
+    return await response.json().catch(() => null);
+}
+
 export const funCreateCalender = async (data: IFormCreateCalender) => {
     const response = await fetch("/api/calender", {
         method: "POST",
@@ -59,3 +64,14 @@ export const funAddMemberCalender = async (path: string, data: IFormMemberCalend
     });
     return await response.json().catch(() => null);
 };
+
+export const funDeleteMemberCalender = async (path: string, data: { idUser: string }) => {
+    const response = await fetch(`/api/calender/${path}/member`, {
+       method: "DELETE",
+       headers: {
+          "Content-Type": "application/json",
+       },
+       body: JSON.stringify(data),
+    });
+    return await response.json().catch(() => null);
+ };

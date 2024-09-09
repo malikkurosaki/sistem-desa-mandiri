@@ -1,6 +1,6 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Avatar, Box, Button, Divider, Flex, Grid, Group, Input, rem, Select, SimpleGrid, Stack, Text, Textarea, TextInput } from '@mantine/core';
+import { Avatar, Box, Button, Divider, Flex, Grid, Group, Input, NumberInput, rem, Select, SimpleGrid, Stack, Text, Textarea, TextInput } from '@mantine/core';
 import { DateInput, TimeInput } from '@mantine/dates';
 import React, { useState } from 'react';
 import { IoIosArrowDropright } from 'react-icons/io';
@@ -28,7 +28,8 @@ export default function NavbarCreateDivisionCalender() {
     timeStart: false,
     timeEnd: false,
     repeatEventTyper: false,
-    desc: false
+    desc: false,
+    repeatValue: false
   })
   const [isData, setData] = useState({
     idDivision: "",
@@ -39,6 +40,7 @@ export default function NavbarCreateDivisionCalender() {
     linkMeet: "",
     repeatEventTyper: "",
     desc: "",
+    repeatValue: "1"
   })
 
   async function onSubmit(val: boolean) {
@@ -56,6 +58,7 @@ export default function NavbarCreateDivisionCalender() {
           linkMeet: isData.linkMeet,
           repeatEventTyper: isData.repeatEventTyper,
           desc: isData.desc,
+          repeatValue: isData.repeatValue,
           member: memberValue
         })
 
@@ -80,10 +83,9 @@ export default function NavbarCreateDivisionCalender() {
 
   if (openMember) return <CreateUserCalender onClose={() => setOpenMember(false)} />
 
-
   return (
     <Box>
-      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="tambah kalender" menu />
+      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Tambah Acara" menu />
       <Box p={20}>
         <Stack pb={100}>
           <TextInput
@@ -198,14 +200,15 @@ export default function NavbarCreateDivisionCalender() {
               },
             }}
             size="md"
-            placeholder="Ulangi Event"
-            label="Ulangi Event"
+            placeholder="Ulangi Acara"
+            label="Ulangi Acara"
             data={[
-              { value: '1', label: 'Acara 1 Kali' },
-              { value: '2', label: 'Hari Kerja (Sen - Jum)' },
-              { value: '3', label: 'Mingguan' },
-              { value: '4', label: 'Bulanan' },
-              { value: '5', label: 'Tahunan' },
+              { value: 'once', label: 'Acara 1 Kali' },
+              { value: 'daily', label: 'Setiap Hari' },
+              // { value: 'weekdays', label: 'Hari Kerja (Sen - Jum)' },
+              { value: 'weekly', label: 'Mingguan' },
+              { value: 'monthly', label: 'Bulanan' },
+              { value: 'yearly', label: 'Tahunan' },
             ]}
             value={isData.repeatEventTyper}
             onChange={(val: any) => {
@@ -216,7 +219,31 @@ export default function NavbarCreateDivisionCalender() {
             onBlur={() => setTouched({ ...touched, repeatEventTyper: true })}
             error={
               touched.repeatEventTyper && (
-                isData.repeatEventTyper == "" ? "Ulangi Event Tidak Boleh Kosong" : null
+                isData.repeatEventTyper == "" ? "Ulangi Acara Tidak Boleh Kosong" : null
+              )
+            }
+          />
+          <TextInput styles={{
+            input: {
+              border: `1px solid ${"#D6D8F6"}`,
+              borderRadius: 10,
+            },
+          }}
+            type='number'
+            required
+            label="Jumlah pengulangan"
+            size="md"
+            placeholder='Jumlah pengulangan'
+            value={isData.repeatValue}
+            onChange={(event) => {
+              setData({ ...isData, repeatValue: String(event.currentTarget.value) })
+              setTouched({ ...touched, repeatValue: false })
+            }}
+            onBlur={() => setTouched({ ...touched, repeatValue: true })}
+            error={
+              touched.repeatValue && (
+                isData.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : null ||
+                  Number(isData.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh 0" : null
               )
             }
           />
@@ -286,7 +313,7 @@ export default function NavbarCreateDivisionCalender() {
                               </Grid.Col>
                               <Grid.Col span={3}>
                                 <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
-                                Anggota
+                                  Anggota
                                 </Text>
                               </Grid.Col>
                             </Grid>

@@ -1,10 +1,11 @@
-import { User } from './../../../module/discussion/lib/type_discussion';
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
 import "moment/locale/id";
+import { createLogUser } from '@/module/user';
+import { Frequency, RRule } from 'rrule';
 
 //GET ALL CALENDER
 export async function GET(request: Request) {
@@ -31,25 +32,33 @@ export async function GET(request: Request) {
                 return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, data tidak ditemukan" }, { status: 404 });
             }
 
-            const data = await prisma.divisionCalendar.findMany({
+            const data = await prisma.divisionCalendarReminder.findMany({
                 where: {
                     isActive: true,
                     idDivision: idDivision,
-                    dateStart:  new Date(String(isDate))
+                    dateStart: new Date(String(isDate)),
+                    DivisionCalendar:{
+                        isActive: true
+                    }
                 },
                 select: {
                     id: true,
-                    title: true,
-                    desc: true,
-                    status: true,
+                    idCalendar: true,
                     timeStart: true,
                     dateStart: true,
                     timeEnd: true,
                     dateEnd: true,
                     createdAt: true,
-                    User: {
+                    status: true,
+                    DivisionCalendar: {
                         select: {
-                            name: true
+                            title: true,
+                            desc: true,
+                            User: {
+                                select: {
+                                    name: true
+                                }
+                            }
                         }
                     }
                 },
@@ -59,8 +68,10 @@ export async function GET(request: Request) {
             });
 
             const allOmit = data.map((v: any) => ({
-                ..._.omit(v, ["User"]),
-                user_name: v.User.name,
+                ..._.omit(v, ["DivisionCalendar", "User"]),
+                title: v.DivisionCalendar.title,
+                desc: v.DivisionCalendar.desc,
+                user_name: v.DivisionCalendar.User.name,
                 timeStart: moment.utc(v.timeStart).format('HH:mm'),
                 timeEnd: moment.utc(v.timeEnd).format('HH:mm')
             }))
@@ -87,7 +98,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
 
-        const { idDivision, title, desc, timeStart, timeEnd, dateStart, dateEnd, repeatEventTyper, member, linkMeet } = (await request.json());
+        const { idDivision, title, desc, timeStart, timeEnd, dateStart, dateEnd, repeatEventTyper, member, linkMeet, repeatValue } = (await request.json());
 
 
         const userId = user.id
@@ -101,8 +112,6 @@ export async function POST(request: Request) {
         if (cekDivision == 0) {
             return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, data tidak ditemukan" }, { status: 404 });
         }
-
-        const statusCalender = 0
 
         const y = new Date('1970-01-01 ' + timeStart)
         const x = new Date('1970-01-01 ' + timeEnd)
@@ -120,16 +129,44 @@ export async function POST(request: Request) {
                 linkMeet,
                 repeatEventTyper,
                 desc,
-                status: statusCalender
+                repeatValue: Number(repeatValue)
             },
             select: {
                 id: true,
-
             }
         });
 
+
+        const freq: Frequency = repeatEventTyper === "yearly" ? RRule.YEARLY :
+            repeatEventTyper === "monthly" ? RRule.MONTHLY :
+                repeatEventTyper === "weekly" ? RRule.WEEKLY :
+                    repeatEventTyper === "daily" ? RRule.DAILY :
+                        repeatEventTyper === "hourly" ? RRule.HOURLY :
+                            repeatEventTyper === "minutely" ? RRule.MINUTELY :
+                                RRule.SECONDLY;
+
+        const rule = new RRule({
+            freq,
+            interval: 1,
+            dtstart: new Date(dateStart),
+            count: repeatValue
+        });
+
+        const hasil = rule.all().map(recurrenceDate => ({
+            idDivision: idDivision,
+            idCalendar: data.id,
+            dateStart: recurrenceDate,
+            timeStart: timeStartFix,
+            timeEnd: timeEndFix,
+            dateEnd: recurrenceDate
+        }));
+
+        const insertReminder = await prisma.divisionCalendarReminder.createMany({
+            data: hasil
+        })
+
         const omitMember = member.map((v: any) => ({
-            ..._.omit(v, ["name", "idUser"]),
+            ..._.omit(v, ["name", "idUser", "img"]),
             idCalendar: data.id,
             idUser: v.idUser
         }))
@@ -139,11 +176,13 @@ export async function POST(request: Request) {
         });
 
 
+        // create log user
+        const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data acara kalender', table: 'divisionCalendar', data: data.id })
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil membuat acara kalender" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membuat acara kalender, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

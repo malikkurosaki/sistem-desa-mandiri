@@ -10,7 +10,7 @@ import { TbCopy } from 'react-icons/tb';
 import { HiMenu } from 'react-icons/hi';
 import DrawerDetailEvent from './drawer_detail_event';
 import { useParams, useRouter } from 'next/navigation';
-import { funGetOneCalender } from '../lib/api_calender';
+import { funDeleteMemberCalender, funGetOneCalender } from '../lib/api_calender';
 import { useShallowEffect } from '@mantine/hooks';
 import moment from "moment";
 import "moment/locale/id";
@@ -18,6 +18,7 @@ import { IDataDetailByIdCalender, IDataDetailByIdMember } from '../lib/type_cale
 import SkeletonDetailEvent from './skeleton_detail_event';
 import { IoIosCloseCircle } from 'react-icons/io';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import toast from 'react-hot-toast';
 
 export default function DetailEventDivision() {
   const param = useParams<{ id: string, detail: string }>()
@@ -29,6 +30,7 @@ export default function DetailEventDivision() {
   const [openDrawerUser, setOpenDrawerUser] = useState(false)
   const [isOpenModal, setOpenModal] = useState(false)
   const router = useRouter()
+  const [dataChoose, setDataChoose] = useState({ id: '', name: '' })
 
 
   const getData = async () => {
@@ -50,9 +52,27 @@ export default function DetailEventDivision() {
     getData()
   }, [])
 
+  async function onSubmit() {
+    try {
+      const res = await funDeleteMemberCalender(String(isDataCalender?.idCalendar), { idUser: dataChoose.id });
+      if (res.success) {
+        toast.success(res.message)
+        setDataChoose({ id: '', name: '' })
+        getData()
+        setOpenDrawer(false)
+        setOpenDrawerUser(false)
+      } else {
+        toast.error(res.message)
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mengeluarkan anggota, coba lagi nanti");
+    }
+  }
+
   return (
     <Box>
-      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Detail Kalender"
+      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Detail Acara"
         menu={<ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
           <HiMenu size={20} color='white' />
         </ActionIcon>} />
@@ -121,11 +141,12 @@ export default function DetailEventDivision() {
                   xl: 11
                 }}>
                   <Text>
-                    {isDataCalender?.repeatEventTyper.toString() === '1' ? 'Acara 1 Kali' :
-                      isDataCalender?.repeatEventTyper.toString() === '2' ? 'Hari Kerja (senin - jumat)' :
-                        isDataCalender?.repeatEventTyper.toString() === '3' ? 'Minggu' :
-                          isDataCalender?.repeatEventTyper.toString() === '4' ? 'Bulanan' :
-                            isDataCalender?.repeatEventTyper.toString() === '5' ? 'Tahunan' :
+                    {isDataCalender?.repeatEventTyper.toString() === 'once' ? 'Acara 1 Kali' :
+                      isDataCalender?.repeatEventTyper.toString() === 'daily' ? 'Setiap Hari' :
+                        // isDataCalender?.repeatEventTyper.toString() === 'weekdays' ? 'Hari Kerja (senin - jumat)' :
+                        isDataCalender?.repeatEventTyper.toString() === 'weekly' ? 'Mingguan' :
+                          isDataCalender?.repeatEventTyper.toString() === 'monthly' ? 'Bulanan' :
+                            isDataCalender?.repeatEventTyper.toString() === 'yearly' ? 'Tahunan' :
                               ''}
                   </Text>
                 </Grid.Col>
@@ -242,7 +263,10 @@ export default function DetailEventDivision() {
                         {
                           isDataAnggota.map((v, i) => {
                             return (
-                              <Box onClick={() => setOpenDrawerUser(true)} key={i}>
+                              <Box onClick={() => {
+                                setDataChoose({ id: v.idUser, name: v.name })
+                                setOpenDrawerUser(true)
+                              }} key={i}>
                                 <Box my={10}>
                                   <Grid align='center' gutter={"lg"}>
                                     <Grid.Col span={{
@@ -283,14 +307,14 @@ export default function DetailEventDivision() {
 
 
 
-      <LayoutDrawer opened={openDrawerUser} title={<Text lineClamp={1}>Menu</Text>} onClose={() => setOpenDrawerUser(false)}>
+      <LayoutDrawer opened={openDrawerUser} title={<Text lineClamp={1}>{dataChoose.name}</Text>} onClose={() => setOpenDrawerUser(false)}>
         <Box>
           <Stack pt={10}>
             <SimpleGrid
               cols={{ base: 2, sm: 3, lg: 3 }}
             >
               <Flex
-                // onClick={() => { router.push('/member/' + ) }}
+                onClick={() => { router.push('/member/' + dataChoose.id) }}
                 justify={'center'} align={'center'} direction={'column'} >
                 <Box>
                   <FaUser size={30} color={WARNA.biruTua} />
@@ -317,12 +341,12 @@ export default function DetailEventDivision() {
         description="Apakah Anda yakin ingin mengeluarkan anggota?"
         onYes={(val) => {
           if (val) {
-            // onSubmit()
+            onSubmit()
           }
           setOpenModal(false)
         }} />
       <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
-        <DrawerDetailEvent />
+        <DrawerDetailEvent idCalendar={String(isDataCalender?.idCalendar)} />
       </LayoutDrawer>
     </Box>
   );

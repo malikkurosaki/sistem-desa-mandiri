@@ -37,7 +37,7 @@ export default function HistoryDivisionCalender() {
   }, [searchQuery])
   return (
     <Box>
-      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Riwayat kalender" menu />
+      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Riwayat acara" menu />
       <Box p={20}>
         <TextInput
           styles={{

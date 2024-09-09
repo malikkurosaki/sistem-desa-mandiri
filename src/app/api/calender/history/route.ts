@@ -29,21 +29,29 @@ export async function GET(request: Request) {
                 return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, data tidak ditemukan" }, { status: 404 });
             }
 
-            const data = await prisma.divisionCalendar.findMany({
+            const data = await prisma.divisionCalendarReminder.findMany({
                 where: {
                     isActive: true,
                     idDivision: idDivision,
-                    title: {
-                        contains: (name == undefined || name == "null") ? "" : name,
-                        mode: "insensitive"
+                    DivisionCalendar: {
+                        title: {
+                            contains: (name == undefined || name == "null") ? "" : name,
+                            mode: "insensitive"
+                        },
+                        isActive: true
                     }
+
                 },
                 select: {
                     id: true,
-                    title: true,
                     timeStart: true,
                     dateStart: true,
                     timeEnd: true,
+                    DivisionCalendar: {
+                        select: {
+                            title: true,
+                        }
+                    }
                 },
                 orderBy: [
                     {
@@ -59,8 +67,8 @@ export async function GET(request: Request) {
             });
 
             const allOmit = data.map((v: any) => ({
-                ..._.omit(v, [""]),
-                dateStart: v.dateStart,
+                ..._.omit(v, ["DivisionCalendar"]),
+                title: v.DivisionCalendar.title
             }))
 
             // groupBy untuk dateStart
@@ -80,15 +88,15 @@ export async function GET(request: Request) {
                 }
             })
 
-            return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender", data: result }, { status: 200 });
+            return NextResponse.json({ success: true, message: "Berhasil mendapatkan riwayat acara kalender", data: result }, { status: 200 });
 
         } else {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, data tidak ditemukan" }, { status: 404 });
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan riwayat acara kalender, coba lagi nanti" }, { status: 404 });
 
         }
 
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, data tidak ditemukan" }, { status: 404 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan riwayat acara kalender, coba lagi nanti" }, { status: 404 });
     }
 }

@@ -109,7 +109,7 @@ export default function DateEventDivision() {
       </Group>
       <Box>
         <Text mb={10} mt={20} fw={"bold"}>
-          Event
+          Acara
         </Text>
         {loading ?
           Array(6)
@@ -123,7 +123,7 @@ export default function DateEventDivision() {
           _.isEmpty(isData)
             ?
             <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '20vh' }}>
-              <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada event</Text>
+              <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada acara</Text>
             </Box>
             :
             isData.map((event, index) => {

@@ -31,13 +31,16 @@ export async function GET(request: Request) {
             return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, data tidak ditemukan" }, { status: 404 });
         }
 
-        const data = await prisma.divisionCalendar.findMany({
+        const data = await prisma.divisionCalendarReminder.findMany({
             where: {
                 isActive: true,
                 idDivision: String(idDivision),
                 dateStart: {
                     gte: new Date(awalDate),
                     lte: new Date(akhirDate),
+                },
+                DivisionCalendar: {
+                    isActive: true
                 }
             }
         })
