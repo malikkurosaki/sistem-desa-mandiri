@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
+import { globalRole, LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
 import { ActionIcon, Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,12 +10,16 @@ import { HiMenu } from "react-icons/hi";
 import { IoAddCircle } from "react-icons/io5";
 import { FaFileCirclePlus, FaPencil, FaUsers } from "react-icons/fa6";
 import { MdCancel } from "react-icons/md";
+import { globalIsAdminDivision } from "@/module/division_new";
+import { useHookstate } from "@hookstate/core";
 
 export default function NavbarDetailDivisionTask() {
    const router = useRouter()
    const param = useParams<{ id: string, detail: string }>()
    const [name, setName] = useState('')
    const [isOpen, setOpen] = useState(false)
+   const roleLogin = useHookstate(globalRole)
+   const adminLogin = useHookstate(globalIsAdminDivision)
 
    async function getOneData() {
       try {
@@ -80,22 +84,6 @@ export default function NavbarDetailDivisionTask() {
                            cursor: 'pointer'
                         }}
                         onClick={() => {
-                           router.push(param.detail + '/add-member')
-                        }}
-                     >
-                        <Box>
-                           <FaUsers size={30} color={WARNA.biruTua} />
-                        </Box>
-                        <Box>
-                           <Text c={WARNA.biruTua} ta='center'>Tambah anggota</Text>
-                        </Box>
-                     </Flex>
-
-                     <Flex justify={'center'} align={'center'} direction={'column'}
-                        style={{
-                           cursor: 'pointer'
-                        }}
-                        onClick={() => {
                            router.push(param.detail + '/add-file')
                         }}
                      >
@@ -107,33 +95,51 @@ export default function NavbarDetailDivisionTask() {
                         </Box>
                      </Flex>
 
-                     <Flex justify={'center'} align={'center'} direction={'column'}
-                        style={{
-                           cursor: 'pointer'
-                        }}
-                        onClick={() => { router.push(param.detail + '/edit') }}
-                     >
-                        <Box>
-                           <FaPencil size={30} color={WARNA.biruTua} />
-                        </Box>
-                        <Box>
-                           <Text c={WARNA.biruTua} ta='center'>Edit</Text>
-                        </Box>
-                     </Flex>
+                     {
+                        (roleLogin.get() != "user" && roleLogin.get() != "coadmin") || adminLogin.get() ?
+                           <>
+                              <Flex justify={'center'} align={'center'} direction={'column'}
+                                 style={{
+                                    cursor: 'pointer'
+                                 }}
+                                 onClick={() => { router.push(param.detail + '/add-member') }} >
+                                 <Box>
+                                    <FaUsers size={30} color={WARNA.biruTua} />
+                                 </Box>
+                                 <Box>
+                                    <Text c={WARNA.biruTua} ta='center'>Tambah anggota</Text>
+                                 </Box>
+                              </Flex>
 
-                     <Flex justify={'center'} align={'center'} direction={'column'}
-                        style={{
-                           cursor: 'pointer'
-                        }}
-                        onClick={() => { router.push(param.detail + '/cancel') }}
-                     >
-                        <Box>
-                           <MdCancel size={30} color={WARNA.biruTua} />
-                        </Box>
-                        <Box>
-                           <Text c={WARNA.biruTua} ta='center'>Batal</Text>
-                        </Box>
-                     </Flex>
+                              <Flex justify={'center'} align={'center'} direction={'column'}
+                                 style={{
+                                    cursor: 'pointer'
+                                 }}
+                                 onClick={() => { router.push(param.detail + '/edit') }} >
+                                 <Box>
+                                    <FaPencil size={30} color={WARNA.biruTua} />
+                                 </Box>
+                                 <Box>
+                                    <Text c={WARNA.biruTua} ta='center'>Edit</Text>
+                                 </Box>
+                              </Flex>
+
+                              <Flex justify={'center'} align={'center'} direction={'column'}
+                                 style={{
+                                    cursor: 'pointer'
+                                 }}
+                                 onClick={() => { router.push(param.detail + '/cancel') }} >
+                                 <Box>
+                                    <MdCancel size={30} color={WARNA.biruTua} />
+                                 </Box>
+                                 <Box>
+                                    <Text c={WARNA.biruTua} ta='center'>Batal</Text>
+                                 </Box>
+                              </Flex>
+                           </> : <></>
+
+                     }
+
 
                   </SimpleGrid>
                </Stack>

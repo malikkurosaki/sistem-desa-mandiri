@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
+import { globalRole, LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
 import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack, Grid } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
@@ -10,6 +10,8 @@ import { IDataMemberTaskDivision } from "../lib/type_task";
 import { FaUser } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
+import { globalIsAdminDivision } from "@/module/division_new";
 
 
 export default function ListAnggotaDetailTask() {
@@ -20,6 +22,8 @@ export default function ListAnggotaDetailTask() {
    const [isOpenModal, setOpenModal] = useState(false)
    const [dataChoose, setDataChoose] = useState({ id: '', name: '' })
    const router = useRouter()
+   const roleLogin = useHookstate(globalRole)
+   const adminLogin = useHookstate(globalIsAdminDivision)
 
    async function getOneData() {
       try {
@@ -140,15 +144,18 @@ export default function ListAnggotaDetailTask() {
                            <Text c={WARNA.biruTua}>Lihat profil</Text>
                         </Box>
                      </Flex>
-
-                     <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
-                        <Box>
-                           <IoIosCloseCircle size={30} color={WARNA.biruTua} />
-                        </Box>
-                        <Box>
-                           <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
-                        </Box>
-                     </Flex>
+                     {
+                        (roleLogin.get() != "user" && roleLogin.get() != "coadmin") || adminLogin.get() ?
+                           <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
+                              <Box>
+                                 <IoIosCloseCircle size={30} color={WARNA.biruTua} />
+                              </Box>
+                              <Box>
+                                 <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
+                              </Box>
+                           </Flex>
+                           : <></>
+                     }
                   </SimpleGrid>
                </Stack>
             </Box>
