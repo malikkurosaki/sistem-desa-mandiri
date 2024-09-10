@@ -68,10 +68,11 @@ export async function GET(request: Request, context: { params: { id: string } })
         const username = data?.User.name
         const user_img = data?.User.img
         const createdAt = moment(data?.createdAt).format("ll")
+        const isCreator = data?.createdBy == user.id
 
 
 
-        const result = { ...userMember, username, createdAt, user_img }
+        const result = { ...userMember, username, createdAt, user_img, isCreator }
 
 
         const omitData = _.omit(result, ["User"])
