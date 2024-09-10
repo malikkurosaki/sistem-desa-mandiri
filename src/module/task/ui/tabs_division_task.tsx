@@ -17,26 +17,26 @@ export default function TabsDivisionTask() {
 
    const dataStatus = [
       {
-        id: "0",
-        title: "Segera",
-        icon: <RiProgress3Line style={iconStyle} />
+         id: "0",
+         title: "Segera",
+         icon: <TbClockPause style={iconStyle} />
       },
       {
-        id: "1",
-        title: "Dikerjakan",
-        icon: <TbClockPause style={iconStyle} />
+         id: "1",
+         title: "Dikerjakan",
+         icon: <RiProgress3Line style={iconStyle} />
       },
       {
-        id: "2",
-        title: "Selesai",
-        icon: <IoIosCheckmarkCircleOutline style={iconStyle} />
+         id: "2",
+         title: "Selesai",
+         icon: <IoIosCheckmarkCircleOutline style={iconStyle} />
       },
       {
-        id: "3",
-        title: "Batal",
-        icon: <IoCloseCircleOutline style={iconStyle} />
+         id: "3",
+         title: "Batal",
+         icon: <IoCloseCircleOutline style={iconStyle} />
       }
-    ]
+   ]
 
    return (
       <Box p={20}>
@@ -77,7 +77,7 @@ export default function TabsDivisionTask() {
                      color={
                         status == item.id
                            ? "white"
-                           : WARNA.biruTua
+                           : (status == null && item.id == "0") ? "white" : WARNA.biruTua
                      }
                      onClick={() => { router.push("?status=" + item.id) }}
                      defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}
@@ -85,7 +85,7 @@ export default function TabsDivisionTask() {
                      bg={
                         status == item.id
                            ? "#FF9861"
-                           : "transparent"
+                           : (status == null && item.id == "0") ? "#FF9861" : "transparent"
                      }
                   >
                      {item.icon}

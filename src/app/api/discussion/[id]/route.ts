@@ -1,6 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
-import { stat } from "fs";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
 import "moment/locale/id";
@@ -68,10 +68,11 @@ export async function GET(request: Request, context: { params: { id: string } })
         const username = data?.User.name
         const user_img = data?.User.img
         const createdAt = moment(data?.createdAt).format("ll")
+        const isCreator = data?.createdBy == user.id
 
 
 
-        const result = { ...userMember, username, createdAt, user_img }
+        const result = { ...userMember, username, createdAt, user_img, isCreator }
 
 
         const omitData = _.omit(result, ["User"])
@@ -95,7 +96,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 }
 
 
-// ONE OR CLOSE DISCUSSION
+// OPEN OR CLOSE DISCUSSION
 export async function DELETE(request: Request, context: { params: { id: string } }) {
     try {
         const user = await funGetUserByCookies()
@@ -131,6 +132,10 @@ export async function DELETE(request: Request, context: { params: { id: string }
                 status: newStatus
             }
         });
+
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate status diskusi', table: 'divisionDisscussion', data: id })
+
         return NextResponse.json({ success: true, message: "Berhasil mengedit diskusi" }, { status: 200 });
 
     } catch (error) {
@@ -167,6 +172,9 @@ export async function PUT(request: Request, context: { params: { id: string } })
                 isActive: false
             }
         });
+        // create log user
+        const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus data diskusi', table: 'divisionDisscussion', data: id })
+
         return NextResponse.json({ success: true, message: "Berhasil menghapus diskusi" }, { status: 200 });
     } catch (error) {
         console.error(error);
@@ -203,6 +211,9 @@ export async function POST(request: Request, context: { params: { id: string } }
                 desc: desc
             }
         });
+
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data diskusi', table: 'divisionDisscussion', data: id })
         return NextResponse.json({ success: true, message: "Berhasil mengedit diskusi" }, { status: 200 });
 
     } catch (error) {

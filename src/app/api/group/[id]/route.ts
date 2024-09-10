@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic'
@@ -75,14 +76,11 @@ export async function DELETE(request: Request, context: { params: { id: string }
          },
       });
 
-      return NextResponse.json(
-         {
-            success: true,
-            message: "Grup berhasil diedit",
-            data,
-         },
-         { status: 200 }
-      );
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User mengedit status data grup', table: 'group', data: id })
+
+      return NextResponse.json( { success: true, message: "Grup berhasil diedit", data, }, { status: 200 } );
+
    } catch (error) {
       console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengedit grup, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
@@ -123,14 +121,11 @@ export async function PUT(request: Request, context: { params: { id: string } })
          },
       });
 
-      return NextResponse.json(
-         {
-            success: true,
-            message: "Grup berhasil diedit",
-            data,
-         },
-         { status: 200 }
-      );
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User mengedit data grup', table: 'group', data: id })
+
+      return NextResponse.json( { success: true, message: "Grup berhasil diedit", data, }, { status: 200 } );
+
    } catch (error) {
       console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengedit grup, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });

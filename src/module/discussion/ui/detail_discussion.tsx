@@ -3,7 +3,6 @@ import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Inp
 import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonDetailDiscussionComment, SkeletonDetailDiscussionMember, SkeletonSingle, WARNA } from "@/module/_global";
 import { GrChatOption } from "react-icons/gr";
 import { LuSendHorizonal } from "react-icons/lu";
-import NavbarDetailDiscussion from "@/module/discussion/ui/navbar_detail_discussion";
 import { useState } from "react";
 import { funCreateComent, funGetAllDiscussion, funGetDiscussionById } from "../lib/api_discussion";
 import { useShallowEffect } from "@mantine/hooks";
@@ -16,8 +15,7 @@ import { useHookstate } from "@hookstate/core";
 import { globalRefreshDiscussion } from "../lib/val_discussion";
 import { HiMenu } from "react-icons/hi";
 import DrawerDetailDiscussion from "./drawer_detail_discussion";
-import { funGetUserByCookies } from "@/module/auth";
-import { funGetDivisionById } from "@/module/division_new";
+import {globalIsAdminDivision } from "@/module/division_new";
 
 export default function DetailDiscussion({ id, idDivision }: { id: string, idDivision: string }) {
    const [isData, setData] = useState<IDetailDiscussion>()
@@ -27,20 +25,16 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    const router = useRouter()
    const refresh = useHookstate(globalRefreshDiscussion)
    const roleLogin = useHookstate(globalRole)
-   const [isAdmin, setAdmin] = useState(false)
    const [isCreator, setCreator] = useState(false)
+   const adminLogin = useHookstate(globalIsAdminDivision)
 
    const getData = async () => {
       try {
          setIsLoad(true)
          const response = await funGetDiscussionById(id)
-         const res = await funGetDivisionById(param.id);
-         const login = await funGetUserByCookies()
-         const cek = res.data.member.some((i: any) => i.idUser == login.id && i.isAdmin == true)
-         setAdmin(cek)
          setData(response.data)
          setIsLoad(false)
-         setCreator(response.data.createdBy == login.id)
+         setCreator(response.data.isCreator)
       } catch (error) {
          console.error(error)
       } finally {
@@ -52,19 +46,25 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
       getData()
    }, [refresh.get()])
 
+   async function reloadData() {
+      try {
+         const response = await funGetDiscussionById(id)
+         setData(response.data)
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
    const sendComent = async () => {
       try {
          if (isComent.trim() == "") {
             return toast.error("Masukkan Komentar Anda")
          }
-         const response = await funCreateComent(id, {
-            comment: isComent,
-            idDiscussion: param.detail
-         })
+         const response = await funCreateComent(id, { comment: isComent, idDiscussion: param.detail })
 
          if (response.success) {
             setIsComent("")
-            getData()
+            reloadData()
          } else {
             toast.error(response.message)
          }
@@ -82,7 +82,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
          {/* <NavbarDetailDiscussion id={id} status={Number(isData?.status)} idDivision={idDivision} /> */}
          <LayoutNavbarNew back={`/division/${param.id}/discussion/`} title="Diskusi "
             menu={
-               ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin || isCreator) ?
+               ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || adminLogin.get() || isCreator) ?
                   <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
                      <HiMenu size={20} color='white' />
                   </ActionIcon>

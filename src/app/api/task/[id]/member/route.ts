@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
@@ -43,14 +44,11 @@ export async function POST(request: Request, context: { params: { id: string } }
          })
       }
 
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User menambahkan anggota tugas divisi', table: 'divisionProject', data: id })
 
-      return NextResponse.json(
-         {
-            success: true,
-            message: "Berhasil menambahkan anggota tugas",
-         },
-         { status: 200 }
-      );
+
+      return NextResponse.json( { success: true, message: "Berhasil menambahkan anggota tugas", }, { status: 200 } );
    } catch (error) {
       console.error(error);
       return NextResponse.json({ success: false, message: "Gagal menambah anggota tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
@@ -92,14 +90,10 @@ export async function DELETE(request: Request, context: { params: { id: string }
          }
       })
 
+      // create log user
+      const log = await createLogUser({ act: 'DELETE', desc: 'User mengeluarkan anggota dari tugas divisi', table: 'divisionProject', data: id })
 
-      return NextResponse.json(
-         {
-            success: true,
-            message: "Berhasil mengeluarkan anggota",
-         },
-         { status: 200 }
-      );
+      return NextResponse.json( { success: true, message: "Berhasil mengeluarkan anggota", }, { status: 200 } );
    } catch (error) {
       console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });

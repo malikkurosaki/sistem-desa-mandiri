@@ -4,6 +4,7 @@ import _ from "lodash";
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { createLogUser } from "@/module/user";
 
 // HAPUS DETAIL FILE, HAPUS FILE DI ASSETS DAN DATABASE (BUKAN PAKE ISACTIVE)
 export async function DELETE(request: Request, context: { params: { id: string } }) {
@@ -55,15 +56,10 @@ export async function DELETE(request: Request, context: { params: { id: string }
          },
       });
 
+      // create log user
+      const log = await createLogUser({ act: 'DELETE', desc: 'User menghpus file divisi', table: 'divisionProject', data: String(dataRelasi?.idProject) })
 
-      return NextResponse.json(
-         {
-            success: true,
-            message: "File berhasil dihapus",
-            data,
-         },
-         { status: 200 }
-      );
+      return NextResponse.json({ success: true, message: "File berhasil dihapus", data, }, { status: 200 });
 
    } catch (error) {
       console.error(error);
@@ -155,7 +151,8 @@ export async function POST(request: Request, context: { params: { id: string } }
          })
       }
 
-
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User meambahkan file tugas divisi baru', table: 'divisionProject', data: id })
       return NextResponse.json({ success: true, message: "Berhasil membuat tugas divisi" }, { status: 200 });
 
    } catch (error) {

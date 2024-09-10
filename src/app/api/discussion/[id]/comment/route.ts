@@ -1,8 +1,9 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import { NextResponse } from "next/server";
 
-// CREATE COMENT BY ID
+// CREATE COMENT BY ID KOMENTAR
 export async function POST(request: Request, context: { params: { id: string } }) {
     try {
         const user = await funGetUserByCookies()
@@ -34,8 +35,14 @@ export async function POST(request: Request, context: { params: { id: string } }
                 comment: comment,
                 idDisscussion: id,
                 createdBy: user.id
+            },
+            select: {
+                id: true
             }
         })
+
+        // create log user
+        const log = await createLogUser({ act: 'CREATE', desc: 'User menambah komentar pada diskusi', table: 'divisionDisscussionComment', data: data.id })
 
         return NextResponse.json({ success: true, message: "Berhasil menambah komentar", data: data, }, { status: 200 });
 

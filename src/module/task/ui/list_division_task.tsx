@@ -1,5 +1,5 @@
 import { WARNA } from "@/module/_global";
-import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Progress, Skeleton, Text, TextInput, Title } from "@mantine/core";
+import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Progress, Skeleton, Text, TextInput, Title } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from "react-icons/hi2";
@@ -67,6 +67,7 @@ export default function ListDivisionTask() {
                   radius={30}
                   leftSection={<HiMagnifyingGlass size={20} />}
                   placeholder="Pencarian"
+                  onChange={(val) => setSearchQuery(val.target.value)}
                />
             </Grid.Col>
             <Grid.Col span={'auto'}>
@@ -181,7 +182,7 @@ export default function ListDivisionTask() {
                                              <Avatar>
                                                 <MdAccountCircle size={32} color={WARNA.biruTua} />
                                              </Avatar>
-                                             <Avatar>+{v.member - 1}</Avatar>
+                                             <Avatar>{(v.member == 0) ? "0" : "+" + (v.member - 1)}</Avatar>
                                           </Avatar.Group>
                                        </Group>
                                     </Box>

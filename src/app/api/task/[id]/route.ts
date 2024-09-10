@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
 import "moment/locale/id"
@@ -184,16 +185,15 @@ export async function POST(request: Request, context: { params: { id: string } }
             dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
             dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
          },
+         select: {
+            id: true
+         }
       });
 
-      return NextResponse.json(
-         {
-            success: true,
-            message: "Detail tugas berhasil ditambahkan",
-            data,
-         },
-         { status: 200 }
-      );
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User menambahkan detail tugas divisi', table: 'divisionProjectTask', data: create.id })
+
+      return NextResponse.json({ success: true, message: "Detail tugas berhasil ditambahkan", data, }, { status: 200 });
    } catch (error) {
       console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengedit detail tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
@@ -238,13 +238,10 @@ export async function DELETE(request: Request, context: { params: { id: string }
          }
       });
 
-      return NextResponse.json(
-         {
-            success: true,
-            message: "Tugas berhasil dibatalkan",
-         },
-         { status: 200 }
-      );
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User membatalkan tugas divisi', table: 'divisionProject', data: id })
+
+      return NextResponse.json({ success: true, message: "Tugas berhasil dibatalkan", }, { status: 200 });
    } catch (error) {
       console.error(error);
       return NextResponse.json({ success: false, message: "Gagal membatalkan tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
@@ -287,13 +284,10 @@ export async function PUT(request: Request, context: { params: { id: string } })
          }
       });
 
-      return NextResponse.json(
-         {
-            success: true,
-            message: "Tugas berhasil diedit",
-         },
-         { status: 200 }
-      );
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data tugas divisi', table: 'divisionProject', data: id })
+
+      return NextResponse.json( { success: true, message: "Tugas berhasil diedit", }, { status: 200 } );
    } catch (error) {
       console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengedit tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });

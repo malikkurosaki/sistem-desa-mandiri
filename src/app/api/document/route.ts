@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
@@ -281,7 +282,13 @@ export async function POST(request: Request) {
             extension: "folder",
             createdBy: user.id,
          },
+         select: {
+            id: true
+         }
       });
+
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User membuat folder baru', table: 'divisionDocumentFolderFile', data: data.id })
 
       return NextResponse.json({ success: true, message: "Berhasil membuat folder baru" }, { status: 200 });
    } catch (error) {
@@ -339,6 +346,9 @@ export async function PUT(request: Request) {
       })
 
 
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User mengubah nama file atau folder', table: 'divisionDocumentFolderFile', data: id })
+
 
       return NextResponse.json({ success: true, message: "Berhasil mengubah nama item" }, { status: 200 });
    } catch (error) {
@@ -369,6 +379,9 @@ export async function DELETE(request: Request) {
             }
          })
       }
+
+      // create log user
+      const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus file atau folder', table: 'divisionDocumentFolderFile', data: '' })
 
 
       return NextResponse.json({ success: true, message: "Berhasil menghapus item" }, { status: 200 });
