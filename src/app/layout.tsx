@@ -37,7 +37,6 @@ export default function RootLayout({
         <MantineProvider>
           <Box bg={'#252A2F'} pos={"fixed"} w={"100%"} h={"100%"} style={{
             overflowY: "auto",
-            touchAction: "manipulation"
           }}>
             <Toaster/>
             <Container mih={'100vh'} p={0} size={rem(550)} bg={WARNA.bgWhite}>
