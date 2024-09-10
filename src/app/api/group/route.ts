@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -56,12 +57,19 @@ export async function POST(request: Request) {
             name,
             idVillage: String(villaId)
          },
+         select: {
+            id: true
+         }
       });
 
       revalidatePath('/api/group?active=true', "page")
       revalidatePath('/api/group?active=false', 'page')
       revalidatePath('/group?active=true', 'page')
       revalidateTag('group')
+
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data grup', table: 'group', data: data.id })
+
 
       return NextResponse.json({ success: true, message: "Berhasil menambahkan grup", data, }, { status: 200 });
    } catch (error) {
