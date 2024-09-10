@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
@@ -64,6 +65,9 @@ export async function POST(request: Request) {
             }
          })
       }
+
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User memindahkan file atau folder', table: 'divisionDocumentFolderFile', data: '' })
 
 
       return NextResponse.json({ success: true, message: "Berhasil memindahkan item" }, { status: 200 });

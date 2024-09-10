@@ -4,6 +4,7 @@ import _ from "lodash";
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { createLogUser } from "@/module/user";
 
 
 // UPLOAD FILE
@@ -91,6 +92,9 @@ export async function POST(request: Request) {
       const buffer = Buffer.from(await file.arrayBuffer());
       // Tulis file ke sistem
       fs.writeFileSync(filePath, buffer);
+
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User mengupload file baru', table: 'divisionDocumentFolderFile', data: dataInsert.id })
 
       return NextResponse.json({ success: true, message: "Berhasil upload file" }, { status: 200 });
    } catch (error) {
