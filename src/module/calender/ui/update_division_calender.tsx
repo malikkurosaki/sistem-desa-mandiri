@@ -90,7 +90,7 @@ export default function UpdateDivisionCalender() {
     <Box>
       <LayoutNavbarNew back='' title="Edit acara" menu />
       <Box p={20}>
-        <Stack>
+        <Stack mb={100}>
           {loading ?
             <>
               <Skeleton height={40} mt={25} radius={10} />

@@ -300,8 +300,9 @@ export async function GET(request: Request) {
          })
 
          allData = data.map((v: any) => ({
-            ..._.omit(v, ["User"]),
-            user_name: v.User.name,
+            ..._.omit(v, ["DivisionCalendar", "User"]),
+            user_name: v.DivisionCalendar.User.name,
+            title: v.DivisionCalendar.title,
             timeStart: moment.utc(v.timeStart).format('HH:mm'),
             timeEnd: moment.utc(v.timeEnd).format('HH:mm')
          }))
@@ -364,6 +365,6 @@ export async function GET(request: Request) {
    }
    catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan data, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan data, coba lagi nanti 99", reason: (error as Error).message, }, { status: 500 });
    }
 }
