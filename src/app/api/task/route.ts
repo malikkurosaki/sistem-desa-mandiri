@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
 import moment from "moment";
+import { createLogUser } from "@/module/user";
 
 
 // GET ALL DATA TUGAS DIVISI
@@ -195,6 +196,9 @@ export async function POST(request: Request) {
             data: fileFix
          })
       }
+
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User membuat tugas divisi baru', table: 'divisionProject', data: data.id })
 
 
       return NextResponse.json({ success: true, message: "Berhasil membuat tugas divisi" }, { status: 200 });
