@@ -4,6 +4,7 @@ import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
 import "moment/locale/id";
+import { createLogUser } from "@/module/user";
 
 
 // GET ALL DISCUSSION DIVISION ACTIVE = TRUE
@@ -116,7 +117,13 @@ export async function POST(request: Request) {
             desc,
             createdBy: user.id
          },
+         select: {
+            id: true
+         }
       });
+
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data diskusi', table: 'divisionDisscussion', data: data.id })
 
       return NextResponse.json({ success: true, message: "Berhasil menambahkan diskusi", data, }, { status: 200 });
    } catch (error) {

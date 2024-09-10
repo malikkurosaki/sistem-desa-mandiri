@@ -52,19 +52,25 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
       getData()
    }, [refresh.get()])
 
+   async function reloadData() {
+      try {
+         const response = await funGetDiscussionById(id)
+         setData(response.data)
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
    const sendComent = async () => {
       try {
          if (isComent.trim() == "") {
             return toast.error("Masukkan Komentar Anda")
          }
-         const response = await funCreateComent(id, {
-            comment: isComent,
-            idDiscussion: param.detail
-         })
+         const response = await funCreateComent(id, { comment: isComent, idDiscussion: param.detail })
 
          if (response.success) {
             setIsComent("")
-            getData()
+            reloadData()
          } else {
             toast.error(response.message)
          }
