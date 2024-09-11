@@ -1,4 +1,4 @@
-import { prisma } from "@/module/_global";
+import { funDeleteFile, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import { NextResponse } from "next/server";
@@ -118,26 +118,35 @@ export async function PUT(request: Request) {
         })
 
         if (String(file) != "undefined" && String(file) != "null") {
-            fs.unlink(`./public/image/user/${update.img}`, (err) => { })
-            const root = path.join(process.cwd(), "./public/image/user/");
             const fExt = file.name.split(".").pop()
-            const fileName = user.id + '.' + fExt;
-            const filePath = path.join(root, fileName);
+            // const fileName = user.id + '.' + fExt;
+            const fileName = 'COBAAYAA.' + fExt;
+            const newFile = new File([file], fileName, { type: file.type });
+            console.log(fileName, newFile.name)
+            await funDeleteFile({ name: fileName, dirId: "cm0x8dbwn0005bp5tgmfcthzw" })
+            await funUploadFile({ file: newFile, dirId: "cm0x8dbwn0005bp5tgmfcthzw" })
 
-            // Konversi ArrayBuffer ke Buffer
-            const buffer = Buffer.from(await file.arrayBuffer());
 
-            // Tulis file ke sistem
-            fs.writeFileSync(filePath, buffer);
+            // fs.unlink(`./public/image/user/${update.img}`, (err) => { })
+            // const root = path.join(process.cwd(), "./public/image/user/");
+            // const fExt = file.name.split(".").pop()
+            // const fileName = user.id + '.' + fExt;
+            // const filePath = path.join(root, fileName);
 
-            await prisma.user.update({
-                where: {
-                    id: user.id
-                },
-                data: {
-                    img: fileName
-                }
-            })
+            // // Konversi ArrayBuffer ke Buffer
+            // const buffer = Buffer.from(await file.arrayBuffer());
+
+            // // Tulis file ke sistem
+            // fs.writeFileSync(filePath, buffer);
+
+            // await prisma.user.update({
+            //     where: {
+            //         id: user.id
+            //     },
+            //     data: {
+            //         img: fileName
+            //     }
+            // })
         }
 
         const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data profile', table: 'user', data: user.id })

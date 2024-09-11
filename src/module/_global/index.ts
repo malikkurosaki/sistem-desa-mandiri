@@ -6,6 +6,8 @@ import SkeletonDetailListTugasTask from "./components/skeleton_detail_list_tugas
 import SkeletonDetailProfile from "./components/skeleton_detail_profile";
 import SkeletonSingle from "./components/skeleton_single";
 import WrapLayout from "./components/wrap_layout";
+import { funDeleteFile } from "./fun/delete_file";
+import { funUploadFile } from "./fun/upload_file";
 import { WARNA } from "./fun/WARNA";
 import LayoutDrawer from "./layout/layout_drawer";
 import LayoutIconBack from "./layout/layout_icon_back";
@@ -36,3 +38,5 @@ export { LayoutModalViewFile }
 export { globalRole }
 export { WrapLayout }
 export { NoZoom }
+export { funUploadFile }
+export { funDeleteFile }

@@ -1,7 +1,7 @@
-export async function fileUpload({ file }: { file: File}) {
+export async function funUploadFile({ file, dirId }: { file: File, dirId: string }) {
    const formData = new FormData();
    formData.append("file", file);
-   formData.append("dirId", "cm0x8dbwn0005bp5tgmfcthzw");
+   formData.append("dirId", dirId);
 
    try {
       const res = await fetch("https://wibu-storage.wibudev.com/api/upload", {
@@ -13,13 +13,10 @@ export async function fileUpload({ file }: { file: File}) {
       });
 
       if (res.ok) {
-         console.log("File uploaded successfullyAmalia");
-         const hasil = await res.text()
-         console.log('berhasilAmalia',hasil)
-         
+         console.log("File uploaded successfully");
       } else {
          const errorText = await res.text();
-         console.log('errorAmalia',errorText)
+         console.log('errorAmalia', errorText)
       }
    } catch (error) {
       console.error("Upload error:", error);
