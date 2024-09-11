@@ -11,6 +11,8 @@ import { Lato } from "next/font/google";
 import '@mantine/carousel/styles.css';
 import { Toaster } from 'react-hot-toast';
 import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
+import { Notifications } from '@mantine/notifications'
 
 export const metadata = {
   title: "SISTEM DESA MANDIRI",
@@ -35,6 +37,7 @@ export default function RootLayout({
       </head>
       <body className={`${LatoFont.className}`} suppressHydrationWarning>
         <MantineProvider>
+        <Notifications />
           <Box bg={'#252A2F'} pos={"fixed"} w={"100%"} h={"100%"} style={{
             overflowY: "auto",
           }}>
