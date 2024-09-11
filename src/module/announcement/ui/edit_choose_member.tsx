@@ -2,7 +2,7 @@
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { funGetGroupDivision } from '@/module/group/lib/api_group';
 import { Box, Button, Divider, Flex, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import React, { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import { GroupData, GroupDataEditAnnouncement } from '../lib/type_announcement';
@@ -102,6 +102,7 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
       memberGroup.set(selectedGroups);
       onClose(true);
    };
+   const isMobile = useMediaQuery('(max-width: 369px)');
 
    useShallowEffect(() => {
       getData()
@@ -150,6 +151,7 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
                            {item.name}
                         </Text>
                         <Text
+                           lineClamp={1}
                         >
                            {checked[item.id] && checked[item.id].length === item.Division.length ? <FaCheck style={{ marginRight: 10 }} />
                               : (checked[item.id] && checked[item.id].length > 0 && checked[item.id].length < item.Division.length) ? <FaMinus style={{ marginRight: 10 }} /> : ""}
@@ -160,7 +162,7 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
                         <Box key={division.id}>
                            <Group onClick={() => handleCheck(item.id, division.id)} justify='space-between' align='center'>
                               <Box w={{
-                                 base: 280,
+                                 base: isMobile ? 230 : 280,
                                  xl: 430
                               }}>
                                  <Text truncate="end" pl={20}>

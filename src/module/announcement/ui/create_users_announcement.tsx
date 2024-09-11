@@ -2,7 +2,7 @@
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
 import { funGetGroupDivision } from '@/module/group/lib/api_group';
 import { Box, Button, Divider, Flex, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import React, { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import { GroupData } from '../lib/type_announcement';
@@ -103,6 +103,7 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
     memberGroup.set(selectedGroups);
     onClose(true);
   };
+  const isMobile = useMediaQuery('(max-width: 369px)');
 
   useShallowEffect(() => {
     getData()
@@ -111,7 +112,7 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
   return (
     <div>
       <LayoutNavbarNew back="" title="Tambah Divisi Penerima Pengumuman" menu={<></>} />
-      <Box p={20}>
+      <Box p={20} pb={100}>
         <Group justify='flex-end' mb={20}>
           <Text
             onClick={handleSelectAll}
@@ -162,7 +163,7 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
                 <Box key={division.id}>
                   <Group onClick={() => handleCheck(item.id, division.id)} justify='space-between' align='center'>
                     <Box w={{
-                      base: 280,
+                     base: isMobile ? 230 : 280,
                       xl: 430
                     }}>
                       <Text truncate="end" pl={20}>
