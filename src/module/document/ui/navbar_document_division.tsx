@@ -15,7 +15,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import DrawerMenuDocumentDivision from './drawer_menu_document_division';
 import DrawerMore from './drawer_more';
 import { funGetDivisionById } from '@/module/division_new';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { funDeleteDocument, funGetAllDocument, funRenameDocument } from '../lib/api_document';
 import { IDataDocument, IJalurItem } from '../lib/type_document';
 import { useHookstate } from '@hookstate/core';
@@ -46,6 +46,7 @@ export default function NavbarDocumentDivision() {
   const [selectedFiles, setSelectedFiles] = useState<any>([])
   const [selectAll, setSelectAll] = useState(false)
   const [dariSelectAll, setDariSelectAll] = useState(false)
+  const isMobile = useMediaQuery('(max-width: 369px)');  
   const [bodyRename, setBodyRename] = useState({
     id: '',
     name: '',
@@ -349,20 +350,20 @@ export default function NavbarDocumentDivision() {
                               <Indicator offset={15} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaShare />} size={25}>
                                 {
                                   (v.category == "FOLDER") ?
-                                    <FcFolder size={50} /> :
+                                    <FcFolder size={isMobile ? 40 : 50} /> :
                                     (v.extension == "pdf" || v.extension == "csv") ?
-                                      <FcDocument size={50} /> :
-                                      <FcImageFile size={50} />
+                                      <FcDocument size={isMobile ? 40 : 50} /> :
+                                      <FcImageFile size={isMobile ? 40 : 50} />
                                 }
                               </Indicator>
                               :
                               <>
                                 {
                                   (v.category == "FOLDER") ?
-                                    <FcFolder size={50} /> :
+                                    <FcFolder size={isMobile ? 40 : 50} /> :
                                     (v.extension == "pdf" || v.extension == "csv") ?
-                                      <FcDocument size={50} /> :
-                                      <FcImageFile size={50} />
+                                      <FcDocument size={isMobile ? 40 : 50} /> :
+                                      <FcImageFile size={isMobile ? 40 : 50} />
                                 }
                               </>
 
@@ -386,7 +387,7 @@ export default function NavbarDocumentDivision() {
                           }}
                         >
                           <Box w={{
-                            base: 230,
+                            base: isMobile ? 200 : 230,
                             xl: 380,
                             md: 380,
                             sm: 380,

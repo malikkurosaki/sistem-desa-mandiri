@@ -1,7 +1,7 @@
 "use client"
 import { WARNA } from "@/module/_global";
 import { Box, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -16,6 +16,7 @@ export default function ListDiscussionOnDetailDivision() {
   const param = useParams<{ id: string }>()
   const [data, setData] = useState<IDataDiscussionOnDetailDivision[]>([])
   const [loading, setLoading] = useState(true);
+  const isMobile = useMediaQuery('(max-width: 369px)');
 
   async function fetchData() {
     try {
@@ -86,8 +87,11 @@ export default function ListDiscussionOnDetailDivision() {
                 >
                   <Group>
                     <GoDiscussionClosed size={25} />
-                    <Box w={{ base: 230, md: 400 }}>
-                      <Text fw={"bold"} truncate="end">
+                    <Box w={{
+                     base: isMobile ? 180 : 230,
+                      md: 400
+                    }}>
+                      <Text fw={"bold"} truncate="end" fz={isMobile ? 14 : 16}>
                         {v.desc}
                       </Text>
                     </Box>
@@ -100,7 +104,7 @@ export default function ListDiscussionOnDetailDivision() {
                       <Group gap={5} align="center">
                         <CiUser size={18} />
                         <Box w={{
-                          base: 125,
+                          base: isMobile ? 110 : 125,
                           xl: 300
                         }}>
                           <Text fz={13} lineClamp={1}>
@@ -115,7 +119,7 @@ export default function ListDiscussionOnDetailDivision() {
                     }}>
                       <Group gap={5} align="center" justify="flex-end">
                         <CiClock2 size={18} />
-                        <Text fz={13}>{v.date}</Text>
+                        <Text fz={isMobile ? 11 : 13}>{v.date}</Text>
                       </Group>
                     </Grid.Col>
                   </Grid>

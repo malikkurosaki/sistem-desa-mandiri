@@ -1,7 +1,7 @@
 "use client"
 import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Button, Divider, Flex, Grid, Group, Skeleton, Stack, Text } from '@mantine/core';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -30,6 +30,7 @@ export default function InformationDivision() {
   const [isOpenModal, setOpenModal] = useState(false)
   const roleLogin = useHookstate(globalRole)
   const [isAdmin, setAdmin] = useState(false)
+  const isMobile = useMediaQuery('(max-width: 369px)');
 
   async function getOneData() {
     try {
@@ -176,10 +177,10 @@ export default function InformationDivision() {
 
                 ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
                   <Group align='center' onClick={() => router.push('/division/add-member/' + param.id)}>
-                    <Avatar size="lg">
-                      <AiOutlineUserAdd size={30} color={WARNA.biruTua} />
+                    <Avatar size={isMobile ? 'md' : 'lg'}>
+                      <AiOutlineUserAdd size={isMobile ? 25 : 30} color={WARNA.biruTua} />
                     </Avatar>
-                    <Text>Tambah Anggota</Text>
+                    <Text fz={isMobile ? 14 : 16}>Tambah Anggota</Text>
                   </Group>
                   : <></>
               }
@@ -207,19 +208,19 @@ export default function InformationDivision() {
                         >
                           <Grid.Col span={9}>
                             <Group>
-                              <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                              <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
                               <Box w={{
-                                base: 140,
+                                base: isMobile ? 130 : 140,
                                 xl: 270
                               }}>
-                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
                                   {v.name}
                                 </Text>
                               </Box>
                             </Group>
                           </Grid.Col>
                           <Grid.Col span={3}>
-                            <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
+                            <Text c={WARNA.biruTua} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
                               {(v.isAdmin) ? 'Admin' : 'Anggota'}
                             </Text>
                           </Grid.Col>

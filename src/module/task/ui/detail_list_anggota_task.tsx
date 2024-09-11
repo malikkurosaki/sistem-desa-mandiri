@@ -1,7 +1,7 @@
 'use client'
 import { globalRole, LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
 import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack, Grid } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -24,6 +24,7 @@ export default function ListAnggotaDetailTask() {
    const router = useRouter()
    const roleLogin = useHookstate(globalRole)
    const adminLogin = useHookstate(globalIsAdminDivision)
+   const isMobile = useMediaQuery('(max-width: 369px)');
 
    async function getOneData() {
       try {
@@ -104,20 +105,20 @@ export default function ListAnggotaDetailTask() {
                                     >
                                        <Grid.Col span={9}>
                                           <Group>
-                                             <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                                             <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
                                              <Box w={{
-                                                base: 140,
+                                                base: isMobile ? 130 : 140,
                                                 xl: 270
                                              }}>
                                                 <Flex direction={'column'} align="flex-start" justify="flex-start">
-                                                   <Text lineClamp={1}>{v.name}</Text>
-                                                   <Text c={"#5A687D"} fz={14} lineClamp={1}>{v.email}</Text>
+                                                   <Text lineClamp={1} fz={isMobile ? 14 : 16}>{v.name}</Text>
+                                                   <Text c={"#5A687D"} lineClamp={1} fz={isMobile ? 10 : 14}>{v.email}</Text>
                                                 </Flex>
                                              </Box>
                                           </Group>
                                        </Grid.Col>
                                        <Grid.Col span={3}>
-                                          <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
+                                          <Text c={WARNA.biruTua} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
                                              Anggota
                                           </Text>
                                        </Grid.Col>

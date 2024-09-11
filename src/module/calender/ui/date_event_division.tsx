@@ -4,7 +4,7 @@ import { DatePicker, DatePickerProps } from '@mantine/dates';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { funGetAllCalender, funGetIndicatorCalender } from '../lib/api_calender';
-import { useSetState, useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useSetState, useShallowEffect } from '@mantine/hooks';
 import { IDataCalender } from '../lib/type_calender';
 import moment from 'moment';
 import _ from 'lodash';
@@ -21,6 +21,7 @@ export default function DateEventDivision() {
   const [isDate, setDate] = useSetState<any>(moment().format('YYYY-MM-DD'))
   const [isMonth, setMonth] = useState<any>(moment().month() + 1)
   const [loading, setLoading] = useState(true)
+  const isMobile = useMediaQuery('(max-width: 369px)');
 
   const getData = async (tgl: any) => {
     try {
@@ -137,21 +138,21 @@ export default function DateEventDivision() {
                     <Group>
                       <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
                       <Flex direction={'column'}>
-                        <Text>{event.timeStart} - {event.timeEnd}</Text>
+                        <Text fz={isMobile ? 14 : 16}>{event.timeStart} - {event.timeEnd}</Text>
                         <Box w={{
-                          base: 280,
+                          base: isMobile ? 220 : 280,
                           xl: 430
                         }}>
-                          <Text  fw={"bold"} lineClamp={1}>
-                          {_.startCase(event.title)}
+                          <Text fw={"bold"} lineClamp={1}>
+                            {_.startCase(event.title)}
                           </Text>
                         </Box>
                         <Box w={{
-                          base: 280,
+                          base: isMobile ? 230 : 280,
                           xl: 420
                         }}>
-                          <Text  lineClamp={1}>
-                          Dibuat oleh : {event.user_name}
+                          <Text lineClamp={1}>
+                            Dibuat oleh : {event.user_name}
                           </Text>
                         </Box>
                       </Flex>

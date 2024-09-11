@@ -6,7 +6,7 @@ import { useState } from "react"
 import { IDataHomeEvent } from "../lib/type_home"
 import { funGetHome } from "../lib/api_home"
 import toast from "react-hot-toast"
-import { useShallowEffect } from "@mantine/hooks"
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks"
 import _ from "lodash"
 
 
@@ -14,6 +14,7 @@ export default function ListEventHome() {
    const router = useRouter()
    const [isData, setData] = useState<IDataHomeEvent[]>([])
    const [loading, setLoading] = useState(true);
+   const isMobile = useMediaQuery('(max-width: 369px)');
 
    const fetchData = async () => {
       try {
@@ -74,9 +75,9 @@ export default function ListEventHome() {
                               <Group>
                                  <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
                                  <Flex direction={'column'}>
-                                    <Text>{event.timeStart} - {event.timeEnd}</Text>
+                                    <Text fz={isMobile ? 14 : 16}>{event.timeStart} - {event.timeEnd}</Text>
                                     <Box w={{
-                                       base: 260,
+                                       base: isMobile ? 220 : 260,
                                        xl: 430
                                     }}>
                                        <Text fw={"bold"} lineClamp={1}>
@@ -84,7 +85,7 @@ export default function ListEventHome() {
                                        </Text>
                                     </Box>
                                     <Box w={{
-                                       base: 260,
+                                       base: isMobile ? 230 : 260,
                                        xl: 420
                                     }}>
                                        <Text lineClamp={1}>

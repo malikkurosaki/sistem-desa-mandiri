@@ -62,7 +62,7 @@ export default function ListAnggotaDetailProject() {
       toast.error("Gagal menghapus anggota Kegiatan, coba lagi nanti");
     }
   }
-  const isMobile = useMediaQuery('(max-width: 369px)');
+const isMobile = useMediaQuery('(max-width: 369px)');  
 
   return (
     <Box pt={20}>

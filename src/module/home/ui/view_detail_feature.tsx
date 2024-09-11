@@ -7,10 +7,12 @@ import { PiUsersFourFill } from "react-icons/pi";
 import { useRouter } from 'next/navigation';
 import { FaUserTag, FaUserTie } from 'react-icons/fa6';
 import { useHookstate } from '@hookstate/core';
+import { useMediaQuery } from '@mantine/hooks';
 
 export default function ViewDetailFeature() {
   const router = useRouter()
   const roleLogin = useHookstate(globalRole)
+  const isMobile = useMediaQuery('(max-width: 369px)');
   return (
     <>
       <LayoutNavbarNew back='/home' title='Fitur' menu={<></>} />
@@ -22,11 +24,11 @@ export default function ViewDetailFeature() {
             <Box onClick={() => router.push('/division')}>
               <Center>
                 <ActionIcon variant="gradient"
-                  size={68}
+                  size={isMobile ? 50 : 68}
                   aria-label="Gradient action icon"
                   radius={100}
                   gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <HiMiniUserGroup size={35} color={WARNA.biruTua} />
+                  <HiMiniUserGroup size={isMobile ? 25 : 35} color={WARNA.biruTua} />
                 </ActionIcon>
               </Center>
               <Center>
@@ -36,11 +38,11 @@ export default function ViewDetailFeature() {
             <Box onClick={() => router.push('/project?status=0&group=null')}>
               <Center>
                 <ActionIcon variant="gradient"
-                  size={68}
+                  size={isMobile ? 50 : 68}
                   aria-label="Gradient action icon"
                   radius={100}
                   gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <HiMiniPresentationChartBar size={35} color={WARNA.biruTua} />
+                  <HiMiniPresentationChartBar size={isMobile ? 25 : 35} color={WARNA.biruTua} />
                 </ActionIcon>
               </Center>
               <Center>
@@ -50,11 +52,11 @@ export default function ViewDetailFeature() {
             <Box onClick={() => router.push('/announcement')}>
               <Center>
                 <ActionIcon variant="gradient"
-                  size={68}
+                  size={isMobile ? 50 : 68}
                   aria-label="Gradient action icon"
                   radius={100}
                   gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <HiMegaphone size={35} color={WARNA.biruTua} />
+                  <HiMegaphone size={isMobile ? 25 : 35} color={WARNA.biruTua} />
                 </ActionIcon>
               </Center>
               <Center>
@@ -64,11 +66,11 @@ export default function ViewDetailFeature() {
             <Box onClick={() => router.push('/member')}>
               <Center>
                 <ActionIcon variant="gradient"
-                  size={68}
+                  size={isMobile ? 50 : 68}
                   aria-label="Gradient action icon"
                   radius={100}
                   gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <PiUsersFourFill size={35} color={WARNA.biruTua} />
+                  <PiUsersFourFill size={isMobile ? 25 : 35} color={WARNA.biruTua} />
                 </ActionIcon>
               </Center>
               <Center>
@@ -78,11 +80,11 @@ export default function ViewDetailFeature() {
             <Box onClick={() => router.push('/position')}>
               <Center>
                 <ActionIcon variant="gradient"
-                  size={68}
+                  size={isMobile ? 50 : 68}
                   aria-label="Gradient action icon"
                   radius={100}
                   gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <FaUserTie size={35} color={WARNA.biruTua} />
+                  <FaUserTie size={isMobile ? 25 : 35} color={WARNA.biruTua} />
                 </ActionIcon>
               </Center>
               <Center>
@@ -94,11 +96,11 @@ export default function ViewDetailFeature() {
               <Box onClick={() => router.push('/group')}>
                 <Center>
                   <ActionIcon variant="gradient"
-                    size={68}
+                    size={isMobile ? 50 : 68}
                     aria-label="Gradient action icon"
                     radius={100}
                     gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                    <FaUserTag size={35} color={WARNA.biruTua} />
+                    <FaUserTag size={isMobile ? 25 : 35} color={WARNA.biruTua} />
                   </ActionIcon>
                 </Center>
                 <Center>

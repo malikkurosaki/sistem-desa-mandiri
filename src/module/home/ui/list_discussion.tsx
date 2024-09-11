@@ -8,7 +8,7 @@ import { useState } from "react";
 import { IDataHomeDiskusi } from "../lib/type_home";
 import { funGetHome } from "../lib/api_home";
 import toast from "react-hot-toast";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 
 
@@ -16,6 +16,7 @@ export default function ListDiscussion() {
    const router = useRouter()
    const [isData, setData] = useState<IDataHomeDiskusi[]>([])
    const [loading, setLoading] = useState(true);
+   const isMobile = useMediaQuery('(max-width: 369px)');
 
    const fetchData = async () => {
       try {
@@ -79,8 +80,11 @@ export default function ListDiscussion() {
                                  }}  onClick={() => router.push(`/division/${v.idDivision}/discussion/${v.id}`)}>
                                     <Group>
                                        <GoDiscussionClosed size={25} />
-                                       <Box w={{ base: 230, md: 400 }}>
-                                          <Text fw={"bold"} truncate="end">
+                                          <Box w={{
+                                              base: isMobile ? 180 : 230,
+                                             md: 400
+                                          }}>
+                                          <Text fw={"bold"} truncate="end" fz={isMobile ? 14 : 16} >
                                              {v.desc}
                                           </Text>
                                        </Box>
@@ -93,7 +97,7 @@ export default function ListDiscussion() {
                                           <Group gap={5} align="center">
                                              <CiUser size={18} />
                                              <Box w={{
-                                                base: 125,
+                                               base: isMobile ? 110 : 125,
                                                 xl: 300
                                              }}>
                                                 <Text fz={13} lineClamp={1}>
@@ -108,7 +112,7 @@ export default function ListDiscussion() {
                                        }}>
                                           <Group gap={5} align="center" justify="flex-end">
                                              <CiClock2 size={18} />
-                                             <Text fz={13}>{v.date}</Text>
+                                             <Text fz={isMobile ? 11 : 13}>{v.date}</Text>
                                           </Group>
                                        </Grid.Col>
                                     </Grid>
