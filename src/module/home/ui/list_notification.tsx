@@ -1,6 +1,7 @@
 "use client"
 import { WARNA } from '@/module/_global';
 import { ActionIcon, Box, Center, Grid, Group, Spoiler, Text } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { FaBell } from 'react-icons/fa6';
@@ -65,6 +66,7 @@ const dataNotification = [
 
 export default function ListNotification() {
   const router = useRouter()
+  const isMobile = useMediaQuery('(max-width: 369px)');
   return (
     <Box>
       {dataNotification.map((v, i) => {
@@ -81,11 +83,11 @@ export default function ListNotification() {
                 </ActionIcon>
                 <Box
                   w={{
-                    base: 240,
+                    base: isMobile ? 200 : 240,
                     xl: 380
                 }}
                 >
-                <Text fw={'bold'} fz={18} lineClamp={1}>{v.title}</Text>
+                <Text fw={'bold'} fz={isMobile ? 16 : 18} lineClamp={1}>{v.title}</Text>
                 </Box>
               </Group>
               <Spoiler maxHeight={60} showLabel="Lebih banyak" hideLabel="Lebih sedikit">

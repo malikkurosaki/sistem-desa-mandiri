@@ -16,7 +16,7 @@ import {
     Textarea,
     TextInput,
 } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
@@ -34,6 +34,7 @@ export default function CreateDivision() {
     const [isChooseAnggota, setChooseAnggota] = useState(false)
     const [isChooseAdmin, setChooseAdmin] = useState(false)
     const member = useHookstate(globalMemberDivision)
+    const isMobile = useMediaQuery('(max-width: 369px)');
     const [body, setBody] = useState<any>({
         idGroup: "",
         name: "",
@@ -194,19 +195,19 @@ export default function CreateDivision() {
                                                 >
                                                     <Grid.Col span={9}>
                                                         <Group>
-                                                            <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                                                            <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
                                                             <Box w={{
-                                                                base: 140,
+                                                                base: isMobile ? 130 : 140,
                                                                 xl: 270
                                                             }}>
-                                                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                                                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
                                                                     {v.name}
                                                                 </Text>
                                                             </Box>
                                                         </Group>
                                                     </Grid.Col>
                                                     <Grid.Col span={3}>
-                                                        <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
+                                                        <Text c={WARNA.biruTua} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
                                                             Anggota
                                                         </Text>
                                                     </Grid.Col>

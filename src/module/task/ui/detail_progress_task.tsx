@@ -1,7 +1,7 @@
 'use client'
 import { WARNA } from "@/module/_global";
 import { Box, Grid, ActionIcon, Progress, Text, Skeleton } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
@@ -16,6 +16,7 @@ export default function ProgressDetailTask() {
    const param = useParams<{ id: string, detail: string }>()
    const refresh = useHookstate(globalRefreshTask)
    const [loading, setLoading] = useState(true)
+   const isMobile = useMediaQuery('(max-width: 369px)');  
 
    async function getOneData() {
       try {
@@ -68,17 +69,17 @@ export default function ProgressDetailTask() {
                   <Grid.Col span={3}>
                      <ActionIcon
                         variant="gradient"
-                        size={68}
+                        size={isMobile ? 50 : 68}
                         aria-label="Gradient action icon"
                         radius={100}
                         gradient={{ from: "#DFDA7C", to: "#F2AF46", deg: 174 }}
                      >
-                        <HiMiniPresentationChartBar size={35} color={WARNA.biruTua} />
+                        <HiMiniPresentationChartBar size={isMobile ? 25 : 35} color={WARNA.biruTua} />
                      </ActionIcon>
                   </Grid.Col>
                   <Grid.Col span={9}>
                      <Box>
-                        <Text>Kemajuan Kegiatan {valProgress}%</Text>
+                        <Text fz={isMobile ? 14 : 16}>Kemajuan Kegiatan {valProgress}%</Text>
                         <Progress
                            style={{
                               border: `1px solid ${"#BDBDBD"}`,
@@ -86,7 +87,7 @@ export default function ProgressDetailTask() {
                            w={"100%"}
                            color="#FCAA4B"
                            radius="md"
-                           size="xl"
+                           size={isMobile ? "lg" : "xl"}
                            value={valProgress}
                         />
                      </Box>
