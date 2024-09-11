@@ -28,6 +28,7 @@ export default function Profile() {
       const res = await funGetProfileByCookies()
       setData(res.data)
       setIMG(`/api/file/img?jenis=image&cat=user&file=${res.data.img}`)
+      // setIMG(`https://wibu-storage.wibudev.com/api/files/view/cm0x8dbwn0005bp5tgmfcthzw/${res.data.img}`)
       setLoading(false)
     } catch (error) {
       console.error(error);
