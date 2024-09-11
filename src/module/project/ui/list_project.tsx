@@ -8,7 +8,7 @@ import { MdAccountCircle } from 'react-icons/md';
 import { RiCircleFill } from 'react-icons/ri';
 import { funGetAllProject } from '../lib/api_project';
 import toast from 'react-hot-toast';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { IDataProject } from '../lib/type_project';
 import { useHookstate } from '@hookstate/core';
 import _ from 'lodash';
@@ -52,6 +52,7 @@ export default function ListProject() {
   const handleList = () => {
     setIsList(!isList)
   }
+  const isMobile = useMediaQuery('(max-width: 369px)');
 
   return (
     <Box mt={20}>
@@ -132,7 +133,7 @@ export default function ListProject() {
                       <Group justify='space-between' align='center'>
                         <Box>
                           <Box w={{
-                            base: 230,
+                            base: isMobile ? 200 : 230,
                             xl: 430
                           }}>
                             <Text truncate="end" pl={20}>

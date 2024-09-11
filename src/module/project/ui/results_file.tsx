@@ -22,7 +22,7 @@ export default function ResultsFile({ name, extension }: IListFileTaskProject) {
           </Center>
         </Grid.Col>
         <Grid.Col span={10}>
-        <Text>{name}</Text>
+        <Text lineClamp={1}>{name}</Text>
         </Grid.Col>
       </Grid>
       <Group>

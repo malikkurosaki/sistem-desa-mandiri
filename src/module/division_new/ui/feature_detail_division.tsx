@@ -38,6 +38,7 @@ export default function FeatureDetailDivision() {
     fetchData()
   }, [param.id])
   const isMobile = useMediaQuery('(max-width: 399px)');
+  const isMobile2 = useMediaQuery('(max-width: 369px)');
 
   return (
     <Box pt={10}>
@@ -57,12 +58,12 @@ export default function FeatureDetailDivision() {
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"
-                size={"xl"}
+                size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
                 radius={100}
                 color={WARNA.bgHijauMuda}
               >
-                <LuClipboardEdit size={25} color={WARNA.biruTua} />
+                <LuClipboardEdit size={isMobile2 ? 20 : 25} color={WARNA.biruTua} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col span={{ base: 7, md: 9 }}>
@@ -82,12 +83,12 @@ export default function FeatureDetailDivision() {
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"
-                size={"xl"}
+                size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
                 radius={100}
                 color={WARNA.bgHijauMuda}
               >
-                <BsFileEarmarkText size={25} color={WARNA.biruTua} />
+                <BsFileEarmarkText size={isMobile2 ? 20 : 25} color={WARNA.biruTua} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col span={{ base: 7, md: 9 }}>
@@ -107,12 +108,12 @@ export default function FeatureDetailDivision() {
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"
-                size={"xl"}
+                size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
                 radius={100}
                 color={WARNA.bgHijauMuda}
               >
-                <GoCommentDiscussion size={25} color={WARNA.biruTua} />
+                <GoCommentDiscussion size={isMobile2 ? 20 : 25} color={WARNA.biruTua} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col span={{ base: 7, md: 9 }}>
@@ -132,12 +133,12 @@ export default function FeatureDetailDivision() {
           <Grid justify='center' align='center'>
             <Grid.Col span={"auto"}>
               <ActionIcon variant="filled"
-                size={"xl"}
+                size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
                 radius={100}
                 color={WARNA.bgHijauMuda}
               >
-                <IoCalendarOutline size={25} color={WARNA.biruTua} />
+                <IoCalendarOutline size={isMobile2 ? 20 : 25} color={WARNA.biruTua} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col span={{ base: 7, md: 9 }}>
