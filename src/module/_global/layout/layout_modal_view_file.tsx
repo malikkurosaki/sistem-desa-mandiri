@@ -55,7 +55,7 @@ export default function LayoutModal({ opened, onClose, extension, fitur, file }:
          }}>
             <div style={{ transform: `scale(${zoom})`, transformOrigin: 'center' }}>
                {
-                  extension === 'pdf' ? <PdfToImage md={filePdf} /> :
+                  extension === 'pdf' ? <PdfToImage md={`https://wibu-storage.wibudev.com/api/files/${file}`} /> :
                      <Image
                         radius="md"
                         style={{
@@ -63,7 +63,7 @@ export default function LayoutModal({ opened, onClose, extension, fitur, file }:
                            maxHeight: '100%',
                         }}
                         fit="contain"
-                        src={`/api/file/img?cat=${fitur}&file=${file}&jenis=file`}
+                        src={`https://wibu-storage.wibudev.com/api/files/${file}`}
                         alt={file}
                      />
                }

@@ -1,4 +1,4 @@
-import { prisma } from "@/module/_global";
+import { DIR, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import moment from "moment";
@@ -169,31 +169,22 @@ export async function POST(request: Request) {
         }
 
         if (cekFile) {
-            const root = path.join(process.cwd(), "./public/file/project/");
             for (var pair of body.entries()) {
                 if (String(pair[0]).substring(0, 4) == "file") {
                     const file = body.get(pair[0]) as File
                     const fExt = file.name.split(".").pop()
                     const fName = file.name.replace("." + fExt, "")
-
-
-                    const insertToTable = await prisma.projectFile.create({
-                        data: {
-                            idProject: data.id,
-                            name: fName,
-                            extension: String(fExt)
-                        },
-                        select: {
-                            id: true
-                        }
-                    })
-
-                    const nameFix = insertToTable.id + '.' + fExt
-                    const filePath = path.join(root, nameFix)
-                    // Konversi ArrayBuffer ke Buffer
-                    const buffer = Buffer.from(await file.arrayBuffer());
-                    // Tulis file ke sistem
-                    fs.writeFileSync(filePath, buffer);
+                    const upload = await funUploadFile({ file: file, dirId: DIR.project })
+                    if (upload.success) {
+                        await prisma.projectFile.create({
+                            data: {
+                                idStorage: upload.data.id,
+                                idProject: data.id,
+                                name: fName,
+                                extension: String(fExt)
+                            }
+                        })
+                    }
                 }
             }
         }

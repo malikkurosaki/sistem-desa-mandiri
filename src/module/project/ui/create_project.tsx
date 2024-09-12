@@ -128,10 +128,7 @@ export default function CreateProject() {
 
 
 
-  if (openTugas) return <ViewDateEndTask onClose={(val) => {
-    setDataTask([...dataTask, val])
-    setOpenTugas(false)
-  }} />;
+  if (openTugas) return <ViewDateEndTask onClose={(val) => { setOpenTugas(false) }} onSet={(val) => { setDataTask([...dataTask, val]); setOpenTugas(false) }} />;
 
   if (isChooseAnggota) return <CreateUsersProject grup={body.idGroup} onClose={() => { setChooseAnggota(false) }} />
 

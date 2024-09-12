@@ -1,4 +1,4 @@
-import { prisma } from "@/module/_global";
+import { DIR, funDeleteFile, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { NextResponse } from "next/server";
 import fs from "fs";
@@ -36,8 +36,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
          }
       })
 
-
-      fs.unlink(`./public/file/project/${dataRelasi?.id}.${dataRelasi?.extension}`, (err) => { })
+      const delStorage = await funDeleteFile({ fileId: String(dataRelasi?.idStorage) })
 
       const deleteRelasi = await prisma.projectFile.delete({
          where: {
@@ -166,31 +165,27 @@ export async function POST(request: Request, context: { params: { id: string } }
 
 
       if (cekFile) {
-         const root = path.join(process.cwd(), "./public/file/project/");
          for (var pair of body.entries()) {
             if (String(pair[0]).substring(0, 4) == "file") {
                const file = body.get(pair[0]) as File
                const fExt = file.name.split(".").pop()
                const fName = file.name.replace("." + fExt, "")
 
+               const upload = await funUploadFile({ file: file, dirId: DIR.project })
+               if (upload.success) {
+                  const insertToTable = await prisma.projectFile.create({
+                     data: {
+                        idStorage: upload.data.id,
+                        idProject: id,
+                        name: fName,
+                        extension: String(fExt),
 
-               const insertToTable = await prisma.projectFile.create({
-                  data: {
-                     idProject: id,
-                     name: fName,
-                     extension: String(fExt)
-                  },
-                  select: {
-                     id: true
-                  }
-               })
-
-               const nameFix = insertToTable.id + '.' + fExt
-               const filePath = path.join(root, nameFix)
-               // Konversi ArrayBuffer ke Buffer
-               const buffer = Buffer.from(await file.arrayBuffer());
-               // Tulis file ke sistem
-               fs.writeFileSync(filePath, buffer);
+                     },
+                     select: {
+                        id: true
+                     }
+                  })
+               }
             }
          }
       }

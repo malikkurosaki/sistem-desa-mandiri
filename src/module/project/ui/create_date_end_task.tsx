@@ -1,6 +1,7 @@
 "use client";
 import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import {
+  ActionIcon,
   Avatar,
   Box,
   Button,
@@ -19,9 +20,10 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import moment from "moment";
 import { IFormDateProject } from "../lib/type_project";
+import { HiChevronLeft } from "react-icons/hi2";
 
 
-export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateProject) => void }) {
+export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: boolean) => void, onSet: (val: IFormDateProject) => void }) {
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const router = useRouter()
   const [title, setTitle] = useState("")
@@ -36,7 +38,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
     if (title == "")
       return toast.error("Error! harus memasukkan judul tugas")
 
-    onClose(
+    onSet(
       {
         dateStart: value[0],
         dateEnd: value[1],
@@ -48,7 +50,13 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
 
   return (
     <Box>
-      <LayoutNavbarNew title={"Tanggal Tugas"} menu />
+      <LayoutNavbarNew state={
+        <Box>
+          <ActionIcon variant="light" onClick={() => { onClose(true) }} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+            <HiChevronLeft size={20} color='white' />
+          </ActionIcon>
+        </Box>
+      } title={"Tanggal Tugas"} menu />
       <Box p={20}>
         <Group
           justify="center"
