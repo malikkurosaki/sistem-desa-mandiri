@@ -1,7 +1,6 @@
 "use client"
 import { LayoutIconBack, LayoutNavbarHome, SkeletonDetailProfile, WARNA } from "@/module/_global";
-import { ActionIcon, Anchor, Avatar, Box, Button, Flex, Grid, Group, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
-import { HiUser } from "react-icons/hi2";
+import { ActionIcon, Avatar, Box, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { RiIdCardFill } from "react-icons/ri";
 import { FaSquarePhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
@@ -27,8 +26,7 @@ export default function Profile() {
       setLoading(true)
       const res = await funGetProfileByCookies()
       setData(res.data)
-      setIMG(`/api/file/img?jenis=image&cat=user&file=${res.data.img}`)
-      // setIMG(`https://wibu-storage.wibudev.com/api/files/view/cm0x8dbwn0005bp5tgmfcthzw/${res.data.img}`)
+      setIMG(`https://wibu-storage.wibudev.com/api/files/${res.data.img}`)
       setLoading(false)
     } catch (error) {
       console.error(error);

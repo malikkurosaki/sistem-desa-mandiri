@@ -71,7 +71,7 @@ export default function EditMember({ id }: { id: string }) {
          const res = await funGetOneMember(id)
          setData(res.data)
          getAllPosition(res.data?.idGroup)
-         setIMG(`/api/file/img?jenis=image&cat=user&file=${res.data.img}`)
+         setIMG(`https://wibu-storage.wibudev.com/api/files/${res.data.img}`)
          setLoading(false)
       } catch (error) {
          console.error(error)

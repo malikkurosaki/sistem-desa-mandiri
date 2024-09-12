@@ -1,4 +1,4 @@
-import { funDeleteFile, funUploadFile, prisma } from "@/module/_global";
+import { DIR, funDeleteFile, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import { NextResponse } from "next/server";
@@ -119,34 +119,21 @@ export async function PUT(request: Request) {
 
         if (String(file) != "undefined" && String(file) != "null") {
             const fExt = file.name.split(".").pop()
-            // const fileName = user.id + '.' + fExt;
-            const fileName = 'COBAAYAA.' + fExt;
+            const fileName = user.id + '.' + fExt;
             const newFile = new File([file], fileName, { type: file.type });
-            console.log(fileName, newFile.name)
-            await funDeleteFile({ name: fileName, dirId: "cm0x8dbwn0005bp5tgmfcthzw" })
-            await funUploadFile({ file: newFile, dirId: "cm0x8dbwn0005bp5tgmfcthzw" })
+            await funDeleteFile({ fileId: String(update.img) })
+            const upload = await funUploadFile({ file: newFile, dirId: DIR.user })
+            if (upload.success) {
+                await prisma.user.update({
+                    where: {
+                        id: user.id
+                    },
+                    data: {
+                        img: upload.data.id
+                    }
+                })
+            }
 
-
-            // fs.unlink(`./public/image/user/${update.img}`, (err) => { })
-            // const root = path.join(process.cwd(), "./public/image/user/");
-            // const fExt = file.name.split(".").pop()
-            // const fileName = user.id + '.' + fExt;
-            // const filePath = path.join(root, fileName);
-
-            // // Konversi ArrayBuffer ke Buffer
-            // const buffer = Buffer.from(await file.arrayBuffer());
-
-            // // Tulis file ke sistem
-            // fs.writeFileSync(filePath, buffer);
-
-            // await prisma.user.update({
-            //     where: {
-            //         id: user.id
-            //     },
-            //     data: {
-            //         img: fileName
-            //     }
-            // })
         }
 
         const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data profile', table: 'user', data: user.id })

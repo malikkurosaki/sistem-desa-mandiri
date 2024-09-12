@@ -131,7 +131,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                         >
                            {isData?.username ?
                               <Group>
-                                 <Avatar src={`/api/file/img?jenis=image&cat=user&file=${isData?.user_img}`} alt="it's me" size="lg" />
+                                 <Avatar src={`https://wibu-storage.wibudev.com/api/files/${isData?.user_img}`} alt="it's me" size="lg" />
                                  <Box>
                                     <Text c={WARNA.biruTua} fw={"bold"}>
                                        {isData?.username}
@@ -165,7 +165,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                      <Box mb={20}>
                         <Grid align="center">
                            <Grid.Col span={2}>
-                              <Avatar src={`/api/file/img?jenis=image&cat=user&file=${isData?.user_img}`} alt="it's me" size="lg" />
+                              <Avatar src={`https://wibu-storage.wibudev.com/api/files/${isData?.user_img}`} alt="it's me" size="lg" />
                            </Grid.Col>
                            <Grid.Col span={6}>
                               <Box pl={{
@@ -245,7 +245,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                         <Box key={i} p={10} >
                            <Grid align="center">
                               <Grid.Col span={2}>
-                                 <Avatar alt="it's me" size="md" src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} />
+                                 <Avatar alt="it's me" size="md" src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} />
                               </Grid.Col>
                               <Grid.Col span={6}>
                                  <Box>

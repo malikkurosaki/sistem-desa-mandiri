@@ -13,12 +13,14 @@ export async function funUploadFile({ file, dirId }: { file: File, dirId: string
       });
 
       if (res.ok) {
-         console.log("File uploaded successfully");
+         const hasil = await res.json()
+         return { success: true, data: hasil.data }
       } else {
          const errorText = await res.text();
-         console.log('errorAmalia', errorText)
+         return { success: false, data: {} }
       }
    } catch (error) {
       console.error("Upload error:", error);
+      return { success: false, data: {} }
    }
 }

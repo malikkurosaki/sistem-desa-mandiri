@@ -91,7 +91,8 @@ export async function GET(request: Request, context: { params: { id: string } })
                 select: {
                     id: true,
                     name: true,
-                    extension: true
+                    extension: true,
+                    idStorage: true
                 }
             })
 

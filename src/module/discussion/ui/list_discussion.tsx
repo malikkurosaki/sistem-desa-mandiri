@@ -105,7 +105,7 @@ export default function ListDiscussion({ id }: { id: string }) {
                            router.push(`/division/${param.id}/discussion/${v.id}`)
                         }}>
                            <Grid.Col span={2}>
-                              <Avatar alt="it's me" src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} size="lg" />
+                              <Avatar alt="it's me" src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} size="lg" />
                            </Grid.Col>
                            <Grid.Col span={6}>
                               <Box pl={{

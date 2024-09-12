@@ -16,6 +16,7 @@ export default function ListFileDetailProject() {
   const param = useParams<{ id: string }>()
   const [loading, setLoading] = useState(true)
   const [idData, setIdData] = useState('')
+  const [idStorage, setIdStorage] = useState('')
   const [nameData, setNameData] = useState('')
   const [openDrawer, setOpenDrawer] = useState(false)
   const [isOpenModal, setOpenModal] = useState(false)
@@ -52,6 +53,7 @@ export default function ListFileDetailProject() {
         toast.success(res.message)
         getOneData()
         setIdData("")
+        setIdStorage("")
         setOpenDrawer(false)
       } else {
         toast.error(res.message);
@@ -102,6 +104,7 @@ export default function ListFileDetailProject() {
                         setNameData(item.name + '.' + item.extension)
                         setExtension(item.extension)
                         setIdData(item.id)
+                        setIdStorage(item.idStorage)
                         setOpenDrawer(true)
                       }}
                     >
@@ -167,7 +170,7 @@ export default function ListFileDetailProject() {
             setOpenModal(false)
           }} />
 
-        <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idData + '.' + isExtension} extension={isExtension} fitur='project' />
+        <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idStorage} extension={isExtension} fitur='project' />
       </Box>
     </>
   );

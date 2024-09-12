@@ -200,6 +200,7 @@ model ProjectFile {
   idProject String
   name      String
   extension String
+  idStorage String?
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

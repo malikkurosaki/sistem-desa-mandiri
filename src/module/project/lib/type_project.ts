@@ -19,6 +19,7 @@ export interface IDataFileProject {
   id: string
   name: string
   extension: string
+  idStorage:string
 }
 
 export interface IDataMemberProject {

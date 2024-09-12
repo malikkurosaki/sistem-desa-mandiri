@@ -45,7 +45,7 @@ export default function EditProfile() {
       setLoading(true)
       const res = await funGetProfileByCookies()
       setData(res.data)
-      setIMG(`/api/file/img?jenis=image&cat=user&file=${res.data.img}`)
+      setIMG(`https://wibu-storage.wibudev.com/api/files/${res.data.img}`)
       setLoading(false)
     } catch (error) {
       console.error(error);
@@ -258,31 +258,31 @@ export default function EditProfile() {
         zIndex: 999,
         backgroundColor: `${WARNA.bgWhite}`,
       }}>
-        {loading ? 
-           <Skeleton height={50} radius={30} />
+        {loading ?
+          <Skeleton height={50} radius={30} />
           :
-        <Button
-          c={"white"}
-          bg={WARNA.biruTua}
-          size="md"
-          radius={30}
-          fullWidth
-          onClick={() => {
-            if (
-              data.nik !== "" &&
-              data.name !== "" &&
-              data.email !== "" &&
-              data.phone !== "" &&
-              data.gender !== ""
-            ) {
-              setValModal(true)
-            } else {
-              toast.error("Mohon lengkapi semua form");
-            }
-          }}
-        >
-          Simpan
-        </Button>
+          <Button
+            c={"white"}
+            bg={WARNA.biruTua}
+            size="md"
+            radius={30}
+            fullWidth
+            onClick={() => {
+              if (
+                data.nik !== "" &&
+                data.name !== "" &&
+                data.email !== "" &&
+                data.phone !== "" &&
+                data.gender !== ""
+              ) {
+                setValModal(true)
+              } else {
+                toast.error("Mohon lengkapi semua form");
+              }
+            }}
+          >
+            Simpan
+          </Button>
         }
       </Box>
       <LayoutModal opened={isValModal} onClose={() => setValModal(false)}

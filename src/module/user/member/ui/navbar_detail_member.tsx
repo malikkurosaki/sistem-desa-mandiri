@@ -72,7 +72,7 @@ export default function NavbarDetailMember({ id }: IMember) {
                   gap="xs"
                >
                   <Center>
-                     <Avatar src={`/api/file/img?jenis=image&cat=user&file=${dataOne?.img}`} alt="it's me" size="xl" />
+                     <Avatar src={`https://wibu-storage.wibudev.com/api/files/${dataOne?.img}`} alt="it's me" size="xl" />
                   </Center>
                   {loading ?
                      <>

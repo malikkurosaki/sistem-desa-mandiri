@@ -27,7 +27,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
       try {
         setLoading(true)
         const res = await funGetProfileByCookies()
-        setIMG(`/api/file/img?jenis=image&cat=user&file=${res.data.img}`)
+        setIMG(`https://wibu-storage.wibudev.com/api/files/${res.data.img}`)
         setLoading(false)
       } catch (error) {
         console.error(error);

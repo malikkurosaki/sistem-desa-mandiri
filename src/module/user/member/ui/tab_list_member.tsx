@@ -92,7 +92,7 @@ export default function TabListMember() {
                                     xl: "xs"
                                  }} align="center">
                                     <Grid.Col span={2}>
-                                       <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} size={50} alt="image" />
+                                       <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} size={50} alt="image" />
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                        <Text fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{_.startCase(v.name)}</Text>

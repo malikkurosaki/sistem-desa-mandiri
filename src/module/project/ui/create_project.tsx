@@ -128,10 +128,7 @@ export default function CreateProject() {
 
 
 
-  if (openTugas) return <ViewDateEndTask onClose={(val) => {
-    setDataTask([...dataTask, val])
-    setOpenTugas(false)
-  }} />;
+  if (openTugas) return <ViewDateEndTask onClose={(val) => { setOpenTugas(false) }} onSet={(val) => { setDataTask([...dataTask, val]); setOpenTugas(false) }} />;
 
   if (isChooseAnggota) return <CreateUsersProject grup={body.idGroup} onClose={() => { setChooseAnggota(false) }} />
 
@@ -303,7 +300,7 @@ export default function CreateProject() {
                           >
                             <Grid.Col span={9}>
                               <Group>
-                                <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
+                                <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
                                 <Box w={{
                                   base: isMobile ? 130 : 140,
                                   xl: 270

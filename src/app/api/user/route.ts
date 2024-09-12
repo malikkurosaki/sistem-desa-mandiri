@@ -1,4 +1,4 @@
-import { funUploadFile, prisma } from "@/module/_global";
+import { DIR, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
@@ -141,27 +141,17 @@ export async function POST(request: Request) {
         const fExt = file.name.split(".").pop()
         const fileName = user.id + '.' + fExt;
         const newFile = new File([file], fileName, { type: file.type });
-        await funUploadFile({ file: newFile, dirId: "cm0x8dbwn0005bp5tgmfcthzw" })
-
-        // const root = path.join(process.cwd(), "./public/image/user/");
-        // const fExt = file.name.split(".").pop()
-        // const fileName = users.id + '.' + fExt;
-        // const filePath = path.join(root, fileName);
-
-        // // Konversi ArrayBuffer ke Buffer
-        // const buffer = Buffer.from(await file.arrayBuffer());
-
-        // // Tulis file ke sistem
-        // fs.writeFileSync(filePath, buffer);
-
-        // await prisma.user.update({
-        //   where: {
-        //     id: users.id
-        //   },
-        //   data: {
-        //     img: fileName
-        //   }
-        // })
+        const upload = await funUploadFile({ file: newFile, dirId: DIR.user })
+        if (upload.success) {
+          await prisma.user.update({
+            where: {
+              id: users.id
+            },
+            data: {
+              img: upload.data.id
+            }
+          })
+        }
       }
 
       // create log user
