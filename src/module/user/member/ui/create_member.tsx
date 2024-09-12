@@ -442,7 +442,7 @@ export default function CreateMember() {
           onBlur={() => setTouched({ ...touched, gender: true })}
           error={
             touched.gender && (
-              listData.gender == "" ? "Gender Tidak Boleh Kosong" : null
+              listData.gender == "" ? "Jenis Kelamin Tidak Boleh Kosong" : null
             )
           }
         />

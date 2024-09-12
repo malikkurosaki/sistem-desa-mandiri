@@ -1,7 +1,7 @@
-import { prisma } from "@/module/_global";
+import { DIR, funDeleteFile, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
-import _ from "lodash";
+import _, { update } from "lodash";
 import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
@@ -203,22 +203,17 @@ export async function PUT(request: Request, context: { params: { id: string } })
             });
 
             if (String(file) != "undefined" && String(file) != "null") {
-                fs.unlink(`./public/image/user/${updates.img}`, (err) => { })
-                const root = path.join(process.cwd(), "./public/image/user/");
                 const fExt = file.name.split(".").pop()
                 const fileName = id + '.' + fExt;
-                const filePath = path.join(root, fileName);
-
-                // Konversi ArrayBuffer ke Buffer
-                const buffer = Buffer.from(await file.arrayBuffer());
-                fs.writeFileSync(filePath, buffer);
-
+                const newFile = new File([file], fileName, { type: file.type });
+                await funDeleteFile({ fileId: String(updates.img) })
+                const upload = await funUploadFile({ file: newFile, dirId: DIR.user })
                 await prisma.user.update({
                     where: {
                         id: id
                     },
                     data: {
-                        img: fileName
+                        img: upload.data.id
                     }
                 })
             }
