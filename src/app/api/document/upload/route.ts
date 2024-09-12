@@ -1,4 +1,4 @@
-import { prisma } from "@/module/_global";
+import { DIR, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import { NextResponse } from "next/server";
@@ -70,33 +70,29 @@ export async function POST(request: Request) {
 
       const fExt = file.name.split(".").pop()
       const fName = file.name.replace("." + fExt, "")
+      const upload = await funUploadFile({ file: file, dirId: DIR.document })
+      if (upload.success) {
+         const dataInsert = await prisma.divisionDocumentFolderFile.create({
+            data: {
+               name: fName,
+               path: idPath,
+               idDivision,
+               category: "FILE",
+               extension: String(fExt),
+               createdBy: user.id,
+               idStorage: upload.data.id
+            },
+            select: {
+               id: true
+            }
+         });
 
-      const dataInsert = await prisma.divisionDocumentFolderFile.create({
-         data: {
-            name: fName,
-            path: idPath,
-            idDivision,
-            category: "FILE",
-            extension: String(fExt),
-            createdBy: user.id,
-         },
-         select: {
-            id: true
-         }
-      });
-
-      const root = path.join(process.cwd(), "./public/file/dokumen/");
-      const nameFix = dataInsert.id + '.' + fExt
-      const filePath = path.join(root, nameFix)
-      // Konversi ArrayBuffer ke Buffer
-      const buffer = Buffer.from(await file.arrayBuffer());
-      // Tulis file ke sistem
-      fs.writeFileSync(filePath, buffer);
-
-      // create log user
-      const log = await createLogUser({ act: 'CREATE', desc: 'User mengupload file baru', table: 'divisionDocumentFolderFile', data: dataInsert.id })
-
-      return NextResponse.json({ success: true, message: "Berhasil upload file" }, { status: 200 });
+         // create log user
+         const log = await createLogUser({ act: 'CREATE', desc: 'User mengupload file baru', table: 'divisionDocumentFolderFile', data: dataInsert.id })
+         return NextResponse.json({ success: true, message: "Berhasil upload file" }, { status: 200 });
+      } else {
+         return NextResponse.json({ success: false, message: "Gagal upload file, coba lagi nanti" }, { status: 400 });
+      }
    } catch (error) {
       console.error(error);
       return NextResponse.json({ success: false, message: "Gagal upload file, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });

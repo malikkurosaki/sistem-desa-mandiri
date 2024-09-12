@@ -364,6 +364,7 @@ model DivisionDocumentFolderFile {
   id                    String                  @id @default(cuid())
   Division              Division                @relation(fields: [idDivision], references: [id])
   idDivision            String
+  idStorage             String?
   category              String                  @default("FOLDER") // FOLDER OR FILE
   name                  String
   extension             String

@@ -1,4 +1,5 @@
 export interface IDataDocument {
+   idStorage: string;
    id: string;
    name: string;
    extension: string;

@@ -30,7 +30,7 @@ export default function NavbarDocumentDivision() {
   const param = useParams<{ id: string }>()
   const [isOpenModalView, setOpenModalView] = useState(false)
   const [isExtension, setExtension] = useState('')
-  const [idData, setIdData] = useState('')
+  const [idStorage, setIdStorage] = useState('')
   const [name, setName] = useState('')
   const [isOpen, setOpen] = useState(false)
   const [isDelete, setIsDelete] = useState(false)
@@ -337,7 +337,7 @@ export default function NavbarDocumentDivision() {
                           router.push('?path=' + v.id)
                         } else if (v.category == "FILE" && selectedFiles.length == 0 && !dariSelectAll) {
                           setExtension(v.extension)
-                          setIdData(v.id)
+                          setIdStorage(v.idStorage)
                           setOpenModalView(true)
                         }
 
@@ -380,7 +380,7 @@ export default function NavbarDocumentDivision() {
                               router.push('?path=' + v.id)
                             } else if (v.category == "FILE" && selectedFiles.length == 0 && !dariSelectAll) {
                               setExtension(v.extension)
-                              setIdData(v.id)
+                              setIdStorage(v.idStorage)
                               setOpenModalView(true)
                             }
 
@@ -485,7 +485,7 @@ export default function NavbarDocumentDivision() {
       </LayoutDrawer>
 
 
-      <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idData + '.' + isExtension} extension={isExtension} fitur='dokumen' />
+      <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idStorage} extension={isExtension} fitur='dokumen' />
     </Box>
   );
 }
