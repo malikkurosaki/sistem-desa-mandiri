@@ -90,7 +90,8 @@ export async function GET(request: Request, context: { params: { id: string } })
                   select: {
                      id: true,
                      name: true,
-                     extension: true
+                     extension: true,
+                     idStorage: true
                   }
                }
             }
@@ -101,6 +102,7 @@ export async function GET(request: Request, context: { params: { id: string } })
             nameInStorage: v.ContainerFileDivision.id,
             name: v.ContainerFileDivision.name,
             extension: v.ContainerFileDivision.extension,
+            idStorage: v.ContainerFileDivision.idStorage,
          }))
 
          allData = fix
@@ -287,7 +289,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
       // create log user
       const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data tugas divisi', table: 'divisionProject', data: id })
 
-      return NextResponse.json( { success: true, message: "Tugas berhasil diedit", }, { status: 200 } );
+      return NextResponse.json({ success: true, message: "Tugas berhasil diedit", }, { status: 200 });
    } catch (error) {
       console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengedit tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });

@@ -452,6 +452,7 @@ model ContainerFileDivision {
   id                  String                @id @default(cuid())
   Division            Division              @relation(fields: [idDivision], references: [id])
   idDivision          String
+  idStorage           String?
   name                String
   extension           String
   isActive            Boolean               @default(true)

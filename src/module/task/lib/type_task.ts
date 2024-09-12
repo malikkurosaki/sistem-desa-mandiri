@@ -68,5 +68,6 @@ export interface IDataFileTaskDivision {
    id: string
    name: string
    extension: string,
-   nameInStorage: string
+   nameInStorage: string,
+   idStorage: string
 }

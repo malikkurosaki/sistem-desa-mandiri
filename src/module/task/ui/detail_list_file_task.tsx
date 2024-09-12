@@ -18,6 +18,7 @@ export default function ListFileDetailTask() {
    const [openDrawer, setOpenDrawer] = useState(false)
    const [isOpenModal, setOpenModal] = useState(false)
    const [idData, setIdData] = useState('')
+   const [idDataStorage, setIdDataStorage] = useState('')
    const [nameStorage, setNameStorage] = useState('')
    const [nameData, setNameData] = useState('')
    const [isOpenModalView, setOpenModalView] = useState(false)
@@ -52,6 +53,7 @@ export default function ListFileDetailTask() {
             toast.success(res.message)
             getOneData()
             setIdData("")
+            setIdDataStorage("")
             setOpenDrawer(false)
          } else {
             toast.error(res.message);
@@ -102,6 +104,7 @@ export default function ListFileDetailTask() {
                                  setExtension(item.extension)
                                  setNameStorage(item.nameInStorage)
                                  setIdData(item.id)
+                                 setIdDataStorage(item.idStorage)
                                  setOpenDrawer(true)
                               }}
                            >
@@ -167,7 +170,7 @@ export default function ListFileDetailTask() {
                setOpenModal(false)
             }} />
 
-         <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={nameStorage + '.' + isExtension} extension={isExtension} fitur='task' />
+         <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idDataStorage} extension={isExtension} fitur='task' />
       </Box>
    )
 }

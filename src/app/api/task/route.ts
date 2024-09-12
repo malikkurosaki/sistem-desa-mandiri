@@ -1,4 +1,4 @@
-import { prisma } from "@/module/_global";
+import { DIR, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _, { ceil } from "lodash";
 import { NextResponse } from "next/server";
@@ -153,42 +153,35 @@ export async function POST(request: Request) {
       let fileFix: any[] = []
 
       if (cekFile) {
-         const root = path.join(process.cwd(), "./public/file/task/");
          for (var pair of body.entries()) {
             if (String(pair[0]).substring(0, 4) == "file") {
                const file = body.get(pair[0]) as File
                const fExt = file.name.split(".").pop()
                const fName = file.name.replace("." + fExt, "")
 
+               const upload = await funUploadFile({ file: file, dirId: DIR.task })
+               if (upload.success) {
+                  const insertToContainer = await prisma.containerFileDivision.create({
+                     data: {
+                        idDivision: idDivision,
+                        name: fName,
+                        extension: String(fExt),
+                        idStorage: upload.data.id
+                     },
+                     select: {
+                        id: true
+                     }
+                  })
 
-               const insertToContainer = await prisma.containerFileDivision.create({
-                  data: {
+                  const dataFile = {
+                     idProject: data.id,
                      idDivision: idDivision,
-                     name: fName,
-                     extension: String(fExt)
-                  },
-                  select: {
-                     id: true
+                     idFile: insertToContainer.id,
+                     createdBy: user.id,
                   }
-               })
 
-               const nameFix = insertToContainer.id + '.' + fExt
-               const filePath = path.join(root, nameFix)
-               // Konversi ArrayBuffer ke Buffer
-               const buffer = Buffer.from(await file.arrayBuffer());
-               // Tulis file ke sistem
-               fs.writeFileSync(filePath, buffer);
-
-
-               const dataFile = {
-                  idProject: data.id,
-                  idDivision: idDivision,
-                  idFile: insertToContainer.id,
-                  createdBy: user.id,
+                  fileFix.push(dataFile)
                }
-
-
-               fileFix.push(dataFile)
             }
          }
 
