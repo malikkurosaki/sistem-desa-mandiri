@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { FaUserTag, FaUserTie } from 'react-icons/fa6';
 import { useHookstate } from '@hookstate/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { IoColorPalette, IoColorPaletteOutline } from 'react-icons/io5';
 
 export default function ViewDetailFeature() {
   const router = useRouter()
@@ -105,6 +106,23 @@ export default function ViewDetailFeature() {
                 </Center>
                 <Center>
                   <Text fz={15} c={WARNA.biruTua}>Grup</Text>
+                </Center>
+              </Box>
+            }
+            {
+              roleLogin.get() == "supadmin" &&
+              <Box onClick={() => router.push('/color-palette')}>
+                <Center>
+                  <ActionIcon variant="gradient"
+                    size={isMobile ? 50 : 68}
+                    aria-label="Gradient action icon"
+                    radius={100}
+                    gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
+                    <IoColorPalette size={isMobile ? 25 : 35} color={WARNA.biruTua} />
+                  </ActionIcon>
+                </Center>
+                <Center>
+                  <Text fz={15} c={WARNA.biruTua}>Palet Warna</Text>
                 </Center>
               </Box>
             }
