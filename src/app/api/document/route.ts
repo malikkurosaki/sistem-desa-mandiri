@@ -129,6 +129,7 @@ export async function GET(request: Request) {
 
             formatDataShare = dataShare.map((v: any) => ({
                ..._.omit(v, ["DivisionDocumentFolderFile"]),
+               idStorage: '',
                id: v.DivisionDocumentFolderFile.id,
                category: v.DivisionDocumentFolderFile.category,
                name: v.DivisionDocumentFolderFile.name,
@@ -156,6 +157,7 @@ export async function GET(request: Request) {
             category: true,
             name: true,
             extension: true,
+            idStorage: true,
             path: true,
             User: {
                select: {

@@ -1,0 +1,22 @@
+[
+   {
+      "id": "theme1",
+      "name": "Tema 1",
+      "utama": "#19345E",
+      "bgUtama": "#F4F9FD",
+      "bgIcon": "#384288",
+      "bgFiturHome": "#FCAA4B",
+      "bgFiturDivisi": "#FCAA4B",
+      "bgTotalKegiatan": "#DCEED8"
+   },
+   {
+      "id": "theme2",
+      "name": "Tema 2",
+      "utama": "#508D4E",
+      "bgUtama": "#F4F9FD",
+      "bgIcon": "#3C8754",
+      "bgFiturHome": "#FCAA4B",
+      "bgFiturDivisi": "#FCAA4B",
+      "bgTotalKegiatan": "#DCEED8"
+   }
+]

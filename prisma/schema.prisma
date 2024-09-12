@@ -47,6 +47,7 @@ model UserRole {
 
 model Village {
   id           String         @id @default(cuid())
+  idTheme      String?
   name         String
   desc         String         @db.Text
   isActive     Boolean        @default(true)
@@ -57,6 +58,7 @@ model Village {
   Announcement Announcement[]
   Project      Project[]
   Division     Division[]
+  ColorTheme   ColorTheme[]
 }
 
 model Group {
@@ -364,6 +366,7 @@ model DivisionDocumentFolderFile {
   id                    String                  @id @default(cuid())
   Division              Division                @relation(fields: [idDivision], references: [id])
   idDivision            String
+  idStorage             String?
   category              String                  @default("FOLDER") // FOLDER OR FILE
   name                  String
   extension             String
@@ -451,10 +454,27 @@ model ContainerFileDivision {
   id                  String                @id @default(cuid())
   Division            Division              @relation(fields: [idDivision], references: [id])
   idDivision          String
+  idStorage           String?
   name                String
   extension           String
   isActive            Boolean               @default(true)
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
   DivisionProjectFile DivisionProjectFile[]
+}
+
+model ColorTheme {
+  id              String   @id @default(cuid())
+  Village         Village? @relation(fields: [idVillage], references: [id])
+  idVillage       String?
+  name            String
+  utama           String
+  bgUtama         String
+  bgIcon          String
+  bgFiturHome     String
+  bgFiturDivision String
+  bgTotalKegiatan String
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

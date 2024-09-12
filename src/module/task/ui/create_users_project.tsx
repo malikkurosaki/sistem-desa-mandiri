@@ -26,7 +26,7 @@ import { globalMemberTask } from "../lib/val_task";
 import { FaCheck } from "react-icons/fa6";
 import { RiListCheck } from "react-icons/ri";
 import { BsListCheck } from "react-icons/bs";
-import { HiMagnifyingGlass } from "react-icons/hi2";
+import { HiChevronLeft, HiMagnifyingGlass } from "react-icons/hi2";
 import { IoArrowBackOutline, IoClose } from "react-icons/io5";
 import { Carousel } from "@mantine/carousel";
 
@@ -119,21 +119,27 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
   async function fetchGetMember(val: string) {
     setSearchQuery(val)
     try {
-       const res = await funGetSearchMemberDivision('?search=' + val, param.id);
-       if (res.success) {
-          setData(res.data)
-       } else {
-          toast.error(res.message);
-       }
+      const res = await funGetSearchMemberDivision('?search=' + val, param.id);
+      if (res.success) {
+        setData(res.data)
+      } else {
+        toast.error(res.message);
+      }
     } catch (error) {
-       console.error(error);
+      console.error(error);
     }
- }
+  }
 
   return (
     <Box>
       <LayoutNavbarNew
-        // back=""
+        state={
+          <Box>
+            <ActionIcon variant="light" onClick={() => { onClose(true) }} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+              <HiChevronLeft size={20} color='white' />
+            </ActionIcon>
+          </Box>
+        }
         title="Pilih Anggota"
         menu={<ActionIcon onClick={handleSearchClick} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="search">
           <HiMagnifyingGlass size={20} color='white' />

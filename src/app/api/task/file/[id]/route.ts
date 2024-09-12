@@ -1,4 +1,4 @@
-import { prisma } from "@/module/_global";
+import { DIR, funDeleteFile, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import { NextResponse } from "next/server";
@@ -42,7 +42,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
          }
       })
 
-      fs.unlink(`./public/file/task/${dataFile?.id}.${dataFile?.extension}`, (err) => { })
+      await funDeleteFile({ fileId: String(dataFile?.idStorage) })
 
       const deleteRelasi = await prisma.divisionProjectFile.delete({
          where: {
@@ -57,7 +57,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
       });
 
       // create log user
-      const log = await createLogUser({ act: 'DELETE', desc: 'User menghpus file divisi', table: 'divisionProject', data: String(dataRelasi?.idProject) })
+      const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus file tugas divisi', table: 'divisionProject', data: String(dataRelasi?.idProject) })
 
       return NextResponse.json({ success: true, message: "File berhasil dihapus", data, }, { status: 200 });
 
@@ -115,34 +115,29 @@ export async function POST(request: Request, context: { params: { id: string } }
                const fName = file.name.replace("." + fExt, "")
 
 
-               const insertToContainer = await prisma.containerFileDivision.create({
-                  data: {
-                     idDivision: String(dataProject?.idDivision),
-                     name: fName,
-                     extension: String(fExt)
-                  },
-                  select: {
-                     id: true
+               const upload = await funUploadFile({ file: file, dirId: DIR.task })
+               if (upload.success) {
+                  const insertToContainer = await prisma.containerFileDivision.create({
+                     data: {
+                        idDivision: String(dataProject?.idDivision),
+                        name: fName,
+                        extension: String(fExt),
+                        idStorage: upload.data.id
+                     },
+                     select: {
+                        id: true
+                     }
+                  })
+
+                  const dataFile = {
+                     idProject: id,
+                     idDivision: dataProject?.idDivision,
+                     idFile: insertToContainer.id,
+                     createdBy: user.id,
                   }
-               })
 
-               const nameFix = insertToContainer.id + '.' + fExt
-               const filePath = path.join(root, nameFix)
-               // Konversi ArrayBuffer ke Buffer
-               const buffer = Buffer.from(await file.arrayBuffer());
-               // Tulis file ke sistem
-               fs.writeFileSync(filePath, buffer);
-
-
-               const dataFile = {
-                  idProject: id,
-                  idDivision: dataProject?.idDivision,
-                  idFile: insertToContainer.id,
-                  createdBy: user.id,
+                  fileFix.push(dataFile)
                }
-
-
-               fileFix.push(dataFile)
             }
          }
 
@@ -152,12 +147,12 @@ export async function POST(request: Request, context: { params: { id: string } }
       }
 
       // create log user
-      const log = await createLogUser({ act: 'CREATE', desc: 'User meambahkan file tugas divisi baru', table: 'divisionProject', data: id })
-      return NextResponse.json({ success: true, message: "Berhasil membuat tugas divisi" }, { status: 200 });
+      const log = await createLogUser({ act: 'CREATE', desc: 'User menambahkan file tugas divisi baru', table: 'divisionProject', data: id })
+      return NextResponse.json({ success: true, message: "Berhasil menambahkan file" }, { status: 200 });
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal membuat tugas divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menambahkan filae, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
 

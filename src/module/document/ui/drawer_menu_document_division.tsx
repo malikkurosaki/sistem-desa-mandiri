@@ -114,7 +114,10 @@ export default function DrawerMenuDocumentDivision() {
             maxSize={3 * 1024 ** 2}
             accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
             onReject={(files) => {
-              return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+              refresh.set(true)
+              setOpenModal(false)
+              setOpenDrawerDocument(false)
+              toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
             }}
           >
             <Flex justify={'center'} align={'center'} direction={'column'} mb={20} onClick={() => openRef.current?.()}>
