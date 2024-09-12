@@ -1,4 +1,5 @@
-import { WARNA } from '@/module/_global';
+import { TEMA, WARNA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 import { Box, Flex, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -7,6 +8,7 @@ import { RiFilter2Line } from "react-icons/ri";
 
 export default function DrawerAnnouncement() {
    const router = useRouter()
+   const tema = useHookstate(TEMA)
 
    return (
       <Box>
@@ -23,10 +25,10 @@ export default function DrawerAnnouncement() {
                   }}
                >
                   <Box>
-                     <IoAddCircle size={30} color={WARNA.biruTua} />
+                     <IoAddCircle size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua} ta='center'>Tambah Pengumuman</Text>
+                     <Text c={tema.get().utama} ta='center'>Tambah Pengumuman</Text>
                   </Box>
                </Flex>
             </SimpleGrid>

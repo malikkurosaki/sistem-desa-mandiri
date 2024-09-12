@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, LayoutModalViewFile, WARNA } from '@/module/_global';
+import { LayoutDrawer, LayoutModalViewFile, TEMA } from '@/module/_global';
 import { Box, Center, Flex, Grid, Group, SimpleGrid, Skeleton, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -10,6 +10,7 @@ import { IDataFileProject } from '../lib/type_project';
 import { BsFileTextFill, BsFiletypeCsv, BsFiletypeHeic, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from 'react-icons/bs';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { FaTrash } from 'react-icons/fa6';
+import { useHookstate } from '@hookstate/core';
 
 export default function ListFileDetailProject() {
   const [isData, setData] = useState<IDataFileProject[]>([])
@@ -22,6 +23,7 @@ export default function ListFileDetailProject() {
   const [isOpenModal, setOpenModal] = useState(false)
   const [isOpenModalView, setOpenModalView] = useState(false)
   const [isExtension, setExtension] = useState('')
+  const tema = useHookstate(TEMA)
 
   async function getOneData() {
     try {
@@ -68,7 +70,7 @@ export default function ListFileDetailProject() {
   return (
     <>
       <Box pt={20}>
-        <Text fw={'bold'} c={WARNA.biruTua}>File</Text>
+        <Text fw={'bold'} c={tema.get().utama}>File</Text>
         <Box bg={"white"} style={{
           borderRadius: 10,
           border: `1px solid ${"#D6D8F6"}`,
@@ -140,19 +142,19 @@ export default function ListFileDetailProject() {
               >
                 <Flex onClick={() => { setOpenModalView(true) }} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
-                    <BsFileTextFill size={30} color={WARNA.biruTua} />
+                    <BsFileTextFill size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                    <Text c={WARNA.biruTua}>Lihat file</Text>
+                    <Text c={tema.get().utama}>Lihat file</Text>
                   </Box>
                 </Flex>
 
                 <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
-                    <FaTrash size={30} color={WARNA.biruTua} />
+                    <FaTrash size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                    <Text c={WARNA.biruTua}>Hapus file</Text>
+                    <Text c={tema.get().utama}>Hapus file</Text>
                   </Box>
                 </Flex>
               </SimpleGrid>

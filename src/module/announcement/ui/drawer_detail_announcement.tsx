@@ -1,4 +1,4 @@
-import { WARNA } from '@/module/_global';
+import { TEMA, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { Box, Flex, SimpleGrid, Stack, Text, } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
@@ -6,11 +6,13 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaPencil, FaTrash } from 'react-icons/fa6';
 import { funDeleteAnnouncement } from '../lib/api_announcement';
+import { useHookstate } from '@hookstate/core';
 
 export default function DrawerDetailAnnouncement({ onDeleted }: { onDeleted: (val: boolean) => void }) {
    const router = useRouter()
    const [isOpen, setOpen] = useState(false)
    const param = useParams<{ id: string }>()
+   const tema = useHookstate(TEMA)
 
    async function onTrue(val: boolean) {
       if (val) {
@@ -36,10 +38,10 @@ export default function DrawerDetailAnnouncement({ onDeleted }: { onDeleted: (va
             >
                <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => setOpen(true)}>
                   <Box>
-                     <FaTrash size={30} color={WARNA.biruTua} />
+                     <FaTrash size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua} ta='center'>Hapus</Text>
+                     <Text c={tema.get().utama} ta='center'>Hapus</Text>
                   </Box>
                </Flex>
 
@@ -47,10 +49,10 @@ export default function DrawerDetailAnnouncement({ onDeleted }: { onDeleted: (va
                   router.push('edit/' + param.id)
                }} style={{ cursor: 'pointer' }}>
                   <Box>
-                     <FaPencil size={30} color={WARNA.biruTua} />
+                     <FaPencil size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua} ta='center'>Edit</Text>
+                     <Text c={tema.get().utama} ta='center'>Edit</Text>
                   </Box>
                </Flex>
             </SimpleGrid>

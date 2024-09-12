@@ -1,5 +1,5 @@
 "use client"
-import { globalRole, WARNA } from '@/module/_global';
+import { globalRole, TEMA, WARNA } from '@/module/_global';
 import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -24,6 +24,7 @@ export default function ListProject() {
   const [searchQuery, setSearchQuery] = useState('')
   const roleLogin = useHookstate(globalRole)
   const [nameGroup, setNameGroup] = useState('')
+  const tema = useHookstate(TEMA)
 
   const fetchData = async () => {
     try {
@@ -61,7 +62,7 @@ export default function ListProject() {
           <TextInput
             styles={{
               input: {
-                color: WARNA.biruTua,
+                color: tema.get().utama,
                 borderRadius: '#A3A3A3',
                 borderColor: '#A3A3A3',
               },
@@ -77,9 +78,9 @@ export default function ListProject() {
         <Grid.Col span={'auto'}>
           <Flex justify={'center'}>
             {isList ? (
-              <HiOutlineListBullet size={35} color={WARNA.biruTua} onClick={handleList} />
+              <HiOutlineListBullet size={35} color={tema.get().utama} onClick={handleList} />
             ) : (
-              <HiSquares2X2 size={35} color={WARNA.biruTua} onClick={handleList} />
+              <HiSquares2X2 size={35} color={tema.get().utama} onClick={handleList} />
             )}
           </Flex>
         </Grid.Col>
@@ -91,10 +92,10 @@ export default function ListProject() {
             <Skeleton width={"100%"} height={100} radius={"md"} />
           </Box>
           :
-          <Box bg={"#DCEED8"} p={10} style={{ borderRadius: 10 }}>
-            <Text fw={'bold'} c={WARNA.biruTua}>Total Kegiatan</Text>
+          <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
+            <Text fw={'bold'} c={tema.get().utama}>Total Kegiatan</Text>
             <Flex justify={'center'} align={'center'} h={'100%'}>
-              <Text fz={40} fw={'bold'} c={WARNA.biruTua}>{isData.length}</Text>
+              <Text fz={40} fw={'bold'} c={tema.get().utama}>{isData.length}</Text>
             </Flex>
           </Box>
         }
@@ -115,13 +116,14 @@ export default function ListProject() {
                             size={50}
                             aria-label="Gradient action icon"
                             radius={100}
-                            gradient={{
-                              from: '#DFDA7C',
-                              to: '#F2AF46',
-                              deg: 174
-                            }}
+                            // gradient={{
+                            //   from: '#DFDA7C',
+                            //   to: '#F2AF46',
+                            //   deg: 174
+                            // }}
+                            bg={tema.get().bgFiturHome}
                           >
-                            <HiMiniPresentationChartBar size={25} color={WARNA.biruTua} />
+                            <HiMiniPresentationChartBar size={25} color={tema.get().utama} />
                           </ActionIcon>
                         </Center>
                       </Group>
@@ -179,7 +181,7 @@ export default function ListProject() {
                     <Box key={i} mb={20}>
                       <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/project/${v.id}`)}>
                         <Card.Section>
-                          <Box h={120} bg={WARNA.biruTua}>
+                          <Box h={120} bg={tema.get().utama}>
                             <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
                               <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.title}</Title>
                             </Flex>
@@ -203,7 +205,7 @@ export default function ListProject() {
                               }</Badge>
                             <Avatar.Group>
                               <Avatar>
-                                <MdAccountCircle size={32} color={WARNA.biruTua} />
+                                <MdAccountCircle size={32} color={tema.get().utama} />
                               </Avatar>
                               <Avatar>+{v.member - 1}</Avatar>
                             </Avatar.Group>

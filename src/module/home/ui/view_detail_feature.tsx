@@ -1,5 +1,5 @@
 'use client'
-import { globalRole, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { globalRole, LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Center, SimpleGrid, Text } from '@mantine/core';
 import React from 'react';
 import { HiMiniUserGroup, HiMiniPresentationChartBar, HiMegaphone, HiSquares2X2, HiChevronLeft, HiUserGroup, HiUsers } from "react-icons/hi2";
@@ -14,6 +14,7 @@ export default function ViewDetailFeature() {
   const router = useRouter()
   const roleLogin = useHookstate(globalRole)
   const isMobile = useMediaQuery('(max-width: 369px)');
+  const tema = useHookstate(TEMA)
   return (
     <>
       <LayoutNavbarNew back='/home' title='Fitur' menu={<></>} />
@@ -28,12 +29,14 @@ export default function ViewDetailFeature() {
                   size={isMobile ? 50 : 68}
                   aria-label="Gradient action icon"
                   radius={100}
-                  gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <HiMiniUserGroup size={isMobile ? 25 : 35} color={WARNA.biruTua} />
+                  // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                  bg={tema.get().bgFiturHome}
+                  >
+                  <HiMiniUserGroup size={isMobile ? 25 : 35} color={tema.get().utama} />
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={WARNA.biruTua}>Divisi</Text>
+                <Text fz={15} c={tema.get().utama}>Divisi</Text>
               </Center>
             </Box>
             <Box onClick={() => router.push('/project?status=0&group=null')}>
@@ -42,12 +45,14 @@ export default function ViewDetailFeature() {
                   size={isMobile ? 50 : 68}
                   aria-label="Gradient action icon"
                   radius={100}
-                  gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <HiMiniPresentationChartBar size={isMobile ? 25 : 35} color={WARNA.biruTua} />
+                  // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                  bg={tema.get().bgFiturHome}
+                  >
+                  <HiMiniPresentationChartBar size={isMobile ? 25 : 35} color={tema.get().utama} />
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={WARNA.biruTua}>Kegiatan</Text>
+                <Text fz={15} c={tema.get().utama}>Kegiatan</Text>
               </Center>
             </Box>
             <Box onClick={() => router.push('/announcement')}>
@@ -56,12 +61,14 @@ export default function ViewDetailFeature() {
                   size={isMobile ? 50 : 68}
                   aria-label="Gradient action icon"
                   radius={100}
-                  gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <HiMegaphone size={isMobile ? 25 : 35} color={WARNA.biruTua} />
+                  // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                  bg={tema.get().bgFiturHome}
+                  >
+                  <HiMegaphone size={isMobile ? 25 : 35} color={tema.get().utama} />
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={WARNA.biruTua}>Pengumuman</Text>
+                <Text fz={15} c={tema.get().utama}>Pengumuman</Text>
               </Center>
             </Box>
             <Box onClick={() => router.push('/member')}>
@@ -70,12 +77,14 @@ export default function ViewDetailFeature() {
                   size={isMobile ? 50 : 68}
                   aria-label="Gradient action icon"
                   radius={100}
-                  gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <PiUsersFourFill size={isMobile ? 25 : 35} color={WARNA.biruTua} />
+                  // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                  bg={tema.get().bgFiturHome}
+                  >
+                  <PiUsersFourFill size={isMobile ? 25 : 35} color={tema.get().utama} />
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={WARNA.biruTua}>Anggota</Text>
+                <Text fz={15} c={tema.get().utama}>Anggota</Text>
               </Center>
             </Box>
             <Box onClick={() => router.push('/position')}>
@@ -84,12 +93,14 @@ export default function ViewDetailFeature() {
                   size={isMobile ? 50 : 68}
                   aria-label="Gradient action icon"
                   radius={100}
-                  gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                  <FaUserTie size={isMobile ? 25 : 35} color={WARNA.biruTua} />
+                  // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                  bg={tema.get().bgFiturHome}
+                  >
+                  <FaUserTie size={isMobile ? 25 : 35} color={tema.get().utama} />
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={WARNA.biruTua}>Jabatan</Text>
+                <Text fz={15} c={tema.get().utama}>Jabatan</Text>
               </Center>
             </Box>
             {
@@ -100,12 +111,14 @@ export default function ViewDetailFeature() {
                     size={isMobile ? 50 : 68}
                     aria-label="Gradient action icon"
                     radius={100}
-                    gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                    <FaUserTag size={isMobile ? 25 : 35} color={WARNA.biruTua} />
+                    // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                    bg={tema.get().bgFiturHome}
+                    >
+                    <FaUserTag size={isMobile ? 25 : 35} color={tema.get().utama} />
                   </ActionIcon>
                 </Center>
                 <Center>
-                  <Text fz={15} c={WARNA.biruTua}>Grup</Text>
+                  <Text fz={15} c={tema.get().utama}>Grup</Text>
                 </Center>
               </Box>
             }
@@ -117,12 +130,14 @@ export default function ViewDetailFeature() {
                     size={isMobile ? 50 : 68}
                     aria-label="Gradient action icon"
                     radius={100}
-                    gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}>
-                    <IoColorPalette size={isMobile ? 25 : 35} color={WARNA.biruTua} />
+                    // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                    bg={tema.get().bgFiturHome}
+                    >
+                    <IoColorPalette size={isMobile ? 25 : 35} color={tema.get().utama} />
                   </ActionIcon>
                 </Center>
                 <Center>
-                  <Text fz={15} c={WARNA.biruTua}>Palet Warna</Text>
+                  <Text fz={15} c={tema.get().utama}>Tema</Text>
                 </Center>
               </Box>
             }

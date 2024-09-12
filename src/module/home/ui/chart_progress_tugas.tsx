@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { TEMA, WARNA } from "@/module/_global";
 import { Box, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { EChartsOption } from "echarts";
@@ -7,12 +7,13 @@ import EChartsReact from "echarts-for-react";
 import { useState } from "react";
 import { funGetHome } from "../lib/api_home";
 import toast from "react-hot-toast";
+import { useHookstate } from "@hookstate/core";
 
 export default function ChartProgressHome() {
    const [options, setOptions] = useState<EChartsOption>({});
    const [isData, setData] = useState<any[]>([])
    const [loading, setLoading] = useState(true);
-
+   const tema = useHookstate(TEMA)
    useShallowEffect(() => {
       fetchData()
    }, [])
@@ -47,7 +48,7 @@ export default function ChartProgressHome() {
             top: '2%',
             left: 'center',
             textStyle: {
-               color: WARNA.biruTua
+               color: tema.get().utama
             }
          },
          legend: {

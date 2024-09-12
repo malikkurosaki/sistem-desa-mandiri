@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { TEMA, WARNA } from "@/module/_global";
 import { Box, Grid, Group, SimpleGrid, Skeleton, Text } from "@mantine/core";
 import { GoDiscussionClosed } from "react-icons/go";
 import { CiClock2, CiUser } from "react-icons/ci";
@@ -10,6 +10,7 @@ import { funGetHome } from "../lib/api_home";
 import toast from "react-hot-toast";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function ListDiscussion() {
@@ -17,6 +18,7 @@ export default function ListDiscussion() {
    const [isData, setData] = useState<IDataHomeDiskusi[]>([])
    const [loading, setLoading] = useState(true);
    const isMobile = useMediaQuery('(max-width: 369px)');
+   const tema = useHookstate(TEMA)
 
    const fetchData = async () => {
       try {
@@ -45,7 +47,7 @@ export default function ListDiscussion() {
 
    return (
       <Box pt={10}>
-         <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Diskusi</Text>
+         <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Diskusi</Text>
          <Box bg={"white"} style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,

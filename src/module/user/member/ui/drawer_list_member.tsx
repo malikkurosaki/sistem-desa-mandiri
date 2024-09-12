@@ -1,4 +1,4 @@
-import { globalRole, WARNA } from '@/module/_global';
+import { globalRole, TEMA, WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { Box, Flex, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -11,6 +11,7 @@ export default function DrawerListMember() {
    const roleLogin = useHookstate(globalRole)
    const searchParams = useSearchParams()
    const group = searchParams.get('group')
+   const tema = useHookstate(TEMA)
 
    return (
       <Box>
@@ -27,10 +28,10 @@ export default function DrawerListMember() {
                   }}
                >
                   <Box>
-                     <IoAddCircle size={30} color={WARNA.biruTua} />
+                     <IoAddCircle size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua} ta='center'>Tambah Anggota</Text>
+                     <Text c={tema.get().utama} ta='center'>Tambah Anggota</Text>
                   </Box>
                </Flex>
                {
@@ -42,10 +43,10 @@ export default function DrawerListMember() {
                      }}
                   >
                      <Box>
-                        <RiFilter2Line size={30} color={WARNA.biruTua} />
+                        <RiFilter2Line size={30} color={tema.get().utama} />
                      </Box>
                      <Box>
-                        <Text c={WARNA.biruTua} ta='center'>Filter</Text>
+                        <Text c={tema.get().utama} ta='center'>Filter</Text>
                      </Box>
                   </Flex>
                }

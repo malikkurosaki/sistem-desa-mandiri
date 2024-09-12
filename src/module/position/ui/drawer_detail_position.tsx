@@ -1,4 +1,4 @@
-import { LayoutDrawer, WARNA } from "@/module/_global"
+import { LayoutDrawer, TEMA, WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { funGetAllGroup, IDataGroup } from "@/module/group"
 import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button, Skeleton } from "@mantine/core"
@@ -18,6 +18,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    const [isModal, setModal] = useState(false)
    const refresh = useHookstate(globalRefreshPosition)
    const [loading, setLoading] = useState(true)
+   const tema = useHookstate(TEMA)
    const [data, setData] = useState<any>({
       id: id,
       name: "",
@@ -129,10 +130,10 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                   onClick={() => setModal(true)}
                >
                   <Box>
-                     <FaToggleOff size={30} color={WARNA.biruTua} />
+                     <FaToggleOff size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua}>{isActive == false ? "Aktifkan" : "Non Aktifkan"}</Text>
+                     <Text c={tema.get().utama}>{isActive == false ? "Aktifkan" : "Non Aktifkan"}</Text>
                   </Box>
                </Flex>
 
@@ -141,10 +142,10 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                   onClick={() => setOpenDrawerGroup(true)}
                >
                   <Box>
-                     <FaPencil size={30} color={WARNA.biruTua} />
+                     <FaPencil size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua} ta='center'>Edit</Text>
+                     <Text c={tema.get().utama} ta='center'>Edit</Text>
                   </Box>
                </Flex>
             </SimpleGrid>
@@ -163,9 +164,9 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                         label="Jabatan"
                         styles={{
                            input: {
-                              color: WARNA.biruTua,
-                              borderRadius: WARNA.biruTua,
-                              borderColor: WARNA.biruTua,
+                              color: tema.get().utama,
+                              borderRadius: tema.get().utama,
+                              borderColor: tema.get().utama,
                            },
                         }}
                         required
@@ -189,7 +190,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                <Box pos={"absolute"} bottom={10} left={0} right={0}>
                   <Button
                      c={"white"}
-                     bg={WARNA.biruTua}
+                     bg={tema.get().utama}
                      size="lg"
                      radius={30}
                      fullWidth

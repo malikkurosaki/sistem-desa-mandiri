@@ -1,6 +1,9 @@
+import { useHookstate } from "@hookstate/core";
 import { ActionIcon, Box, Divider, Group, Skeleton } from "@mantine/core";
+import { TEMA } from "../bin/val_global";
 
 export default function SkeletonDetailDiscussionComment() {
+  const tema = useHookstate(TEMA)
   return (
     <>
       <Group justify='space-between'>
@@ -8,7 +11,7 @@ export default function SkeletonDetailDiscussionComment() {
           <Box>
             <ActionIcon
               variant="light"
-              bg={"#DCEED8"}
+              bg={tema.get().bgTotalKegiatan}
               size={50}
               radius={100}
               aria-label="icon"

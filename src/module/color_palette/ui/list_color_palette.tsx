@@ -11,26 +11,26 @@ import DrawerPaletEditEndDefault from './drawer_palet_edit_end_default';
 const paletWarna = [
   {
     id: 1,
-    name: 'Palet Bawaan 1',
-    color: ['#ff69b4', '#33cc33', '#7D8A7DFF', '#0B730BFF']
+    name: 'Tema Bawaan 1',
+    color: ['#ff69b4', '#33cc33', '#7D8A7DFF', '#0B730BFF', '#16ACE3FF', '#532CC1FF']
   },
   {
     id: 2,
-    name: 'Palet Bawaan 2',
-    color: ['#EF8A62FF', '#532CC1FF', '#16ACE3FF', '#760B2DFF']
+    name: 'Tema Bawaan 2',
+    color: ['#EF8A62FF', '#532CC1FF', '#16ACE3FF', '#760B2DFF', '#F67280FF', '#C06C84FF']
   },
   {
     id: 3,
-    name: 'Palet Bawaan 3',
-    color: ['#F8B195FF', '#F67280FF', '#C06C84FF', '#6C5B7BFF']
+    name: 'Tema Bawaan 3',
+    color: ['#F8B195FF', '#F67280FF', '#C06C84FF', '#6C5B7BFF', '#7D8A7DFF', '#0B730BFF']
   },
 ]
 
 const paletTambahan = [
   {
     id: 1,
-    name: 'Palet Tambah 1',
-    color: ['#ABD220FF', '#E409E8FF', '#08A2A4FF', '#C11515FF']
+    name: 'Tema Tambah 1',
+    color: ['#ABD220FF', '#E409E8FF', '#08A2A4FF', '#C11515FF', '#F67280FF', '#C06C84FF']
   }
 ]
 
@@ -40,7 +40,7 @@ export default function ListColorPalette() {
   const [isOpenTambahan, setOpenTambahan] = useState(false)
   return (
     <Box>
-      <LayoutNavbarNew back='/home' title='Palet Warna' menu={
+      <LayoutNavbarNew back='/home' title='Tema Aplikasi' menu={
         <ActionIcon onClick={() => { setOpen(true) }} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
           <HiMenu size={20} color='white' />
         </ActionIcon>
@@ -76,13 +76,19 @@ export default function ListColorPalette() {
                   <Box bg={v.color[3]} w={30} h={30} style={{
                     borderRadius: "100%"
                   }} />
+                  <Box bg={v.color[4]} w={30} h={30} style={{
+                    borderRadius: "100%"
+                  }} />
+                  <Box bg={v.color[5]} w={30} h={30} style={{
+                    borderRadius: "100%"
+                  }} />
                 </Flex>
               </Box>
             </Box>
           </Box>
         ))}
         <Box>
-          <Text fw={"bold"}>Palet Tambahan</Text>
+          <Text fw={"bold"}>Tema Tambahan</Text>
           {paletTambahan.map((v, i) => (
             <Box mb={20} key={i}>
               <Box style={{
@@ -111,6 +117,12 @@ export default function ListColorPalette() {
                       borderRadius: "100%"
                     }} />
                     <Box bg={v.color[3]} w={30} h={30} style={{
+                      borderRadius: "100%"
+                    }} />
+                    <Box bg={v.color[4]} w={30} h={30} style={{
+                      borderRadius: "100%"
+                    }} />
+                    <Box bg={v.color[5]} w={30} h={30} style={{
                       borderRadius: "100%"
                     }} />
                   </Flex>

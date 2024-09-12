@@ -1,4 +1,4 @@
-import { globalRole, LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
+import { globalRole, LayoutDrawer, SkeletonSingle, TEMA, WARNA } from "@/module/_global";
 import { ActionIcon, Box, Flex, Grid, Group, Text, TextInput } from "@mantine/core";
 import React, { useState } from "react";
 import { FaUserTie } from "react-icons/fa6";
@@ -28,6 +28,7 @@ export default function ListPositionActive() {
   const refresh = useHookstate(globalRefreshPosition)
   const roleLogin = useHookstate(globalRole)
   const [nameGroup, setNameGroup] = useState('')
+  const tema = useHookstate(TEMA)
 
   async function getAllPosition() {
     try {
@@ -54,9 +55,9 @@ export default function ListPositionActive() {
       <TextInput
         styles={{
           input: {
-            color: WARNA.biruTua,
-            borderRadius: WARNA.biruTua,
-            borderColor: WARNA.biruTua,
+            color: tema.get().utama,
+            borderRadius: tema.get().utama,
+            borderColor: tema.get().utama,
           },
         }}
         size="md"
@@ -84,7 +85,7 @@ export default function ListPositionActive() {
                     <Group
                       align="center"
                       style={{
-                        border: `1px solid ${"#DCEED8"}`,
+                        border: `1px solid ${tema.get().bgTotalKegiatan}`,
                         padding: 10,
                         borderRadius: 10,
                       }}
@@ -105,12 +106,12 @@ export default function ListPositionActive() {
                           <Flex justify={{ base: "center", xl: "flex-start" }}>
                             <ActionIcon
                               variant="light"
-                              bg={"#DCEED8"}
+                              bg={tema.get().bgTotalKegiatan}
                               size={50}
                               radius={100}
                               aria-label="icon"
                             >
-                              <FaUserTie color={WARNA.biruTua} size={25} />
+                              <FaUserTie color={tema.get().utama} size={25} />
                             </ActionIcon>
                           </Flex>
                         </Grid.Col>
@@ -124,7 +125,7 @@ export default function ListPositionActive() {
                               xl: 400
                             }}
                           >
-                            <Text fw={"bold"} c={WARNA.biruTua} lineClamp={1}>
+                            <Text fw={"bold"} c={tema.get().utama} lineClamp={1}>
                               {v.name}
                             </Text>
                             <Text fw={"lighter"} fz={12} lineClamp={1}>

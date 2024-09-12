@@ -1,5 +1,6 @@
 "use client"
-import { WARNA } from '@/module/_global';
+import { TEMA, WARNA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Box, Center, Grid, Group, Spoiler, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
@@ -67,18 +68,19 @@ const dataNotification = [
 export default function ListNotification() {
   const router = useRouter()
   const isMobile = useMediaQuery('(max-width: 369px)');
+  const tema = useHookstate(TEMA)
   return (
     <Box>
       {dataNotification.map((v, i) => {
         return (
           <Box key={i} my={15}>
             <Box style={{
-              border: `1px solid ${WARNA.borderOrange}`,
+              border: `1px solid ${tema.get().utama}`,
               padding: 20,
               borderRadius: 15
             }} >
               <Group align='center'>
-                <ActionIcon variant="light" bg={WARNA.biruTua} size={35} radius={100} aria-label="icon">
+                <ActionIcon variant="light" bg={tema.get().utama} size={35} radius={100} aria-label="icon">
                   <FaBell size={20} color='white' />
                 </ActionIcon>
                 <Box

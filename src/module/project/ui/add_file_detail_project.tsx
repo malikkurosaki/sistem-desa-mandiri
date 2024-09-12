@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutDrawer, LayoutNavbarNew } from "@/module/_global";
 import {
    Box,
    Button,
@@ -21,6 +21,8 @@ import { FaTrash } from "react-icons/fa6";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { IListFileTaskProject } from "../lib/type_project";
 import { funAddFileProject, funCekNamFileUploadProject } from "../lib/api_project";
+import { TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function AddFileDetailProject() {
@@ -31,6 +33,7 @@ export default function AddFileDetailProject() {
    const param = useParams<{ id: string }>()
    const [indexDelFile, setIndexDelFile] = useState<number>(0)
    const [openDrawerFile, setOpenDrawerFile] = useState(false)
+   const tema = useHookstate(TEMA)
    const openRef = useRef<() => void>(null)
 
    function deleteFile(index: number) {
@@ -119,7 +122,7 @@ export default function AddFileDetailProject() {
             {
                listFile.length > 0 &&
                <Box pt={20}>
-                  <Text fw={'bold'} c={WARNA.biruTua}>File</Text>
+                  <Text fw={'bold'} c={tema.get().utama}>File</Text>
                   <Box bg={"white"} style={{
                      borderRadius: 10,
                      border: `1px solid ${"#D6D8F6"}`,
@@ -144,11 +147,11 @@ export default function AddFileDetailProject() {
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             <Button
                color="white"
-               bg={WARNA.biruTua}
+               bg={tema.get().utama}
                size="lg" radius={30}
                fullWidth
                onClick={() => {
@@ -171,10 +174,10 @@ export default function AddFileDetailProject() {
                <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
                   <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteFile(indexDelFile)}>
                      <Box>
-                        <FaTrash size={30} color={WARNA.biruTua} />
+                        <FaTrash size={30} color={tema.get().utama} />
                      </Box>
                      <Box>
-                        <Text c={WARNA.biruTua} ta='center'>Hapus File</Text>
+                        <Text c={tema.get().utama} ta='center'>Hapus File</Text>
                      </Box>
                   </Flex>
                </SimpleGrid>

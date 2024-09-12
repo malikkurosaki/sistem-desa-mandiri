@@ -8,6 +8,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { useShallowEffect } from "@mantine/hooks";
 import toast from "react-hot-toast";
+import { useHookstate } from "@hookstate/core";
+import { TEMA } from "../bin/val_global";
 
 export default function ViewFilter({ linkFilter }: { linkFilter: string }) {
    const [selectedFilter, setSelectedFilter] = useState<any>('');
@@ -15,6 +17,7 @@ export default function ViewFilter({ linkFilter }: { linkFilter: string }) {
    const [loading, setLoading] = useState(true)
    const searchParams = useSearchParams()
    const group = searchParams.get('group')
+   const tema = useHookstate(TEMA)
 
 
    async function getAllGroupFilter() {
@@ -84,13 +87,13 @@ export default function ViewFilter({ linkFilter }: { linkFilter: string }) {
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             <Button
                fullWidth
                radius={100}
                size="lg"
-               color={WARNA.biruTua}
+               color={tema.get().utama}
                onClick={() => {
                   router.push(`/${linkFilter}?group=` + selectedFilter)
                }}

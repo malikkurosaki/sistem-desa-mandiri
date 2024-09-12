@@ -1,5 +1,5 @@
 "use client";
-import { WARNA } from "@/module/_global";
+import { TEMA, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
 import { ImUserCheck } from "react-icons/im";
 import { funEditStatusMember } from "../lib/api_member";
+import { useHookstate } from "@hookstate/core";
 
 export default function DrawerDetailMember({
   onDeleted,
@@ -21,20 +22,22 @@ export default function DrawerDetailMember({
 }) {
   const router = useRouter();
   const [isModal, setModal] = useState(false);
+  const tema = useHookstate(TEMA)
 
   async function nonActive(val: boolean) {
     try {
-      const res = await funEditStatusMember(id, {
-        isActive: status,
-      });
-
-      if (res.success) {
-        toast.success(res.message);
-        onDeleted(true);
-      } else {
-        onDeleted(false);
+      if (val) {
+        const res = await funEditStatusMember(id, {
+          isActive: true,
+        });
+        if (res.success) {
+          toast.success(res.message);
+          router.push("/member?active=true");
+          onDeleted(true);
+        } else {
+          onDeleted(false);
+        }
       }
-      router.push("/member?active=true");
       setModal(false);
     } catch (error) {
       console.error(error);
@@ -57,10 +60,10 @@ export default function DrawerDetailMember({
             }}
           >
             <Box>
-              <FaToggleOff size={30} color={WARNA.biruTua} />
+              <FaToggleOff size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua} ta="center">
+              <Text c={tema.get().utama} ta="center">
                 {" "}
                 {status === false ? "Aktifkan" : "Non Aktifkan"}
               </Text>
@@ -77,10 +80,10 @@ export default function DrawerDetailMember({
             }}
           >
             <Box>
-              <FaPencil size={30} color={WARNA.biruTua} />
+              <FaPencil size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua} ta="center">
+              <Text c={tema.get().utama} ta="center">
                 Edit
               </Text>
             </Box>

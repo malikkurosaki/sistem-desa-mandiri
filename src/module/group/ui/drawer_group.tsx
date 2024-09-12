@@ -1,4 +1,4 @@
-import { LayoutDrawer, WARNA } from "@/module/_global";
+import { LayoutDrawer, TEMA, WARNA } from "@/module/_global";
 import {
   Box,
   Button,
@@ -14,10 +14,12 @@ import React, { useState } from "react";
 import { IoAddCircle } from "react-icons/io5";
 import { funCreateGroup } from "../lib/api_group";
 import toast from "react-hot-toast";
+import { useHookstate } from "@hookstate/core";
 
 export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) => void; }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false);
   const [namaGroup, setNamaGroup] = useState("");
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     name: false,
   });
@@ -50,10 +52,10 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
         >
           <Flex justify={"center"} align={"center"} direction={"column"}>
             <Box>
-              <IoAddCircle size={30} color={WARNA.biruTua} />
+              <IoAddCircle size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Tambah Grup</Text>
+              <Text c={tema.get().utama}>Tambah Grup</Text>
             </Box>
           </Flex>
         </SimpleGrid>
@@ -67,9 +69,9 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
           <TextInput
             styles={{
               input: {
-                color: WARNA.biruTua,
-                borderRadius: WARNA.biruTua,
-                borderColor: WARNA.biruTua,
+                color: tema.get().utama,
+                borderRadius: tema.get().utama,
+                borderColor: tema.get().utama,
               },
             }}
             size="lg"
@@ -87,7 +89,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
           <Box mt={"xl"}>
             <Button
               c={"white"}
-              bg={WARNA.biruTua}
+              bg={tema.get().utama}
               size="lg"
               radius={30}
               fullWidth

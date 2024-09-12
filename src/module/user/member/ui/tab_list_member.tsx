@@ -1,5 +1,5 @@
 
-import { globalRole, SkeletonSingle, WARNA } from "@/module/_global"
+import { globalRole, SkeletonSingle, TEMA, WARNA } from "@/module/_global"
 import { Box, Text, TextInput, Divider, Avatar, Grid } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -23,6 +23,7 @@ export default function TabListMember() {
    const status = searchParams.get('active')
    const roleLogin = useHookstate(globalRole)
    const [nameGroup, setNameGroup] = useState('')
+   const tema = useHookstate(TEMA)
 
 
    async function getAllUser() {
@@ -53,9 +54,9 @@ export default function TabListMember() {
             <TextInput
                styles={{
                   input: {
-                     color: WARNA.biruTua,
-                     borderRadius: WARNA.biruTua,
-                     borderColor: WARNA.biruTua,
+                     color: tema.get().utama,
+                     borderRadius: tema.get().utama,
+                     borderColor: tema.get().utama,
                   },
                }}
                size="md"
@@ -95,7 +96,7 @@ export default function TabListMember() {
                                        <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} size={50} alt="image" />
                                     </Grid.Col>
                                     <Grid.Col span={9}>
-                                       <Text fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{_.startCase(v.name)}</Text>
+                                       <Text fw={'bold'} c={tema.get().utama} lineClamp={1}>{_.startCase(v.name)}</Text>
                                        <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
                                     </Grid.Col>
                                  </Grid>

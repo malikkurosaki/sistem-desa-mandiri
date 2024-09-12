@@ -6,9 +6,10 @@ import { funEditDetailProject, funGetDetailProject } from '../lib/api_project';
 import moment from 'moment';
 import { useShallowEffect } from '@mantine/hooks';
 import { Box, Button, Group, Input, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import { DatePicker } from '@mantine/dates';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
 
 export default function EditDetailTaskProject() {
    const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
@@ -16,6 +17,7 @@ export default function EditDetailTaskProject() {
    const param = useParams<{ id: string }>()
    const [openModal, setOpenModal] = useState(false)
    const [loading, setLoading] = useState(true)
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       title: false,
    });
@@ -88,7 +90,7 @@ export default function EditDetailTaskProject() {
                   value={value}
                   onChange={setValue}
                   size="md"
-                  c={WARNA.biruTua}
+                  c={tema.get().utama}
                />
             </Group>
             <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
@@ -157,14 +159,14 @@ export default function EditDetailTaskProject() {
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             {loading ?
                <Skeleton height={50} radius={30} />
                :
             <Button
                c={"white"}
-               bg={WARNA.biruTua}
+               bg={tema.get().utama}
                size="lg"
                radius={30}
                fullWidth

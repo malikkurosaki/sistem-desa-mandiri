@@ -1,5 +1,5 @@
 "use client"
-import { LayoutIconBack, LayoutNavbarHome, SkeletonDetailProfile, WARNA } from "@/module/_global";
+import { LayoutIconBack, LayoutNavbarHome, SkeletonDetailProfile, TEMA, WARNA } from "@/module/_global";
 import { ActionIcon, Avatar, Box, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { RiIdCardFill } from "react-icons/ri";
 import { FaSquarePhone } from "react-icons/fa6";
@@ -13,6 +13,7 @@ import { funGetProfileByCookies } from "../lib/api_profile";
 import { useShallowEffect } from "@mantine/hooks";
 import { IProfileById } from "../lib/type_profile";
 import { useRouter } from "next/navigation";
+import { useHookstate } from "@hookstate/core";
 
 export default function Profile() {
   const [openModal, setOpenModal] = useState(false);
@@ -20,6 +21,7 @@ export default function Profile() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [img, setIMG] = useState<any | null>()
+  const tema = useHookstate(TEMA)
 
   async function getData() {
     try {
@@ -61,7 +63,7 @@ export default function Profile() {
         <LayoutNavbarHome  >
           <Group justify="space-between">
             <LayoutIconBack back="/home" />
-            <ActionIcon onClick={() => { setOpenModal(true) }} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
+            <ActionIcon onClick={() => { setOpenModal(true) }} variant="light" bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Info">
               <LuLogOut size={20} color='white' />
             </ActionIcon>
           </Group>

@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Divider, Grid, Group, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiMiniUserGroup } from 'react-icons/hi2';
@@ -8,6 +8,7 @@ import { useShallowEffect } from '@mantine/hooks';
 import { IDataDivisionSearch, IDataProjectSearch, IDataUserSearch } from '../lib/type_search';
 import { useRouter } from 'next/navigation';
 import _ from 'lodash';
+import { useHookstate } from '@hookstate/core';
 
 export default function ViewSearch() {
   const [search, setSearch] = useState('');
@@ -15,6 +16,7 @@ export default function ViewSearch() {
   const [dataProject, setDataProject] = useState<IDataProjectSearch[]>([]);
   const [dataDivision, setDataDivision] = useState<IDataDivisionSearch[]>([]);
   const router = useRouter()
+  const tema = useHookstate(TEMA)
 
   async function featchSearch() {
     try {
@@ -45,9 +47,9 @@ export default function ViewSearch() {
         <TextInput
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           size="md"
@@ -89,7 +91,7 @@ export default function ViewSearch() {
                                 <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} size={50} alt="image" />
                               </Grid.Col>
                               <Grid.Col span={9}>
-                                <Text fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{_.startCase(v.name)}</Text>
+                                <Text fw={'bold'} c={tema.get().utama} lineClamp={1}>{_.startCase(v.name)}</Text>
                                 <Text fw={'lighter'} fz={12}>{v.group + ' - ' + v.position}</Text>
                               </Grid.Col>
                             </Grid>
@@ -121,7 +123,7 @@ export default function ViewSearch() {
                           <Box key={i} onClick={() => router.push(`/division/${v.id}`)}>
                             <Grid justify='center' align='center' mt={15} >
                               <Grid.Col span={2}>
-                                <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
+                                <ActionIcon variant="light" bg={tema.get().utama} size={50} radius={100} aria-label="icon">
                                   <HiMiniUserGroup color={'white'} size={25} />
                                 </ActionIcon>
                               </Grid.Col>
@@ -132,7 +134,7 @@ export default function ViewSearch() {
                                     xl: 380
                                   }}
                                 >
-                                <Text pl={{base: 10, xl:0}} fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{v.name.toUpperCase()}</Text>
+                                <Text pl={{base: 10, xl:0}} fw={'bold'} c={tema.get().utama} lineClamp={1}>{v.name.toUpperCase()}</Text>
                                 </Box>
                                 <Text pl={{base: 10, xl:0}} fw={'lighter'} fz={12} lineClamp={1}>{v.group}</Text>
                               </Grid.Col>
@@ -165,7 +167,7 @@ export default function ViewSearch() {
                           <Box key={i} onClick={() => router.push(`/project/${v.id}`)}>
                             <Grid justify='center' align='center' mt={10}>
                               <Grid.Col span={2}>
-                                <ActionIcon variant="light" bg={WARNA.biruTua} size={50} radius={100} aria-label="icon">
+                                <ActionIcon variant="light" bg={tema.get().utama} size={50} radius={100} aria-label="icon">
                                   <HiMiniPresentationChartBar color={'white'} size={25} />
                                 </ActionIcon>
                               </Grid.Col>
@@ -176,7 +178,7 @@ export default function ViewSearch() {
                                     xl: 380
                                   }}
                                 >
-                                <Text pl={{base: 10, xl:0}} fw={'bold'} c={WARNA.biruTua} lineClamp={1}>{v.title.toUpperCase()}</Text>
+                                <Text pl={{base: 10, xl:0}} fw={'bold'} c={tema.get().utama} lineClamp={1}>{v.title.toUpperCase()}</Text>
                                 </Box>
                                 <Text pl={{base: 10, xl:0}} fw={'lighter'} fz={12} lineClamp={1}>{v.group}</Text>
                               </Grid.Col>
