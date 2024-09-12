@@ -147,7 +147,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
                         <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
                           <Avatar style={{
                             border: `2px solid ${WARNA.biruTua}`
-                          }} src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                          }} src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
                         </Indicator>
                       </Center>
                       <Text ta={"center"} lineClamp={1}>{v.name}</Text>
@@ -184,7 +184,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
                         base: 3,
                         xl: 2
                       }}>
-                        <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                        <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
                       </Grid.Col>
                       <Grid.Col span={{
                         base: 9,

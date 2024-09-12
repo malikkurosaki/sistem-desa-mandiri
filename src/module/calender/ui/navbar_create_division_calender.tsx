@@ -300,7 +300,7 @@ export default function NavbarCreateDivisionCalender() {
                             >
                               <Grid.Col span={9}>
                                 <Group>
-                                  <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                                  <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
                                   <Box w={{
                                     base: 140,
                                     xl: 270

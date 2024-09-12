@@ -1,5 +1,5 @@
 "use client"
-import { DIR, LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, WARNA } from "@/module/_global";
 import { Avatar, Box, Button, Flex, Indicator, Modal, rem, Select, Skeleton, Stack, Text, TextInput } from "@mantine/core";
 import toast from "react-hot-toast";
 import LayoutModal from "@/module/_global/layout/layout_modal";

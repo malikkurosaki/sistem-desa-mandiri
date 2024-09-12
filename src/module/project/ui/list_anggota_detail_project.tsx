@@ -102,7 +102,7 @@ const isMobile = useMediaQuery('(max-width: 369px)');
                         >
                           <Grid.Col span={9}>
                             <Group>
-                              <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
+                              <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
                               <Box w={{
                                 base: isMobile ? 130 : 140,
                                 xl: 270

@@ -72,7 +72,7 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
                     >
                       <Grid.Col span={10}>
                         <Group>
-                          <Avatar src={`/api/file/img?jenis=image&cat=user&file=${v.img}`} alt="it's me" size="lg" />
+                          <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
                           <Box w={{
                             base: 200,
                             xl: 270

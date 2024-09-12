@@ -1,5 +1,5 @@
 "use client"
-import { DIR, LayoutIconBack, LayoutNavbarHome, SkeletonDetailProfile, WARNA } from "@/module/_global";
+import { LayoutIconBack, LayoutNavbarHome, SkeletonDetailProfile, WARNA } from "@/module/_global";
 import { ActionIcon, Avatar, Box, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { RiIdCardFill } from "react-icons/ri";
 import { FaSquarePhone } from "react-icons/fa6";
