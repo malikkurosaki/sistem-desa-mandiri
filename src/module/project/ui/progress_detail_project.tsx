@@ -1,5 +1,4 @@
 'use client'
-import { WARNA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Box, Grid, Progress, Skeleton, Text } from '@mantine/core';
 import { useParams } from 'next/navigation';
@@ -9,6 +8,7 @@ import { globalRefreshProject } from '../lib/val_project';
 import toast from 'react-hot-toast';
 import { funGetOneProjectById } from '../lib/api_project';
 import { useShallowEffect } from '@mantine/hooks';
+import { TEMA } from '@/module/_global';
 
 export default function ProgressDetailProject() {
   const [valProgress, setValProgress] = useState(0)
@@ -16,6 +16,7 @@ export default function ProgressDetailProject() {
   const param = useParams<{ id: string }>()
   const refresh = useHookstate(globalRefreshProject)
   const [loading, setLoading] = useState(true)
+  const tema = useHookstate(TEMA)
 
   async function getOneData() {
     try {
@@ -71,9 +72,10 @@ export default function ProgressDetailProject() {
                 size={68}
                 aria-label="Gradient action icon"
                 radius={100}
-                gradient={{ from: "#DFDA7C", to: "#F2AF46", deg: 174 }}
+                  // gradient={{ from: "#DFDA7C", to: "#F2AF46", deg: 174 }}
+                  bg={tema.get().bgFiturHome}
               >
-                <HiMiniPresentationChartBar size={35} color={WARNA.biruTua} />
+                <HiMiniPresentationChartBar size={35} color={tema.get().utama} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col span={9}>
@@ -84,7 +86,7 @@ export default function ProgressDetailProject() {
                     border: `1px solid ${"#BDBDBD"}`,
                   }}
                   w={"100%"}
-                  color="#FCAA4B"
+                  color={tema.get().bgFiturHome}
                   radius="md"
                   size="xl"
                   value={valProgress}

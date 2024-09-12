@@ -1,7 +1,10 @@
+import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Box, Flex, Group, Skeleton } from '@mantine/core';
 import React from 'react';
+import { TEMA } from '../bin/val_global';
 
 export default function SkeletonDetailDiscussionMember() {
+  const tema = useHookstate(TEMA)
   return (
     <>
       <Flex justify="space-between" align="center" mt={20}>
@@ -9,7 +12,7 @@ export default function SkeletonDetailDiscussionMember() {
           <Box>
             <ActionIcon
               variant="light"
-              bg={"#DCEED8"}
+              bg={tema.get().bgTotalKegiatan}
               size={50}
               radius={100}
               aria-label="icon"

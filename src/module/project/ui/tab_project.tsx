@@ -1,5 +1,5 @@
 "use client"
-import { globalRole, LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from '@/module/_global';
 import { ActionIcon, Box, Button, Flex, Group, Indicator, Progress, rem, SimpleGrid, Tabs } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
@@ -21,6 +21,7 @@ export default function TabProject() {
   const group = searchParams.get("group");
   const iconStyle = { width: rem(20), height: rem(20) };
   const roleLogin = useHookstate(globalRole)
+  const tema = useHookstate(TEMA)
 
   const dataStatus = [
     {
@@ -49,7 +50,7 @@ export default function TabProject() {
     <Box>
       <LayoutNavbarNew back='/home' title='Kegiatan'
         menu={(roleLogin.get() != "user" && roleLogin.get() != "coadmin") ?
-          <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+          <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
             <HiMenu size={20} color='white' />
           </ActionIcon>
           : <></>
@@ -64,14 +65,14 @@ export default function TabProject() {
                 color={
                   status == item.id
                     ? "white"
-                    : WARNA.biruTua
+                    : tema.get().utama
                 }
                 onClick={() => { router.push("?status=" + item.id + "&group=" + group) }}
                 defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}
                 radius={"xl"}
                 bg={
                   status == item.id
-                    ? WARNA.biruTua
+                    ? tema.get().utama
                     : "transparent"
                 }
               >
@@ -86,7 +87,7 @@ export default function TabProject() {
             <Box key={i}>
               <Box w={6} h={6} bg={
                 status == v.id
-                  ? WARNA.biruTua
+                  ? tema.get().utama
                   : "#B0AEAE"
               } style={{
                 borderRadius: 100
@@ -102,27 +103,27 @@ export default function TabProject() {
             <Tabs.Tab value="0"
               leftSection={<TbClockPause style={iconStyle} />}
               onClick={() => { router.push("?status=0&group=" + group) }}
-              color={WARNA.biruTua}
+              color={tema.get().utama}
             >
               Segera
             </Tabs.Tab>
             <Tabs.Tab value="1"
               leftSection={<RiProgress3Line style={iconStyle} />}
               onClick={() => { router.push("?status=1&group=" + group) }}
-              color={WARNA.biruTua}
+              color={tema.get().utama}
             >
               Dikerjakan
             </Tabs.Tab>
             <Tabs.Tab value="2"
               leftSection={<IoIosCheckmarkCircleOutline style={iconStyle} />}
               onClick={() => { router.push("?status=2&group=" + group) }}
-              color={WARNA.biruTua}>
+              color={tema.get().utama}>
               Selesai
             </Tabs.Tab>
             <Tabs.Tab value="3"
               leftSection={<IoCloseCircleOutline style={iconStyle} />}
               onClick={() => { router.push("?status=3&group=" + group) }}
-              color={WARNA.biruTua}>
+              color={tema.get().utama}>
               Batal
             </Tabs.Tab>
           </SimpleGrid>
@@ -133,27 +134,27 @@ export default function TabProject() {
             <Tabs.Tab value="0" w={"23%"}
               leftSection={<TbClockPause style={iconStyle} />}
               onClick={() => { router.push("?status=0&group=" + group) }}
-              color={WARNA.biruTua}
+              color={tema.get().utama}
             >
               Segera
             </Tabs.Tab>
             <Tabs.Tab value="1" w={"28%"}
               leftSection={<RiProgress3Line style={iconStyle} />}
               onClick={() => { router.push("?status=1&group=" + group) }}
-              color={WARNA.biruTua}
+              color={tema.get().utama}
             >
               Dikerjakan
             </Tabs.Tab>
             <Tabs.Tab value="2" w={"23%"}
               leftSection={<IoIosCheckmarkCircleOutline style={iconStyle} />}
               onClick={() => { router.push("?status=2&group=" + group) }}
-              color={WARNA.biruTua}>
+              color={tema.get().utama}>
               Selesai
             </Tabs.Tab>
             <Tabs.Tab value="3" w={"20%"}
               leftSection={<IoCloseCircleOutline style={iconStyle} />}
               onClick={() => { router.push("?status=3&group=" + group) }}
-              color={WARNA.biruTua}>
+              color={tema.get().utama}>
               Batal
             </Tabs.Tab>
           </Tabs.List>

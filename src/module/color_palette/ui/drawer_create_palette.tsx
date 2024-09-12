@@ -18,7 +18,7 @@ export default function DrawerCreatePalette() {
             <IoAddCircle size={30} color={WARNA.biruTua} />
           </Box>
           <Box>
-            <Text ta={'center'} c={WARNA.biruTua}>Tambah Palet</Text>
+            <Text ta={'center'} c={WARNA.biruTua}>Tambah Tema</Text>
           </Box>
         </Flex>
       </SimpleGrid>

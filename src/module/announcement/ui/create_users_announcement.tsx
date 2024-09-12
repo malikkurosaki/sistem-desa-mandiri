@@ -1,5 +1,5 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
 import { funGetGroupDivision } from '@/module/group/lib/api_group';
 import { Box, Button, Divider, Flex, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
@@ -23,6 +23,7 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
   const [isData, setIsData] = useState<GroupData[]>([])
   const memberGroup = useHookstate(globalMemberAnnouncement)
   const [loading, setLoading] = useState(false)
+  const tema = useHookstate(TEMA)
 
   const handleCheck = (groupId: string, divisionId: string) => {
     const newChecked = { ...checked };
@@ -126,17 +127,17 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
             Pilih Semua
           </Text>
         </Group>
-        {loading ? 
+        {loading ?
           Array(6)
-          .fill(null)
-          .map((_, i) => (
-             <Box key={i}>
-                <Skeleton mt={20} h={20}/>
-                <Skeleton mt={20} h={20} ml={20}/>
-                <Skeleton mt={20} h={20} ml={20}/>
-                <Skeleton mt={20} h={20} ml={20}/>
-             </Box>
-          ))
+            .fill(null)
+            .map((_, i) => (
+              <Box key={i}>
+                <Skeleton mt={20} h={20} />
+                <Skeleton mt={20} h={20} ml={20} />
+                <Skeleton mt={20} h={20} ml={20} />
+                <Skeleton mt={20} h={20} ml={20} />
+              </Box>
+            ))
           :
           isData.map((item) => (
             <Stack mb={30} key={item.id}>
@@ -163,7 +164,7 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
                 <Box key={division.id}>
                   <Group onClick={() => handleCheck(item.id, division.id)} justify='space-between' align='center'>
                     <Box w={{
-                     base: isMobile ? 230 : 280,
+                      base: isMobile ? 230 : 280,
                       xl: 430
                     }}>
                       <Text truncate="end" pl={20}>
@@ -194,11 +195,11 @@ export default function CreateUsersAnnouncement({ onClose }: { onClose: (val: an
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         <Button
           color="white"
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
 
           size="lg"
           radius={30}

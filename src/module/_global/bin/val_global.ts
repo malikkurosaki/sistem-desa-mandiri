@@ -1,4 +1,5 @@
 import { hookstate } from "@hookstate/core"
+import { IGlobalTema } from './type_global';
 
 export const pwd_key_config = "fchgvjknlmdfnbvghhujlaknsdvjbhknlkmsdbdyu567t8y9u30r4587638y9uipkoeghjvuyi89ipkoefmnrjbhtiu4or9ipkoemnjfbhjiuoijdklnjhbviufojkejnshbiuojijknehgruyu"
 export const globalRole = hookstate<string>('')
@@ -10,3 +11,12 @@ export const DIR = {
    user: "cm0x8dbwn0005bp5tgmfcthzw",
 
 }
+
+export const TEMA = hookstate<IGlobalTema>({
+   utama: "#19345E",
+   bgUtama: "#F4F9FD",
+   bgIcon: "#384288",
+   bgFiturHome: "#FCAA4B",
+   bgFiturDivisi: "#FCAA4B",
+   bgTotalKegiatan: "#DCEED8"
+})

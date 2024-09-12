@@ -1,5 +1,5 @@
 "use client";
-import { WARNA } from "@/module/_global";
+import { TEMA, WARNA } from "@/module/_global";
 import { Box, rem, Tabs, TextInput } from "@mantine/core";
 import React from "react";
 import { HiMagnifyingGlass, HiMiniUser } from "react-icons/hi2";
@@ -7,6 +7,7 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import TabListMember from "./tab_list_member";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useHookstate } from "@hookstate/core";
 
 export default function ListMember() {
   const iconStyle = { width: rem(20), height: rem(20) };
@@ -14,12 +15,13 @@ export default function ListMember() {
   const searchParams = useSearchParams();
   const status = searchParams.get("active");
   const group = searchParams.get("group");
+  const tema = useHookstate(TEMA)
 
   return (
     <Box p={20}>
       <Tabs
         variant="pills"
-        color="#FF9861"
+        color={tema.get().bgFiturHome}
         radius="xl"
         defaultValue={status == "false" ? "false" : "true"}
       >

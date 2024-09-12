@@ -1,5 +1,5 @@
 'use client'
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
 import { Avatar, Box, Button, Flex, Group, rem, Stack, Text, Textarea, TextInput } from "@mantine/core";
@@ -21,6 +21,7 @@ export default function CreateAnnouncement() {
    const memberValue = memberGroup.get() as GroupData[]
    const [selectedFiles, setSelectedFiles] = useState<any>([])
    const router = useRouter()
+   const tema = useHookstate(TEMA)
 
 
    const [isChooseMember, setIsChooseMember] = useState(false)
@@ -86,9 +87,9 @@ export default function CreateAnnouncement() {
                size="md" type="text" radius={10} placeholder="Judul Pengumuman" withAsterisk label="Judul" w={"100%"}
                styles={{
                   input: {
-                     color: WARNA.biruTua,
-                     borderRadius: WARNA.biruTua,
-                     borderColor: WARNA.biruTua,
+                     color: tema.get().utama,
+                     borderRadius: tema.get().utama,
+                     borderColor: tema.get().utama,
                   },
                }}
                value={isData.title}
@@ -112,9 +113,9 @@ export default function CreateAnnouncement() {
                placeholder="Deskripsi Pengumuman"
                styles={{
                   input: {
-                     color: WARNA.biruTua,
-                     borderRadius: WARNA.biruTua,
-                     borderColor: WARNA.biruTua,
+                     color: tema.get().utama,
+                     borderRadius: tema.get().utama,
+                     borderColor: tema.get().utama,
                   },
                }}
                value={isData.desc}
@@ -131,7 +132,7 @@ export default function CreateAnnouncement() {
             />
             <Box pt={10}>
                <Group justify="space-between" style={{
-                  border: `1px solid ${WARNA.biruTua}`,
+                  border: `1px solid ${tema.get().utama}`,
                   padding: 10,
                   borderRadius: 10
                }}
@@ -144,7 +145,7 @@ export default function CreateAnnouncement() {
                </Group>
             </Box>
             <Box pt={20} mb={60}>
-               <Text c={WARNA.biruTua} mb={10}>Divisi Terpilih</Text>
+               <Text c={tema.get().utama} mb={10}>Divisi Terpilih</Text>
                {(memberGroup.length === 0) ? (
                   <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada anggota</Text>
                ) : memberGroup.get().map((v: any, i: any) => {
@@ -166,11 +167,11 @@ export default function CreateAnnouncement() {
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             <Button
                c={"white"}
-               bg={WARNA.biruTua}
+               bg={tema.get().utama}
                size="lg"
                radius={30}
                fullWidth

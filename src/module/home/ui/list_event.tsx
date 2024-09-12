@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global"
+import { TEMA, WARNA } from "@/module/_global"
 import { Box, Divider, Flex, Group, Skeleton, Text } from "@mantine/core"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -8,6 +8,7 @@ import { funGetHome } from "../lib/api_home"
 import toast from "react-hot-toast"
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks"
 import _ from "lodash"
+import { useHookstate } from "@hookstate/core"
 
 
 export default function ListEventHome() {
@@ -15,6 +16,7 @@ export default function ListEventHome() {
    const [isData, setData] = useState<IDataHomeEvent[]>([])
    const [loading, setLoading] = useState(true);
    const isMobile = useMediaQuery('(max-width: 369px)');
+   const tema = useHookstate(TEMA)
 
    const fetchData = async () => {
       try {
@@ -43,7 +45,7 @@ export default function ListEventHome() {
 
    return (
       <Box pt={10}>
-         <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Acara Hari Ini</Text>
+         <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Acara Hari Ini</Text>
          <Box bg={"white"} style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,

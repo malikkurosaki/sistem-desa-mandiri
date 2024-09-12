@@ -1,5 +1,5 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
 import { funGetGroupDivision } from '@/module/group/lib/api_group';
 import { Box, Button, Divider, Flex, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
@@ -23,6 +23,7 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
    const [isData, setIsData] = useState<GroupData[]>([])
    const memberGroup = useHookstate(globalMemberEditAnnouncement)
    const [loading, setLoading] = useState(true)
+   const tema = useHookstate(TEMA)
 
    const handleCheck = (groupId: string, divisionId: string) => {
       const newChecked = { ...checked };
@@ -195,14 +196,14 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             {loading ?
                <Skeleton height={50} radius={30} />
                :
                <Button
                   color="white"
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
 
                   size="lg"
                   radius={30}

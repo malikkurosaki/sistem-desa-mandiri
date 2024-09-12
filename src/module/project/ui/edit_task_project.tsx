@@ -5,8 +5,9 @@ import toast from 'react-hot-toast';
 import { funEditProject, funGetOneProjectById } from '../lib/api_project';
 import { useShallowEffect } from '@mantine/hooks';
 import { Box, Button, Input, rem, Skeleton, Stack, TextInput } from '@mantine/core';
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA} from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
 
 export default function EditTaskProject() {
   const router = useRouter()
@@ -14,6 +15,7 @@ export default function EditTaskProject() {
   const [openModal, setOpenModal] = useState(false)
   const param = useParams<{ id: string }>()
   const [loading, setLoading] = useState(true)
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     name: false,
   });
@@ -99,14 +101,14 @@ export default function EditTaskProject() {
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         {loading ?
            <Skeleton height={50} radius={30} />
       :  
         <Button
           c={"white"}
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
           size="lg"
           radius={30}
           fullWidth

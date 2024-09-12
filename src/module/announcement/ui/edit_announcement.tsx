@@ -1,5 +1,5 @@
 'use client'
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { Box, Button, Flex, Group, List, rem, Skeleton, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -20,6 +20,7 @@ export default function EditAnnouncement() {
    const param = useParams<{ id: string }>()
    const [loading, setLoading] = useState(true)
    const router = useRouter()
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       title: false,
       desc: false
@@ -132,9 +133,9 @@ export default function EditAnnouncement() {
                      size="md" type="text" radius={30} placeholder="Judul Pengumuman" withAsterisk label="Judul" w={"100%"}
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      value={body.title}
@@ -158,9 +159,9 @@ export default function EditAnnouncement() {
                      placeholder="Deskripsi Pengumuman"
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      value={body.desc}
@@ -178,7 +179,7 @@ export default function EditAnnouncement() {
                   />
                   <Box pt={10}  w={"100%"}>
                      <Group justify="space-between" style={{
-                     border: `1px solid ${WARNA.biruTua}`,
+                     border: `1px solid ${tema.get().utama}`,
                      maxWidth: rem(550),
                         padding: 10,
                         borderRadius: 10
@@ -238,14 +239,14 @@ export default function EditAnnouncement() {
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             {loading ?
                <Skeleton height={40} radius={30} />
                :
                <Button
                   c={"white"}
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
                   size="lg"
                   radius={30}
                   fullWidth

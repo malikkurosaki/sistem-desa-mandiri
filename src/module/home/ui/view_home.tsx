@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarHome, WARNA } from '@/module/_global';
+import { LayoutNavbarHome, TEMA, WARNA } from '@/module/_global';
 import { Box, Group, Notification, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import Carosole from './carosole';
@@ -15,15 +15,17 @@ import { useShallowEffect } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import { IoNotifications } from 'react-icons/io5';
 import { ImCheckboxUnchecked } from 'react-icons/im';
+import { useHookstate } from '@hookstate/core';
 
 
 export default function ViewHome() {
   const [isNotif, setIsNotif] = useState(true);
+  const tema = useHookstate(TEMA)
 
   useShallowEffect(() => {
     if (isNotif) {
       notifications.show({
-        color: WARNA.biruTua,
+        color: tema.get().utama,
         title: <Text lineClamp={1}>Pengumuman Upacara bendera Upacara bendera Upacara bendera Upacara bendera</Text>,
         message: <Text lineClamp={1}>Upacara bendera Upacara bendera Upacara bendera Upacara bendera Upacara bendera</Text>,
         icon: <IoNotifications/>,
@@ -33,7 +35,7 @@ export default function ViewHome() {
         radius: 'lg',
         bg: "white",
         style: {
-          border: `1px solid #0A8072FF`,
+          border: `1px solid ${tema.get().utama}`,
         },
         onClose: () => setIsNotif(false)
       });

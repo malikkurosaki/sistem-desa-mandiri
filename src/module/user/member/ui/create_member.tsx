@@ -1,5 +1,5 @@
 "use client";
-import { globalRole, WARNA } from "@/module/_global";
+import { globalRole, TEMA, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { Avatar, Box, Button, Indicator, rem, Select, Stack, Text, TextInput } from "@mantine/core";
@@ -27,6 +27,7 @@ export default function CreateMember() {
   const [img, setIMG] = useState<any | null>()
   const [imgForm, setImgForm] = useState<any>()
   const openRef = useRef<() => void>(null)
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     nik: false,
     name: false,
@@ -171,7 +172,7 @@ export default function CreateMember() {
           }}
         >
         </Dropzone>
-        <Indicator offset={20} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
+        <Indicator offset={20} withBorder inline color={tema.get().bgIcon} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
           <Avatar
             size="150"
             radius={"100"}
@@ -190,9 +191,9 @@ export default function CreateMember() {
             radius={30}
             styles={{
               input: {
-                color: WARNA.biruTua,
-                borderRadius: WARNA.biruTua,
-                borderColor: WARNA.biruTua,
+                color: tema.get().utama,
+                borderRadius: tema.get().utama,
+                borderColor: tema.get().utama,
               },
             }}
             data={
@@ -225,9 +226,9 @@ export default function CreateMember() {
           radius={30}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           data={
@@ -264,9 +265,9 @@ export default function CreateMember() {
           radius={30}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           data={
@@ -302,9 +303,9 @@ export default function CreateMember() {
           w={"100%"}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           onChange={(event: any) => {
@@ -329,9 +330,9 @@ export default function CreateMember() {
           w={"100%"}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           onChange={(event: any) => {
@@ -359,9 +360,9 @@ export default function CreateMember() {
           w={"100%"}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           onChange={(event: any) => {
@@ -391,9 +392,9 @@ export default function CreateMember() {
           w={"100%"}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           onChange={(event: any) => {
@@ -422,9 +423,9 @@ export default function CreateMember() {
           radius={30}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           data={[
@@ -450,11 +451,11 @@ export default function CreateMember() {
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         <Button
           c={"white"}
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
           size="md"
           radius={30}
           fullWidth

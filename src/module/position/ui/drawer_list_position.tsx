@@ -1,4 +1,4 @@
-import { WARNA, LayoutDrawer, globalRole } from "@/module/_global";
+import { WARNA, LayoutDrawer, globalRole, TEMA } from "@/module/_global";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { Box, Stack, SimpleGrid, Flex, TextInput, Button, Text, Select } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -20,6 +20,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
    const refresh = useHookstate(globalRefreshPosition)
    const searchParams = useSearchParams()
    const group = searchParams.get('group')
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       name: false,
       idGroup: false
@@ -81,20 +82,20 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
             >
                <Flex justify={'center'} align={'center'} direction={'column'} >
                   <Box>
-                     <IoAddCircle size={30} color={WARNA.biruTua} />
+                     <IoAddCircle size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text ta={'center'} c={WARNA.biruTua}>Tambah Jabatan</Text>
+                     <Text ta={'center'} c={tema.get().utama}>Tambah Jabatan</Text>
                   </Box>
                </Flex>
                {
                   roleLogin.get() == "supadmin" &&
                   <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => router.push('/position?page=filter&group=' + group)}>
                      <Box>
-                        <RiFilter2Line size={30} color={WARNA.biruTua} />
+                        <RiFilter2Line size={30} color={tema.get().utama} />
                      </Box>
                      <Box>
-                        <Text ta={'center'} c={WARNA.biruTua}>Filter</Text>
+                        <Text ta={'center'} c={tema.get().utama}>Filter</Text>
                      </Box>
                   </Flex>
                }
@@ -128,9 +129,9 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      }}
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      error={
@@ -146,9 +147,9 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                   label="Jabatan"
                   styles={{
                      input: {
-                        color: WARNA.biruTua,
-                        borderRadius: WARNA.biruTua,
-                        borderColor: WARNA.biruTua,
+                        color: tema.get().utama,
+                        borderRadius: tema.get().utama,
+                        borderColor: tema.get().utama,
                      },
                   }}
                   my={15}
@@ -174,7 +175,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                <Box pos={"absolute"} bottom={10} left={0} right={0}>
                   <Button
                      c={"white"}
-                     bg={WARNA.biruTua}
+                     bg={tema.get().utama}
                      size="lg"
                      radius={30}
                      fullWidth

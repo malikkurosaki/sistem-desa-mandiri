@@ -1,101 +1,155 @@
 "use client"
 import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Badge, Box, Button, Center, ColorInput, Flex, Pill, rem, Stack, Text } from '@mantine/core';
+import { Badge, Box, Button, Center, ColorInput, Flex, Pill, rem, SimpleGrid, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 
 export default function EditPaletteColor() {
   const [isWarna, setWarna] = useState({
-    warnaSatu: '',
-    warnaDua: '',
-    warnaTiga: '',
-    warnaEmpat: '',
-
+    warnaUtama: '',
+    backgroundUtama: '',
+    backgroundIcon: '',
+    backgroundFiturHome: '',
+    backgroundFiturDivisi: '',
+    backgroundTotalKegiatan: '',
   })
   return (
     <Box>
-      <LayoutNavbarNew back='/color-palette' title='Edit Palet' menu />
+      <LayoutNavbarNew back='/color-palette' title='Edit Tema' menu />
       <Box p={20}>
         <Stack>
           <ColorInput
-            label={'Warna 1'}
+            label={'Warna Utama'}
             placeholder='Pilih Warna'
             required
             size="md"
             radius="md"
             onChangeEnd={
-              (color) => setWarna({ ...isWarna, warnaSatu: color })
+              (color) => setWarna({ ...isWarna, warnaUtama: color })
             }
           />
           <ColorInput
-            label={'Warna 2'}
+            label={'Background Utama'}
             placeholder='Pilih Warna'
             required
             size="md"
             radius="md"
             onChangeEnd={
-              (color) => setWarna({ ...isWarna, warnaDua: color })
+              (color) => setWarna({ ...isWarna, backgroundUtama: color })
             }
           />
           <ColorInput
-            label={'Warna 3'}
+            label={'Background Icon'}
             placeholder='Pilih Warna'
             required
             size="md"
             radius="md"
             onChangeEnd={
-              (color) => setWarna({ ...isWarna, warnaTiga: color })
+              (color) => setWarna({ ...isWarna, backgroundIcon: color })
             }
           />
           <ColorInput
-            label={'Warna 4'}
+            label={'Background Fitur Home'}
             placeholder='Pilih Warna'
             required
             size="md"
             radius="md"
             onChangeEnd={
-              (color) => setWarna({ ...isWarna, warnaEmpat: color })
+              (color) => setWarna({ ...isWarna, backgroundFiturHome: color })
+            }
+          />
+          <ColorInput
+            label={'Background Fitur Divisi'}
+            placeholder='Pilih Warna'
+            required
+            size="md"
+            radius="md"
+            onChangeEnd={
+              (color) => setWarna({ ...isWarna, backgroundFiturDivisi: color })
+            }
+          />
+          <ColorInput
+            label={'Background Total Kegiatan'}
+            placeholder='Pilih Warna'
+            required
+            size="md"
+            radius="md"
+            onChangeEnd={
+              (color) => setWarna({ ...isWarna, backgroundTotalKegiatan: color })
             }
           />
         </Stack>
-        <Flex justify={'center'} align={"center"} w={"auto"} gap={10} mt={30}>
-          <Box>
-            <Center>
-            <Box bg={isWarna.warnaSatu} w={50} h={50} style={{
-              borderRadius: 10
-            }} />
-            </Center>
-            {isWarna.warnaSatu.length == 0 ? "" :
-              <Pill size="xs" ta={"center"}>{isWarna.warnaSatu}</Pill>
-            }
-          </Box>
-          <Box>
-            <Box bg={isWarna.warnaDua} w={50} h={50} style={{
-              borderRadius: 10
-            }} />
-            {isWarna.warnaDua.length == 0 ? "" :
-              <Pill size="xs" ta={"center"}>{isWarna.warnaDua}</Pill>
-            }
-          </Box>
-          <Box>
-            <Box bg={isWarna.warnaTiga} w={50} h={50} style={{
-              borderRadius: 10
-            }} />
-            {isWarna.warnaTiga.length == 0 ? "" :
-              <Pill size="xs" ta={"center"}>{isWarna.warnaTiga}</Pill>
-            }
-          </Box>
-          <Box>
-            <Box bg={isWarna.warnaEmpat} w={50} h={50} style={{
-              borderRadius: 10
-            }} />
-            {isWarna.warnaEmpat.length == 0 ? "" :
-              <Pill size="xs" ta={"center"}>{isWarna.warnaEmpat}</Pill>
-            }
-          </Box>
+        <Flex justify={'center'} align={"center"} w={"auto"} gap={10} mt={20} mb={100}>
+          <SimpleGrid
+            cols={{ base: 3, sm: 3, lg: 6 }}
+            spacing={{ base: 10, sm: 'xl' }}
+            verticalSpacing={{ base: 'md', sm: 'xl' }}
+          >
+            <Flex justify={"center"} direction={"column"}>
+              <Center>
+                <Box bg={isWarna.warnaUtama} w={35} h={35} style={{
+                  borderRadius: 10
+                }} />
+              </Center>
+              {isWarna.warnaUtama.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.warnaUtama}</Pill>
+              }
+            </Flex>
+            <Flex justify={"center"} direction={"column"}>
+              <Center>
+                <Box bg={isWarna.backgroundUtama} w={35} h={35} style={{
+                  borderRadius: 10
+                }} />
+              </Center>
+              {isWarna.backgroundUtama.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.backgroundUtama}</Pill>
+              }
+            </Flex>
+            <Flex justify={"center"} direction={"column"}>
+              <Center>
+                <Box bg={isWarna.backgroundIcon} w={35} h={35} style={{
+                  borderRadius: 10
+                }} />
+              </Center>
+              {isWarna.backgroundIcon.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.backgroundIcon}</Pill>
+              }
+            </Flex>
+            <Flex justify={"center"} direction={"column"}>
+              <Center>
+                <Box bg={isWarna.backgroundFiturHome} w={35} h={35} style={{
+                  borderRadius: 10
+                }} />
+              </Center>
+              {isWarna.backgroundFiturHome.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.backgroundFiturHome}</Pill>
+              }
+            </Flex>
+            <Flex justify={"center"} direction={"column"}>
+              <Center>
+                <Box bg={isWarna.backgroundFiturDivisi} w={35} h={35} style={{
+                  borderRadius: 10
+                }} />
+              </Center>
+              {isWarna.backgroundFiturDivisi.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.backgroundFiturDivisi}</Pill>
+              }
+            </Flex>
+            <Flex justify={"center"} direction={"column"}>
+              <Center>
+                <Box bg={isWarna.backgroundTotalKegiatan} w={35} h={35} style={{
+                  borderRadius: 10
+                }} />
+              </Center>
+              {isWarna.backgroundTotalKegiatan.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.backgroundTotalKegiatan}</Pill>
+              }
+            </Flex>
+          </SimpleGrid>
+
         </Flex>
       </Box>
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-        maxWidth: rem(550),
+        maxWidth: rem(535),
         zIndex: 999,
         backgroundColor: `${WARNA.bgWhite}`,
       }}>
@@ -113,4 +167,3 @@ export default function EditPaletteColor() {
     </Box>
   );
 }
-

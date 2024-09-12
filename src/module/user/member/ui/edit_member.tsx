@@ -1,5 +1,5 @@
 'use client'
-import { globalRole, WARNA } from "@/module/_global";
+import { globalRole, TEMA, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { funGetAllPosition } from "@/module/position/lib/api_position";
@@ -29,6 +29,7 @@ export default function EditMember({ id }: { id: string }) {
    const [img, setIMG] = useState<any | null>()
    const [loading, setLoading] = useState(true)
    const roleLogin = useHookstate(globalRole)
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       nik: false,
       name: false,
@@ -172,7 +173,7 @@ export default function EditMember({ id }: { id: string }) {
             {loading ?
                <Skeleton height={150} width={150} radius={"100"} />
                :
-               <Indicator offset={20} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
+               <Indicator offset={20} withBorder inline color={tema.get().bgIcon} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
                   <Avatar
                      size="150"
                      radius={"100"}
@@ -197,9 +198,9 @@ export default function EditMember({ id }: { id: string }) {
                      placeholder="Pilih Grup" label="Grup" w={"100%"} size="md" required withAsterisk radius={30}
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      data={
@@ -226,9 +227,9 @@ export default function EditMember({ id }: { id: string }) {
                      placeholder="Pilih Jabatan" label="Jabatan" w={"100%"} size="md" required withAsterisk radius={30}
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      data={
@@ -255,9 +256,9 @@ export default function EditMember({ id }: { id: string }) {
                      placeholder="Pilih Role" label="User Role" w={"100%"} size="md" required withAsterisk radius={30}
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      data={
@@ -284,9 +285,9 @@ export default function EditMember({ id }: { id: string }) {
                      size="md" type="number" radius={30} placeholder="NIK" withAsterisk label="NIK" w={"100%"}
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      onChange={(e) => {
@@ -306,9 +307,9 @@ export default function EditMember({ id }: { id: string }) {
                      size="md" type="text" radius={30} placeholder="Nama" withAsterisk label="Nama" w={"100%"}
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      onChange={(e) => {
@@ -327,9 +328,9 @@ export default function EditMember({ id }: { id: string }) {
                      size="md" type="email" radius={30} placeholder="Email" withAsterisk label="Email" w={"100%"}
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      onChange={(e) => {
@@ -349,9 +350,9 @@ export default function EditMember({ id }: { id: string }) {
                      size="md" type="number" radius={30} withAsterisk label="Nomor Telepon" w={"100%"}
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      placeholder="8xxx xxxx xxxx"
@@ -373,9 +374,9 @@ export default function EditMember({ id }: { id: string }) {
                      placeholder="Jenis Kelamin" label="Jenis Kelamin" w={"100%"} size="md" required withAsterisk radius={30}
                      styles={{
                         input: {
-                           color: WARNA.biruTua,
-                           borderRadius: WARNA.biruTua,
-                           borderColor: WARNA.biruTua,
+                           color: tema.get().utama,
+                           borderRadius: tema.get().utama,
+                           borderColor: tema.get().utama,
                         },
                      }}
                      data={
@@ -408,14 +409,14 @@ export default function EditMember({ id }: { id: string }) {
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             {loading ?
                <Skeleton height={50} radius={30} />
                :
                <Button
                   c={"white"}
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
                   size="md"
                   radius={30}
                   fullWidth

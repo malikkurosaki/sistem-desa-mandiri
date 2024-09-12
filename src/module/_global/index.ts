@@ -1,5 +1,5 @@
 import prisma from "./bin/prisma";
-import { DIR, globalRole, pwd_key_config } from "./bin/val_global";
+import { DIR, globalRole, pwd_key_config, TEMA } from "./bin/val_global";
 import SkeletonDetailDiscussionComment from "./components/skeleton_detail_discussion_comment";
 import SkeletonDetailDiscussionMember from "./components/skeleton_detail_discussion_member";
 import SkeletonDetailListTugasTask from "./components/skeleton_detail_list_tugas_task";
@@ -41,3 +41,4 @@ export { NoZoom }
 export { funUploadFile }
 export { funDeleteFile }
 export { DIR }
+export { TEMA }

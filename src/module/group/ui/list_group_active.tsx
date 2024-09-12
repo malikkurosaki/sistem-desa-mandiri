@@ -1,4 +1,4 @@
-import { LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
+import { LayoutDrawer, SkeletonSingle, TEMA, WARNA } from "@/module/_global";
 import {
   ActionIcon,
   Box,
@@ -19,6 +19,7 @@ import { funGetAllGroup } from "../lib/api_group";
 import { IDataGroup } from "../lib/type_group";
 import { useSearchParams } from "next/navigation";
 import _ from "lodash";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function ListGroupActive() {
@@ -31,6 +32,7 @@ export default function ListGroupActive() {
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams()
   const status = searchParams.get('active')
+  const tema = useHookstate(TEMA)
 
 
   const fetchData = async () => {
@@ -64,9 +66,9 @@ export default function ListGroupActive() {
       <TextInput
         styles={{
           input: {
-            color: WARNA.biruTua,
-            borderRadius: WARNA.biruTua,
-            borderColor: WARNA.biruTua,
+            color: tema.get().utama,
+            borderRadius: tema.get().utama,
+            borderColor: tema.get().utama,
           },
         }}
         size="md"
@@ -96,7 +98,7 @@ export default function ListGroupActive() {
                 <Group
                   align="center"
                   style={{
-                    border: `1px solid ${"#DCEED8"}`,
+                    border: `1px solid ${tema.get().bgTotalKegiatan}`,
                     padding: 10,
                     borderRadius: 10,
                     cursor: "pointer",
@@ -116,13 +118,13 @@ export default function ListGroupActive() {
                       <Flex justify={{base: "center", xl: "flex-start"}}>
                         <ActionIcon
                           variant="light"
-                          bg={"#DCEED8"}
+                          bg={tema.get().bgTotalKegiatan}
                           size={50}
                           radius={100}
                           aria-label="icon"
                         >
                           <HiOutlineOfficeBuilding
-                            color={WARNA.biruTua}
+                            color={tema.get().utama}
                             size={25}
                           />
                         </ActionIcon>
@@ -138,7 +140,7 @@ export default function ListGroupActive() {
                           xl: 400
                         }}
                       >
-                        <Text fw={"bold"} c={WARNA.biruTua} lineClamp={1}>
+                        <Text fw={"bold"} c={tema.get().utama} lineClamp={1}>
                       {v.name}
                     </Text>
                       </Box>

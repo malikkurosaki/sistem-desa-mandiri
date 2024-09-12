@@ -1,5 +1,5 @@
 'use client'
-import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, SkeletonDetailProfile, globalRole } from "@/module/_global";
+import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, SkeletonDetailProfile, globalRole, TEMA } from "@/module/_global";
 import { Box, Group, ActionIcon, Stack, Text, Center, Avatar, Skeleton, Grid } from "@mantine/core";
 import { HiMenu } from "react-icons/hi";
 import DrawerDetailMember from "./drawer_detail_member";
@@ -24,6 +24,7 @@ export default function NavbarDetailMember({ id }: IMember) {
    const [loading, setLoading] = useState(true)
    const [isEdit, setEdit] = useState(false)
    const roleLogin = useHookstate(globalRole)
+   const tema = useHookstate(TEMA)
 
    useShallowEffect(() => {
       featchGetOne()
@@ -61,7 +62,7 @@ export default function NavbarDetailMember({ id }: IMember) {
                   <LayoutIconBack />
                   {
                      (roleLogin.get() != "user") && isEdit &&
-                     <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Info">
+                     <ActionIcon onClick={() => setOpen(true)} variant="light" bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Info">
                         <HiMenu size={20} color='white' />
                      </ActionIcon>
                   }

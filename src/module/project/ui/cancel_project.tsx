@@ -4,14 +4,16 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funCancelProject } from '../lib/api_project';
 import { Box, Button, rem, Stack, Textarea } from '@mantine/core';
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA} from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
 
 export default function CancelProject() {
   const router = useRouter()
   const [alasan, setAlasan] = useState("")
   const [openModal, setOpenModal] = useState(false)
   const param = useParams<{ id: string }>()
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     reason: false,
   });
@@ -67,11 +69,11 @@ export default function CancelProject() {
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         <Button
           c={"white"}
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
           size="lg"
           radius={30}
           fullWidth

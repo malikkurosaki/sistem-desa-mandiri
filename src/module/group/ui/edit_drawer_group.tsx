@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDrawer, WARNA } from "@/module/_global";
+import { LayoutDrawer, TEMA, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import {
   Box,
@@ -18,12 +18,14 @@ import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
 import { IoAddCircle, IoCloseCircleOutline } from "react-icons/io5";
 import { funEditGroup, funEditStatusGroup, funGetGroupById } from "../lib/api_group";
+import { useHookstate } from "@hookstate/core";
 
 export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdated: (val: boolean) => void; id: string; isActive: boolean; }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false);
   const [isModal, setModal] = useState(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     name: false,
   });
@@ -100,10 +102,10 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
             style={{ cursor: "pointer" }}
           >
             <Box>
-              <FaToggleOff size={30} color={WARNA.biruTua} />
+              <FaToggleOff size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>{isActive == false ? "Aktifkan" : "Non Aktifkan"}</Text>
+              <Text c={tema.get().utama}>{isActive == false ? "Aktifkan" : "Non Aktifkan"}</Text>
             </Box>
           </Flex>
           <Flex
@@ -114,10 +116,10 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
             style={{ cursor: "pointer" }}
           >
             <Box>
-              <FaPencil size={30} color={WARNA.biruTua} />
+              <FaPencil size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Edit</Text>
+              <Text c={tema.get().utama}>Edit</Text>
             </Box>
           </Flex>
         </SimpleGrid>
@@ -131,9 +133,9 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
           <TextInput
             styles={{
               input: {
-                color: WARNA.biruTua,
-                borderRadius: WARNA.biruTua,
-                borderColor: WARNA.biruTua,
+                color: tema.get().utama,
+                borderRadius: tema.get().utama,
+                borderColor: tema.get().utama,
               },
             }}
             size="lg"
@@ -154,7 +156,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
           <Box mt={"xl"}>
             <Button
               c={"white"}
-              bg={WARNA.biruTua}
+              bg={tema.get().utama}
               size="lg"
               radius={30}
               fullWidth

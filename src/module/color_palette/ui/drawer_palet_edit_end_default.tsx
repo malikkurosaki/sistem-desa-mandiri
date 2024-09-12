@@ -1,5 +1,6 @@
-import { WARNA } from '@/module/_global';
+import { TEMA, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
 import { Box, Flex, SimpleGrid, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -9,9 +10,15 @@ import { IoAddCircle, IoColorPalette } from 'react-icons/io5';
 export default function DrawerPaletEditEndDefault() {
   const router = useRouter()
   const [isModal, setModal] = useState(false)
+  const tema = useHookstate(TEMA)
 
   function onCLose(val: boolean) {
     setModal(false)
+    // tema.set({
+    //   ...tema.get(),
+    //   utama:'#000'
+    // })
+    // router.refresh()
   }
   return (
     <Box>
@@ -25,7 +32,7 @@ export default function DrawerPaletEditEndDefault() {
             <IoColorPalette size={30} color={WARNA.biruTua} />
           </Box>
           <Box>
-            <Text ta={'center'} c={WARNA.biruTua}>Default Warna</Text>
+            <Text ta={'center'} c={WARNA.biruTua}>Gunakan Tema</Text>
           </Box>
         </Flex>
         <Flex justify={'center'} align={'center'} direction={'column'}
@@ -35,13 +42,13 @@ export default function DrawerPaletEditEndDefault() {
             <FaPencil size={30} color={WARNA.biruTua} />
           </Box>
           <Box>
-            <Text ta={'center'} c={WARNA.biruTua}>Edit Palet</Text>
+            <Text ta={'center'} c={WARNA.biruTua}>Edit Tema</Text>
           </Box>
         </Flex>
       </SimpleGrid>
 
       <LayoutModal opened={isModal} onClose={() => setModal(false)}
-        description="Apakah Anda yakin ingin mengubah warna Aplikasi?"
+        description="Apakah Anda yakin ingin mengubah Tema Aplikasi?"
         onYes={(val) => { onCLose(val) }} />
     </Box>
   );

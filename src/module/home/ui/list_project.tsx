@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { TEMA, WARNA } from "@/module/_global";
 import { Carousel } from "@mantine/carousel";
 import { Box, Card, Flex, Title, Text, Progress, Stack, Skeleton } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -9,11 +9,13 @@ import toast from "react-hot-toast";
 import { funGetHome } from "../lib/api_home";
 import { IDataHomeKegiatan } from "../lib/type_home";
 import _ from "lodash";
+import { useHookstate } from "@hookstate/core";
 
 export default function ListProjects() {
    const router = useRouter()
    const [isData, setData] = useState<IDataHomeKegiatan[]>([])
    const [loading, setLoading] = useState(true);
+   const tema = useHookstate(TEMA)
 
    const fetchData = async () => {
       try {
@@ -43,7 +45,7 @@ export default function ListProjects() {
    return (
       <>
          <Box pt={10}>
-            <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Kegiatan Terbaru</Text>
+            <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Kegiatan Terbaru</Text>
             {loading ?
                <Box pb={20}>
                   <Skeleton width={"100%"} height={200} radius={"md"} />
@@ -61,7 +63,7 @@ export default function ListProjects() {
                            <Box w={{ base: 300, md: 400 }}>
                               <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/project/${v.id}`)}>
                                  <Card.Section>
-                                    <Box h={120} bg={WARNA.biruTua}>
+                                    <Box h={120} bg={tema.get().utama}>
                                        <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
                                           <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.title}</Title>
                                        </Flex>
@@ -73,7 +75,7 @@ export default function ListProjects() {
                                           <Progress.Label>{v.progress}%</Progress.Label>
                                        </Progress.Section>
                                     </Progress.Root>
-                                    <Text c={WARNA.biruTua}>{v.createdAt}</Text>
+                                    <Text c={tema.get().utama}>{v.createdAt}</Text>
                                  </Stack>
                               </Card>
                            </Box>

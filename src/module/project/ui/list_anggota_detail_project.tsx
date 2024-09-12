@@ -1,5 +1,5 @@
 'use client'
-import { globalRole, LayoutDrawer, SkeletonSingle, WARNA } from '@/module/_global';
+import { globalRole, LayoutDrawer, SkeletonSingle, TEMA } from '@/module/_global';
 import { Avatar, Box, Flex, Grid, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import { funDeleteMemberProject, funGetOneProjectById } from '../lib/api_project';
@@ -22,6 +22,7 @@ export default function ListAnggotaDetailProject() {
   const [dataChoose, setDataChoose] = useState({ id: '', name: '' })
   const router = useRouter()
   const roleLogin = useHookstate(globalRole)
+  const tema = useHookstate(TEMA)
 
   async function getOneData() {
     try {
@@ -67,8 +68,8 @@ const isMobile = useMediaQuery('(max-width: 369px)');
   return (
     <Box pt={20}>
       <Group justify="space-between">
-        <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-        <Text c={WARNA.biruTua}>Total {isData.length} Anggota</Text>
+        <Text c={tema.get().utama}>Anggota Terpilih</Text>
+        <Text c={tema.get().utama}>Total {isData.length} Anggota</Text>
       </Group>
       <Box pt={10}>
         <Box mb={20}>
@@ -115,7 +116,7 @@ const isMobile = useMediaQuery('(max-width: 369px)');
                             </Group>
                           </Grid.Col>
                           <Grid.Col span={3}>
-                            <Text c={WARNA.biruTua} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                            <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
                               Anggota
                             </Text>
                           </Grid.Col>
@@ -135,10 +136,10 @@ const isMobile = useMediaQuery('(max-width: 369px)');
             >
               <Flex onClick={() => { router.push('/member/' + dataChoose.id) }} justify={'center'} align={'center'} direction={'column'} >
                 <Box>
-                  <FaUser size={30} color={WARNA.biruTua} />
+                  <FaUser size={30} color={tema.get().utama} />
                 </Box>
                 <Box>
-                  <Text c={WARNA.biruTua}>Lihat profil</Text>
+                  <Text c={tema.get().utama}>Lihat profil</Text>
                 </Box>
               </Flex>
 
@@ -146,10 +147,10 @@ const isMobile = useMediaQuery('(max-width: 369px)');
                 (roleLogin.get() != "user" && roleLogin.get() != "coadmin") &&
                 <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
-                    <IoIosCloseCircle size={30} color={WARNA.biruTua} />
+                    <IoIosCloseCircle size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                    <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
+                    <Text c={tema.get().utama}>Keluarkan anggota</Text>
                   </Box>
                 </Flex>
               }
