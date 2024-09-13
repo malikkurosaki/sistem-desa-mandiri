@@ -1,6 +1,7 @@
 "use client";
 import {
   Anchor,
+  Box,
   Button,
   Center,
   Flex,
@@ -16,7 +17,7 @@ import { WARNA } from "@/module/_global";
 const listTextWellcome = [
   {
     id: "1",
-    text: "Selamat Datang di Aplikasi Desa Darmasaba Optimalkan Proyek Desa dengan Fitur Kolaboratif Manajemen Proyek yang Efisien untuk Masa Depan Yang Lebih Baik",
+    text: "Selamat Datang di Aplikasi Desa Darmasaba Optimalkan Kegiatan Desa dengan Fitur Kolaboratif Manajemen Kegiatan yang Efisien untuk Masa Depan Yang Lebih Baik",
     img: "/assets/img/welcome/wellcome-1.png",
   },
   {
@@ -37,8 +38,8 @@ export function ViewWelcome() {
 
   function onLanjutkan() {
     if (index === listTextWellcome.length - 1) {
-      // return router.push("/home");
-      return window.location.href = "/home"
+      return router.replace("/home");
+      // return window.location.href = "/home"
     }
     setIndex(index + 1);
   }
@@ -51,9 +52,10 @@ export function ViewWelcome() {
   }
   return (
     <Stack>
-      <Group pos={"absolute"} top={20} right={40}>
-        <Anchor>Lewati</Anchor>
-      </Group>
+      <Flex justify={'right'} mr={30} mt={20}>
+        <Anchor onClick={() => router.replace("/home")}>Lewati</Anchor>
+      </Flex>
+
       <Stack gap={"xl"} p={"xl"} pt={50}>
         <WelcomeItem index={index} listTextWellcome={listTextWellcome} />
       </Stack>
@@ -66,6 +68,8 @@ export function ViewWelcome() {
         right={0}
         p={"xl"}
         align={"center"}
+        maw={550}
+        m={"0 auto"}
       >
         <Button
           display={index === 0 ? "none" : "block"}

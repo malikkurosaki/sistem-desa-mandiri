@@ -1,0 +1,262 @@
+###
+POST http://localhost:3000/api/auth/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "phone": "6287701790942"
+}
+
+// GROUP 
+
+###
+GET http://localhost:3000/api/group/get?path=get-all-group&villageId=121212&active=true HTTP/1.1
+
+###
+POST http://localhost:3000/api/group/post?path=create-group HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "LPD 3",
+    "idVillage": "121212"
+}
+
+###
+POST http://localhost:3000/api/group/post?path=update-group HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "1",
+    "name": "LPD2",
+    "idVillage": "121212"
+}
+
+###
+POST http://localhost:3000/api/group/post?path=delete-group HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "1",
+    "idVillage": "121212"
+}
+
+###
+GET http://localhost:3000/api/group/get?path=get-one-group&groupId=3 HTTP/1.1
+
+
+// VILLAGE
+
+###
+GET http://localhost:3000/api/village/get?path=get-all-village HTTP/1.1
+
+###
+GET http://localhost:3000/api/village/get?path=get-one-village HTTP/1.1
+
+###
+POST http://localhost:3000/api/village/post?path=create-village HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "nama satu satu ",
+    "desc": "description data"
+}
+
+###
+POST http://localhost:3000/api/village/post?path=update-village HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "11",
+    "name": "nama satu new",
+    "desc": "description data new"
+}
+
+###
+POST http://localhost:3000/api/village/post?path=delete-village HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "11"
+}
+
+
+// POSITION
+
+###
+GET http://localhost:3000/api/position/get?path=get-all-position&groupID=2 HTTP/1.1
+
+###
+GET http://localhost:3000/api/position/get?path=get-one-position&positionId=clz24bff70001w01in64dd9ea HTTP/1.1
+
+###
+POST http://localhost:3000/api/position/post?path=create-position HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Anggota",
+    "idGroup": "1"
+}
+
+###
+POST http://localhost:3000/api/position/post?path=update-position HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "1",
+    "name": "Wakil Sekertaris",
+    "idGroup": "2"
+}
+
+###
+POST http://localhost:3000/api/position/post?path=delete-position HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "1"
+}
+
+
+// USERS
+
+###
+GET http://localhost:3000/api/user/get?path=get-all-users&active=true HTTP/1.1
+
+###
+GET http://localhost:3000/api/user/get?path=get-one-users&userID=devAmalia HTTP/1.1
+
+###
+POST http://localhost:3000/api/user/post?path=create-users HTTP/1.1
+Content-Type: application/json
+
+{
+    "idUserRole": "user",
+    "idVillage": "121212",
+    "idGroup": "2",
+    "idPosition": "clz24bff70001w01in64dd9ea",
+    "nik": "53239236727329",
+    "name": "coba user",
+    "email": "cobauser@gmail.com",
+    "phone": "07319031009",
+    "gender": "M"
+}
+
+###
+POST http://localhost:3000/api/user/post?path=update-users HTTP/1.1
+Content-Type: application/json
+
+{
+     "id": "clz6dq88e0001b3mlyl4vjaf8",
+    "idUserRole": "user",
+    "idVillage": "121212",
+    "idGroup": "2",
+    "idPosition": "clz24bff70001w01in64dd9ea",
+    "nik": "53239236727329",
+    "name": "coba user edit",
+    "email": "cobauser@gmail.com",
+    "phone": "07319031009",
+    "gender": "M"
+}
+
+###
+POST http://localhost:3000/api/user/post?path=delete-users HTTP/1.1
+Content-Type: application/json
+
+{
+     "id": "clz6dq88e0001b3mlyl4vjaf8"
+}
+ 
+
+ // Announcement
+
+###
+POST http://localhost:3000/api/announcement/post?path=create-announcement HTTP/1.1
+Content-Type: application/json
+
+{
+   
+    "title": "cobaannouncement1 dsdsd",
+    "desc": "coba announcement sdsdsd",
+    "idVillage": "desa1",
+    "createBy": "superAdminLukman",
+    "groups": [
+    {
+      "idGroup": "group1",
+      "idDivision": "1"
+    },
+  ]
+}
+
+###
+GET http://localhost:3000/api/announcement/get?path=get-all-announcement HTTP/1.1
+###
+GET http://localhost:3000/api/announcement/get?path=get-user-announcement HTTP/1.1
+
+###
+GET http://localhost:3000/api/announcement/get?path=get-all-announcement&divisionI=1 HTTP/1.1
+
+###
+GET http://localhost:3000/api/announcement/get?path=get-one-announcement&announcementId=1 HTTP/1.1
+
+###
+POST http://localhost:3000/api/announcement/post?path=update-announcement HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "clz6kqzvt000eb3mle1nyz6fd",
+    "title": "cobaannouncement coba coba",
+    "desc": "coba announcement coba coba",
+    "idVillage": "121212",
+    "createBy": "clz6dq88e0001b3mlyl4vjaf8",
+    "groups": [
+    {
+      "idGroup": "1",
+      "idDivision": "1"
+    },
+    {
+      "idGroup": "1",
+      "idDivision": "2"
+    }
+  ]
+}
+
+###
+POST http://localhost:3000/api/announcement/post?path=delete-announcement HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "clz6naf9s000ib3mlf5aujk92"
+}
+
+
+###
+POST http://localhost:3000/api/announcement HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "test",
+    "desc": "test",
+    "groups": 
+   [
+      {
+        "idAnnouncement": "1",
+        "idGroup": "group1",
+        "idDivision": "1",
+        "isActive": true
+      },
+      {
+         "idAnnouncement": "1",
+         "idGroup": "group1",
+         "idDivision": "clzknx2xy0001bt0wygcwjfph",
+         "isActive": true
+      }
+    ]
+}
+
+
+
+###
+DELETE http://localhost:3000/api/discussion/clzs6b7kb0001aw16g5clh5vw HTTP/1.1
+Content-Type: application/json
+
+{
+    "status":1
+}

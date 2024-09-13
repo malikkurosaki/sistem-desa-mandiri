@@ -1,8 +1,15 @@
-import { ViewListAnnouncement } from "@/module/announcement";
+import { ViewFilter } from "@/module/_global";
+import { ListAnnouncement, NavbarAnnouncement } from "@/module/announcement";
+import { Box } from "@mantine/core";
 
-function Page() {
+function Page({ searchParams }: { searchParams: { page: string } }) {
+   if (searchParams.page == 'filter')
+      return <ViewFilter linkFilter="announcement" />
    return (
-      <ViewListAnnouncement/>
+      <Box>
+         <NavbarAnnouncement />
+         <ListAnnouncement />
+      </Box>
    )
 }
 

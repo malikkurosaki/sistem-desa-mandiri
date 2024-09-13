@@ -13,6 +13,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model AdminRole {
+  id        String   @id @default(cuid())
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Admin     Admin[]
+}
+
+model Admin {
+  id          String    @id @default(cuid())
+  AdminRole   AdminRole @relation(fields: [idAdminRole], references: [id])
+  idAdminRole String
+  name        String
+  phone       String    @unique
+  email       String?   @unique
+  gender      String    @default("M") //M= Male, F= Female
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
 model UserRole {
   id        String   @id @default(cuid())
   name      String
@@ -24,32 +46,34 @@ model UserRole {
 }
 
 model Village {
-  id          String        @id @default(cuid())
-  name        String
-  desc        String        @db.Text
-  isActive    Boolean       @default(true)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  Group       Group[]
-  User        User[]
-  Annoucement Annoucement[]
-  Project     Project[]
-  Division    Division[]
+  id           String         @id @default(cuid())
+  idTheme      String?
+  name         String
+  desc         String         @db.Text
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Group        Group[]
+  User         User[]
+  Announcement Announcement[]
+  Project      Project[]
+  Division     Division[]
+  ColorTheme   ColorTheme[]
 }
 
 model Group {
-  id                String              @id @default(cuid())
-  Village           Village             @relation(fields: [idVillage], references: [id])
-  idVillage         String
-  name              String
-  isActive          Boolean             @default(true)
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  Position          Position[]
-  User              User[]
-  Project           Project[]
-  Division          Division[]
-  AnnoucementMember AnnoucementMember[]
+  id                 String               @id @default(cuid())
+  Village            Village              @relation(fields: [idVillage], references: [id])
+  idVillage          String
+  name               String
+  isActive           Boolean              @default(true)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  Position           Position[]
+  User               User[]
+  Project            Project[]
+  Division           Division[]
+  AnnouncementMember AnnouncementMember[]
 }
 
 model Position {
@@ -67,21 +91,23 @@ model User {
   id                         String                       @id @default(cuid())
   UserRole                   UserRole                     @relation(fields: [idUserRole], references: [id])
   idUserRole                 String
-  Village                    Village?                     @relation(fields: [idVillage], references: [id])
-  idVillage                  String?
-  Group                      Group?                       @relation(fields: [idGroup], references: [id])
-  idGroup                    String?
-  Position                   Position?                    @relation(fields: [idPosition], references: [id])
-  idPosition                 String?
+  Village                    Village                      @relation(fields: [idVillage], references: [id])
+  idVillage                  String
+  Group                      Group                        @relation(fields: [idGroup], references: [id])
+  idGroup                    String
+  Position                   Position                     @relation(fields: [idPosition], references: [id])
+  idPosition                 String
   nik                        String                       @unique
   name                       String
   phone                      String                       @unique
   email                      String?                      @unique
   gender                     String                       @default("M") //M= Male, F= Female
+  img                        String?
+  isFirstLogin               Boolean                      @default(true)
   isActive                   Boolean                      @default(true)
   createdAt                  DateTime                     @default(now())
   updatedAt                  DateTime                     @updatedAt
-  Annoucement                Annoucement[]
+  Announcement               Announcement[]
   Project                    Project[]
   ProjectMember              ProjectMember[]
   ProjectComment             ProjectComment[]
@@ -94,6 +120,7 @@ model User {
   DivisionDisscussionComment DivisionDisscussionComment[]
   DivisionDocumentFolderFile DivisionDocumentFolderFile[]
   DivisionCalendar           DivisionCalendar[]
+  DivisionCalendarMember     DivisionCalendarMember[]
 }
 
 model UserLog {
@@ -109,31 +136,31 @@ model UserLog {
   updatedAt DateTime @updatedAt
 }
 
-model Annoucement {
-  id                String              @id @default(cuid())
-  Village           Village             @relation(fields: [idVillage], references: [id])
-  idVillage         String
-  title             String
-  desc              String              @db.Text
-  isActive          Boolean             @default(true)
-  User              User                @relation(fields: [createdBy], references: [id])
-  createdBy         String
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  AnnoucementMember AnnoucementMember[]
+model Announcement {
+  id                 String               @id @default(cuid())
+  Village            Village              @relation(fields: [idVillage], references: [id])
+  idVillage          String
+  title              String
+  desc               String               @db.Text
+  isActive           Boolean              @default(true)
+  User               User                 @relation(fields: [createdBy], references: [id])
+  createdBy          String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  AnnouncementMember AnnouncementMember[]
 }
 
-model AnnoucementMember {
-  id            String      @id @default(cuid())
-  Annoucement   Annoucement @relation(fields: [idAnnoucement], references: [id])
-  idAnnoucement String
-  Group         Group       @relation(fields: [idGroup], references: [id])
-  idGroup       String
-  Division      Division    @relation(fields: [idDivision], references: [id])
-  idDivision    String
-  isActive      Boolean     @default(true)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+model AnnouncementMember {
+  id             String       @id @default(cuid())
+  Announcement   Announcement @relation(fields: [idAnnouncement], references: [id])
+  idAnnouncement String
+  Group          Group        @relation(fields: [idGroup], references: [id])
+  idGroup        String
+  Division       Division     @relation(fields: [idDivision], references: [id])
+  idDivision     String
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 model Project {
@@ -142,8 +169,10 @@ model Project {
   idVillage      String
   Group          Group            @relation(fields: [idGroup], references: [id])
   idGroup        String
-  name           String
-  desc           String           @db.Text
+  title          String
+  status         Int              @default(0) // 0 = pending, 1 = ongoing, 2 = done, 3 = cancelled
+  desc           String?          @db.Text
+  reason         String?          @db.Text
   isActive       Boolean          @default(true)
   User           User             @relation(fields: [createdBy], references: [id])
   createdBy      String
@@ -152,6 +181,7 @@ model Project {
   ProjectMember  ProjectMember[]
   ProjectFile    ProjectFile[]
   ProjectComment ProjectComment[]
+  ProjectTask    ProjectTask[]
 }
 
 model ProjectMember {
@@ -172,6 +202,21 @@ model ProjectFile {
   idProject String
   name      String
   extension String
+  idStorage String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProjectTask {
+  id        String   @id @default(cuid())
+  Project   Project  @relation(fields: [idProject], references: [id])
+  idProject String
+  title     String
+  desc      String?
+  status    Int      @default(0) // 0 = todo, 1 = done
+  dateStart DateTime @db.Date
+  dateEnd   DateTime @db.Date
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -203,7 +248,7 @@ model Division {
   createdAt                  DateTime                     @default(now())
   updatedAt                  DateTime                     @updatedAt
   DivisionMember             DivisionMember[]
-  AnnoucementMember          AnnoucementMember[]
+  AnnouncementMember         AnnouncementMember[]
   DivisionProject            DivisionProject[]
   DivisionProjectTask        DivisionProjectTask[]
   DivisionProjectMember      DivisionProjectMember[]
@@ -213,6 +258,7 @@ model Division {
   DivisionDocumentShare      DivisionDocumentShare[]
   DivisionCalendar           DivisionCalendar[]
   DivisionCalendarReminder   DivisionCalendarReminder[]
+  ContainerFileDivision      ContainerFileDivision[]
 }
 
 model DivisionMember {
@@ -229,85 +275,98 @@ model DivisionMember {
 }
 
 model DivisionProject {
-  id         String   @id @default(cuid())
-  Division   Division @relation(fields: [idDivision], references: [id])
-  idDivision String
-  title      String
-  desc       String   @db.Text
-  status     Int      @default(0)
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id                    String                  @id @default(cuid())
+  Division              Division                @relation(fields: [idDivision], references: [id])
+  idDivision            String
+  title                 String
+  desc                  String?                 @db.Text
+  reason                String?                 @db.Text
+  status                Int                     @default(0) // 0 = pending, 1 = ongoing, 2 = done, 3 = cancelled
+  isActive              Boolean                 @default(true)
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  DivisionProjectTask   DivisionProjectTask[]
+  DivisionProjectMember DivisionProjectMember[]
+  DivisionProjectFile   DivisionProjectFile[]
 }
 
 model DivisionProjectTask {
-  id         String   @id @default(cuid())
-  Division   Division @relation(fields: [idDivision], references: [id])
-  idDivision String
-  title      String
-  desc       String   @db.Text
-  status     Int      @default(0)
-  dateStart  DateTime @db.Date
-  dateEnd    DateTime @db.Date
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id              String          @id @default(cuid())
+  Division        Division        @relation(fields: [idDivision], references: [id])
+  idDivision      String
+  DivisionProject DivisionProject @relation(fields: [idProject], references: [id])
+  idProject       String
+  title           String
+  desc            String?         @db.Text
+  status          Int             @default(0) // 0 = todo, 1 = done
+  dateStart       DateTime        @db.Date
+  dateEnd         DateTime        @db.Date
+  isActive        Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 }
 
 model DivisionProjectMember {
-  id         String   @id @default(cuid())
-  Division   Division @relation(fields: [idDivision], references: [id])
-  idDivision String
-  User       User     @relation(fields: [idUser], references: [id])
-  idUser     String
-  isLeader   Boolean  @default(false)
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id              String          @id @default(cuid())
+  Division        Division        @relation(fields: [idDivision], references: [id])
+  idDivision      String
+  DivisionProject DivisionProject @relation(fields: [idProject], references: [id])
+  idProject       String
+  User            User            @relation(fields: [idUser], references: [id])
+  idUser          String
+  isLeader        Boolean         @default(false)
+  isActive        Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 }
 
 model DivisionProjectFile {
-  id         String   @id @default(cuid())
-  Division   Division @relation(fields: [idDivision], references: [id])
-  idDivision String
-  name       String
-  extension  String
-  isActive   Boolean  @default(true)
-  User       User     @relation(fields: [createdBy], references: [id])
-  createdBy  String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id                    String                @id @default(cuid())
+  Division              Division              @relation(fields: [idDivision], references: [id])
+  idDivision            String
+  DivisionProject       DivisionProject       @relation(fields: [idProject], references: [id])
+  idProject             String
+  ContainerFileDivision ContainerFileDivision @relation(fields: [idFile], references: [id])
+  idFile                String
+  isActive              Boolean               @default(true)
+  User                  User                  @relation(fields: [createdBy], references: [id])
+  createdBy             String
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
 }
 
 model DivisionDisscussion {
-  id         String   @id @default(cuid())
-  Division   Division @relation(fields: [idDivision], references: [id])
-  idDivision String
-  title      String
-  desc       String   @db.Text
-  status     Int      @default(1) // 1 = open, 2 = close
-  isActive   Boolean  @default(true)
-  User       User     @relation(fields: [createdBy], references: [id])
-  createdBy  String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id                         String                       @id @default(cuid())
+  Division                   Division                     @relation(fields: [idDivision], references: [id])
+  idDivision                 String
+  title                      String?
+  desc                       String                       @db.Text
+  status                     Int                          @default(1) // 1 = open, 2 = close
+  isActive                   Boolean                      @default(true)
+  User                       User                         @relation(fields: [createdBy], references: [id])
+  createdBy                  String
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  DivisionDisscussionComment DivisionDisscussionComment[]
 }
 
 model DivisionDisscussionComment {
-  id            String   @id @default(cuid())
-  idDisscussion String
-  comment       String   @db.Text
-  isActive      Boolean  @default(true)
-  User          User     @relation(fields: [createdBy], references: [id])
-  createdBy     String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                  String              @id @default(cuid())
+  DivisionDisscussion DivisionDisscussion @relation(fields: [idDisscussion], references: [id])
+  idDisscussion       String
+  comment             String              @db.Text
+  isActive            Boolean             @default(true)
+  User                User                @relation(fields: [createdBy], references: [id])
+  createdBy           String
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
 }
 
 model DivisionDocumentFolderFile {
   id                    String                  @id @default(cuid())
   Division              Division                @relation(fields: [idDivision], references: [id])
   idDivision            String
+  idStorage             String?
   category              String                  @default("FOLDER") // FOLDER OR FILE
   name                  String
   extension             String
@@ -337,16 +396,21 @@ model DivisionCalendar {
   idDivision               String
   title                    String
   desc                     String                     @db.Text
+  linkMeet                 String?                    @db.Text
   dateStart                DateTime                   @db.Date
-  dateEnd                  DateTime                   @db.Date
-  repeatEventTyper         String
-  reminderInterval         String
+  dateEnd                  DateTime?                  @db.Date
+  timeStart                DateTime                   @db.Time()
+  timeEnd                  DateTime                   @db.Time()
+  repeatEventTyper         String // once = Acara 1 Kali, weekdays = hari Kerja (senin - jumat), daily=setiap hari , weekly = setiap minggu, monthly = setiap bulan, yearly = setiap tahun
+  repeatValue              Int                        @default(1)
+  reminderInterval         String?
   status                   Int                        @default(0)
   isActive                 Boolean                    @default(true)
   User                     User                       @relation(fields: [createdBy], references: [id])
   createdBy                String
   createdAt                DateTime                   @default(now())
   DivisionCalendarReminder DivisionCalendarReminder[]
+  DivisionCalendarMember   DivisionCalendarMember[]
 }
 
 model DivisionCalendarReminder {
@@ -356,9 +420,61 @@ model DivisionCalendarReminder {
   DivisionCalendar DivisionCalendar @relation(fields: [idCalendar], references: [id])
   idCalendar       String
   dateStart        DateTime         @db.Date
-  dateEnd          DateTime         @db.Date
+  dateEnd          DateTime?        @db.Date
+  timeStart        DateTime         @db.Time()
+  timeEnd          DateTime         @db.Time()
   status           Int              @default(0)
   isActive         Boolean          @default(true)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
+}
+
+model DivisionCalendarMember {
+  id               String           @id @default(cuid())
+  DivisionCalendar DivisionCalendar @relation(fields: [idCalendar], references: [id])
+  idCalendar       String
+  User             User             @relation(fields: [idUser], references: [id])
+  idUser           String
+  isActive         Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+model ContainerImage {
+  id         String   @id @default(cuid())
+  category   String
+  idCategory String
+  extension  String
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ContainerFileDivision {
+  id                  String                @id @default(cuid())
+  Division            Division              @relation(fields: [idDivision], references: [id])
+  idDivision          String
+  idStorage           String?
+  name                String
+  extension           String
+  isActive            Boolean               @default(true)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  DivisionProjectFile DivisionProjectFile[]
+}
+
+model ColorTheme {
+  id              String   @id @default(cuid())
+  Village         Village? @relation(fields: [idVillage], references: [id])
+  idVillage       String?
+  name            String
+  utama           String
+  bgUtama         String
+  bgIcon          String
+  bgFiturHome     String
+  bgFiturDivision String
+  bgTotalKegiatan String
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

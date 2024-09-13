@@ -1,10 +1,12 @@
-import { ViewDetailMember } from "@/module/user/member";
+import { NavbarDetailMember } from "@/module/user/member";
+import { Box } from "@mantine/core";
 
 function Page({ params }: { params: { id: string } }) {
-   return (
-      <ViewDetailMember data={params.id} />
-   )
+  return (
+    <Box>
+      <NavbarDetailMember id={params.id} />
+    </Box>
+  );
 }
 
 export default Page;
-

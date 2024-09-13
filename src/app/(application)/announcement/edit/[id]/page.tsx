@@ -1,8 +1,11 @@
-import { ViewEditAnnouncement } from "@/module/announcement";
+import { EditAnnouncement } from "@/module/announcement";
+import { Box } from "@mantine/core";
 
 function Page({ params }: { params: { id: any } }) {
    return (
-      <ViewEditAnnouncement data={params.id} />
+      <Box>
+         <EditAnnouncement />
+      </Box>
    )
 }
 
