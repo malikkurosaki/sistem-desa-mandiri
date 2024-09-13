@@ -1,5 +1,5 @@
 'use client'
-import { TEMA} from "@/module/_global";
+import { TEMA } from "@/module/_global";
 import { Avatar, Badge, Box, Divider, Flex, Grid, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -106,15 +106,30 @@ export default function ListDiscussion({ id }: { id: string }) {
                         <Grid align="center" mt={20} onClick={() => {
                            router.push(`/division/${param.id}/discussion/${v.id}`)
                         }}>
-                           <Grid.Col span={2}>
+                           <Grid.Col span={{
+                              sm: 2,
+                              lg: 2,
+                              xl: 2,
+                              md: 2,
+                              xs: 1,
+                              base: 2
+                           }}>
                               <Avatar alt="it's me" src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} size="lg" />
                            </Grid.Col>
-                           <Grid.Col span={6}>
+                           <Grid.Col span={{
+                              sm: 6,
+                              lg: 6,
+                              xl: 6,
+                              md: 6,
+                              xs: 7,
+                              base: 6
+                           }}>
                               <Box pl={{
                                  sm: 0,
                                  lg: 0,
                                  xl: 0,
                                  md: 0,
+                                 xs: 40,
                                  base: 10
                               }}>
                                  <Text c={tema.get().utama} fw={"bold"} lineClamp={1}>

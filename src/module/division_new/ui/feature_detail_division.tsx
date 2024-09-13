@@ -40,7 +40,7 @@ export default function FeatureDetailDivision() {
     fetchData()
   }, [param.id])
   const isMobile = useMediaQuery('(max-width: 399px)');
-  const isMobile2 = useMediaQuery('(max-width: 369px)');
+  const isMobile2 = useMediaQuery('(max-width: 411px)');
 
   return (
     <Box pt={10}>
@@ -58,7 +58,12 @@ export default function FeatureDetailDivision() {
           padding: 10
         }} onClick={() => router.push(param.id + '/task?status=0')}>
           <Grid justify='center' align='center'>
-            <Grid.Col span={"auto"}>
+            <Grid.Col span={{
+              base: isMobile2 ? 4 : 3.5,
+              xs: 3,
+              sm: 3,
+              md: 3,
+            }}>
               <ActionIcon variant="filled"
                 size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
@@ -68,7 +73,13 @@ export default function FeatureDetailDivision() {
                 <LuClipboardEdit size={isMobile2 ? 20 : 25} color={tema.get().utama} />
               </ActionIcon>
             </Grid.Col>
-            <Grid.Col span={{ base: 7, md: 9 }}>
+            <Grid.Col
+              span={{
+                base: isMobile2 ? 8 : 7.5,
+                xs: 9,
+                md: 9,
+                sm: 9,
+              }}>
               <Text fz={15} c={tema.get().utama} fw={"bold"}>Tugas</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.tugas} Tugas</Text>
@@ -83,7 +94,12 @@ export default function FeatureDetailDivision() {
           padding: 10
         }} onClick={() => router.push(param.id + '/document')}>
           <Grid justify='center' align='center'>
-            <Grid.Col span={"auto"}>
+            <Grid.Col span={{
+              base: isMobile2 ? 4 : 3.5,
+              xs: 3,
+              sm: 3,
+              md: 3,
+            }}>
               <ActionIcon variant="filled"
                 size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
@@ -93,7 +109,12 @@ export default function FeatureDetailDivision() {
                 <BsFileEarmarkText size={isMobile2 ? 20 : 25} color={tema.get().utama} />
               </ActionIcon>
             </Grid.Col>
-            <Grid.Col span={{ base: 7, md: 9 }}>
+            <Grid.Col span={{
+              base: isMobile2 ? 8 : 7.5,
+              xs: 9,
+              md: 9,
+              sm: 9,
+            }}>
               <Text fz={15} c={tema.get().utama} fw={"bold"}>Dokumen</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.dokumen} File</Text>
@@ -108,7 +129,12 @@ export default function FeatureDetailDivision() {
           padding: 10
         }} onClick={() => router.push(param.id + '/discussion')}>
           <Grid justify='center' align='center'>
-            <Grid.Col span={"auto"}>
+            <Grid.Col span={{
+              base: isMobile2 ? 4 : 3.5,
+              xs: 3,
+              sm: 3,
+              md: 3,
+            }}>
               <ActionIcon variant="filled"
                 size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
@@ -118,7 +144,12 @@ export default function FeatureDetailDivision() {
                 <GoCommentDiscussion size={isMobile2 ? 20 : 25} color={tema.get().utama} />
               </ActionIcon>
             </Grid.Col>
-            <Grid.Col span={{ base: 7, md: 9 }}>
+            <Grid.Col span={{
+              base: isMobile2 ? 8 : 7.5,
+              xs: 9,
+              md: 9,
+              sm: 9,
+            }}>
               <Text fz={15} c={tema.get().utama} fw={"bold"}>Diskusi</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.diskusi} Diskusi</Text>
@@ -133,7 +164,12 @@ export default function FeatureDetailDivision() {
           padding: 10
         }} onClick={() => router.push(param.id + '/calender')}>
           <Grid justify='center' align='center'>
-            <Grid.Col span={"auto"}>
+            <Grid.Col span={{
+              base: isMobile2 ? 4 : 3.5,
+              xs: 3,
+              sm: 3,
+              md: 3,
+            }}>
               <ActionIcon variant="filled"
                 size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
@@ -143,7 +179,12 @@ export default function FeatureDetailDivision() {
                 <IoCalendarOutline size={isMobile2 ? 20 : 25} color={tema.get().utama} />
               </ActionIcon>
             </Grid.Col>
-            <Grid.Col span={{ base: 7, md: 9 }}>
+            <Grid.Col span={{
+              base: isMobile2 ? 8 : 7.5,
+              xs: 9,
+              md: 9,
+              sm: 9,
+            }}>
               <Text fz={15} c={tema.get().utama} fw={"bold"}>Kalender</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.kalender} Acara</Text>
