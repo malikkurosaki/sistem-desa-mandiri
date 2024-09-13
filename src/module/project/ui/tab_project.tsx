@@ -57,9 +57,18 @@ export default function TabProject() {
         } />
 
       <Box p={20}>
-        <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
-          {dataStatus.map((item, index) => (
-            <Carousel.Slide key={index}>
+        <Box
+          style={{
+            display: "flex",
+            gap: "20px",
+            position: "relative",
+            overflowX: "scroll",
+            scrollbarWidth: "none",
+            maxWidth: "550px"
+          }}
+        >
+          <Flex gap={"md"} justify={"space-between"}>
+            {dataStatus.map((item, index) => (
               <Button
                 variant="subtle"
                 color={
@@ -67,6 +76,7 @@ export default function TabProject() {
                     ? "white"
                     : tema.get().utama
                 }
+                key={index}
                 onClick={() => { router.push("?status=" + item.id + "&group=" + group) }}
                 defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}
                 radius={"xl"}
@@ -75,91 +85,14 @@ export default function TabProject() {
                     ? tema.get().utama
                     : "transparent"
                 }
+                leftSection={item.icon}
               >
-                {item.icon}
-                <Box ml={10}>{item.title}</Box>
+                {item.title}
               </Button>
-            </Carousel.Slide>
-          ))}
-        </Carousel>
-        {/* <Flex justify={"center"} gap={'sm'} align={'center'} mt={10}>
-          {dataStatus.map((v, i) => (
-            <Box key={i}>
-              <Box w={6} h={6} bg={
-                status == v.id
-                  ? tema.get().utama
-                  : "#B0AEAE"
-              } style={{
-                borderRadius: 100
-              }} />
-            </Box>
-          ))}
-        </Flex> */}
+            ))}
+          </Flex>
+        </Box>
         <ListProject />
-        {/* <Tabs variant="pills" radius="md" defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}>
-          <SimpleGrid
-            cols={{ base: 2, sm: 2, lg: 4 }}
-          >
-            <Tabs.Tab value="0"
-              leftSection={<TbClockPause style={iconStyle} />}
-              onClick={() => { router.push("?status=0&group=" + group) }}
-              color={tema.get().utama}
-            >
-              Segera
-            </Tabs.Tab>
-            <Tabs.Tab value="1"
-              leftSection={<RiProgress3Line style={iconStyle} />}
-              onClick={() => { router.push("?status=1&group=" + group) }}
-              color={tema.get().utama}
-            >
-              Dikerjakan
-            </Tabs.Tab>
-            <Tabs.Tab value="2"
-              leftSection={<IoIosCheckmarkCircleOutline style={iconStyle} />}
-              onClick={() => { router.push("?status=2&group=" + group) }}
-              color={tema.get().utama}>
-              Selesai
-            </Tabs.Tab>
-            <Tabs.Tab value="3"
-              leftSection={<IoCloseCircleOutline style={iconStyle} />}
-              onClick={() => { router.push("?status=3&group=" + group) }}
-              color={tema.get().utama}>
-              Batal
-            </Tabs.Tab>
-          </SimpleGrid>
-          <ListProject />
-        </Tabs> */}
-        {/* <Tabs variant="pills" radius="xl" defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}>
-          <Tabs.List grow justify='center'>
-            <Tabs.Tab value="0" w={"23%"}
-              leftSection={<TbClockPause style={iconStyle} />}
-              onClick={() => { router.push("?status=0&group=" + group) }}
-              color={tema.get().utama}
-            >
-              Segera
-            </Tabs.Tab>
-            <Tabs.Tab value="1" w={"28%"}
-              leftSection={<RiProgress3Line style={iconStyle} />}
-              onClick={() => { router.push("?status=1&group=" + group) }}
-              color={tema.get().utama}
-            >
-              Dikerjakan
-            </Tabs.Tab>
-            <Tabs.Tab value="2" w={"23%"}
-              leftSection={<IoIosCheckmarkCircleOutline style={iconStyle} />}
-              onClick={() => { router.push("?status=2&group=" + group) }}
-              color={tema.get().utama}>
-              Selesai
-            </Tabs.Tab>
-            <Tabs.Tab value="3" w={"20%"}
-              leftSection={<IoCloseCircleOutline style={iconStyle} />}
-              onClick={() => { router.push("?status=3&group=" + group) }}
-              color={tema.get().utama}>
-              Batal
-            </Tabs.Tab>
-          </Tabs.List>
-          <ListProject />
-        </Tabs> */}
 
       </Box>
 

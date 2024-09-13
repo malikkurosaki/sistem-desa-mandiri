@@ -7,7 +7,7 @@ import { MdAccountCircle } from "react-icons/md";
 import { IDataTask } from "../lib/type_task";
 import { funGetAllTask } from "../lib/api_task";
 import toast from "react-hot-toast";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { useHookstate } from "@hookstate/core";
 
@@ -21,6 +21,7 @@ export default function ListDivisionTask() {
    const [searchQuery, setSearchQuery] = useState('')
    const [loading, setLoading] = useState(true);
    const tema = useHookstate(TEMA)
+   const paddingLift = useMediaQuery('(max-width: 505px)')
 
    const handleList = () => {
       setIsList(!isList)
@@ -102,7 +103,11 @@ export default function ListDivisionTask() {
                         <Box key={i}>
                            <Grid align='center'>
                               <Grid.Col span={{
-                                 base: 2,
+                                 base: 1,
+                                 xs: 1,
+                                 sm: 1,
+                                 md: 1,
+                                 lg: 1,
                                  xl: 1
                               }}>
                                  <Group onClick={() => router.push(`task/${v.id}`)}>
@@ -125,15 +130,19 @@ export default function ListDivisionTask() {
                                  </Group>
                               </Grid.Col>
                               <Grid.Col span={{
-                                 base: 10,
-                                 xl: 11
+                                 base: 11,
+                                 xs: 11,
+                                 sm: 11,
+                                 md: 11,
+                                 lg: 11,
+                                 xl: 11,
                               }}>
                                  <Box>
                                     <Box w={{
                                        base: 280,
                                        xl: 430
                                     }}>
-                                       <Text truncate="end" pl={20}>
+                                       <Text truncate="end" pl={paddingLift ? 30 : 20}>
                                           {v.title}
                                        </Text>
                                     </Box>

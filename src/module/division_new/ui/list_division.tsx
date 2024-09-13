@@ -7,7 +7,7 @@ import { HiMenu } from 'react-icons/hi';
 import { HiMagnifyingGlass, HiMiniUserGroup, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
 import { MdAccountCircle } from 'react-icons/md';
 import DrawerDivision from './drawer_division';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { IDataDivison } from '../lib/type_division';
 import { funGetAllDivision } from '../lib/api_division';
 import toast from 'react-hot-toast';
@@ -26,6 +26,8 @@ export default function ListDivision() {
   const [nameGroup, setNameGroup] = useState('')
   const roleLogin = useHookstate(globalRole)
   const tema = useHookstate(TEMA)
+
+  const paddingLift = useMediaQuery('(max-width: 505px)')
 
 
   const handleList = () => {
@@ -131,12 +133,16 @@ export default function ListDivision() {
               data?.map((v: any, i: any) => {
                 return (
                   <Box key={i}>
-                    <Grid align='center'>
+                    <Grid align='center' onClick={() => router.push(`/division/${v.id}`)}>
                       <Grid.Col span={{
-                        base: 2,
+                        base: 1,
+                        xs: 1,
+                        sm: 1,
+                        md: 1,
+                        lg: 1,
                         xl: 1
                       }}>
-                        <Group onClick={() => router.push(`/division/${v.id}`)}>
+                        <Group >
                           <Center>
                             <ActionIcon
                               variant="gradient"
@@ -156,15 +162,19 @@ export default function ListDivision() {
                         </Group>
                       </Grid.Col>
                       <Grid.Col span={{
-                        base: 10,
-                        xl: 11
+                        base: 11,
+                        xs: 11,
+                        sm: 11,
+                        md: 11,
+                        lg: 11,
+                        xl: 11,
                       }}>
                         <Box>
                           <Box w={{
                             base: 280,
                             xl: 430
                           }}>
-                            <Text truncate="end" pl={20}>
+                            <Text truncate="end" pl={paddingLift ? 30 : 20}>
                               {v.name}
                             </Text>
                           </Box>

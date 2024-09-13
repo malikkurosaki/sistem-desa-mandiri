@@ -55,6 +55,8 @@ export default function ListProject() {
   }
   const isMobile = useMediaQuery('(max-width: 369px)');
 
+  const paddingLift = useMediaQuery('(max-width: 505px)')
+
   return (
     <Box mt={20}>
       <Grid justify='center' align='center'>
@@ -104,12 +106,16 @@ export default function ListProject() {
             {isData.map((v, i) => {
               return (
                 <Box key={i}>
-                  <Grid align='center'>
+                  <Grid align='center' onClick={() => router.push(`/project/${v.id}`)}>
                     <Grid.Col span={{
-                      base: 2,
+                      base: 1,
+                      xs: 1,
+                      sm: 1,
+                      md: 1,
+                      lg: 1,
                       xl: 1
                     }}>
-                      <Group onClick={() => router.push(`/project/${v.id}`)}>
+                      <Group >
                         <Center>
                           <ActionIcon
                             variant="gradient"
@@ -129,8 +135,12 @@ export default function ListProject() {
                       </Group>
                     </Grid.Col>
                     <Grid.Col span={{
-                      base: 10,
-                      xl: 11
+                      base: 11,
+                      xs: 11,
+                      sm: 11,
+                      md: 11,
+                      lg: 11,
+                      xl: 11,
                     }}>
                       <Group justify='space-between' align='center'>
                         <Box>
@@ -138,7 +148,7 @@ export default function ListProject() {
                             base: isMobile ? 200 : 230,
                             xl: 430
                           }}>
-                            <Text truncate="end" pl={20}>
+                            <Text truncate="end" pl={paddingLift ? 30 : 20}>
                               {v.title}
                             </Text>
                           </Box>
