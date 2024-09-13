@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import { Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
@@ -40,6 +40,7 @@ export default function CreateTask() {
   const [indexDelTask, setIndexDelTask] = useState<number>(0)
   const isMobile = useMediaQuery('(max-width: 369px)');
   const [title, setTitle] = useState("")
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     title: false,
     task: false,
@@ -174,7 +175,7 @@ export default function CreateTask() {
           {
             dataTask.length > 0 &&
             <Box pt={20}>
-              <Text fw={'bold'} c={WARNA.biruTua}>Tanggal & Tugas</Text>
+              <Text fw={'bold'} c={tema.get().utama}>Tanggal & Tugas</Text>
               {
                 dataTask.map((v, i) => {
                   return (
@@ -193,7 +194,7 @@ export default function CreateTask() {
           {
             listFile.length > 0 &&
             <Box pt={20}>
-              <Text fw={'bold'} c={WARNA.biruTua}>File</Text>
+              <Text fw={'bold'} c={tema.get().utama}>File</Text>
               <Box bg={"white"} style={{
                 borderRadius: 10,
                 border: `1px solid ${"#D6D8F6"}`,
@@ -220,8 +221,8 @@ export default function CreateTask() {
             member.length > 0 &&
             <Box pt={30}>
               <Group justify="space-between">
-                <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-                <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
+                <Text c={tema.get().utama}>Anggota Terpilih</Text>
+                <Text c={tema.get().utama}>Total {member.length} Anggota</Text>
               </Group>
               <Box pt={10}>
                 <Box mb={20}>
@@ -245,14 +246,14 @@ export default function CreateTask() {
                                   base: isMobile ? 130 : 140,
                                   xl: 270
                                 }}>
-                                  <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
+                                  <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
                                     {v.name}
                                   </Text>
                                 </Box>
                               </Group>
                             </Grid.Col>
                             <Grid.Col span={3}>
-                              <Text c={WARNA.biruTua} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                              <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
                                 Anggota
                               </Text>
                             </Grid.Col>
@@ -273,11 +274,11 @@ export default function CreateTask() {
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         <Button
           color="white"
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
           size="lg" radius={30}
           fullWidth
           onClick={() => {
@@ -371,10 +372,10 @@ export default function CreateTask() {
           <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
             <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteFile(indexDelFile)}>
               <Box>
-                <FaTrash size={30} color={WARNA.biruTua} />
+                <FaTrash size={30} color={tema.get().utama} />
               </Box>
               <Box>
-                <Text c={WARNA.biruTua} ta='center'>Hapus File</Text>
+                <Text c={tema.get().utama} ta='center'>Hapus File</Text>
               </Box>
             </Flex>
           </SimpleGrid>
@@ -392,10 +393,10 @@ export default function CreateTask() {
           <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
             <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteTask(indexDelTask)}>
               <Box>
-                <FaTrash size={30} color={WARNA.biruTua} />
+                <FaTrash size={30} color={tema.get().utama} />
               </Box>
               <Box>
-                <Text c={WARNA.biruTua} ta='center'>Hapus Tugas</Text>
+                <Text c={tema.get().utama} ta='center'>Hapus Tugas</Text>
               </Box>
             </Flex>
           </SimpleGrid>

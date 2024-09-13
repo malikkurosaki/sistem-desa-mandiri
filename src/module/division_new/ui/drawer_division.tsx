@@ -1,5 +1,5 @@
 "use client"
-import { globalRole, WARNA } from '@/module/_global';
+import { globalRole, TEMA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { Box, Flex, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -13,6 +13,7 @@ export default function DrawerDivision() {
   const roleLogin = useHookstate(globalRole)
   const searchParams = useSearchParams()
   const group = searchParams.get('group')
+  const tema = useHookstate(TEMA)
 
   return (
     <Box>
@@ -22,10 +23,10 @@ export default function DrawerDivision() {
         >
           <Flex onClick={() => router.push('/division/create')} justify={'center'} align={'center'} direction={'column'} >
             <Box>
-              <IoAddCircle size={30} color={WARNA.biruTua} />
+              <IoAddCircle size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua} ta={"center"}>Tambah Divisi</Text>
+              <Text c={tema.get().utama} ta={"center"}>Tambah Divisi</Text>
             </Box>
           </Flex>
           {
@@ -34,10 +35,10 @@ export default function DrawerDivision() {
               router.push('/division?page=filter&group=' + group)
             }} justify={'center'} align={'center'} direction={'column'} >
               <Box>
-                <HiOutlineFilter size={30} color={WARNA.biruTua} />
+                <HiOutlineFilter size={30} color={tema.get().utama} />
               </Box>
               <Box>
-                <Text c={WARNA.biruTua}>Filter</Text>
+                <Text c={tema.get().utama}>Filter</Text>
               </Box>
             </Flex>
           }
@@ -48,10 +49,10 @@ export default function DrawerDivision() {
               router.push('/division?page=report')
             }} justify={'center'} align={'center'} direction={'column'} >
               <Box>
-                <TbReportAnalytics size={30} color={WARNA.biruTua} />
+                <TbReportAnalytics size={30} color={tema.get().utama} />
               </Box>
               <Box>
-                <Text c={WARNA.biruTua}>Report</Text>
+                <Text c={tema.get().utama}>Report</Text>
               </Box>
             </Flex>
           }

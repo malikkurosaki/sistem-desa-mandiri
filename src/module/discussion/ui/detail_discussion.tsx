@@ -1,10 +1,10 @@
 "use client"
-import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, Input, rem, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
-import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonDetailDiscussionComment, SkeletonDetailDiscussionMember, SkeletonSingle, WARNA } from "@/module/_global";
+import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, rem, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
+import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import { GrChatOption } from "react-icons/gr";
 import { LuSendHorizonal } from "react-icons/lu";
 import { useState } from "react";
-import { funCreateComent, funGetAllDiscussion, funGetDiscussionById } from "../lib/api_discussion";
+import { funCreateComent, funGetDiscussionById } from "../lib/api_discussion";
 import { useShallowEffect } from "@mantine/hooks";
 import { IDetailDiscussion } from "../lib/type_discussion";
 import moment from "moment";
@@ -27,6 +27,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    const roleLogin = useHookstate(globalRole)
    const [isCreator, setCreator] = useState(false)
    const adminLogin = useHookstate(globalIsAdminDivision)
+   const tema = useHookstate(TEMA)
 
    const getData = async () => {
       try {
@@ -83,7 +84,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
          <LayoutNavbarNew back={`/division/${param.id}/discussion/`} title="Diskusi "
             menu={
                ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || adminLogin.get() || isCreator) ?
-                  <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+                  <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
                      <HiMenu size={20} color='white' />
                   </ActionIcon>
                   : <></>
@@ -133,7 +134,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                               <Group>
                                  <Avatar src={`https://wibu-storage.wibudev.com/api/files/${isData?.user_img}`} alt="it's me" size="lg" />
                                  <Box>
-                                    <Text c={WARNA.biruTua} fw={"bold"}>
+                                    <Text c={tema.get().utama} fw={"bold"}>
                                        {isData?.username}
                                     </Text>
                                     <Badge color={isData?.status === 1 ? "green" : "red"} size="sm">{isData?.status === 1 ? "BUKA" : "TUTUP"}</Badge>
@@ -175,7 +176,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                                  md: 0,
                                  base: 10
                               }}>
-                                 <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                                 <Text c={tema.get().utama} fw={"bold"} lineClamp={1}>
                                     {isData?.username}
                                  </Text>
                                  <Badge color={isData?.status === 1 ? "green" : "red"} size="sm">{isData?.status === 1 ? "BUKA" : "TUTUP"}</Badge>
@@ -249,7 +250,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                               </Grid.Col>
                               <Grid.Col span={6}>
                                  <Box>
-                                    <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1} fz={15}>
+                                    <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={15}>
                                        {v.username}
                                     </Text>
                                  </Box>
@@ -283,12 +284,12 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
             :
             <Box pos={'fixed'} bottom={0} w={"100%"} style={{
                maxWidth: rem(550)
-            }} pl={rem(15)} pr={rem(15)} bg={WARNA.bgWhite}>
-               <Box bg={WARNA.bgWhite} >
+            }} pl={rem(15)} pr={rem(15)} bg={tema.get().bgUtama}>
+               <Box bg={tema.get().bgUtama} >
                   <Group justify="flex-end">
                      <Text fz={13}>{300 - isComent.length} karakter tersisa</Text>
                   </Group>
-                  <Box mb={20} bg={WARNA.bgWhite}>
+                  <Box mb={20} bg={tema.get().bgUtama}>
                      <Grid bg={"white"} style={{
                         border: '1px solid gray',
                         borderRadius: 40
@@ -297,7 +298,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                            <TextInput
                               styles={{
                                  input: {
-                                    color: WARNA.biruTua,
+                                    color: tema.get().utama,
                                     border: "none",
                                     backgroundColor: "transparent"
                                  },

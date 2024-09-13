@@ -1,5 +1,5 @@
 'use client'
-import { globalRole, LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
+import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import { ActionIcon } from "@mantine/core";
 import { useState } from "react";
 import { HiMenu } from "react-icons/hi";
@@ -11,11 +11,12 @@ export default function NavbarDetailDiscussion({id, status, idDivision}: {id: st
    const [openDrawer, setOpenDrawer] = useState(false)
    const param = useParams<{ id: string }>()
    const roleLogin = useHookstate(globalRole)
+   const tema = useHookstate(TEMA)
    return (
       <>
          <LayoutNavbarNew back={`/division/${param.id}/discussion/`} title="Diskusi "
             menu={
-               <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+               <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
                   <HiMenu size={20} color='white' />
                </ActionIcon>}
          />

@@ -1,5 +1,5 @@
 "use client"
-import { WARNA } from "@/module/_global";
+import { TEMA } from "@/module/_global";
 import { Box, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { CiUser, CiClock2 } from "react-icons/ci";
 import { GoDiscussionClosed } from "react-icons/go";
 import { funGetDetailDivisionById } from "../lib/api_division";
 import { IDataDiscussionOnDetailDivision } from "../lib/type_division";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function ListDiscussionOnDetailDivision() {
@@ -17,6 +18,7 @@ export default function ListDiscussionOnDetailDivision() {
   const [data, setData] = useState<IDataDiscussionOnDetailDivision[]>([])
   const [loading, setLoading] = useState(true);
   const isMobile = useMediaQuery('(max-width: 369px)');
+  const tema = useHookstate(TEMA)
 
   async function fetchData() {
     try {
@@ -43,7 +45,7 @@ export default function ListDiscussionOnDetailDivision() {
   return (
     <>
       <Box pt={10}>
-        <Text c={WARNA.biruTua} mb={10} fw={"bold"} fz={16}>
+        <Text c={tema.get().utama} mb={10} fw={"bold"} fz={16}>
           Diskusi Terbaru
         </Text>
         <Box

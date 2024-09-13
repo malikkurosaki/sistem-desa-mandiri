@@ -1,4 +1,4 @@
-import { TEMA, WARNA } from '@/module/_global';
+import { TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
 import { Box, Flex, SimpleGrid, Text } from '@mantine/core';
@@ -29,20 +29,20 @@ export default function DrawerPaletEditEndDefault() {
           onClick={() => setModal(true)}
         >
           <Box>
-            <IoColorPalette size={30} color={WARNA.biruTua} />
+            <IoColorPalette size={30} color={tema.get().utama} />
           </Box>
           <Box>
-            <Text ta={'center'} c={WARNA.biruTua}>Gunakan Tema</Text>
+            <Text ta={'center'} c={tema.get().utama}>Gunakan Tema</Text>
           </Box>
         </Flex>
         <Flex justify={'center'} align={'center'} direction={'column'}
           onClick={() => router.push('/color-palette/update/1')}
         >
           <Box>
-            <FaPencil size={30} color={WARNA.biruTua} />
+            <FaPencil size={30} color={tema.get().utama} />
           </Box>
           <Box>
-            <Text ta={'center'} c={WARNA.biruTua}>Edit Tema</Text>
+            <Text ta={'center'} c={tema.get().utama}>Edit Tema</Text>
           </Box>
         </Flex>
       </SimpleGrid>

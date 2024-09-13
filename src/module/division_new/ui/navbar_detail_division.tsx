@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import { ActionIcon, Box } from "@mantine/core";
 import { useState } from "react";
 import { HiMenu } from "react-icons/hi";
@@ -8,11 +8,13 @@ import { funGetDivisionById } from "../lib/api_division";
 import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useShallowEffect } from "@mantine/hooks";
+import { useHookstate } from "@hookstate/core";
 
 export default function NavbarDetailDivision() {
    const [openDrawer, setOpenDrawer] = useState(false)
    const param = useParams<{ id: string }>()
    const [name, setName] = useState('')
+   const tema = useHookstate(TEMA)
 
    async function getOneData() {
       try {
@@ -36,7 +38,7 @@ export default function NavbarDetailDivision() {
    return (
       <>
          <LayoutNavbarNew back="/division" title={name} menu={
-            <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+            <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
                <HiMenu size={20} color='white' />
             </ActionIcon>
          } />

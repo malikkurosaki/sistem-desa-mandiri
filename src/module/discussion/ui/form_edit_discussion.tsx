@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global"
+import { TEMA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { Box, Group, Avatar, Textarea, Button, Grid, rem, Skeleton } from "@mantine/core"
 import { useParams, useRouter } from "next/navigation"
@@ -8,6 +8,7 @@ import toast from "react-hot-toast"
 import { funEditDiscussion, funGetDiscussionById } from "../lib/api_discussion"
 import { useShallowEffect } from "@mantine/hooks"
 import { funGetProfileByCookies } from "@/module/user/profile/lib/api_profile"
+import { useHookstate } from "@hookstate/core"
 
 export default function FormEditDiscussion() {
    const [isValModal, setValModal] = useState(false)
@@ -16,6 +17,7 @@ export default function FormEditDiscussion() {
    const [isDataOne, setDataOne] = useState("")
    const [loading, setLoading] = useState(true)
    const [img, setIMG] = useState<any | null>()
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       desc: false,
    });
@@ -125,14 +127,14 @@ export default function FormEditDiscussion() {
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             {loading ?
                <Skeleton height={50} radius={30} />
                :
                <Button
                   color="white"
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
                   size="lg"
                   radius={30}
                   fullWidth

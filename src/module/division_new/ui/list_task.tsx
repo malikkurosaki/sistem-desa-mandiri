@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { TEMA } from "@/module/_global";
 import { Carousel } from "@mantine/carousel";
 import { Avatar, Box, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -10,6 +10,7 @@ import { funGetDetailDivisionById } from "../lib/api_division";
 import { useState } from "react";
 import { IDataTaskOnDetailDivision } from "../lib/type_division";
 import _ from "lodash";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function ListTaskOnDetailDivision() {
@@ -17,6 +18,7 @@ export default function ListTaskOnDetailDivision() {
    const param = useParams<{ id: string }>()
    const [data, setData] = useState<IDataTaskOnDetailDivision[]>([])
    const [loading, setLoading] = useState(true);
+   const tema = useHookstate(TEMA)
 
    async function fetchData() {
       try {
@@ -42,7 +44,7 @@ export default function ListTaskOnDetailDivision() {
 
    return (
       <Box pt={10}>
-         <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Tugas Hari Ini</Text>
+         <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Tugas Hari Ini</Text>
          <Group justify="center" grow>
             {
                loading ?
@@ -65,8 +67,8 @@ export default function ListTaskOnDetailDivision() {
          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
             {data.map((v, i) =>
                <Carousel.Slide key={v.id}>
-                  <Box p={20} w={{ base: 300, md: 400 }} onClick={() => router.push(`/task/${v.id}`)} bg={WARNA.biruTua} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
-                     <Text fw={'bold'} c={WARNA.bgWhite} lineClamp={1}>{_.startCase(v.title)}</Text>
+                  <Box p={20} w={{ base: 300, md: 400 }} onClick={() => router.push(`/task/${v.id}`)} bg={tema.get().utama} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
+                     <Text fw={'bold'} c={tema.get().bgUtama} lineClamp={1}>{_.startCase(v.title)}</Text>
                      <Group justify="space-between" mt={20}>
                         <Group gap={5} align="center" c={"#CFCDCD"}>
                            <CiClock2 size={18} />

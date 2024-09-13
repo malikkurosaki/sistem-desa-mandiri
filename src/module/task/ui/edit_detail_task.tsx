@@ -1,5 +1,5 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import {
    Avatar,
    Box,
@@ -22,6 +22,7 @@ import moment from "moment";
 import { funEditDetailTask, funGetDetailTask } from "../lib/api_task";
 import { useShallowEffect } from "@mantine/hooks";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function EditDetailTask() {
@@ -31,6 +32,7 @@ export default function EditDetailTask() {
    const param = useParams<{ id: string, detail: string }>()
    const [openModal, setOpenModal] = useState(false)
    const [loading, setLoading] = useState(true)
+   const tema = useHookstate(TEMA)
 
    async function onSubmit() {
       if (value[0] == null || value[1] == null)
@@ -101,7 +103,7 @@ export default function EditDetailTask() {
                   value={value}
                   onChange={setValue}
                   size="md"
-                  c={WARNA.biruTua}
+                  c={tema.get().utama}
                />
             </Group>
             <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
@@ -127,7 +129,7 @@ export default function EditDetailTask() {
                      <Skeleton height={45} mt={20} radius={10} />
                      :
                      <>
-                        <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+                        <Text c={tema.get().utama}>Tanggal Berakhir</Text>
                         <Group
                            justify="center"
                            bg={"white"}
@@ -164,14 +166,14 @@ export default function EditDetailTask() {
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             {loading ?
                <Skeleton height={50} radius={30} />
                :
                <Button
                   c={"white"}
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
                   size="lg"
                   radius={30}
                   fullWidth

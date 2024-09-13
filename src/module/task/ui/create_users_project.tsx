@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, SkeletonSingle, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, SkeletonSingle, TEMA } from "@/module/_global";
 import { funGetDivisionById, funGetSearchMemberDivision, IDataMemberDivision } from "@/module/division_new";
 import { useHookstate } from "@hookstate/core";
 import {
@@ -40,6 +40,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
   const [loading, setLoading] = useState(true)
   const [onClickSearch, setOnClickSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const tema = useHookstate(TEMA)
 
 
   async function getData() {
@@ -135,13 +136,13 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
       <LayoutNavbarNew
         state={
           <Box>
-            <ActionIcon variant="light" onClick={() => { onClose(true) }} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+            <ActionIcon variant="light" onClick={() => { onClose(true) }} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
               <HiChevronLeft size={20} color='white' />
             </ActionIcon>
           </Box>
         }
         title="Pilih Anggota"
-        menu={<ActionIcon onClick={handleSearchClick} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="search">
+        menu={<ActionIcon onClick={handleSearchClick} variant="light" bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="search">
           <HiMagnifyingGlass size={20} color='white' />
         </ActionIcon>}
       />
@@ -152,7 +153,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
             pos={'fixed'} top={0} p={rem(20)} w={"100%"} style={{
               maxWidth: rem(550),
               zIndex: 9999,
-              backgroundColor: `${WARNA.biruTua}`,
+              backgroundColor: `${tema.get().utama}`,
               borderBottomLeftRadius: 20,
               borderBottomRightRadius: 20,
             }}>
@@ -168,8 +169,8 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
                     input: {
                       color: "white",
                       borderRadius: '#A3A3A3',
-                      borderColor: `${WARNA.biruTua}`,
-                      backgroundColor: `${WARNA.biruTua}`,
+                      borderColor: `${tema.get().utama}`,
+                      backgroundColor: `${tema.get().utama}`,
                     },
                   }}
                   size="md"
@@ -187,7 +188,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
       <Box pos={'fixed'} top={80} pl={rem(20)} pr={rem(20)} pt={rem(20)} pb={rem(5)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 100,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
         borderBottom: `1px solid ${"#E0DFDF"}`
       }}>
         {selectedFiles.length > 0 ? (
@@ -204,7 +205,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
                     <Center>
                       <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
                         <Avatar style={{
-                          border: `2px solid ${WARNA.biruTua}`
+                          border: `2px solid ${tema.get().utama}`
                         }} src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
                       </Indicator>
                     </Center>
@@ -229,10 +230,10 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
           <Skeleton height={20} width={"100%"} mt={20} />
           :
           <Group justify="space-between" mt={100} onClick={handleSelectAll}>
-            <Text c={WARNA.biruTua} fw={"bold"}>
+            <Text c={tema.get().utama} fw={"bold"}>
               Pilih Semua Anggota
             </Text>
-            <BsListCheck size={25} style={{ marginRight: 5 }} color={WARNA.biruTua} />
+            <BsListCheck size={25} style={{ marginRight: 5 }} color={tema.get().utama} />
           </Group>
         }
         <Box mt={15} mb={100}>
@@ -280,11 +281,11 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         <Button
           c={"white"}
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
           size="lg"
           radius={30}
           fullWidth

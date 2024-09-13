@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { funGetUserByCookies } from '@/module/auth';
 import { funGetAllmember, TypeUser } from '@/module/user';
@@ -14,6 +14,7 @@ import { IDataMemberDivision } from '../lib/type_division';
 import { funAddDivisionMember, funGetDivisionById } from '../lib/api_division';
 import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
 import { Carousel } from '@mantine/carousel';
+import { useHookstate } from '@hookstate/core';
 
 
 export default function CreateAnggotaDivision() {
@@ -26,6 +27,7 @@ export default function CreateAnggotaDivision() {
   const param = useParams<{ id: string }>()
   const [loading, setLoading] = useState(true)
   const [onClickSearch, setOnClickSearch] = useState(false)
+  const tema = useHookstate(TEMA)
 
   const handleFileClick = (index: number) => {
     if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
@@ -98,7 +100,7 @@ export default function CreateAnggotaDivision() {
   return (
     <Box>
       <LayoutNavbarNew back={`/division/info/${param.id}`} title="tambah anggota"
-        menu={<ActionIcon onClick={handleSearchClick} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="search">
+        menu={<ActionIcon onClick={handleSearchClick} variant="light" bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="search">
           <HiMagnifyingGlass size={20} color='white' />
         </ActionIcon>}
       />
@@ -108,7 +110,7 @@ export default function CreateAnggotaDivision() {
             pos={'fixed'} top={0} p={rem(20)} w={"100%"} style={{
               maxWidth: rem(550),
               zIndex: 9999,
-              backgroundColor: `${WARNA.biruTua}`,
+              backgroundColor: `${tema.get().utama}`,
               borderBottomLeftRadius: 20,
               borderBottomRightRadius: 20,
             }}>
@@ -124,8 +126,8 @@ export default function CreateAnggotaDivision() {
                     input: {
                       color: "white",
                       borderRadius: '#A3A3A3',
-                      borderColor: `${WARNA.biruTua}`,
-                      backgroundColor: `${WARNA.biruTua}`,
+                      borderColor: `${tema.get().utama}`,
+                      backgroundColor: `${tema.get().utama}`,
                     },
                   }}
                   size="md"
@@ -142,7 +144,7 @@ export default function CreateAnggotaDivision() {
       <Box pos={'fixed'} top={80} pl={rem(20)} pr={rem(20)} pt={rem(20)} pb={rem(5)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 100,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
         borderBottom: `1px solid ${"#E0DFDF"}`
       }}>
         {selectedFiles.length > 0 ? (
@@ -159,7 +161,7 @@ export default function CreateAnggotaDivision() {
                     <Center>
                       <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
                         <Avatar style={{
-                          border: `2px solid ${WARNA.biruTua}`
+                          border: `2px solid ${tema.get().utama}`
                         }} src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
                       </Indicator>
                     </Center>
@@ -219,11 +221,11 @@ export default function CreateAnggotaDivision() {
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         <Button
           color="white"
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
           size="lg"
           radius={30}
           fullWidth

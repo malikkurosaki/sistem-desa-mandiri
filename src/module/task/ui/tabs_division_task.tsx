@@ -7,13 +7,15 @@ import { TbClockPause } from "react-icons/tb";
 import ListDivisionTask from "./list_division_task";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Carousel } from "@mantine/carousel";
-import { WARNA } from "@/module/_global";
+import { TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 
 export default function TabsDivisionTask() {
    const iconStyle = { width: rem(20), height: rem(20) };
    const router = useRouter()
    const searchParams = useSearchParams()
    const status = searchParams.get('status')
+   const tema = useHookstate(TEMA)
 
    const dataStatus = [
       {
@@ -77,15 +79,15 @@ export default function TabsDivisionTask() {
                      color={
                         status == item.id
                            ? "white"
-                           : (status == null && item.id == "0") ? "white" : WARNA.biruTua
+                           : (status == null && item.id == "0") ? "white" : tema.get().utama
                      }
                      onClick={() => { router.push("?status=" + item.id) }}
                      defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}
                      radius={"xl"}
                      bg={
                         status == item.id
-                           ? "#FF9861"
-                           : (status == null && item.id == "0") ? "#FF9861" : "transparent"
+                           ? tema.get().bgFiturDivisi
+                           : (status == null && item.id == "0") ? tema.get().bgFiturDivisi : "transparent"
                      }
                   >
                      {item.icon}

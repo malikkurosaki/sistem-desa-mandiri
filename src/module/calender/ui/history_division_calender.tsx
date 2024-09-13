@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import { Box, Center, Flex, Grid, Group, Skeleton, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -10,6 +10,7 @@ import { useShallowEffect } from '@mantine/hooks';
 import moment from 'moment';
 import "moment/locale/id";
 import _ from 'lodash';
+import { useHookstate } from '@hookstate/core';
 
 export default function HistoryDivisionCalender() {
   const [isData, setData] = useState<IHistoryCalender[]>([])
@@ -17,6 +18,7 @@ export default function HistoryDivisionCalender() {
   const param = useParams<{ id: string, detail: string }>()
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
+  const tema = useHookstate(TEMA)
 
 
   const getData = async () => {
@@ -42,9 +44,9 @@ export default function HistoryDivisionCalender() {
         <TextInput
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           size="md"
@@ -55,7 +57,7 @@ export default function HistoryDivisionCalender() {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <Box mt={30}>
-          <Box bg={"#DBE9D8"} style={{
+          <Box bg={tema.get().bgTotalKegiatan} style={{
             borderRadius: 10,
             padding: 20
           }}>

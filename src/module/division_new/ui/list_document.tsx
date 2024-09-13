@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { TEMA, } from "@/module/_global";
 import { Carousel } from "@mantine/carousel";
 import { Box, Image, Text, Center, Paper, Stack, UnstyledButton, Skeleton, Group } from "@mantine/core";
 import * as ICON from '../lib/file_icon'
@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { funGetDetailDivisionById } from "../lib/api_division";
 import { IDataKalenderOnDetailDivision } from "../lib/type_division";
 import { useState } from "react";
+import { useHookstate } from "@hookstate/core";
 
 const iconContainer = (icon: string) => 'data:image/svg+xml;base64,' + btoa(icon)
 
@@ -17,6 +18,7 @@ export default function ListDocumentOnDetailDivision() {
    const param = useParams<{ id: string }>()
    const [data, setData] = useState<IDataKalenderOnDetailDivision[]>([])
    const [loading, setLoading] = useState(true);
+   const tema = useHookstate(TEMA)
 
    async function fetchData() {
       try {
@@ -42,7 +44,7 @@ export default function ListDocumentOnDetailDivision() {
 
    return (
       <Box pt={10}>
-         <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Dokumen Terbaru</Text>
+         <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Dokumen Terbaru</Text>
          <Group justify="center" grow>
             {
                loading

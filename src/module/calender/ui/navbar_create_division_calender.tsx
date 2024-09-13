@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import { Avatar, Box, Button, Divider, Flex, Grid, Group, Input, NumberInput, rem, Select, SimpleGrid, Stack, Text, Textarea, TextInput } from '@mantine/core';
 import { DateInput, TimeInput } from '@mantine/dates';
 import React, { useState } from 'react';
@@ -22,6 +22,7 @@ export default function NavbarCreateDivisionCalender() {
   const memberValue = member.get() as IFormMemberCalender[]
   const [openMember, setOpenMember] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     title: false,
     dateStart: false,
@@ -274,8 +275,8 @@ export default function NavbarCreateDivisionCalender() {
             member.length > 0 &&
             <Box pt={30} mb={60}>
               <Group justify="space-between">
-                <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-                <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
+                <Text c={tema.get().utama}>Anggota Terpilih</Text>
+                <Text c={tema.get().utama}>Total {member.length} Anggota</Text>
               </Group>
               <Box pt={10}>
                 <Box mb={20}>
@@ -305,14 +306,14 @@ export default function NavbarCreateDivisionCalender() {
                                     base: 140,
                                     xl: 270
                                   }}>
-                                    <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                                    <Text c={tema.get().utama} fw={"bold"} lineClamp={1}>
                                       {v.name}
                                     </Text>
                                   </Box>
                                 </Group>
                               </Grid.Col>
                               <Grid.Col span={3}>
-                                <Text c={WARNA.biruTua} fw={"bold"} ta={'end'}>
+                                <Text c={tema.get().utama} fw={"bold"} ta={'end'}>
                                   Anggota
                                 </Text>
                               </Grid.Col>
@@ -333,11 +334,11 @@ export default function NavbarCreateDivisionCalender() {
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         <Button
           c={"white"}
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
           size="lg"
           radius={30}
           fullWidth

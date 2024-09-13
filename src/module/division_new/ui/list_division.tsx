@@ -1,5 +1,5 @@
 'use client'
-import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
+import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -25,6 +25,7 @@ export default function ListDivision() {
   const [loading, setLoading] = useState(true)
   const [nameGroup, setNameGroup] = useState('')
   const roleLogin = useHookstate(globalRole)
+  const tema = useHookstate(TEMA)
 
 
   const handleList = () => {
@@ -67,7 +68,7 @@ export default function ListDivision() {
       <LayoutNavbarNew back='/home' title='Divisi'
         menu={
           (roleLogin.get() != "user" && roleLogin.get() != "coadmin") &&
-          <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+          <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
             <HiMenu size={20} color='white' />
           </ActionIcon>
         } />
@@ -78,7 +79,7 @@ export default function ListDivision() {
             <TextInput
               styles={{
                 input: {
-                  color: WARNA.biruTua,
+                  color: tema.get().utama,
                   borderRadius: '#A3A3A3',
                   borderColor: '#A3A3A3',
                 },
@@ -94,9 +95,9 @@ export default function ListDivision() {
           <Grid.Col span={'auto'}>
             <Flex justify={'center'}>
               {isList ? (
-                <HiOutlineListBullet size={35} color={WARNA.biruTua} onClick={handleList} />
+                <HiOutlineListBullet size={35} color={tema.get().utama} onClick={handleList} />
               ) : (
-                <HiSquares2X2 size={35} color={WARNA.biruTua} onClick={handleList} />
+                <HiSquares2X2 size={35} color={tema.get().utama} onClick={handleList} />
               )}
             </Flex>
           </Grid.Col>
@@ -108,7 +109,7 @@ export default function ListDivision() {
               <Skeleton width={"100%"} height={100} radius={"md"} />
             </>
             :
-            <Box bg={WARNA.biruTua} p={10} style={{ borderRadius: 10 }}>
+            <Box bg={tema.get().utama} p={10} style={{ borderRadius: 10 }}>
               <Text fw={'bold'} c={'white'}>Total Divisi</Text>
               <Flex justify={'center'} align={'center'} h={'100%'}>
                 <Text fz={40} fw={'bold'} c={'white'}>{jumlah}</Text>
@@ -142,13 +143,14 @@ export default function ListDivision() {
                               size={50}
                               aria-label="Gradient action icon"
                               radius={100}
-                              gradient={{
-                                from: '#DFDA7C',
-                                to: '#F2AF46',
-                                deg: 174
-                              }}
+                              // gradient={{
+                              //   from: '#DFDA7C',
+                              //   to: '#F2AF46',
+                              //   deg: 174
+                              // }}
+                              bg={tema.get().bgFiturHome}
                             >
-                              <HiMiniUserGroup size={25} color={WARNA.biruTua} />
+                              <HiMiniUserGroup size={25} color={tema.get().utama} />
                             </ActionIcon>
                           </Center>
                         </Group>
@@ -191,7 +193,7 @@ export default function ListDivision() {
                   <Box key={i} mb={20}>
                     <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
                       <Card.Section>
-                        <Box h={120} bg={WARNA.biruTua}>
+                        <Box h={120} bg={tema.get().utama}>
                           <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
                             <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.name}</Title>
                           </Flex>
@@ -202,7 +204,7 @@ export default function ListDivision() {
                         <Group align='center' pt={10} justify='flex-end'>
                           <Avatar.Group>
                             <Avatar>
-                              <MdAccountCircle size={32} color={WARNA.biruTua} />
+                              <MdAccountCircle size={32} color={tema.get().utama} />
                             </Avatar>
                             <Avatar>
                               {

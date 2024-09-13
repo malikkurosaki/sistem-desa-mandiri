@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import { Box, Button, Group, rem, Select, SimpleGrid, Skeleton, Stack, Text, Textarea, TextInput } from '@mantine/core';
 import { DateInput, TimeInput } from '@mantine/dates';
 import React, { useState } from 'react';
@@ -12,6 +12,7 @@ import { IDetailByIdCalender } from '../lib/type_calender';
 import moment from 'moment';
 import "moment/locale/id";
 import UpdateListUsers from './update_list_users';
+import { useHookstate } from '@hookstate/core';
 
 export default function UpdateDivisionCalender() {
   const [isModal, setModal] = useState(false)
@@ -19,6 +20,7 @@ export default function UpdateDivisionCalender() {
   const [isDataCalender, setDataCalender] = useState<IDetailByIdCalender>()
   const [openMember, setOpenMember] = useState(false)
   const [loading, setLoading] = useState(true)
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     title: false,
     dateStart: false,
@@ -324,14 +326,14 @@ export default function UpdateDivisionCalender() {
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         {loading ?
           <Skeleton height={50} radius={30} />
           :
           <Button
             c={"white"}
-            bg={WARNA.biruTua}
+            bg={tema.get().utama}
             size="lg"
             radius={30}
             fullWidth
