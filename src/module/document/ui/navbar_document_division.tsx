@@ -38,6 +38,7 @@ export default function NavbarDocumentDivision() {
   const [share, setShare] = useState(false)
   const [more, setMore] = useState(false)
   const [shareSelected, setShareSelected] = useState(false)
+  const [copyAllowed, setCopyAllowed] = useState(true)
   const searchParams = useSearchParams()
   const path = searchParams.get('path')
   const [dataDocument, setDataDocument] = useState<IDataDocument[]>([])
@@ -46,7 +47,7 @@ export default function NavbarDocumentDivision() {
   const [selectedFiles, setSelectedFiles] = useState<any>([])
   const [selectAll, setSelectAll] = useState(false)
   const [dariSelectAll, setDariSelectAll] = useState(false)
-  const isMobile = useMediaQuery('(max-width: 369px)');  
+  const isMobile = useMediaQuery('(max-width: 369px)');
   const [bodyRename, setBodyRename] = useState({
     id: '',
     name: '',
@@ -69,6 +70,7 @@ export default function NavbarDocumentDivision() {
           extension: dataDocument[index].extension,
           category: dataDocument[index].category,
           share: dataDocument[index].share,
+          idStorage: dataDocument[index].idStorage
         }
       ])
     }
@@ -88,6 +90,13 @@ export default function NavbarDocumentDivision() {
     } else {
       setShareSelected(false)
     }
+
+    const cek = selectedFiles.some((i: any) => i?.category == 'FOLDER')
+    if (cek || shareSelected || selectedFiles.length > 1) {
+      setCopyAllowed(false)
+    } else {
+      setCopyAllowed(true)
+    }
   }
 
   const handleSelectAll = () => {
@@ -102,6 +111,7 @@ export default function NavbarDocumentDivision() {
             extension: dataDocument[index].extension,
             category: dataDocument[index].category,
             share: dataDocument[index].share,
+            idStorage: dataDocument[index].idStorage
           }
           setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
         }
@@ -216,6 +226,28 @@ export default function NavbarDocumentDivision() {
     setRename(true)
   }
 
+  const onDownload = async () => {
+    try {
+      const fileUrl = `https://wibu-storage.wibudev.com/api/files/${selectedFiles[0].idStorage}`;
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+
+      // Create a link element, use Blob URL
+      const link = document.createElement("a");
+      const url = window.URL.createObjectURL(blob);
+      link.href = url;
+      link.download = `${selectedFiles[0].name}.${selectedFiles[0].extension}`; // Nama file yang akan diunduh
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
     <Box>
       {(selectedFiles.length > 0 || dariSelectAll) && (
@@ -245,9 +277,14 @@ export default function NavbarDocumentDivision() {
           }}>
             <Flex justify={"center"} align={"center"} h={"100%"} w={"100%"}>
               <SimpleGrid cols={{ base: 5, sm: 5, lg: 5 }} spacing="xs">
-                <Flex justify={'center'} align={'center'} direction={'column'}>
-                  <BsDownload size={20} color={(selectedFiles.length > 0) ? 'white' : '#656060'} />
-                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0) ? 'white' : '#656060'}>Unduh</Text>
+                <Flex justify={'center'} align={'center'} direction={'column'}
+                  onClick={() => {
+                    if ((selectedFiles.length > 0 && copyAllowed)) {
+                      onDownload()
+                    }
+                  }}>
+                  <BsDownload size={20} color={(selectedFiles.length > 0 && copyAllowed) ? 'white' : '#656060'} />
+                  <Text fz={12} ta={"center"} c={(selectedFiles.length > 0 && copyAllowed) ? 'white' : '#656060'}>Unduh</Text>
                 </Flex>
                 <Flex justify={'center'} align={'center'} direction={'column'}>
                   <ActionIcon
