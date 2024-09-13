@@ -63,7 +63,8 @@ export default function TabsDivisionTask() {
               }
               onClick={() => { router.push("?status=" + item.id) }}
               defaultValue={(status == "1" || status == "2" || status == "3") ? status : "0"}
-              radius={"xl"}
+                  radius={"xl"}
+                  key={index}
               bg={
                  status == item.id
                     ? tema.get().bgFiturDivisi
