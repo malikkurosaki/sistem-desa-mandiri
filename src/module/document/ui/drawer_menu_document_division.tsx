@@ -1,5 +1,5 @@
 "use clent"
-import { LayoutDrawer, WARNA } from '@/module/_global';
+import { LayoutDrawer, TEMA } from '@/module/_global';
 import { ActionIcon, Box, Button, Divider, Flex, Grid, Modal, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useRef, useState } from 'react';
@@ -23,6 +23,7 @@ export default function DrawerMenuDocumentDivision() {
   const refresh = useHookstate(globalRefreshDocument)
   const openRef = useRef<() => void>(null)
   const [fileForm, setFileForm] = useState<any>()
+  const tema = useHookstate(TEMA)
 
   const [bodyFolder, setBodyFolder] = useState({
     name: '',
@@ -78,10 +79,10 @@ export default function DrawerMenuDocumentDivision() {
         >
           <Flex justify={'center'} align={'center'} direction={'column'} >
             <Box>
-              <IoAddCircle size={30} color={WARNA.biruTua} />
+              <IoAddCircle size={30} color={tema.get().utama} />
             </Box>
             <Box >
-              <Text c={WARNA.biruTua}>Tambah Dokumen</Text>
+              <Text c={tema.get().utama}>Tambah Dokumen</Text>
             </Box>
           </Flex>
         </SimpleGrid>
@@ -96,11 +97,11 @@ export default function DrawerMenuDocumentDivision() {
           <Flex onClick={() => setOpenModal(true)} justify={'center'} align={'center'} direction={'column'} mb={20} >
             <Box>
               <ActionIcon variant="filled" color="#DFE8EA" size={61} radius="xl" aria-label="Settings">
-                <FaFolderClosed size={40} color={WARNA.biruTua} />
+                <FaFolderClosed size={40} color={tema.get().utama} />
               </ActionIcon>
             </Box>
             <Box mt={10}>
-              <Text c={WARNA.biruTua}>Membuat Folder</Text>
+              <Text c={tema.get().utama}>Membuat Folder</Text>
             </Box>
           </Flex>
           <Dropzone
@@ -123,11 +124,11 @@ export default function DrawerMenuDocumentDivision() {
             <Flex justify={'center'} align={'center'} direction={'column'} mb={20} onClick={() => openRef.current?.()}>
               <Box>
                 <ActionIcon variant="filled" color="#DFE8EA" size={61} radius="xl" aria-label="Settings">
-                  <HiDocumentText size={40} color={WARNA.biruTua} />
+                  <HiDocumentText size={40} color={tema.get().utama} />
                 </ActionIcon>
               </Box>
               <Box mt={10}>
-                <Text c={WARNA.biruTua}>Upload File</Text>
+                <Text c={tema.get().utama}>Upload File</Text>
               </Box>
             </Flex>
           </Dropzone>
@@ -135,11 +136,11 @@ export default function DrawerMenuDocumentDivision() {
           {/* <Flex justify={'center'} align={'center'} direction={'column'} mb={20} >
             <Box>
               <ActionIcon variant="filled" color="#DFE8EA" size={61} radius="xl" aria-label="Settings">
-                <FaRegImage size={40} color={WARNA.biruTua} />
+                <FaRegImage size={40} color={tema.get().utama} />
               </ActionIcon>
             </Box>
             <Box mt={10}>
-              <Text c={WARNA.biruTua}>Upload Foto</Text>
+              <Text c={tema.get().utama}>Upload Foto</Text>
             </Box>
           </Flex> */}
         </SimpleGrid>
@@ -162,7 +163,7 @@ export default function DrawerMenuDocumentDivision() {
             <TextInput
               styles={{
                 input: {
-                  color: WARNA.biruTua,
+                  color: tema.get().utama,
                   borderRadius: '#828AFC',
                   borderColor: '#828AFC',
                 },
@@ -179,7 +180,7 @@ export default function DrawerMenuDocumentDivision() {
               <Button variant="subtle" fullWidth color='#969494' onClick={() => setOpenModal(false)}>Batalkan</Button>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Button variant="subtle" fullWidth color={WARNA.biruTua} onClick={() => onCreateFolder()}>Membuat</Button>
+              <Button variant="subtle" fullWidth color={tema.get().utama} onClick={() => onCreateFolder()}>Membuat</Button>
             </Grid.Col>
           </Grid>
         </Box>

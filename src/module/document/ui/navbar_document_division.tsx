@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, LayoutModalViewFile, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutDrawer, LayoutModalViewFile, LayoutNavbarNew, TEMA } from '@/module/_global';
 import { ActionIcon, Anchor, Box, Breadcrumbs, Button, Checkbox, Divider, Flex, Grid, Group, Indicator, Modal, rem, Select, SimpleGrid, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
@@ -47,7 +47,8 @@ export default function NavbarDocumentDivision() {
   const [selectedFiles, setSelectedFiles] = useState<any>([])
   const [selectAll, setSelectAll] = useState(false)
   const [dariSelectAll, setDariSelectAll] = useState(false)
-  const isMobile = useMediaQuery('(max-width: 369px)');
+  const isMobile = useMediaQuery('(max-width: 369px)')
+  const tema = useHookstate(TEMA)
   const [bodyRename, setBodyRename] = useState({
     id: '',
     name: '',
@@ -252,7 +253,7 @@ export default function NavbarDocumentDivision() {
     <Box>
       {(selectedFiles.length > 0 || dariSelectAll) && (
         <>
-          <Box h={90} bg={WARNA.biruTua} pos={'fixed'} top={0} w={"100%"} style={{
+          <Box h={90} bg={tema.get().utama} pos={'fixed'} top={0} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
           }}>
@@ -271,7 +272,7 @@ export default function NavbarDocumentDivision() {
               </ActionIcon>
             </Flex>
           </Box>
-          <Box h={70} bg={WARNA.biruTua} pos={'fixed'} bottom={0} w={"100%"} style={{
+          <Box h={70} bg={tema.get().utama} pos={'fixed'} bottom={0} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
           }}>
@@ -340,7 +341,7 @@ export default function NavbarDocumentDivision() {
 
       <LayoutNavbarNew back={`/division/${param.id}/`} title={name}
         menu={
-          <ActionIcon onClick={() => setOpen(true)} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+          <ActionIcon onClick={() => setOpen(true)} variant="light" bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
             <HiMenu size={20} color='white' />
           </ActionIcon>
         }
@@ -384,7 +385,7 @@ export default function NavbarDocumentDivision() {
                         <Box>
                           {
                             (v.share) ?
-                              <Indicator offset={15} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaShare />} size={25}>
+                              <Indicator offset={15} withBorder inline color={tema.get().bgIcon} position="bottom-end" label={<FaShare />} size={25}>
                                 {
                                   (v.category == "FOLDER") ?
                                     <FcFolder size={isMobile ? 40 : 50} /> :
@@ -486,7 +487,7 @@ export default function NavbarDocumentDivision() {
             <TextInput
               styles={{
                 input: {
-                  color: WARNA.biruTua,
+                  color: tema.get().utama,
                   borderRadius: '#828AFC',
                   borderColor: '#828AFC',
                 },
@@ -503,7 +504,7 @@ export default function NavbarDocumentDivision() {
               <Button variant="subtle" fullWidth color='#969494' onClick={() => setRename(false)}>Batalkan</Button>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Button variant="subtle" fullWidth color={WARNA.biruTua} onClick={(val) => onRenameSubmit()}>Simpan</Button>
+              <Button variant="subtle" fullWidth color={tema.get().utama} onClick={(val) => onRenameSubmit()}>Simpan</Button>
             </Grid.Col>
           </Grid>
         </Box>

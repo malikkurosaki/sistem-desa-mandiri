@@ -1,4 +1,4 @@
-import { WARNA } from "@/module/_global";
+import { TEMA } from "@/module/_global";
 import { funGetListDivisionByIdDivision, IDataDivison } from "@/module/division_new";
 import { IDataMemberTaskDivision } from "@/module/task/lib/type_task";
 import { Box, Select, Button, Avatar, Divider, Flex, Group, Stack, Text, ActionIcon } from "@mantine/core";
@@ -17,6 +17,7 @@ export default function DrawerShareDocument({ data }: { data: IShareDivision[]})
    const [isData, setData] = useState<IDataDivison[]>([])
    const param = useParams<{ id: string }>()
    const refresh = useHookstate(globalRefreshDocument)
+   const tema = useHookstate(TEMA)
    
 
 
@@ -112,7 +113,7 @@ export default function DrawerShareDocument({ data }: { data: IShareDivision[]})
             <Box>
                <Button
                   c={"white"}
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
                   size="lg"
                   radius={30}
                   fullWidth
