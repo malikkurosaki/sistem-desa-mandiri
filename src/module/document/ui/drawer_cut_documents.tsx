@@ -1,4 +1,4 @@
-import { WARNA } from '@/module/_global';
+import { TEMA } from '@/module/_global';
 import { Box, Breadcrumbs, Button, Divider, Flex, Grid, Group, Modal, ScrollArea, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -10,6 +10,7 @@ import { useShallowEffect } from '@mantine/hooks';
 import { MdFolder } from 'react-icons/md';
 import router from 'next/router';
 import { GoChevronRight } from 'react-icons/go';
+import { useHookstate } from '@hookstate/core';
 
 
 export default function DrawerCutDocuments({ category, onChoosePath, data }: { category: string, data: IFormDetailMoreItem[], onChoosePath: (val: string) => void }) {
@@ -19,6 +20,7 @@ export default function DrawerCutDocuments({ category, onChoosePath, data }: { c
   const [dataDocument, setDataDocument] = useState<IDataDocument[]>([])
   const [dataJalur, setDataJalur] = useState<IJalurItem[]>([])
   const [valName, setValName] = useState('')
+  const tema = useHookstate(TEMA)
 
 
   async function onCreateFolder() {
@@ -68,10 +70,10 @@ export default function DrawerCutDocuments({ category, onChoosePath, data }: { c
       }}>
         <Grid justify='center'>
           <Grid.Col span={6}>
-            <Button variant="subtle" fullWidth color={WARNA.biruTua} radius={"xl"} onClick={() => setOpened(true)}>BUAT FOLDER BARU</Button>
+            <Button variant="subtle" fullWidth color={tema.get().utama} radius={"xl"} onClick={() => setOpened(true)}>BUAT FOLDER BARU</Button>
           </Grid.Col>
           <Grid.Col span={6}>
-            <Button variant="filled" fullWidth color={WARNA.biruTua} radius={"xl"} onClick={() => onChoosePath(path)}>
+            <Button variant="filled" fullWidth color={tema.get().utama} radius={"xl"} onClick={() => onChoosePath(path)}>
               {
                 (category == "move") ?
                   "PINDAH" : "SALIN"
@@ -152,7 +154,7 @@ export default function DrawerCutDocuments({ category, onChoosePath, data }: { c
             <TextInput
               styles={{
                 input: {
-                  color: WARNA.biruTua,
+                  color: tema.get().utama,
                   borderRadius: '#828AFC',
                   borderColor: '#828AFC',
                 },
@@ -169,7 +171,7 @@ export default function DrawerCutDocuments({ category, onChoosePath, data }: { c
               <Button variant="subtle" fullWidth color='#969494' onClick={() => setOpened(false)}>Batalkan</Button>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Button variant="subtle" fullWidth color={WARNA.biruTua} onClick={() => onCreateFolder()}>Membuat</Button>
+              <Button variant="subtle" fullWidth color={tema.get().utama} onClick={() => onCreateFolder()}>Membuat</Button>
             </Grid.Col>
           </Grid>
         </Box>

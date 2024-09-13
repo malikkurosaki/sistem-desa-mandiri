@@ -1,4 +1,4 @@
-import { LayoutDrawer, WARNA } from "@/module/_global";
+import { LayoutDrawer, TEMA } from "@/module/_global";
 import { Box, Flex, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import React, { useState } from "react";
 import { LuFolders, LuFolderSymlink } from "react-icons/lu";
@@ -17,6 +17,7 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
   const refresh = useHookstate(globalRefreshDocument)
   const param = useParams<{ id: string }>()
   const [forbidCopy, setForbidCopy] = useState(true)
+  const tema = useHookstate(TEMA)
 
 
   async function onMoveItem(path: string) {
@@ -72,20 +73,20 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
         >
           <Flex onClick={() => setIsCut(true)} justify={'center'} align={'center'} direction={'column'} >
             <Box>
-              <LuFolderSymlink size={30} color={WARNA.biruTua} />
+              <LuFolderSymlink size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Pindah</Text>
+              <Text c={tema.get().utama}>Pindah</Text>
             </Box>
           </Flex>
           {
             (!forbidCopy) &&
             <Flex onClick={() => setIsCopy(true)} justify={'center'} align={'center'} direction={'column'} >
               <Box>
-                <LuFolders size={30} color={WARNA.biruTua} />
+                <LuFolders size={30} color={tema.get().utama} />
               </Box>
               <Box>
-                <Text c={WARNA.biruTua}>Salin</Text>
+                <Text c={tema.get().utama}>Salin</Text>
               </Box>
             </Flex>
           }
