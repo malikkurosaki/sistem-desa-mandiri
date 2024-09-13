@@ -3,31 +3,96 @@ import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { Badge, Box, Button, Center, ColorInput, Flex, Pill, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
+import { IEditTheme } from '../lib/type_theme';
+import toast from 'react-hot-toast';
+import { funEditTheme, funGetThemeById } from '../lib/api_theme';
+import { useParams, useRouter } from 'next/navigation';
+import { useShallowEffect } from '@mantine/hooks';
+import LayoutModal from "@/module/_global/layout/layout_modal";
 
 export default function EditPaletteColor() {
   const tema = useHookstate(TEMA)
-  const [isWarna, setWarna] = useState({
-    judulTema: '',
-    warnaUtama: '',
-    backgroundUtama: '',
-    backgroundIcon: '',
-    backgroundFiturHome: '',
-    backgroundFiturDivisi: '',
-    backgroundTotalKegiatan: '',
+  const router = useRouter()
+  const [isModal, setModal] = useState(false)
+  const param = useParams<{ id: string }>()
+  const [touched, setTouched] = useState({
+    name: false,
+    utama: false,
+    bgUtama: false,
+    bgIcon: false,
+    bgFiturHome: false,
+    bgFiturDivision: false,
+    bgTotalKegiatan: false,
+  });
+
+  const [isWarna, setWarna] = useState<IEditTheme>({
+    id: '',
+    name: '',
+    utama: '',
+    bgUtama: '',
+    bgIcon: '',
+    bgFiturHome: '',
+    bgFiturDivision: '',
+    bgTotalKegiatan: '',
   })
+
+  async function getOneData() {
+    try {
+      const res = await funGetThemeById(param.id)
+      if (res.success) {
+        setWarna(res.data)
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error("Gagal menambahkan tema, coba lagi nanti");
+    }
+  }
+
+  useShallowEffect(() => {
+    getOneData()
+  }, [])
+
+
+  async function onSubmit() {
+    try {
+      const res = await funEditTheme(param.id, isWarna)
+      if (res.success) {
+        toast.success(res.message);
+        router.push('/color-palette')
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error("Gagal mengedit tema, coba lagi nanti");
+    }
+  }
+
+
   return (
     <Box>
       <LayoutNavbarNew back='/color-palette' title='Edit Tema' menu />
       <Box p={20}>
         <Stack>
-        <TextInput
+          <TextInput
             label={'Judul Tema'}
             placeholder='Judul Tema'
             required
             size="md"
             radius="md"
+            value={isWarna.name}
             onChange={
-              (e) => setWarna({ ...isWarna, judulTema: e.target.value })
+              (e) => {
+                setWarna({ ...isWarna, name: e.target.value })
+                setTouched({ ...touched, name: true })
+              }
+            }
+            error={
+              touched.name && (
+                isWarna.name == "" ? "Judul Tema Tidak Boleh Kosong" : null
+              )
             }
           />
           <ColorInput
@@ -36,8 +101,17 @@ export default function EditPaletteColor() {
             required
             size="md"
             radius="md"
+            value={isWarna.utama}
             onChangeEnd={
-              (color) => setWarna({ ...isWarna, warnaUtama: color })
+              (color) => {
+                setWarna({ ...isWarna, utama: color })
+                setTouched({ ...touched, utama: true })
+              }
+            }
+            error={
+              touched.utama && (
+                isWarna.utama == "" ? "Warna Utama Tidak Boleh Kosong" : null
+              )
             }
           />
           <ColorInput
@@ -46,8 +120,17 @@ export default function EditPaletteColor() {
             required
             size="md"
             radius="md"
+            value={isWarna.bgUtama}
             onChangeEnd={
-              (color) => setWarna({ ...isWarna, backgroundUtama: color })
+              (color) => {
+                setWarna({ ...isWarna, bgUtama: color })
+                setTouched({ ...touched, bgUtama: true })
+              }
+            }
+            error={
+              touched.bgUtama && (
+                isWarna.bgUtama == "" ? "Background Utama Tidak Boleh Kosong" : null
+              )
             }
           />
           <ColorInput
@@ -56,8 +139,17 @@ export default function EditPaletteColor() {
             required
             size="md"
             radius="md"
+            value={isWarna.bgIcon}
             onChangeEnd={
-              (color) => setWarna({ ...isWarna, backgroundIcon: color })
+              (color) => {
+                setWarna({ ...isWarna, bgIcon: color })
+                setTouched({ ...touched, bgIcon: true })
+              }
+            }
+            error={
+              touched.bgIcon && (
+                isWarna.bgIcon == "" ? "Background Icon Tidak Boleh Kosong" : null
+              )
             }
           />
           <ColorInput
@@ -66,8 +158,17 @@ export default function EditPaletteColor() {
             required
             size="md"
             radius="md"
+            value={isWarna.bgFiturHome}
             onChangeEnd={
-              (color) => setWarna({ ...isWarna, backgroundFiturHome: color })
+              (color) => {
+                setWarna({ ...isWarna, bgFiturHome: color })
+                setTouched({ ...touched, bgFiturHome: true })
+              }
+            }
+            error={
+              touched.bgFiturHome && (
+                isWarna.bgFiturHome == "" ? "Background Fitur Home Tidak Boleh Kosong" : null
+              )
             }
           />
           <ColorInput
@@ -76,8 +177,17 @@ export default function EditPaletteColor() {
             required
             size="md"
             radius="md"
+            value={isWarna.bgFiturDivision}
             onChangeEnd={
-              (color) => setWarna({ ...isWarna, backgroundFiturDivisi: color })
+              (color) => {
+                setWarna({ ...isWarna, bgFiturDivision: color })
+                setTouched({ ...touched, bgFiturDivision: true })
+              }
+            }
+            error={
+              touched.bgFiturDivision && (
+                isWarna.bgFiturDivision == "" ? "Background Fitur Divisi Tidak Boleh Kosong" : null
+              )
             }
           />
           <ColorInput
@@ -86,8 +196,17 @@ export default function EditPaletteColor() {
             required
             size="md"
             radius="md"
+            value={isWarna.bgTotalKegiatan}
             onChangeEnd={
-              (color) => setWarna({ ...isWarna, backgroundTotalKegiatan: color })
+              (color) => {
+                setWarna({ ...isWarna, bgTotalKegiatan: color })
+                setTouched({ ...touched, bgTotalKegiatan: true })
+              }
+            }
+            error={
+              touched.bgTotalKegiatan && (
+                isWarna.bgTotalKegiatan == "" ? "Background Total Kegiatan Tidak Boleh Kosong" : null
+              )
             }
           />
         </Stack>
@@ -99,65 +218,66 @@ export default function EditPaletteColor() {
           >
             <Flex justify={"center"} direction={"column"}>
               <Center>
-                <Box bg={isWarna.warnaUtama} w={35} h={35} style={{
+                <Box bg={isWarna.utama} w={35} h={35} style={{
                   borderRadius: 10
                 }} />
               </Center>
-              {isWarna.warnaUtama.length == 0 ? "" :
-                <Pill size="xs" ta={"center"}>{isWarna.warnaUtama}</Pill>
+              {isWarna.utama.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.utama}</Pill>
               }
             </Flex>
             <Flex justify={"center"} direction={"column"}>
               <Center>
-                <Box bg={isWarna.backgroundUtama} w={35} h={35} style={{
+                <Box bg={isWarna.bgUtama} w={35} h={35} style={{
                   borderRadius: 10
                 }} />
               </Center>
-              {isWarna.backgroundUtama.length == 0 ? "" :
-                <Pill size="xs" ta={"center"}>{isWarna.backgroundUtama}</Pill>
+              {isWarna.bgUtama.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.bgUtama}</Pill>
               }
             </Flex>
             <Flex justify={"center"} direction={"column"}>
               <Center>
-                <Box bg={isWarna.backgroundIcon} w={35} h={35} style={{
+                <Box bg={isWarna.bgIcon} w={35} h={35} style={{
                   borderRadius: 10
                 }} />
               </Center>
-              {isWarna.backgroundIcon.length == 0 ? "" :
-                <Pill size="xs" ta={"center"}>{isWarna.backgroundIcon}</Pill>
+              {isWarna.bgIcon.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.bgIcon}</Pill>
               }
             </Flex>
             <Flex justify={"center"} direction={"column"}>
               <Center>
-                <Box bg={isWarna.backgroundFiturHome} w={35} h={35} style={{
+                <Box bg={isWarna.bgFiturHome} w={35} h={35} style={{
                   borderRadius: 10
                 }} />
               </Center>
-              {isWarna.backgroundFiturHome.length == 0 ? "" :
-                <Pill size="xs" ta={"center"}>{isWarna.backgroundFiturHome}</Pill>
+              {isWarna.bgFiturHome.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.bgFiturHome}</Pill>
               }
             </Flex>
             <Flex justify={"center"} direction={"column"}>
               <Center>
-                <Box bg={isWarna.backgroundFiturDivisi} w={35} h={35} style={{
+                <Box bg={isWarna.bgFiturDivision} w={35} h={35} style={{
                   borderRadius: 10
                 }} />
               </Center>
-              {isWarna.backgroundFiturDivisi.length == 0 ? "" :
-                <Pill size="xs" ta={"center"}>{isWarna.backgroundFiturDivisi}</Pill>
+              {isWarna.bgFiturDivision.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.bgFiturDivision}</Pill>
               }
             </Flex>
             <Flex justify={"center"} direction={"column"}>
               <Center>
-                <Box bg={isWarna.backgroundTotalKegiatan} w={35} h={35} style={{
+                <Box bg={isWarna.bgTotalKegiatan} w={35} h={35} style={{
                   borderRadius: 10
                 }} />
               </Center>
-              {isWarna.backgroundTotalKegiatan.length == 0 ? "" :
-                <Pill size="xs" ta={"center"}>{isWarna.backgroundTotalKegiatan}</Pill>
+              {isWarna.bgTotalKegiatan.length == 0 ? "" :
+                <Pill size="xs" ta={"center"}>{isWarna.bgTotalKegiatan}</Pill>
               }
             </Flex>
           </SimpleGrid>
+
 
         </Flex>
       </Box>
@@ -172,11 +292,22 @@ export default function EditPaletteColor() {
           size="lg"
           radius={30}
           fullWidth
-        // onClick={() => { onSubmit() }}
+          onClick={() => {
+            setModal(true)
+          }}
         >
           Simpan
         </Button>
       </Box>
+
+
+      <LayoutModal opened={isModal} onClose={() => setModal(false)} description="Apakah Anda yakin ingin mengubah data?"
+        onYes={(val) => {
+          if (val)
+            onSubmit()
+          setModal(false)
+        }
+        } />
     </Box>
   );
 }

@@ -16,5 +16,25 @@ export default async function funGetUserByCookies() {
       },
    });
 
-   return  { id: user?.id, idUserRole: user?.idUserRole, name: user?.name, idVillage: user?.idVillage, idGroup: user?.idGroup, idPosition: user?.idPosition };
+   const village = await prisma.village.findUnique({
+      where: {
+         id: user?.idVillage
+      }
+   })
+
+   const warna = await prisma.colorTheme.findUnique({
+      where: {
+         id: String(village?.idTheme)
+      }
+   })
+
+   return {
+      id: user?.id,
+      idUserRole: user?.idUserRole,
+      name: user?.name,
+      idVillage: user?.idVillage,
+      idGroup: user?.idGroup,
+      idPosition: user?.idPosition,
+      theme: warna
+   };
 }
