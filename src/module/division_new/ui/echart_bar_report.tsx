@@ -4,11 +4,13 @@ import EChartsReact from "echarts-for-react";
 import { useShallowEffect } from '@mantine/hooks';
 import * as echarts from 'echarts';
 import { Box } from '@mantine/core';
-import { WARNA } from '@/module/_global';
+import { TEMA,  } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 
 export default function EchartBarReport({ data }: { data: any }) {
   const [options, setOptions] = useState<EChartsOption>({});
   const color = ["#F3C96B", "#9EC97F", "#5971C0"]
+  const tema = useHookstate(TEMA)
 
   useShallowEffect(() => {
     loadData(data)
@@ -21,7 +23,7 @@ export default function EchartBarReport({ data }: { data: any }) {
         top: '2%',
         left: 'center',
         textStyle: {
-          color: WARNA.biruTua
+          color: tema.get().utama
         }
       },
       tooltip: {

@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, SkeletonDetailListTugasTask, WARNA } from "@/module/_global"
+import { LayoutDrawer, SkeletonDetailListTugasTask, TEMA } from "@/module/_global"
 import { Box, Grid, Center, Checkbox, Group, SimpleGrid, Text, Stack, Flex, Divider } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useParams, useRouter } from "next/navigation"
@@ -25,6 +25,7 @@ export default function ListTugasDetailTask() {
    const [statusData, setStatusData] = useState(0)
    const router = useRouter()
    const refresh = useHookstate(globalRefreshTask)
+   const tema = useHookstate(TEMA)
    async function getOneData() {
       try {
          setLoading(true)
@@ -88,7 +89,7 @@ export default function ListTugasDetailTask() {
 
    return (
       <Box pt={20}>
-         <Text fw={"bold"} c={WARNA.biruTua}>
+         <Text fw={"bold"} c={tema.get().utama}>
             Tanggal & Tugas
          </Text>
          <Box
@@ -178,28 +179,28 @@ export default function ListTugasDetailTask() {
                   >
                      <Flex onClick={() => { setOpenDrawerStatus(true) }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>
-                           <AiOutlineFileDone size={30} color={WARNA.biruTua} />
+                           <AiOutlineFileDone size={30} color={tema.get().utama} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua}>Update status</Text>
+                           <Text c={tema.get().utama}>Update status</Text>
                         </Box>
                      </Flex>
 
                      <Flex onClick={() => { router.push('edit/' + idData) }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>
-                           <FaPencil size={30} color={WARNA.biruTua} />
+                           <FaPencil size={30} color={tema.get().utama} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua}>Edit tugas</Text>
+                           <Text c={tema.get().utama}>Edit tugas</Text>
                         </Box>
                      </Flex>
 
                      <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>
-                           <FaTrash size={30} color={WARNA.biruTua} />
+                           <FaTrash size={30} color={tema.get().utama} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua}>Hapus tugas</Text>
+                           <Text c={tema.get().utama}>Hapus tugas</Text>
                         </Box>
                      </Flex>
                   </SimpleGrid>

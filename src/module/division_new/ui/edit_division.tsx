@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { Box, Button, rem, Select, Skeleton, Stack, Textarea, TextInput } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
@@ -9,12 +9,14 @@ import toast from 'react-hot-toast';
 import { funEditDivision, funGetDivisionById } from '../lib/api_division';
 import { funGetAllGroup, IDataGroup } from '@/module/group';
 import { funGetUserByCookies } from '@/module/auth';
+import { useHookstate } from '@hookstate/core';
 
 
 export default function EditDivision() {
   const [openModal, setOpenModal] = useState(false)
   const router = useRouter()
   const param = useParams<{ id: string }>()
+  const tema = useHookstate(TEMA)
   const [loading, setLoading] = useState(false)
   const [body, setBody] = useState<any>({
     idGroup: "",
@@ -119,14 +121,14 @@ export default function EditDivision() {
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         {loading ?
           <Skeleton height={50} radius={30} />
           :
           <Button
             color="white"
-            bg={WARNA.biruTua}
+            bg={tema.get().utama}
             size="lg"
             radius={30}
             fullWidth

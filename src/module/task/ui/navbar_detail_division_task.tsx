@@ -1,5 +1,5 @@
 'use client'
-import { globalRole, LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
+import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import { ActionIcon, Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -20,6 +20,7 @@ export default function NavbarDetailDivisionTask() {
    const [isOpen, setOpen] = useState(false)
    const roleLogin = useHookstate(globalRole)
    const adminLogin = useHookstate(globalIsAdminDivision)
+   const tema = useHookstate(TEMA)
 
    async function getOneData() {
       try {
@@ -46,7 +47,7 @@ export default function NavbarDetailDivisionTask() {
          <LayoutNavbarNew back={`/division/${param.id}/task/`} title={name} menu={
             <ActionIcon
                variant="light"
-               bg={WARNA.bgIcon}
+               bg={tema.get().bgIcon}
                size="lg"
                radius="lg"
                aria-label="Settings"
@@ -72,10 +73,10 @@ export default function NavbarDetailDivisionTask() {
                         }}
                      >
                         <Box>
-                           <IoAddCircle size={30} color={WARNA.biruTua} />
+                           <IoAddCircle size={30} color={tema.get().utama} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua} ta='center'>Tambah Tugas</Text>
+                           <Text c={tema.get().utama} ta='center'>Tambah Tugas</Text>
                         </Box>
                      </Flex>
 
@@ -88,10 +89,10 @@ export default function NavbarDetailDivisionTask() {
                         }}
                      >
                         <Box>
-                           <FaFileCirclePlus size={30} color={WARNA.biruTua} />
+                           <FaFileCirclePlus size={30} color={tema.get().utama} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua} ta='center'>Tambah file</Text>
+                           <Text c={tema.get().utama} ta='center'>Tambah file</Text>
                         </Box>
                      </Flex>
 
@@ -104,10 +105,10 @@ export default function NavbarDetailDivisionTask() {
                                  }}
                                  onClick={() => { router.push(param.detail + '/add-member') }} >
                                  <Box>
-                                    <FaUsers size={30} color={WARNA.biruTua} />
+                                    <FaUsers size={30} color={tema.get().utama} />
                                  </Box>
                                  <Box>
-                                    <Text c={WARNA.biruTua} ta='center'>Tambah anggota</Text>
+                                    <Text c={tema.get().utama} ta='center'>Tambah anggota</Text>
                                  </Box>
                               </Flex>
 
@@ -117,10 +118,10 @@ export default function NavbarDetailDivisionTask() {
                                  }}
                                  onClick={() => { router.push(param.detail + '/edit') }} >
                                  <Box>
-                                    <FaPencil size={30} color={WARNA.biruTua} />
+                                    <FaPencil size={30} color={tema.get().utama} />
                                  </Box>
                                  <Box>
-                                    <Text c={WARNA.biruTua} ta='center'>Edit</Text>
+                                    <Text c={tema.get().utama} ta='center'>Edit</Text>
                                  </Box>
                               </Flex>
 
@@ -130,10 +131,10 @@ export default function NavbarDetailDivisionTask() {
                                  }}
                                  onClick={() => { router.push(param.detail + '/cancel') }} >
                                  <Box>
-                                    <MdCancel size={30} color={WARNA.biruTua} />
+                                    <MdCancel size={30} color={tema.get().utama} />
                                  </Box>
                                  <Box>
-                                    <Text c={WARNA.biruTua} ta='center'>Batal</Text>
+                                    <Text c={tema.get().utama} ta='center'>Batal</Text>
                                  </Box>
                               </Flex>
                            </> : <></>

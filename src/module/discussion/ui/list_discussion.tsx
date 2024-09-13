@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { TEMA} from "@/module/_global";
 import { Avatar, Badge, Box, Divider, Flex, Grid, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -10,12 +10,14 @@ import { useShallowEffect } from "@mantine/hooks";
 import { IDataDiscussion } from "../lib/type_discussion";
 import toast from "react-hot-toast";
 import _ from "lodash";
+import { useHookstate } from "@hookstate/core";
 
 export default function ListDiscussion({ id }: { id: string }) {
    const [isData, setData] = useState<IDataDiscussion[]>([])
    const [searchQuery, setSearchQuery] = useState('')
    const param = useParams<{ id: string }>()
    const [loading, setLoading] = useState(true)
+   const tema = useHookstate(TEMA)
 
    const getData = async () => {
       try {
@@ -46,9 +48,9 @@ export default function ListDiscussion({ id }: { id: string }) {
          <TextInput
             styles={{
                input: {
-                  color: WARNA.biruTua,
-                  borderRadius: WARNA.biruTua,
-                  borderColor: WARNA.biruTua,
+                  color: tema.get().utama,
+                  borderRadius: tema.get().utama,
+                  borderColor: tema.get().utama,
                },
             }}
             size="md"
@@ -115,7 +117,7 @@ export default function ListDiscussion({ id }: { id: string }) {
                                  md: 0,
                                  base: 10
                               }}>
-                                 <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                                 <Text c={tema.get().utama} fw={"bold"} lineClamp={1}>
                                     {v.user_name}
                                  </Text>
                                  <Badge color={v.status === 1 ? "green" : "red"} size="sm">{v.status === 1 ? "BUKA" : "TUTUP"}</Badge>

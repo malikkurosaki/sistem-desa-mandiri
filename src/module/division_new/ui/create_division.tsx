@@ -1,5 +1,5 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
 import {
     Avatar,
@@ -34,6 +34,7 @@ export default function CreateDivision() {
     const [isChooseAnggota, setChooseAnggota] = useState(false)
     const [isChooseAdmin, setChooseAdmin] = useState(false)
     const member = useHookstate(globalMemberDivision)
+    const tema = useHookstate(TEMA)
     const isMobile = useMediaQuery('(max-width: 369px)');
     const [body, setBody] = useState<any>({
         idGroup: "",
@@ -173,8 +174,8 @@ export default function CreateDivision() {
                     </Box>
                     <Box pt={20} pb={50}>
                         <Group justify="space-between">
-                            <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-                            <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
+                            <Text c={tema.get().utama}>Anggota Terpilih</Text>
+                            <Text c={tema.get().utama}>Total {member.length} Anggota</Text>
                         </Group>
                         <Box pt={10}>
                             <Box mb={20}>
@@ -200,14 +201,14 @@ export default function CreateDivision() {
                                                                 base: isMobile ? 130 : 140,
                                                                 xl: 270
                                                             }}>
-                                                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
+                                                                <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
                                                                     {v.name}
                                                                 </Text>
                                                             </Box>
                                                         </Group>
                                                     </Grid.Col>
                                                     <Grid.Col span={3}>
-                                                        <Text c={WARNA.biruTua} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                                                        <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
                                                             Anggota
                                                         </Text>
                                                     </Grid.Col>
@@ -227,11 +228,11 @@ export default function CreateDivision() {
             <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
                 maxWidth: rem(550),
                 zIndex: 999,
-                backgroundColor: `${WARNA.bgWhite}`,
+                backgroundColor: `${tema.get().bgUtama}`,
             }}>
                 <Button
                     color="white"
-                    bg={WARNA.biruTua}
+                    bg={tema.get().utama}
                     size="lg"
                     radius={30}
                     fullWidth

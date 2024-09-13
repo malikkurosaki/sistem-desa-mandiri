@@ -1,5 +1,5 @@
 "use client"
-import { WARNA } from '@/module/_global';
+import { TEMA } from '@/module/_global';
 import { ActionIcon, Box, Center, Grid, Group, SimpleGrid, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMiniUserGroup } from 'react-icons/hi2';
@@ -14,11 +14,13 @@ import { funGetDetailDivisionById } from '../lib/api_division';
 import toast from 'react-hot-toast';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { IDataJumlahDetailDivision } from '../lib/type_division';
+import { useHookstate } from '@hookstate/core';
 
 export default function FeatureDetailDivision() {
   const param = useParams<{ id: string }>()
   const router = useRouter()
   const [feature, setFeature] = useState<IDataJumlahDetailDivision>()
+  const tema = useHookstate(TEMA)
 
   async function fetchData() {
     try {
@@ -42,7 +44,7 @@ export default function FeatureDetailDivision() {
 
   return (
     <Box pt={10}>
-      <Text c={WARNA.biruTua} mb={10} fw={'bold'} fz={16}>Features</Text>
+      <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Features</Text>
       <SimpleGrid
         cols={{ base: 2, sm: 2, lg: 2 }}
         style={{
@@ -51,7 +53,7 @@ export default function FeatureDetailDivision() {
         }}
       >
         <Box bg={'white'} style={{
-          border: `1px solid ${WARNA.bgHijauMuda}`,
+          border: `1px solid ${tema.get().bgTotalKegiatan}`,
           borderRadius: 10,
           padding: 10
         }} onClick={() => router.push(param.id + '/task?status=0')}>
@@ -61,13 +63,13 @@ export default function FeatureDetailDivision() {
                 size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
                 radius={100}
-                color={WARNA.bgHijauMuda}
+                color={tema.get().bgTotalKegiatan}
               >
-                <LuClipboardEdit size={isMobile2 ? 20 : 25} color={WARNA.biruTua} />
+                <LuClipboardEdit size={isMobile2 ? 20 : 25} color={tema.get().utama} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col span={{ base: 7, md: 9 }}>
-              <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Tugas</Text>
+              <Text fz={15} c={tema.get().utama} fw={"bold"}>Tugas</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.tugas} Tugas</Text>
                 {!isMobile && <IoIosArrowRoundForward size={20} color='gray' />}
@@ -76,7 +78,7 @@ export default function FeatureDetailDivision() {
           </Grid>
         </Box>
         <Box bg={'white'} style={{
-          border: `1px solid ${WARNA.bgHijauMuda}`,
+          border: `1px solid ${tema.get().bgTotalKegiatan}`,
           borderRadius: 10,
           padding: 10
         }} onClick={() => router.push(param.id + '/document')}>
@@ -86,13 +88,13 @@ export default function FeatureDetailDivision() {
                 size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
                 radius={100}
-                color={WARNA.bgHijauMuda}
+                color={tema.get().bgTotalKegiatan}
               >
-                <BsFileEarmarkText size={isMobile2 ? 20 : 25} color={WARNA.biruTua} />
+                <BsFileEarmarkText size={isMobile2 ? 20 : 25} color={tema.get().utama} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col span={{ base: 7, md: 9 }}>
-              <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Dokumen</Text>
+              <Text fz={15} c={tema.get().utama} fw={"bold"}>Dokumen</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.dokumen} File</Text>
                 {!isMobile && <IoIosArrowRoundForward size={20} color='gray' />}
@@ -101,7 +103,7 @@ export default function FeatureDetailDivision() {
           </Grid>
         </Box>
         <Box bg={'white'} style={{
-          border: `1px solid ${WARNA.bgHijauMuda}`,
+          border: `1px solid ${tema.get().bgTotalKegiatan}`,
           borderRadius: 10,
           padding: 10
         }} onClick={() => router.push(param.id + '/discussion')}>
@@ -111,13 +113,13 @@ export default function FeatureDetailDivision() {
                 size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
                 radius={100}
-                color={WARNA.bgHijauMuda}
+                color={tema.get().bgTotalKegiatan}
               >
-                <GoCommentDiscussion size={isMobile2 ? 20 : 25} color={WARNA.biruTua} />
+                <GoCommentDiscussion size={isMobile2 ? 20 : 25} color={tema.get().utama} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col span={{ base: 7, md: 9 }}>
-              <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Diskusi</Text>
+              <Text fz={15} c={tema.get().utama} fw={"bold"}>Diskusi</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.diskusi} Diskusi</Text>
                 {!isMobile && <IoIosArrowRoundForward size={20} color='gray' />}
@@ -126,7 +128,7 @@ export default function FeatureDetailDivision() {
           </Grid>
         </Box>
         <Box bg={'white'} style={{
-          border: `1px solid ${WARNA.bgHijauMuda}`,
+          border: `1px solid ${tema.get().bgTotalKegiatan}`,
           borderRadius: 10,
           padding: 10
         }} onClick={() => router.push(param.id + '/calender')}>
@@ -136,13 +138,13 @@ export default function FeatureDetailDivision() {
                 size={isMobile2 ? "lg" : "xl"}
                 aria-label="Gradient action icon"
                 radius={100}
-                color={WARNA.bgHijauMuda}
+                color={tema.get().bgTotalKegiatan}
               >
-                <IoCalendarOutline size={isMobile2 ? 20 : 25} color={WARNA.biruTua} />
+                <IoCalendarOutline size={isMobile2 ? 20 : 25} color={tema.get().utama} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col span={{ base: 7, md: 9 }}>
-              <Text fz={15} c={WARNA.biruTua} fw={"bold"}>Kalender</Text>
+              <Text fz={15} c={tema.get().utama} fw={"bold"}>Kalender</Text>
               <Group justify='space-between' align='center'>
                 <Text fz={10} c={"gray"}>{feature?.kalender} Acara</Text>
                 {!isMobile && <IoIosArrowRoundForward size={20} color='gray' />}

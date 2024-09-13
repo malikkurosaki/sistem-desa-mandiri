@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
+import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, CopyButton, Divider, Flex, Grid, Group, SimpleGrid, Skeleton, Spoiler, Stack, Text, Tooltip } from '@mantine/core';
 import React, { useState } from 'react';
 import { BsCalendar2Event, BsCalendarDate } from 'react-icons/bs';
@@ -19,6 +19,7 @@ import SkeletonDetailEvent from './skeleton_detail_event';
 import { IoIosCloseCircle } from 'react-icons/io';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import toast from 'react-hot-toast';
+import { useHookstate } from '@hookstate/core';
 
 export default function DetailEventDivision() {
   const param = useParams<{ id: string, detail: string }>()
@@ -31,6 +32,7 @@ export default function DetailEventDivision() {
   const [isOpenModal, setOpenModal] = useState(false)
   const router = useRouter()
   const [dataChoose, setDataChoose] = useState({ id: '', name: '' })
+  const tema = useHookstate(TEMA)
 
 
   const getData = async () => {
@@ -73,7 +75,7 @@ export default function DetailEventDivision() {
   return (
     <Box>
       <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Detail Acara"
-        menu={<ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+        menu={<ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
           <HiMenu size={20} color='white' />
         </ActionIcon>} />
       <Box p={20}>
@@ -92,7 +94,7 @@ export default function DetailEventDivision() {
                   base: 2,
                   xl: 1
                 }}>
-                  <BsCalendar2Event size={25} color={WARNA.biruTua} />
+                  <BsCalendar2Event size={25} color={tema.get().utama} />
                 </Grid.Col>
                 <Grid.Col span={{
                   base: 10,
@@ -106,7 +108,7 @@ export default function DetailEventDivision() {
                   base: 2,
                   xl: 1
                 }}>
-                  <BsCalendarDate size={25} color={WARNA.biruTua} />
+                  <BsCalendarDate size={25} color={tema.get().utama} />
                 </Grid.Col>
                 <Grid.Col span={{
                   base: 10,
@@ -120,7 +122,7 @@ export default function DetailEventDivision() {
                   base: 2,
                   xl: 1
                 }}>
-                  <LuClock size={25} color={WARNA.biruTua} />
+                  <LuClock size={25} color={tema.get().utama} />
                 </Grid.Col>
                 <Grid.Col span={{
                   base: 10,
@@ -134,7 +136,7 @@ export default function DetailEventDivision() {
                   base: 2,
                   xl: 1
                 }}>
-                  <BsCalendarDate size={25} color={WARNA.biruTua} />
+                  <BsCalendarDate size={25} color={tema.get().utama} />
                 </Grid.Col>
                 <Grid.Col span={{
                   base: 10,
@@ -156,7 +158,7 @@ export default function DetailEventDivision() {
                   base: 2,
                   xl: 1
                 }}>
-                  <LuLink size={25} color={WARNA.biruTua} />
+                  <LuLink size={25} color={tema.get().utama} />
                 </Grid.Col>
                 <Grid.Col span={{
                   base: 10,
@@ -173,7 +175,7 @@ export default function DetailEventDivision() {
                       <CopyButton value={String(isDataCalender?.linkMeet)} timeout={2000}>
                         {({ copied, copy }) => (
                           <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
-                            <ActionIcon color={copied ? 'teal' : WARNA.biruTua} variant="subtle" onClick={copy}>
+                            <ActionIcon color={copied ? 'teal' : tema.get().utama} variant="subtle" onClick={copy}>
                               {copied ? (
                                 <FaCheck size={20} />
                               ) : (
@@ -195,7 +197,7 @@ export default function DetailEventDivision() {
                   base: 2,
                   xl: 1
                 }}>
-                  <MdOutlineFormatListBulleted size={25} color={WARNA.biruTua} />
+                  <MdOutlineFormatListBulleted size={25} color={tema.get().utama} />
                 </Grid.Col>
                 <Grid.Col span={{
                   base: 10,
@@ -317,19 +319,19 @@ export default function DetailEventDivision() {
                 onClick={() => { router.push('/member/' + dataChoose.id) }}
                 justify={'center'} align={'center'} direction={'column'} >
                 <Box>
-                  <FaUser size={30} color={WARNA.biruTua} />
+                  <FaUser size={30} color={tema.get().utama} />
                 </Box>
                 <Box>
-                  <Text c={WARNA.biruTua}>Lihat profil</Text>
+                  <Text c={tema.get().utama}>Lihat profil</Text>
                 </Box>
               </Flex>
 
               <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
                 <Box>
-                  <IoIosCloseCircle size={30} color={WARNA.biruTua} />
+                  <IoIosCloseCircle size={30} color={tema.get().utama} />
                 </Box>
                 <Box>
-                  <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
+                  <Text c={tema.get().utama}>Keluarkan anggota</Text>
                 </Box>
               </Flex>
             </SimpleGrid>

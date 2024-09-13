@@ -1,5 +1,5 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { Avatar, Box, Button, Center, Grid, Group, rem, Text, Textarea } from "@mantine/core";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import { funCreateDiscussion, funGetDiscussionById } from "../lib/api_discussion
 import { useParams, useRouter } from "next/navigation";
 import { useShallowEffect } from "@mantine/hooks";
 import { funGetProfileByCookies } from "@/module/user/profile/lib/api_profile";
+import { useHookstate } from "@hookstate/core";
 
 export default function FormCreateDiscussion({ id }: { id: string }) {
    const [isValModal, setValModal] = useState(false)
@@ -16,6 +17,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
    const param = useParams<{ id: string, detail: string }>()
    const [loading, setLoading] = useState(true)
    const [img, setIMG] = useState<any | null>()
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       desc: false,
    });
@@ -99,11 +101,11 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             <Button
                color="white"
-               bg={WARNA.biruTua}
+               bg={tema.get().utama}
                size="lg"
                radius={30}
                fullWidth

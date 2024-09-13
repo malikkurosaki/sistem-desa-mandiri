@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
 import { funGetDivisionById, funGetSearchMemberDivision, IDataMemberDivision } from '@/module/division_new';
 import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
@@ -24,6 +24,7 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
   const [loading, setLoading] = useState(true)
   const [onClickSearch, setOnClickSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const tema = useHookstate(TEMA)
 
   async function getData() {
     try {
@@ -118,7 +119,7 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
       <LayoutNavbarNew
         // back=""
         title="Pilih Anggota"
-        menu={<ActionIcon onClick={handleSearchClick} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="search">
+        menu={<ActionIcon onClick={handleSearchClick} variant="light" bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="search">
           <HiMagnifyingGlass size={20} color='white' />
         </ActionIcon>}
       />
@@ -130,7 +131,7 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
             pos={'fixed'} top={0} p={rem(20)} w={"100%"} style={{
               maxWidth: rem(550),
               zIndex: 9999,
-              backgroundColor: `${WARNA.biruTua}`,
+              backgroundColor: `${tema.get().utama}`,
               borderBottomLeftRadius: 20,
               borderBottomRightRadius: 20,
             }}>
@@ -146,8 +147,8 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
                     input: {
                       color: "white",
                       borderRadius: '#A3A3A3',
-                      borderColor: `${WARNA.biruTua}`,
-                      backgroundColor: `${WARNA.biruTua}`,
+                      borderColor: `${tema.get().utama}`,
+                      backgroundColor: `${tema.get().utama}`,
                     },
                   }}
                   size="md"
@@ -165,7 +166,7 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
       <Box pos={'fixed'} top={80} pl={rem(20)} pr={rem(20)} pt={rem(20)} pb={rem(5)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 100,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
         borderBottom: `1px solid ${"#E0DFDF"}`
       }}>
         {selectedFiles.length > 0 ? (
@@ -182,7 +183,7 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
                     <Center>
                       <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
                         <Avatar style={{
-                          border: `2px solid ${WARNA.biruTua}`
+                          border: `2px solid ${tema.get().utama}`
                         }} src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
                       </Indicator>
                     </Center>
@@ -203,7 +204,7 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
 
       <Box p={20}>
         <Group justify="space-between" mt={100} onClick={handleSelectAll}>
-          <Text c={WARNA.biruTua} fw={"bold"}>
+          <Text c={tema.get().utama} fw={"bold"}>
             Pilih Semua Anggota
           </Text>
           {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
@@ -250,14 +251,14 @@ export default function UpdateListUsers({ onClose }: { onClose: (val: any) => vo
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         {loading ?
           <Skeleton height={50} radius={30} />
           :
           <Button
             c={"white"}
-            bg={WARNA.biruTua}
+            bg={tema.get().utama}
             size="lg"
             radius={30}
             fullWidth

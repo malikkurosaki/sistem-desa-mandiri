@@ -1,5 +1,5 @@
 "use client"
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutDrawer, LayoutNavbarNew, TEMA } from '@/module/_global';
 import { ActionIcon, Box, Checkbox, Flex, Group, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -7,8 +7,9 @@ import { FaCircleCheck } from 'react-icons/fa6';
 import { HiMenu } from 'react-icons/hi';
 import DrawerCreatePalette from './drawer_create_palette';
 import DrawerPaletEditEndDefault from './drawer_palet_edit_end_default';
+import { useHookstate } from '@hookstate/core';
 
-const paletWarna = [
+const palettema = [
   {
     id: 1,
     name: 'Tema Bawaan 1',
@@ -38,15 +39,16 @@ export default function ListColorPalette() {
   const router = useRouter()
   const [isOpen, setOpen] = useState(false)
   const [isOpenTambahan, setOpenTambahan] = useState(false)
+  const tema = useHookstate(TEMA)
   return (
     <Box>
       <LayoutNavbarNew back='/home' title='Tema Aplikasi' menu={
-        <ActionIcon onClick={() => { setOpen(true) }} variant="light" bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+        <ActionIcon onClick={() => { setOpen(true) }} variant="light" bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
           <HiMenu size={20} color='white' />
         </ActionIcon>
       } />
       <Box p={20}>
-        {paletWarna.map((v, i) => (
+        {palettema.map((v, i) => (
           <Box mb={20} key={i}>
             <Box style={{
               borderWidth: "3px",

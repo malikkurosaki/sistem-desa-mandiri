@@ -1,4 +1,4 @@
-import { WARNA } from "@/module/_global";
+import { TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { Box, Stack, SimpleGrid, Flex, Text } from "@mantine/core";
 import { useState } from "react";
@@ -17,6 +17,7 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
    const router = useRouter()
    const param = useParams<{ id: string, detail: string }>()
    const refresh = useHookstate(globalRefreshDiscussion)
+   const tema = useHookstate(TEMA)
 
 
    async function fetchStatusDiscussion(val: boolean) {
@@ -77,19 +78,19 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
             >
                <Flex onClick={() => setValModal(true)} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
-                     <BsTrash3 size={30} color={WARNA.biruTua} />
+                     <BsTrash3 size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua}>Hapus</Text>
+                     <Text c={tema.get().utama}>Hapus</Text>
                   </Box>
                </Flex>
 
                <Flex onClick={() => window.location.href = `/division/${param.id}/discussion/update/${param.detail}`} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
-                     <FaPencil size={30} color={WARNA.biruTua} />
+                     <FaPencil size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua}>Edit</Text>
+                     <Text c={tema.get().utama}>Edit</Text>
                   </Box>
                </Flex>
 
@@ -99,9 +100,9 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
                         <>
                            <Flex justify={'center'} align={'center'} direction={'column'}>
                               <Box>
-                                 <MdClose size={30} color={WARNA.biruTua} />
+                                 <MdClose size={30} color={tema.get().utama} />
                               </Box>
-                              <Text style={{ color: WARNA.biruTua }}>Tutup Diskusi</Text>
+                              <Text style={{ color: tema.get().utama }}>Tutup Diskusi</Text>
                            </Flex>
                         </>
                      ) : (
@@ -109,9 +110,9 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
                            <Flex justify={'center'} align={'center'} direction={'column'}>
 
                               <Box>
-                                 <FaCheck size={30} color={WARNA.biruTua} />
+                                 <FaCheck size={30} color={tema.get().utama} />
                               </Box>
-                              <Text style={{ color: WARNA.biruTua }}>Buka Diskusi</Text>
+                              <Text style={{ color: tema.get().utama }}>Buka Diskusi</Text>
                            </Flex>
                         </>
                      )}

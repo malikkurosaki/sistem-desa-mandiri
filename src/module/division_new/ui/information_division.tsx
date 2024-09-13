@@ -1,5 +1,5 @@
 "use client"
-import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
+import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Button, Divider, Flex, Grid, Group, Skeleton, Stack, Text } from '@mantine/core';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
@@ -31,6 +31,7 @@ export default function InformationDivision() {
   const roleLogin = useHookstate(globalRole)
   const [isAdmin, setAdmin] = useState(false)
   const isMobile = useMediaQuery('(max-width: 369px)');
+  const tema = useHookstate(TEMA)
 
   async function getOneData() {
     try {
@@ -110,7 +111,7 @@ export default function InformationDivision() {
           ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
             <ActionIcon variant="light" onClick={() => {
               router.push('/division/edit/' + param.id)
-            }} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
+            }} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
               <LuClipboardEdit size={20} color='white' />
             </ActionIcon>
             : <></>
@@ -121,7 +122,7 @@ export default function InformationDivision() {
           <Text fw={"bold"}>Deskripsi Divisi</Text>
           <Box p={20} bg={"white"} style={{
             borderRadius: 10,
-            border: `1px solid ${WARNA.borderBiruMuda}`,
+            border: `1px solid ${tema.get().bgTotalKegiatan}`,
           }}>
             {
               loading ?
@@ -142,7 +143,7 @@ export default function InformationDivision() {
         <Box mt={20}>
           <Box p={20} bg={"white"} style={{
             borderRadius: 10,
-            border: `1px solid ${WARNA.borderBiruMuda}`,
+            border: `1px solid ${tema.get().bgTotalKegiatan}`,
           }}>
             <Box>
               <Text>{member.length} Anggota</Text>
@@ -178,7 +179,7 @@ export default function InformationDivision() {
                 ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
                   <Group align='center' onClick={() => router.push('/division/add-member/' + param.id)}>
                     <Avatar size={isMobile ? 'md' : 'lg'}>
-                      <AiOutlineUserAdd size={isMobile ? 25 : 30} color={WARNA.biruTua} />
+                      <AiOutlineUserAdd size={isMobile ? 25 : 30} color={tema.get().utama} />
                     </Avatar>
                     <Text fz={isMobile ? 14 : 16}>Tambah Anggota</Text>
                   </Group>
@@ -213,14 +214,14 @@ export default function InformationDivision() {
                                 base: isMobile ? 130 : 140,
                                 xl: 270
                               }}>
-                                <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
+                                <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
                                   {v.name}
                                 </Text>
                               </Box>
                             </Group>
                           </Grid.Col>
                           <Grid.Col span={3}>
-                            <Text c={WARNA.biruTua} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                            <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
                               {(v.isAdmin) ? 'Admin' : 'Anggota'}
                             </Text>
                           </Grid.Col>
@@ -242,15 +243,15 @@ export default function InformationDivision() {
         <Box>
           <Group align='center' mb={20} onClick={() => editStatusAdmin()}>
             <ActionIcon variant="light" size={60} aria-label="admin" radius="xl">
-              <FaUserTie size={30} color={WARNA.biruTua} />
+              <FaUserTie size={30} color={tema.get().utama} />
             </ActionIcon>
-            <Text c={WARNA.biruTua}>{(valChooseMemberStatus == false) ? "Jadikan admin" : "Memberhentikan sebagai admin"}</Text>
+            <Text c={tema.get().utama}>{(valChooseMemberStatus == false) ? "Jadikan admin" : "Memberhentikan sebagai admin"}</Text>
           </Group>
           <Group align='center' onClick={() => setOpenModal(true)}>
             <ActionIcon variant="light" size={60} aria-label="admin" radius="xl">
-              <IoIosCloseCircle size={40} color={WARNA.biruTua} />
+              <IoIosCloseCircle size={40} color={tema.get().utama} />
             </ActionIcon>
-            <Text c={WARNA.biruTua}>Keluarkan dari divisi</Text>
+            <Text c={tema.get().utama}>Keluarkan dari divisi</Text>
           </Group>
         </Box>
       </LayoutDrawer>

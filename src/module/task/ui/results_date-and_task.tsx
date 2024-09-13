@@ -1,5 +1,4 @@
 "use client"
-import { WARNA } from '@/module/_global';
 import { Box, Center, Grid, Group, SimpleGrid, Text } from '@mantine/core';
 import React from 'react';
 import { AiOutlineFileSync } from "react-icons/ai";

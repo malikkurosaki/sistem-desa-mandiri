@@ -1,5 +1,5 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import {
    Box,
    Button,
@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funEditTask, funGetTaskDivisionById } from "../lib/api_task";
 import { useShallowEffect } from "@mantine/hooks";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function EditTask() {
@@ -24,6 +25,7 @@ export default function EditTask() {
    const [openModal, setOpenModal] = useState(false)
    const param = useParams<{ id: string, detail: string }>()
    const [loading, setLoading] = useState(true)
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       title: false,
    });
@@ -111,14 +113,14 @@ export default function EditTask() {
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
             zIndex: 999,
-            backgroundColor: `${WARNA.bgWhite}`,
+            backgroundColor: `${tema.get().bgUtama}`,
          }}>
             {loading ?
                <Skeleton height={50} radius={30} />
                :
                <Button
                   c={"white"}
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
                   size="lg"
                   radius={30}
                   fullWidth

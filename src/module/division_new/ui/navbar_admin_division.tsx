@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Avatar, Box, Button, Checkbox, Divider, Flex, Grid, Group, rem, Stack, Text, TextInput } from '@mantine/core';
 import { useRouter } from 'next/navigation';
@@ -15,6 +15,7 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
   const member = useHookstate(globalMemberDivision)
   const memberValue = member.get() as IFormMemberDivision[]
   const [value, setValue] = useState<string[]>([]);
+  const tema = useHookstate(TEMA)
 
   async function onSubmit() {
     if (value.length === 0) {
@@ -50,7 +51,7 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
         <TextInput
           styles={{
             input: {
-              color: WARNA.biruTua,
+              color: tema.get().utama,
               borderRadius: '#A3A3A3',
               borderColor: '#A3A3A3',
             },
@@ -77,7 +78,7 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
                             base: 200,
                             xl: 270
                           }}>
-                            <Text c={WARNA.biruTua} fw={"bold"} lineClamp={1}>
+                            <Text c={tema.get().utama} fw={"bold"} lineClamp={1}>
                               {v.name}
                             </Text>
                           </Box>
@@ -102,11 +103,11 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         <Button
           color="white"
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
           size="lg"
           radius={30}
           fullWidth

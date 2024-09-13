@@ -1,5 +1,5 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import { Box, Select, Skeleton, Stack, Text } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import React, { useState } from "react";
@@ -13,6 +13,7 @@ import { useShallowEffect } from "@mantine/hooks";
 import { funGetReportDivision } from "../lib/api_division";
 import { useParams } from "next/navigation";
 import moment from "moment";
+import { useHookstate } from "@hookstate/core";
 
 export default function CreateReport() {
   const [value, setValue] = useState<Date | null>(null);
@@ -21,6 +22,7 @@ export default function CreateReport() {
   const [tampil, setTampil] = useState(false);
   const [isGroup, setIsGroup] = useState("");
   const param = useParams<{ id: string }>()
+  const tema = useHookstate(TEMA)
   const [report, setReport] = useState({
     progress: [],
     dokumen: [],
@@ -129,7 +131,7 @@ export default function CreateReport() {
                       <Box
                         bg={"white"}
                         style={{
-                          border: `1px solid ${WARNA.borderBiruMuda}`,
+                          border: `1px solid ${tema.get().bgTotalKegiatan}`,
                           borderRadius: 10,
                           padding: 10,
                         }}
@@ -141,7 +143,7 @@ export default function CreateReport() {
                       <Box
                         bg={"white"}
                         style={{
-                          border: `1px solid ${WARNA.borderBiruMuda}`,
+                          border: `1px solid ${tema.get().bgTotalKegiatan}`,
                           borderRadius: 10,
                           padding: 10,
                         }}
@@ -153,7 +155,7 @@ export default function CreateReport() {
                       <Box
                         bg={"white"}
                         style={{
-                          border: `1px solid ${WARNA.borderBiruMuda}`,
+                          border: `1px solid ${tema.get().bgTotalKegiatan}`,
                           borderRadius: 10,
                           padding: 10,
                         }}

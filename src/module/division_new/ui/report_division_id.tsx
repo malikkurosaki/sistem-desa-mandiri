@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import { Box, Skeleton, Stack } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import React, { useState } from 'react';
@@ -12,6 +12,7 @@ import { funGetReportDivision } from '../lib/api_division';
 import moment from 'moment';
 import "moment/locale/id";
 import toast from 'react-hot-toast';
+import { useHookstate } from '@hookstate/core';
 
 
 export default function ReportDivisionId() {
@@ -19,6 +20,7 @@ export default function ReportDivisionId() {
   const param = useParams<{ id: string }>()
   const [loading, setLoading] = useState(false);
   const [tampil, setTampil] = useState(false);
+  const tema = useHookstate(TEMA)
   const [report, setReport] = useState({
     progress: [],
     dokumen: [],
@@ -95,7 +97,7 @@ export default function ReportDivisionId() {
                       <Box
                         bg={"white"}
                         style={{
-                          border: `1px solid ${WARNA.borderBiruMuda}`,
+                          border: `1px solid ${tema.get().bgTotalKegiatan}`,
                           borderRadius: 10,
                           padding: 10,
                         }}
@@ -107,7 +109,7 @@ export default function ReportDivisionId() {
                       <Box
                         bg={"white"}
                         style={{
-                          border: `1px solid ${WARNA.borderBiruMuda}`,
+                          border: `1px solid ${tema.get().bgTotalKegiatan}`,
                           borderRadius: 10,
                           padding: 10,
                         }}
@@ -119,7 +121,7 @@ export default function ReportDivisionId() {
                       <Box
                         bg={"white"}
                         style={{
-                          border: `1px solid ${WARNA.borderBiruMuda}`,
+                          border: `1px solid ${tema.get().bgTotalKegiatan}`,
                           borderRadius: 10,
                           padding: 10,
                         }}

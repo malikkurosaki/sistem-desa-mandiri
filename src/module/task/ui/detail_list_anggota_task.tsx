@@ -1,5 +1,5 @@
 'use client'
-import { globalRole, LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
+import { globalRole, LayoutDrawer, SkeletonSingle, TEMA } from "@/module/_global";
 import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack, Grid } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
@@ -25,6 +25,7 @@ export default function ListAnggotaDetailTask() {
    const roleLogin = useHookstate(globalRole)
    const adminLogin = useHookstate(globalIsAdminDivision)
    const isMobile = useMediaQuery('(max-width: 369px)');
+   const tema = useHookstate(TEMA)
 
    async function getOneData() {
       try {
@@ -70,8 +71,8 @@ export default function ListAnggotaDetailTask() {
    return (
       <Box pt={20}>
          <Group justify="space-between">
-            <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-            <Text c={WARNA.biruTua}>Total {isData.length} Anggota</Text>
+            <Text c={tema.get().utama}>Anggota Terpilih</Text>
+            <Text c={tema.get().utama}>Total {isData.length} Anggota</Text>
          </Group>
          <Box pt={10}>
             <Box mb={20}>
@@ -118,7 +119,7 @@ export default function ListAnggotaDetailTask() {
                                           </Group>
                                        </Grid.Col>
                                        <Grid.Col span={3}>
-                                          <Text c={WARNA.biruTua} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                                          <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
                                              Anggota
                                           </Text>
                                        </Grid.Col>
@@ -139,20 +140,20 @@ export default function ListAnggotaDetailTask() {
                   >
                      <Flex onClick={() => { router.push('/member/' + dataChoose.id) }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>
-                           <FaUser size={30} color={WARNA.biruTua} />
+                           <FaUser size={30} color={tema.get().utama} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua}>Lihat profil</Text>
+                           <Text c={tema.get().utama}>Lihat profil</Text>
                         </Box>
                      </Flex>
                      {
                         (roleLogin.get() != "user" && roleLogin.get() != "coadmin") || adminLogin.get() ?
                            <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
                               <Box>
-                                 <IoIosCloseCircle size={30} color={WARNA.biruTua} />
+                                 <IoIosCloseCircle size={30} color={tema.get().utama} />
                               </Box>
                               <Box>
-                                 <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
+                                 <Text c={tema.get().utama}>Keluarkan anggota</Text>
                               </Box>
                            </Flex>
                            : <></>

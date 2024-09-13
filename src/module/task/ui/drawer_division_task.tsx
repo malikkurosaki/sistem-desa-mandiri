@@ -1,8 +1,10 @@
-import { WARNA } from "@/module/_global";
+import { TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import { Box, Stack, SimpleGrid, Flex, Text } from "@mantine/core";
 import { IoAddCircle } from "react-icons/io5";
 
 export default function DrawerDivisionTask() {
+   const tema = useHookstate(TEMA)
    return (
       <Box>
          <Stack pt={10}>
@@ -11,10 +13,10 @@ export default function DrawerDivisionTask() {
             >
                <Flex onClick={() => window.location.href = "task/create"} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
-                     <IoAddCircle size={30} color={WARNA.biruTua} />
+                     <IoAddCircle size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua}>Tambah Tugas</Text>
+                     <Text c={tema.get().utama}>Tambah Tugas</Text>
                   </Box>
                </Flex>
             </SimpleGrid>

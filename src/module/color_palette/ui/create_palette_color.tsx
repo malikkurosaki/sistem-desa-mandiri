@@ -1,11 +1,13 @@
-
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Badge, Box, Button, Center, ColorInput, Flex, Pill, rem, SimpleGrid, Stack, Text } from '@mantine/core';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
+import { Badge, Box, Button, Center, ColorInput, Flex, Pill, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 
 export default function CreatePaletteColor() {
+  const tema = useHookstate(TEMA)
   const [isWarna, setWarna] = useState({
+    judulTema: '',
     warnaUtama: '',
     backgroundUtama: '',
     backgroundIcon: '',
@@ -18,6 +20,16 @@ export default function CreatePaletteColor() {
       <LayoutNavbarNew back='/color-palette' title='Tambah Tema' menu />
       <Box p={20}>
         <Stack>
+          <TextInput
+            label={'Judul Tema'}
+            placeholder='Judul Tema'
+            required
+            size="md"
+            radius="md"
+            onChange={
+              (e) => setWarna({ ...isWarna, judulTema: e.target.value })
+            }
+          />
           <ColorInput
             label={'Warna Utama'}
             placeholder='Pilih Warna'
@@ -152,11 +164,11 @@ export default function CreatePaletteColor() {
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(535),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         <Button
           color="white"
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
           size="lg"
           radius={30}
           fullWidth

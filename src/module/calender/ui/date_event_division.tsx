@@ -1,4 +1,3 @@
-import { WARNA } from '@/module/_global';
 import { Box, Divider, Flex, Group, Indicator, Skeleton, Text } from '@mantine/core';
 import { DatePicker, DatePickerProps } from '@mantine/dates';
 import { useParams, useRouter } from 'next/navigation';
@@ -10,7 +9,6 @@ import moment from 'moment';
 import _ from 'lodash';
 import toast from 'react-hot-toast';
 import 'dayjs/locale/id'
-import { PiCalendarStarThin } from 'react-icons/pi';
 
 
 export default function DateEventDivision() {
@@ -22,6 +20,7 @@ export default function DateEventDivision() {
   const [isMonth, setMonth] = useState<any>(moment().month() + 1)
   const [loading, setLoading] = useState(true)
   const isMobile = useMediaQuery('(max-width: 369px)');
+
 
   const getData = async (tgl: any) => {
     try {

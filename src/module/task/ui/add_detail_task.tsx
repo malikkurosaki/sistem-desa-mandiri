@@ -1,5 +1,5 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import {
    Avatar,
    Box,
@@ -21,6 +21,7 @@ import { IFormDateTask } from "../lib/type_task";
 import moment from "moment";
 import { funCreateDetailTask } from "../lib/api_task";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function AddDetailTask() {
@@ -29,6 +30,7 @@ export default function AddDetailTask() {
    const [title, setTitle] = useState("")
    const [openModal, setOpenModal] = useState(false)
    const param = useParams<{ id: string, detail: string }>()
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       title: false,
    });
@@ -83,7 +85,7 @@ export default function AddDetailTask() {
                   value={value}
                   onChange={setValue}
                   size="md"
-                  c={WARNA.biruTua}
+                  c={tema.get().utama}
                />
             </Group>
             <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
@@ -140,11 +142,11 @@ export default function AddDetailTask() {
             <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
                maxWidth: rem(550),
                zIndex: 999,
-               backgroundColor: `${WARNA.bgWhite}`,
+               backgroundColor: `${tema.get().bgUtama}`,
             }}>
                <Button
                   c={"white"}
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
                   size="lg"
                   radius={30}
                   fullWidth

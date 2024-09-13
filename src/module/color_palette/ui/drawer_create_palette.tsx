@@ -1,4 +1,5 @@
-import { WARNA } from '@/module/_global';
+import { TEMA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 import { Box, Flex, SimpleGrid, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -6,6 +7,7 @@ import { IoAddCircle } from 'react-icons/io5';
 
 export default function DrawerCreatePalette() {
   const router = useRouter()
+  const tema = useHookstate(TEMA)
   return (
     <Box>
       <SimpleGrid
@@ -15,10 +17,10 @@ export default function DrawerCreatePalette() {
         onClick={() => router.push('/color-palette/create')}
         >
           <Box>
-            <IoAddCircle size={30} color={WARNA.biruTua} />
+            <IoAddCircle size={30} color={tema.get().utama} />
           </Box>
           <Box>
-            <Text ta={'center'} c={WARNA.biruTua}>Tambah Tema</Text>
+            <Text ta={'center'} c={tema.get().utama}>Tambah Tema</Text>
           </Box>
         </Flex>
       </SimpleGrid>
