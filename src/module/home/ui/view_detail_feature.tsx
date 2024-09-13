@@ -31,7 +31,7 @@ export default function ViewDetailFeature() {
                   radius={100}
                   // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
                   bg={tema.get().bgFiturHome}
-                  >
+                >
                   <HiMiniUserGroup size={isMobile ? 25 : 35} color={tema.get().utama} />
                 </ActionIcon>
               </Center>
@@ -47,7 +47,7 @@ export default function ViewDetailFeature() {
                   radius={100}
                   // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
                   bg={tema.get().bgFiturHome}
-                  >
+                >
                   <HiMiniPresentationChartBar size={isMobile ? 25 : 35} color={tema.get().utama} />
                 </ActionIcon>
               </Center>
@@ -63,7 +63,7 @@ export default function ViewDetailFeature() {
                   radius={100}
                   // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
                   bg={tema.get().bgFiturHome}
-                  >
+                >
                   <HiMegaphone size={isMobile ? 25 : 35} color={tema.get().utama} />
                 </ActionIcon>
               </Center>
@@ -79,7 +79,7 @@ export default function ViewDetailFeature() {
                   radius={100}
                   // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
                   bg={tema.get().bgFiturHome}
-                  >
+                >
                   <PiUsersFourFill size={isMobile ? 25 : 35} color={tema.get().utama} />
                 </ActionIcon>
               </Center>
@@ -95,7 +95,7 @@ export default function ViewDetailFeature() {
                   radius={100}
                   // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
                   bg={tema.get().bgFiturHome}
-                  >
+                >
                   <FaUserTie size={isMobile ? 25 : 35} color={tema.get().utama} />
                 </ActionIcon>
               </Center>
@@ -105,41 +105,40 @@ export default function ViewDetailFeature() {
             </Box>
             {
               roleLogin.get() == "supadmin" &&
-              <Box onClick={() => router.push('/group')}>
-                <Center>
-                  <ActionIcon variant="gradient"
-                    size={isMobile ? 50 : 68}
-                    aria-label="Gradient action icon"
-                    radius={100}
-                    // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
-                    bg={tema.get().bgFiturHome}
+              <>
+                <Box onClick={() => router.push('/group')}>
+                  <Center>
+                    <ActionIcon variant="gradient"
+                      size={isMobile ? 50 : 68}
+                      aria-label="Gradient action icon"
+                      radius={100}
+                      // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                      bg={tema.get().bgFiturHome}
                     >
-                    <FaUserTag size={isMobile ? 25 : 35} color={tema.get().utama} />
-                  </ActionIcon>
-                </Center>
-                <Center>
-                  <Text fz={15} c={tema.get().utama}>Grup</Text>
-                </Center>
-              </Box>
-            }
-            {
-              roleLogin.get() == "supadmin" &&
-              <Box onClick={() => router.push('/color-palette')}>
-                <Center>
-                  <ActionIcon variant="gradient"
-                    size={isMobile ? 50 : 68}
-                    aria-label="Gradient action icon"
-                    radius={100}
-                    // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
-                    bg={tema.get().bgFiturHome}
+                      <FaUserTag size={isMobile ? 25 : 35} color={tema.get().utama} />
+                    </ActionIcon>
+                  </Center>
+                  <Center>
+                    <Text fz={15} c={tema.get().utama}>Grup</Text>
+                  </Center>
+                </Box>
+                <Box onClick={() => router.push('/color-palette')}>
+                  <Center>
+                    <ActionIcon variant="gradient"
+                      size={isMobile ? 50 : 68}
+                      aria-label="Gradient action icon"
+                      radius={100}
+                      // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                      bg={tema.get().bgFiturHome}
                     >
-                    <IoColorPalette size={isMobile ? 25 : 35} color={tema.get().utama} />
-                  </ActionIcon>
-                </Center>
-                <Center>
-                  <Text fz={15} c={tema.get().utama}>Tema</Text>
-                </Center>
-              </Box>
+                      <IoColorPalette size={isMobile ? 25 : 35} color={tema.get().utama} />
+                    </ActionIcon>
+                  </Center>
+                  <Center>
+                    <Text fz={15} c={tema.get().utama}>Tema</Text>
+                  </Center>
+                </Box>
+              </>
             }
 
           </SimpleGrid>
