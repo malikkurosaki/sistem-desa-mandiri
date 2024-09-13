@@ -9,12 +9,14 @@ import { funCopyDocument, funMoveDocument } from "../lib/api_document";
 import { useHookstate } from "@hookstate/core";
 import { globalRefreshDocument } from "../lib/val_document";
 import { useParams } from "next/navigation";
+import { useShallowEffect } from "@mantine/hooks";
 
 export default function DrawerMore({ data }: { data: IDataDocument[] }) {
   const [isCut, setIsCut] = useState(false)
   const [isCopy, setIsCopy] = useState(false)
   const refresh = useHookstate(globalRefreshDocument)
   const param = useParams<{ id: string }>()
+  const [forbidCopy, setForbidCopy] = useState(true)
 
 
   async function onMoveItem(path: string) {
@@ -51,6 +53,16 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
   }
 
 
+  function cekFileSelected() {
+    const cek = data.some((i: any) => i.category == "FOLDER")
+    setForbidCopy(cek)
+  }
+
+  useShallowEffect(() => {
+    cekFileSelected()
+  }, [data])
+
+
 
   return (
     <Box>
@@ -66,14 +78,17 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
               <Text c={WARNA.biruTua}>Pindah</Text>
             </Box>
           </Flex>
-          <Flex onClick={() => setIsCopy(true)} justify={'center'} align={'center'} direction={'column'} >
-            <Box>
-              <LuFolders size={30} color={WARNA.biruTua} />
-            </Box>
-            <Box>
-              <Text c={WARNA.biruTua}>Salin</Text>
-            </Box>
-          </Flex>
+          {
+            (!forbidCopy) &&
+            <Flex onClick={() => setIsCopy(true)} justify={'center'} align={'center'} direction={'column'} >
+              <Box>
+                <LuFolders size={30} color={WARNA.biruTua} />
+              </Box>
+              <Box>
+                <Text c={WARNA.biruTua}>Salin</Text>
+              </Box>
+            </Flex>
+          }
         </SimpleGrid>
       </Stack>
 

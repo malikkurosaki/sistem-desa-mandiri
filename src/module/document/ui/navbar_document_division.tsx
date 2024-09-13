@@ -46,7 +46,7 @@ export default function NavbarDocumentDivision() {
   const [selectedFiles, setSelectedFiles] = useState<any>([])
   const [selectAll, setSelectAll] = useState(false)
   const [dariSelectAll, setDariSelectAll] = useState(false)
-  const isMobile = useMediaQuery('(max-width: 369px)');  
+  const isMobile = useMediaQuery('(max-width: 369px)');
   const [bodyRename, setBodyRename] = useState({
     id: '',
     name: '',
@@ -69,6 +69,7 @@ export default function NavbarDocumentDivision() {
           extension: dataDocument[index].extension,
           category: dataDocument[index].category,
           share: dataDocument[index].share,
+          idStorage: dataDocument[index].idStorage
         }
       ])
     }
@@ -102,6 +103,7 @@ export default function NavbarDocumentDivision() {
             extension: dataDocument[index].extension,
             category: dataDocument[index].category,
             share: dataDocument[index].share,
+            idStorage: dataDocument[index].idStorage
           }
           setSelectedFiles((selectedFiles: any) => [...selectedFiles, newArr])
         }

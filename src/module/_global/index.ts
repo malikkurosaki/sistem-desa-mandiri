@@ -6,6 +6,7 @@ import SkeletonDetailListTugasTask from "./components/skeleton_detail_list_tugas
 import SkeletonDetailProfile from "./components/skeleton_detail_profile";
 import SkeletonSingle from "./components/skeleton_single";
 import WrapLayout from "./components/wrap_layout";
+import { funCopyFile } from "./fun/copy_file";
 import { funDeleteFile } from "./fun/delete_file";
 import { funUploadFile } from "./fun/upload_file";
 import { WARNA } from "./fun/WARNA";
@@ -42,3 +43,4 @@ export { funUploadFile }
 export { funDeleteFile }
 export { DIR }
 export { TEMA }
+export { funCopyFile }
