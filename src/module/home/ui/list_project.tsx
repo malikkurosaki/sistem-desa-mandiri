@@ -2,7 +2,7 @@
 import { TEMA, WARNA } from "@/module/_global";
 import { Carousel } from "@mantine/carousel";
 import { Box, Card, Flex, Title, Text, Progress, Stack, Skeleton } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -41,6 +41,8 @@ export default function ListProjects() {
    useShallowEffect(() => {
       fetchData();
    }, []);
+   
+   const isMobile = useMediaQuery('(max-width: 369px)');
 
    return (
       <>
@@ -60,22 +62,25 @@ export default function ListProjects() {
                   <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
                      {isData.map((v) =>
                         <Carousel.Slide key={v.id}>
-                           <Box w={{ base: 300, md: 400 }}>
+                           <Box w={{
+                              base: isMobile ? 230 : 300,
+                              md: 400
+                           }}>
                               <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/project/${v.id}`)}>
                                  <Card.Section>
-                                    <Box h={120} bg={tema.get().utama}>
+                                    <Box h={isMobile ? 100 : 120} bg={tema.get().utama}>
                                        <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
-                                          <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.title}</Title>
+                                          <Title order={isMobile ? 4 : 3} c={"white"} ta={"center"} lineClamp={2}>{v.title}</Title>
                                        </Flex>
                                     </Box>
                                  </Card.Section>
-                                 <Stack h={150} align="stretch" justify="center">
+                                 <Stack h={isMobile ? 100 : 150} align="stretch" justify="center">
                                     <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
                                        <Progress.Section value={v.progress} color="yellow" striped >
                                           <Progress.Label>{v.progress}%</Progress.Label>
                                        </Progress.Section>
                                     </Progress.Root>
-                                    <Text c={tema.get().utama}>{v.createdAt}</Text>
+                                    <Text c={tema.get().utama} fz={isMobile ? 14 : 16}>{v.createdAt}</Text>
                                  </Stack>
                               </Card>
                            </Box>

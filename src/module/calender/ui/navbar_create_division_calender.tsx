@@ -13,6 +13,7 @@ import { globalCalender, globalUlangiEvent } from '../lib/val_calender';
 import { IFormMemberCalender, IFormUlangiEvent } from '../lib/type_calender';
 import { funCreateCalender } from '../lib/api_calender';
 import CreateUserCalender from './create_user_calender';
+import { useMediaQuery } from '@mantine/hooks';
 
 export default function NavbarCreateDivisionCalender() {
   const [value, setValue] = useState<Date | null>(null);
@@ -23,6 +24,7 @@ export default function NavbarCreateDivisionCalender() {
   const [openMember, setOpenMember] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
   const tema = useHookstate(TEMA)
+  const isMobile = useMediaQuery('(max-width: 369px)');
   const [touched, setTouched] = useState({
     title: false,
     dateStart: false,
@@ -301,19 +303,19 @@ export default function NavbarCreateDivisionCalender() {
                             >
                               <Grid.Col span={9}>
                                 <Group>
-                                  <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
+                                  <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
                                   <Box w={{
-                                    base: 140,
+                                    base: isMobile ? 130 : 140,
                                     xl: 270
                                   }}>
-                                    <Text c={tema.get().utama} fw={"bold"} lineClamp={1}>
+                                    <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16} >
                                       {v.name}
                                     </Text>
                                   </Box>
                                 </Group>
                               </Grid.Col>
                               <Grid.Col span={3}>
-                                <Text c={tema.get().utama} fw={"bold"} ta={'end'}>
+                                <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
                                   Anggota
                                 </Text>
                               </Grid.Col>

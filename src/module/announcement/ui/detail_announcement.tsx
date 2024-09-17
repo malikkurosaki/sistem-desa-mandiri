@@ -57,24 +57,21 @@ export default function DetailAnnouncement({ id }: { id: string }) {
                         <Skeleton height={18} width={150} />
                      </Box>
                   </Group>
-                  <Grid gutter={'md'}>
-                     <Grid.Col span={1}>
-                        <ActionIcon
-                           variant="light"
-                           bg={"#DCEED8"}
-                           size={30}
-                           radius={100}
-                           aria-label="icon"
-                        >
-                           <Skeleton height={25} width={40} />
-                        </ActionIcon>
-                     </Grid.Col>
-                     <Grid.Col span={11}>
-                        <Spoiler maxHeight={100} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
-                           <Skeleton mt={5} ml={5} height={18} width={150} />
-                        </Spoiler>
-                     </Grid.Col>
-                  </Grid>
+                  <Group>
+                     <ActionIcon
+                        variant="light"
+                        bg={"#DCEED8"}
+                        size={30}
+                        radius={100}
+                        aria-label="icon"
+                     >
+                        <Skeleton height={25} width={40} />
+                     </ActionIcon>
+                     <Box>
+                        <Skeleton height={18} width={150} />
+                     </Box>
+                  </Group>
+
                </Stack>
                :
                <Stack>

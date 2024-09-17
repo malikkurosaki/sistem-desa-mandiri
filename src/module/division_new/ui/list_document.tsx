@@ -4,7 +4,7 @@ import { Carousel } from "@mantine/carousel";
 import { Box, Image, Text, Center, Paper, Stack, UnstyledButton, Skeleton, Group } from "@mantine/core";
 import * as ICON from '../lib/file_icon'
 import { useParams, useRouter } from "next/navigation";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import toast from "react-hot-toast";
 import { funGetDetailDivisionById } from "../lib/api_division";
 import { IDataKalenderOnDetailDivision } from "../lib/type_division";
@@ -41,6 +41,7 @@ export default function ListDocumentOnDetailDivision() {
    useShallowEffect(() => {
       fetchData()
    }, [param.id])
+   const isMobile = useMediaQuery('(max-width: 369px)');
 
    return (
       <Box pt={10}>
@@ -69,14 +70,14 @@ export default function ListDocumentOnDetailDivision() {
                data.map((v) =>
                   <Carousel.Slide key={v.id}>
                      <UnstyledButton onClick={() => router.push(`/division/${param.id}/document`)}>
-                        <Stack gap={0} w={200}>
+                        <Stack gap={0} w={isMobile ? 100 : 170}>
                            <Paper withBorder shadow="sm" radius={12} >
                               <Center p={"md"}>
-                                 <Image w={"75"} src={(v.extension == "pdf") ? iconContainer(ICON.PDF) : iconContainer(ICON.IMAGE)} alt="image" />
+                                 <Image w={isMobile ? 50 : 75} src={(v.extension == "pdf") ? iconContainer(ICON.PDF) : iconContainer(ICON.IMAGE)} alt="image" />
                               </Center>
                            </Paper>
                            <Box>
-                              <Text c={"dimmed"}ta={"center"} lineClamp={1}>{v.name + '.' + v.extension}</Text>
+                              <Text c={"dimmed"}ta={"center"} lineClamp={1} fz={isMobile? 14 : 16}>{v.name + '.' + v.extension}</Text>
                            </Box>
                         </Stack>
                      </UnstyledButton>

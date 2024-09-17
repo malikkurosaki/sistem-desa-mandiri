@@ -17,7 +17,7 @@ export default function DrawerListMember() {
       <Box>
          <Stack pt={10}>
             <SimpleGrid
-               cols={{ base: 3, sm: 3, lg: 3 }}
+               cols={{ base: 2, sm: 3, lg: 3 }}
             >
                <Flex justify={'center'} align={'center'} direction={'column'}
                   style={{

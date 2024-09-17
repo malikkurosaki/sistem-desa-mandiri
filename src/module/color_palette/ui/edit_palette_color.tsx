@@ -1,7 +1,7 @@
 "use client"
 import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
-import { Badge, Box, Button, Center, ColorInput, Flex, Pill, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { Badge, Box, Button, Center, ColorInput, Flex, Pill, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { IEditTheme } from '../lib/type_theme';
 import toast from 'react-hot-toast';
@@ -15,6 +15,7 @@ export default function EditPaletteColor() {
   const router = useRouter()
   const [isModal, setModal] = useState(false)
   const param = useParams<{ id: string }>()
+  const [loading, setLoading] = useState(true)
   const [touched, setTouched] = useState({
     name: false,
     utama: false,
@@ -38,15 +39,19 @@ export default function EditPaletteColor() {
 
   async function getOneData() {
     try {
+      setLoading(true)
       const res = await funGetThemeById(param.id)
       if (res.success) {
         setWarna(res.data)
       } else {
         toast.error(res.message);
       }
+      setLoading(false)
     } catch (error) {
       console.error(error)
       toast.error("Gagal menambahkan tema, coba lagi nanti");
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -75,141 +80,154 @@ export default function EditPaletteColor() {
     <Box>
       <LayoutNavbarNew back='/color-palette' title='Edit Tema' menu />
       <Box p={20}>
-        <Stack>
-          <TextInput
-            label={'Judul Tema'}
-            placeholder='Judul Tema'
-            required
-            size="md"
-            radius="md"
-            value={isWarna.name}
-            onChange={
-              (e) => {
-                setWarna({ ...isWarna, name: e.target.value })
-                setTouched({ ...touched, name: true })
+        {loading ?
+          <Stack>
+            {Array(7)
+              .fill(null)
+              .map((_, i) => (
+                <Box key={i}>
+                  <Skeleton width={"30%"} height={20} mb={10} radius={"md"} />
+                  <Skeleton width={"100%"} height={40} radius={"md"} />
+                </Box>
+              ))}
+          </Stack>
+          :
+          <Stack>
+            <TextInput
+              label={'Judul Tema'}
+              placeholder='Judul Tema'
+              required
+              size="md"
+              radius="md"
+              value={isWarna.name}
+              onChange={
+                (e) => {
+                  setWarna({ ...isWarna, name: e.target.value })
+                  setTouched({ ...touched, name: true })
+                }
               }
-            }
-            error={
-              touched.name && (
-                isWarna.name == "" ? "Judul Tema Tidak Boleh Kosong" : null
-              )
-            }
-          />
-          <ColorInput
-            label={'Warna Utama'}
-            placeholder='Pilih Warna'
-            required
-            size="md"
-            radius="md"
-            value={isWarna.utama}
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, utama: color })
-                setTouched({ ...touched, utama: true })
+              error={
+                touched.name && (
+                  isWarna.name == "" ? "Judul Tema Tidak Boleh Kosong" : null
+                )
               }
-            }
-            error={
-              touched.utama && (
-                isWarna.utama == "" ? "Warna Utama Tidak Boleh Kosong" : null
-              )
-            }
-          />
-          <ColorInput
-            label={'Background Utama'}
-            placeholder='Pilih Warna'
-            required
-            size="md"
-            radius="md"
-            value={isWarna.bgUtama}
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, bgUtama: color })
-                setTouched({ ...touched, bgUtama: true })
+            />
+            <ColorInput
+              label={'Warna Utama'}
+              placeholder='Pilih Warna'
+              required
+              size="md"
+              radius="md"
+              value={isWarna.utama}
+              onChangeEnd={
+                (color) => {
+                  setWarna({ ...isWarna, utama: color })
+                  setTouched({ ...touched, utama: true })
+                }
               }
-            }
-            error={
-              touched.bgUtama && (
-                isWarna.bgUtama == "" ? "Background Utama Tidak Boleh Kosong" : null
-              )
-            }
-          />
-          <ColorInput
-            label={'Background Icon'}
-            placeholder='Pilih Warna'
-            required
-            size="md"
-            radius="md"
-            value={isWarna.bgIcon}
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, bgIcon: color })
-                setTouched({ ...touched, bgIcon: true })
+              error={
+                touched.utama && (
+                  isWarna.utama == "" ? "Warna Utama Tidak Boleh Kosong" : null
+                )
               }
-            }
-            error={
-              touched.bgIcon && (
-                isWarna.bgIcon == "" ? "Background Icon Tidak Boleh Kosong" : null
-              )
-            }
-          />
-          <ColorInput
-            label={'Background Fitur Home'}
-            placeholder='Pilih Warna'
-            required
-            size="md"
-            radius="md"
-            value={isWarna.bgFiturHome}
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, bgFiturHome: color })
-                setTouched({ ...touched, bgFiturHome: true })
+            />
+            <ColorInput
+              label={'Background Utama'}
+              placeholder='Pilih Warna'
+              required
+              size="md"
+              radius="md"
+              value={isWarna.bgUtama}
+              onChangeEnd={
+                (color) => {
+                  setWarna({ ...isWarna, bgUtama: color })
+                  setTouched({ ...touched, bgUtama: true })
+                }
               }
-            }
-            error={
-              touched.bgFiturHome && (
-                isWarna.bgFiturHome == "" ? "Background Fitur Home Tidak Boleh Kosong" : null
-              )
-            }
-          />
-          <ColorInput
-            label={'Background Fitur Divisi'}
-            placeholder='Pilih Warna'
-            required
-            size="md"
-            radius="md"
-            value={isWarna.bgFiturDivision}
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, bgFiturDivision: color })
-                setTouched({ ...touched, bgFiturDivision: true })
+              error={
+                touched.bgUtama && (
+                  isWarna.bgUtama == "" ? "Background Utama Tidak Boleh Kosong" : null
+                )
               }
-            }
-            error={
-              touched.bgFiturDivision && (
-                isWarna.bgFiturDivision == "" ? "Background Fitur Divisi Tidak Boleh Kosong" : null
-              )
-            }
-          />
-          <ColorInput
-            label={'Background Total Kegiatan'}
-            placeholder='Pilih Warna'
-            required
-            size="md"
-            radius="md"
-            value={isWarna.bgTotalKegiatan}
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, bgTotalKegiatan: color })
-                setTouched({ ...touched, bgTotalKegiatan: true })
+            />
+            <ColorInput
+              label={'Background Icon'}
+              placeholder='Pilih Warna'
+              required
+              size="md"
+              radius="md"
+              value={isWarna.bgIcon}
+              onChangeEnd={
+                (color) => {
+                  setWarna({ ...isWarna, bgIcon: color })
+                  setTouched({ ...touched, bgIcon: true })
+                }
               }
-            }
-            error={
-              touched.bgTotalKegiatan && (
-                isWarna.bgTotalKegiatan == "" ? "Background Total Kegiatan Tidak Boleh Kosong" : null
-              )
-            }
-          />
-        </Stack>
+              error={
+                touched.bgIcon && (
+                  isWarna.bgIcon == "" ? "Background Icon Tidak Boleh Kosong" : null
+                )
+              }
+            />
+            <ColorInput
+              label={'Background Fitur Home'}
+              placeholder='Pilih Warna'
+              required
+              size="md"
+              radius="md"
+              value={isWarna.bgFiturHome}
+              onChangeEnd={
+                (color) => {
+                  setWarna({ ...isWarna, bgFiturHome: color })
+                  setTouched({ ...touched, bgFiturHome: true })
+                }
+              }
+              error={
+                touched.bgFiturHome && (
+                  isWarna.bgFiturHome == "" ? "Background Fitur Home Tidak Boleh Kosong" : null
+                )
+              }
+            />
+            <ColorInput
+              label={'Background Fitur Divisi'}
+              placeholder='Pilih Warna'
+              required
+              size="md"
+              radius="md"
+              value={isWarna.bgFiturDivision}
+              onChangeEnd={
+                (color) => {
+                  setWarna({ ...isWarna, bgFiturDivision: color })
+                  setTouched({ ...touched, bgFiturDivision: true })
+                }
+              }
+              error={
+                touched.bgFiturDivision && (
+                  isWarna.bgFiturDivision == "" ? "Background Fitur Divisi Tidak Boleh Kosong" : null
+                )
+              }
+            />
+            <ColorInput
+              label={'Background Total Kegiatan'}
+              placeholder='Pilih Warna'
+              required
+              size="md"
+              radius="md"
+              value={isWarna.bgTotalKegiatan}
+              onChangeEnd={
+                (color) => {
+                  setWarna({ ...isWarna, bgTotalKegiatan: color })
+                  setTouched({ ...touched, bgTotalKegiatan: true })
+                }
+              }
+              error={
+                touched.bgTotalKegiatan && (
+                  isWarna.bgTotalKegiatan == "" ? "Background Total Kegiatan Tidak Boleh Kosong" : null
+                )
+              }
+            />
+          </Stack>
+        }
         <Flex justify={'center'} align={"center"} w={"auto"} gap={10} mt={20} mb={100}>
           <SimpleGrid
             cols={{ base: 3, sm: 3, lg: 6 }}
@@ -286,18 +304,22 @@ export default function EditPaletteColor() {
         zIndex: 999,
         backgroundColor: `${tema.get().bgUtama}`,
       }}>
-        <Button
-          color="white"
-          bg={tema.get().utama}
-          size="lg"
-          radius={30}
-          fullWidth
-          onClick={() => {
-            setModal(true)
-          }}
-        >
-          Simpan
-        </Button>
+        {loading ?
+          <Skeleton height={50} radius={30} />
+          :
+          <Button
+            color="white"
+            bg={tema.get().utama}
+            size="lg"
+            radius={30}
+            fullWidth
+            onClick={() => {
+              setModal(true)
+            }}
+          >
+            Simpan
+          </Button>
+        }
       </Box>
 
 
