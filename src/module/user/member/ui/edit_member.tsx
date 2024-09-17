@@ -173,7 +173,7 @@ export default function EditMember({ id }: { id: string }) {
             {loading ?
                <Skeleton height={150} width={150} radius={"100"} />
                :
-               <Indicator offset={20} withBorder inline color={tema.get().bgIcon} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
+               <Indicator offset={20} withBorder inline color={tema.get().bgFiturHome} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
                   <Avatar
                      size="150"
                      radius={"100"}

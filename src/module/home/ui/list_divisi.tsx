@@ -8,7 +8,7 @@ import { useState } from "react";
 import { IDataHomeDivision } from "../lib/type_home";
 import { funGetHome } from "../lib/api_home";
 import toast from "react-hot-toast";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useHookstate } from "@hookstate/core";
 
 export default function ListDivisi() {
@@ -41,6 +41,7 @@ export default function ListDivisi() {
    useShallowEffect(() => {
       fetchData();
    }, []);
+   const isMobile = useMediaQuery('(max-width: 369px)');
 
 
    return (
@@ -61,18 +62,21 @@ export default function ListDivisi() {
                   <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
                      {isData.map((v) =>
                         <Carousel.Slide key={v.id}>
-                           <Box w={{ base: 300, md: 400 }}>
+                           <Box w={{
+                             base: isMobile ? 230 : 300,
+                              md: 400
+                           }}>
                               <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
                                  <Card.Section>
-                                    <Box h={120} bg={tema.get().bgFiturHome}>
+                                    <Box h={isMobile ? 100 : 120} bg={tema.get().bgFiturHome}>
                                        <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
-                                          <Title order={3} c={tema.get().utama} ta={"center"} lineClamp={2}>{v.name}</Title>
+                                          <Title order={isMobile ? 4 : 3} c={tema.get().utama} ta={"center"} lineClamp={2}>{v.name}</Title>
                                        </Flex>
                                     </Box>
                                  </Card.Section>
-                                 <Box pt={10} mih={150}>
-                                    <Text fw={'bold'} fz={18}>KEGIATAN</Text>
-                                    <Text fw={'bolder'} ta={'center'} fz={70}>{v.jumlah}</Text>
+                                 <Box pt={10} mih={isMobile ? 100 : 150}>
+                                    <Text fw={'bold'} fz={isMobile ? 15 : 18}>KEGIATAN</Text>
+                                    <Text fw={'bolder'} ta={'center'} fz={isMobile ? 50 : 70}>{v.jumlah}</Text>
                                  </Box>
                               </Card>
                            </Box>

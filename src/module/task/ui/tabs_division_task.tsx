@@ -67,8 +67,8 @@ export default function TabsDivisionTask() {
                   key={index}
               bg={
                  status == item.id
-                    ? tema.get().bgFiturDivisi
-                    : (status == null && item.id == "0") ? tema.get().bgFiturDivisi : "transparent"
+                    ? tema.get().bgFiturDivision
+                    : (status == null && item.id == "0") ? tema.get().bgFiturDivision : "transparent"
               }
               leftSection={item.icon}
            >

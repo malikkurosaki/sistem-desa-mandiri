@@ -1,7 +1,7 @@
 import { TEMA } from "@/module/_global";
 import { funGetListDivisionByIdDivision, IDataDivison } from "@/module/division_new";
 import { IDataMemberTaskDivision } from "@/module/task/lib/type_task";
-import { Box, Select, Button, Avatar, Divider, Flex, Group, Stack, Text, ActionIcon } from "@mantine/core";
+import { Box, Select, Button, Avatar, Divider, Flex, Group, Stack, Text, ActionIcon, ScrollArea } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -12,13 +12,13 @@ import { funShareDocument } from "../lib/api_document";
 import { useHookstate } from "@hookstate/core";
 import { globalRefreshDocument } from "../lib/val_document";
 
-export default function DrawerShareDocument({ data }: { data: IShareDivision[]}) {
+export default function DrawerShareDocument({ data }: { data: IShareDivision[] }) {
    const [selectedFiles, setSelectedFiles] = useState<any>([])
    const [isData, setData] = useState<IDataDivison[]>([])
    const param = useParams<{ id: string }>()
    const refresh = useHookstate(globalRefreshDocument)
    const tema = useHookstate(TEMA)
-   
+
 
 
    async function onShare() {
@@ -72,6 +72,12 @@ export default function DrawerShareDocument({ data }: { data: IShareDivision[]})
    return (
       <Box pt={10}>
          <Box mt={10}>
+         <ScrollArea
+            h={{
+               base: "58vh", xl: "58vh", md: "57vh",
+               sm: "58vh",
+            }} type="scroll" scrollbarSize={2} scrollHideDelay={0} scrollbars="y"
+         >
             {isData.map((v, i) => {
                const isSelected = selectedFiles.some((i: any) => i?.id == v.id);
                return (
@@ -106,8 +112,9 @@ export default function DrawerShareDocument({ data }: { data: IShareDivision[]})
                   </Box>
                );
             })}
+         </ScrollArea>
          </Box>
-         <Box h={90} pos={"fixed"} bottom={0} w={{ base: "92%", md: "94%" }} style={{
+         <Box h={60} pos={"fixed"} bottom={0} w={{ base: "92%", md: "94%" }} style={{
             zIndex: 999
          }}>
             <Box>

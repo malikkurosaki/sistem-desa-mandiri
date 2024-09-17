@@ -17,6 +17,6 @@ export const TEMA = hookstate<IGlobalTema>({
    bgUtama: "#F4F9FD",
    bgIcon: "#384288",
    bgFiturHome: "#FCAA4B",
-   bgFiturDivisi: "#FCAA4B",
+   bgFiturDivision: "#FCAA4B",
    bgTotalKegiatan: "#DCEED8"
 })

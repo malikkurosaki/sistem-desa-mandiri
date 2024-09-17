@@ -117,12 +117,7 @@ export default function ListDivisionTask() {
                                           size={50}
                                           aria-label="Gradient action icon"
                                           radius={100}
-                                          // gradient={{
-                                          //    from: '#DFDA7C',
-                                          //    to: '#F2AF46',
-                                          //    deg: 174
-                                          // }}
-                                          bg={tema.get().bgFiturDivisi}
+                                          bg={tema.get().bgFiturDivision}
                                        >
                                           <HiMiniPresentationChartBar size={25} color={tema.get().utama} />
                                        </ActionIcon>

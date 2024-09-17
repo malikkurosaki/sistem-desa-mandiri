@@ -49,7 +49,7 @@ export default function DrawerPaletEditEndDefault({ id, idVillage }: { id: strin
 
   return (
     <Box>
-      <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }}>
+      <SimpleGrid cols={{ base: 2, sm: 3, lg: 3 }}>
         <Flex justify={'center'} align={'center'} direction={'column'}
           onClick={() => setModal(true)}
         >

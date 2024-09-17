@@ -2,7 +2,7 @@
 import { TEMA } from "@/module/_global";
 import { Carousel } from "@mantine/carousel";
 import { Avatar, Box, Group, Skeleton, Stack, Text } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { CiClock2 } from "react-icons/ci";
@@ -42,6 +42,8 @@ export default function ListTaskOnDetailDivision() {
       fetchData()
    }, [param.id])
 
+   const isMobile = useMediaQuery('(max-width: 369px)');
+
    return (
       <Box pt={10}>
          <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Tugas Hari Ini</Text>
@@ -52,8 +54,8 @@ export default function ListTaskOnDetailDivision() {
                      .fill(null)
                      .map((_, i) => (
                         <Stack align="stretch" justify="center" key={i}>
-                           <Skeleton height={80} radius="md" m={0} />
-                           <Skeleton height={10} radius="md" m={0} />
+                           <Skeleton height={80} radius="md" m={0} w={isMobile ? "80%" : "90%"} />
+                           <Skeleton height={10} radius="md" m={0} w={isMobile ? "80%" : "90%"}/>
                         </Stack>
                      ))
                   :
@@ -67,7 +69,10 @@ export default function ListTaskOnDetailDivision() {
          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
             {data.map((v, i) =>
                <Carousel.Slide key={v.id}>
-                  <Box p={20} w={{ base: 300, md: 400 }} onClick={() => router.push(`/task/${v.id}`)} bg={tema.get().utama} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
+                  <Box p={20} w={{
+                     base: isMobile ? 230 : 300,
+                     md: 400
+                  }} onClick={() => router.push(`/task/${v.id}`)} bg={tema.get().utama} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
                      <Text fw={'bold'} c={tema.get().bgUtama} lineClamp={1}>{_.startCase(v.title)}</Text>
                      <Group justify="space-between" mt={20}>
                         <Group gap={5} align="center" c={"#CFCDCD"}>

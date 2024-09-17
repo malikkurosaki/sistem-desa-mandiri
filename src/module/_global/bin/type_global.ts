@@ -3,6 +3,6 @@ export interface IGlobalTema {
     bgUtama: string
     bgIcon: string
     bgFiturHome: string
-    bgFiturDivisi: string
+    bgFiturDivision: string
     bgTotalKegiatan: string
 }

@@ -28,7 +28,7 @@ export default function DrawerDetailMember({
     try {
       if (val) {
         const res = await funEditStatusMember(id, {
-          isActive: true,
+          isActive: status ? true : false,
         });
         if (res.success) {
           toast.success(res.message);

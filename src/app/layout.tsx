@@ -13,6 +13,7 @@ import { Toaster } from 'react-hot-toast';
 import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import { Notifications } from '@mantine/notifications'
+import LayoutBackground from "@/module/_global/layout/layout_background";
 
 export const metadata = {
   title: "SISTEM DESA MANDIRI",
@@ -42,9 +43,9 @@ export default function RootLayout({
             overflowY: "auto",
           }}>
             <Toaster/>
-            <Container mih={'100vh'} p={0} size={rem(550)} bg={WARNA.bgWhite}>
+            <LayoutBackground>
               {children}
-            </Container>
+            </LayoutBackground>
           </Box>
         </MantineProvider>
       </body>

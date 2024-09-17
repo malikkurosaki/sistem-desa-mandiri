@@ -94,7 +94,7 @@ export default function ListDivision() {
               onChange={(val) => { searchDivision(val.target.value) }}
             />
           </Grid.Col>
-          <Grid.Col span={'auto'}>
+          <Grid.Col span={2}>
             <Flex justify={'center'}>
               {isList ? (
                 <HiOutlineListBullet size={35} color={tema.get().utama} onClick={handleList} />

@@ -436,9 +436,9 @@ export default function NavbarDocumentDivision() {
                           </Box>
                         </Flex>
                         <Checkbox
-                          color="teal"
+                          color={tema.get().utama}
                           radius="lg"
-                          size="md"
+                          size={isMobile ? "sm" : "md"}
                           checked={isSelected}
                           onChange={() => handleCheckboxChange(i)}
                         />

@@ -74,7 +74,7 @@ export default function ProgressDetailTask() {
                         aria-label="Gradient action icon"
                         radius={100}
                         // gradient={{ from: "#DFDA7C", to: "#F2AF46", deg: 174 }}
-                        bg={tema.get().bgFiturDivisi}
+                        bg={tema.get().bgFiturDivision}
                      >
                         <HiMiniPresentationChartBar size={isMobile ? 25 : 35} color={tema.get().utama} />
                      </ActionIcon>
@@ -87,7 +87,7 @@ export default function ProgressDetailTask() {
                               border: `1px solid ${"#BDBDBD"}`,
                            }}
                            w={"100%"}
-                           color={tema.get().bgFiturDivisi}
+                           color={tema.get().bgFiturDivision}
                            radius="md"
                            size={isMobile ? "lg" : "xl"}
                            value={valProgress}

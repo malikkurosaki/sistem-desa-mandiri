@@ -89,7 +89,7 @@ export async function GET(request: Request) {
 
         const allData = announcements.map((v: any) => ({
             ..._.omit(v, ["createdAt"]),
-            createdAt: moment(v.createdAt).format("LL")
+            createdAt: moment(v.createdAt).format("ll")
         }))
 
         return NextResponse.json({ success: true, message: "Berhasil mendapatkan pengumuman", data: allData, }, { status: 200 });

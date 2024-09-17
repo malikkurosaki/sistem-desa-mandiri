@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import { Avatar, Box, Button, Flex, Indicator, Modal, rem, Select, Skeleton, Stack, Text, TextInput } from "@mantine/core";
 import toast from "react-hot-toast";
 import LayoutModal from "@/module/_global/layout/layout_modal";
@@ -11,6 +11,7 @@ import { FaCamera, FaShare } from "react-icons/fa6";
 import { Dropzone } from "@mantine/dropzone";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
+import { useHookstate } from "@hookstate/core";
 
 export default function EditProfile() {
   const [isValModal, setValModal] = useState(false)
@@ -20,6 +21,7 @@ export default function EditProfile() {
   const [imgForm, setImgForm] = useState<any>()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
+  const tema = useHookstate(TEMA)
 
   const [touched, setTouched] = useState({
     nik: false,
@@ -90,6 +92,7 @@ export default function EditProfile() {
         gap="xs"
         pt={30}
         px={20}
+        pb={100}
       >
         <Dropzone
           openRef={openRef}
@@ -112,7 +115,7 @@ export default function EditProfile() {
         {loading ?
           <Skeleton height={150} width={150} radius={"100"} />
           :
-          <Indicator offset={20} withBorder inline color={WARNA.borderBiruMuda} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
+          <Indicator offset={20} withBorder inline color={tema.get().bgFiturHome} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
             <Avatar
               size="150"
               radius={"100"}
@@ -134,9 +137,9 @@ export default function EditProfile() {
               size="md" type="number" radius={30} placeholder="NIK" withAsterisk label="NIK" w={"100%"}
               styles={{
                 input: {
-                  color: WARNA.biruTua,
-                  borderRadius: WARNA.biruTua,
-                  borderColor: WARNA.biruTua,
+                  color: tema.get().utama,
+                  borderRadius: tema.get().utama,
+                  borderColor: tema.get().utama,
                 },
               }}
               onChange={(e) => {
@@ -156,9 +159,9 @@ export default function EditProfile() {
               size="md" type="text" radius={30} placeholder="Nama" withAsterisk label="Nama" w={"100%"}
               styles={{
                 input: {
-                  color: WARNA.biruTua,
-                  borderRadius: WARNA.biruTua,
-                  borderColor: WARNA.biruTua,
+                  color: tema.get().utama,
+                  borderRadius: tema.get().utama,
+                  borderColor: tema.get().utama,
                 },
               }}
               onChange={(e) => {
@@ -177,9 +180,9 @@ export default function EditProfile() {
               size="md" type="email" radius={30} placeholder="Email" withAsterisk label="Email" w={"100%"}
               styles={{
                 input: {
-                  color: WARNA.biruTua,
-                  borderRadius: WARNA.biruTua,
-                  borderColor: WARNA.biruTua,
+                  color: tema.get().utama,
+                  borderRadius: tema.get().utama,
+                  borderColor: tema.get().utama,
                 },
               }}
               onChange={(e) => {
@@ -199,9 +202,9 @@ export default function EditProfile() {
               size="md" type="number" radius={30} placeholder="8xx xxxx xxxx" withAsterisk label="Nomor Telepon" w={"100%"}
               styles={{
                 input: {
-                  color: WARNA.biruTua,
-                  borderRadius: WARNA.biruTua,
-                  borderColor: WARNA.biruTua,
+                  color: tema.get().utama,
+                  borderRadius: tema.get().utama,
+                  borderColor: tema.get().utama,
                 },
               }}
               leftSection={<Text>+62</Text>}
@@ -221,9 +224,9 @@ export default function EditProfile() {
               placeholder="Jenis Kelamin" label="Jenis Kelamin" w={"100%"} size="md" required withAsterisk radius={30}
               styles={{
                 input: {
-                  color: WARNA.biruTua,
-                  borderRadius: WARNA.biruTua,
-                  borderColor: WARNA.biruTua,
+                  color: tema.get().utama,
+                  borderRadius: tema.get().utama,
+                  borderColor: tema.get().utama,
                 },
               }}
               data={
@@ -256,14 +259,14 @@ export default function EditProfile() {
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
         maxWidth: rem(550),
         zIndex: 999,
-        backgroundColor: `${WARNA.bgWhite}`,
+        backgroundColor: `${tema.get().bgUtama}`,
       }}>
         {loading ?
           <Skeleton height={50} radius={30} />
           :
           <Button
             c={"white"}
-            bg={WARNA.biruTua}
+            bg={tema.get().utama}
             size="md"
             radius={30}
             fullWidth
