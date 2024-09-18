@@ -128,22 +128,22 @@ export async function POST(request: Request) {
 
         let memberDivision = []
 
-        // for (var i = 0, l = groups.length; i < l; i++) {
-        //     var obj = groups[i].Division;
-        //     for (let index = 0; index < obj.length; index++) {
-        //         const element = obj[index];
-        //         const fix = {
-        //             idAnnouncement: data.id,
-        //             idGroup: groups[i].id,
-        //             idDivision: element.id
-        //         }
-        //         memberDivision.push(fix)
-        //     }
-        // }
+        for (var i = 0, l = groups.length; i < l; i++) {2
+            var obj = groups[i].Division;
+            for (let index = 0; index < obj.length; index++) {
+                const element = obj[index];
+                const fix = {
+                    idAnnouncement: data.id,
+                    idGroup: groups[i].id,
+                    idDivision: element.id
+                }
+                memberDivision.push(fix)
+            }
+        }
 
-        // const announcementMember = await prisma.announcementMember.createMany({
-        //     data: memberDivision,
-        // });
+        const announcementMember = await prisma.announcementMember.createMany({
+            data: memberDivision,
+        });
 
         const memberNotif = await prisma.divisionMember.findMany({
             where: {
@@ -175,9 +175,9 @@ export async function POST(request: Request) {
 
 
 
-        // const insertNotif = await prisma.notifications.createMany({
-        //     data: dataNotif
-        // })
+        const insertNotif = await prisma.notifications.createMany({
+            data: dataNotif
+        })
 
         for (let index = 0; index < dataNotif.length; index++) {
 
