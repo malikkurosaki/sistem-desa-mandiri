@@ -1,10 +1,11 @@
-import { Box, Button, Flex, Group, Modal, SimpleGrid, Text } from '@mantine/core';
+import { Button, Flex, Modal, SimpleGrid, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import { BsQuestionCircleFill } from 'react-icons/bs';
-import { WARNA } from '../fun/WARNA';
+import { useMediaQuery } from '@mantine/hooks';
 
 export default function LayoutModal({ opened, onClose, description, onYes }: { opened: boolean, onClose: () => void, description: string, onYes: (val: boolean) => void }) {
   const [isValModal, setValModal] = useState(opened)
+  const isMobile = useMediaQuery('(max-width: 768px)');
   return (
     <Modal styles={{
       body: {
@@ -19,13 +20,23 @@ export default function LayoutModal({ opened, onClose, description, onYes }: { o
         <BsQuestionCircleFill size={100} color="red" />
         <Text mt={30} ta={"center"} fw={"bold"} fz={18}>{description}</Text>
       </Flex>
-        <SimpleGrid
+      <SimpleGrid
         cols={{ base: 1, sm: 2, lg: 2 }}
         mt={30}
-        >
-          <Button fullWidth size="lg" radius={'xl'} bg={'#F1C1CF'} c={'#D30B30'} onClick={() => onYes(false)}>TIDAK</Button>
-          <Button fullWidth size="lg" radius={'xl'} bg={WARNA.biruTua} onClick={() => onYes(true)}>YA</Button>
-        </SimpleGrid>
+      >
+        {isMobile ?
+          <>
+            <Button fullWidth size="lg" radius={'xl'} bg={'green'} onClick={() => onYes(true)}>YA</Button>
+            <Button fullWidth size="lg" radius={'xl'} bg={'#F1C1CF'} c={'#D30B30'} onClick={() => onYes(false)}>TIDAK</Button>
+          </>
+          :
+          <>
+            <Button fullWidth size="lg" radius={'xl'} bg={'#F1C1CF'} c={'#D30B30'} onClick={() => onYes(false)}>TIDAK</Button>
+            <Button fullWidth size="lg" radius={'xl'} bg={'green'} onClick={() => onYes(true)}>YA</Button>
+          </>
+
+        }
+      </SimpleGrid>
     </Modal>
   );
 }

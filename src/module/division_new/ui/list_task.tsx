@@ -42,7 +42,7 @@ export default function ListTaskOnDetailDivision() {
       fetchData()
    }, [param.id])
 
-   const isMobile = useMediaQuery('(max-width: 369px)');
+   const isMobile = useMediaQuery('(max-width: 399px)');
 
    return (
       <Box pt={10}>
