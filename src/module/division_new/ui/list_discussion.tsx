@@ -17,7 +17,7 @@ export default function ListDiscussionOnDetailDivision() {
   const param = useParams<{ id: string }>()
   const [data, setData] = useState<IDataDiscussionOnDetailDivision[]>([])
   const [loading, setLoading] = useState(true);
-  const isMobile = useMediaQuery('(max-width: 369px)');
+  const isMobile = useMediaQuery('(max-width: 399px)');
   const tema = useHookstate(TEMA)
 
   async function fetchData() {

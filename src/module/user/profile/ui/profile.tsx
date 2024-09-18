@@ -1,5 +1,5 @@
 "use client"
-import { LayoutIconBack, LayoutNavbarHome, SkeletonDetailProfile, TEMA, WARNA } from "@/module/_global";
+import { LayoutIconBack, LayoutNavbarHome, SkeletonAvatar, SkeletonDetailProfile, TEMA, WARNA } from "@/module/_global";
 import { ActionIcon, Avatar, Box, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { RiIdCardFill } from "react-icons/ri";
 import { FaSquarePhone } from "react-icons/fa6";
@@ -72,11 +72,14 @@ export default function Profile() {
             justify="center"
             gap="xs"
           >
+            {loading ? <Skeleton height={100} radius={"100"} width={100} /> :      
             <Avatar
               size="100"
               radius={"100"}
               src={img}
             />
+            }
+            {/* <SkeletonAvatar size="100" sizeNoImg="100" img={img} /> */}
             {loading ?
               <Skeleton height={62} mt={10} width={"40%"} />
               :
