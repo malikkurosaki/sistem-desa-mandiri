@@ -1,5 +1,5 @@
 'use client'
-import { SkeletonSingle, TEMA, WARNA } from '@/module/_global';
+import { globalNotifPage, SkeletonSingle, TEMA, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Center, Divider, Grid, Group, Spoiler, Stack, Text, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { TfiAnnouncement } from "react-icons/tfi";
@@ -19,6 +19,7 @@ export default function ListAnnouncement() {
    const router = useRouter()
    const [loading, setLoading] = useState(true);
    const tema = useHookstate(TEMA)
+   const load = useHookstate(globalNotifPage)
 
    const fetchData = async () => {
       try {
@@ -32,7 +33,7 @@ export default function ListAnnouncement() {
          }
          setLoading(false);
       } catch (error) {
-         toast.error("Gagal mendapatkan announcement, coba lagi nanti");
+         toast.error("Gagal mendapatkan pengumuman, coba lagi nanti");
          console.error(error);
       } finally {
          setLoading(false);
@@ -41,7 +42,14 @@ export default function ListAnnouncement() {
 
    useShallowEffect(() => {
       fetchData()
-   }, [searchQuery])
+   }, [searchQuery, load.get().load])
+
+   useShallowEffect(() => {
+      if (load.get().category == "announcement") {
+         console.log('masuk sinii', load.get().load)
+         fetchData()
+      }
+   }, [load.get().load])
 
    return (
       <Box p={20}>

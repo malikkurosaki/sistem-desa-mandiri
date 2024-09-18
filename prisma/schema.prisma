@@ -121,6 +121,8 @@ model User {
   DivisionDocumentFolderFile DivisionDocumentFolderFile[]
   DivisionCalendar           DivisionCalendar[]
   DivisionCalendarMember     DivisionCalendarMember[]
+  Notifications              Notifications[]              @relation("UserToUser")
+  Notifications2             Notifications[]              @relation("UserFromUser")
 }
 
 model UserLog {
@@ -482,4 +484,20 @@ model ColorTheme {
 model Subscription {
   id   String @id @default(cuid())
   data Json
+}
+
+model Notifications {
+  id         String   @id @default(cuid())
+  User1      User     @relation("UserToUser", fields: [idUserTo], references: [id], map: "UserToUserMap")
+  idUserTo   String
+  User2      User     @relation("UserFromUser", fields: [idUserFrom], references: [id], map: "UserFromUserMap")
+  idUserFrom String
+  category   String
+  idContent  String
+  title      String
+  desc       String
+  isRead     Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

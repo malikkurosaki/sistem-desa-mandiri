@@ -20,3 +20,8 @@ export const TEMA = hookstate<IGlobalTema>({
    bgFiturDivision: "#FCAA4B",
    bgTotalKegiatan: "#DCEED8"
 })
+
+export const globalNotifPage = hookstate({
+   load: false,
+   category: ''
+})
