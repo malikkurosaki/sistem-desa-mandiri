@@ -478,3 +478,8 @@ model ColorTheme {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
+
+model Subscription {
+  id   String @id @default(cuid())
+  data Json
+}
