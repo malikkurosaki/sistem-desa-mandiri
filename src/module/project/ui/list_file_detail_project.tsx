@@ -121,7 +121,9 @@ export default function ListFileDetailProject() {
                           </Center>
                         </Grid.Col>
                         <Grid.Col span={10}>
-                          <Text>{item.name + '.' + item.extension}</Text>
+                          <Text style={{
+                            overflowWrap: "break-word"
+                          }}>{item.name + '.' + item.extension}</Text>
                         </Grid.Col>
                       </Grid>
                       <Group>
