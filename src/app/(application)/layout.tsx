@@ -10,7 +10,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
    const user = await funGetUserByCookies()
    return (
       <>
-         <WrapLayout role={user.idUserRole} theme={user.theme}>
+         <WrapLayout role={user.idUserRole} theme={user.theme} user={user.id}>
             {children}
          </WrapLayout>
       </>

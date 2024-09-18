@@ -5,6 +5,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { NextResponse } from "next/server";
 import { createLogUser } from '@/module/user';
+import mtqq_client from "../../../module/_global/bin/mqtt_client";
 
 export const dynamic = 'force-dynamic'
 
@@ -127,22 +128,72 @@ export async function POST(request: Request) {
 
         let memberDivision = []
 
-        for (var i = 0, l = groups.length; i < l; i++) {
-            var obj = groups[i].Division;
-            for (let index = 0; index < obj.length; index++) {
-                const element = obj[index];
-                const fix = {
-                    idAnnouncement: data.id,
-                    idGroup: groups[i].id,
-                    idDivision: element.id
+        // for (var i = 0, l = groups.length; i < l; i++) {
+        //     var obj = groups[i].Division;
+        //     for (let index = 0; index < obj.length; index++) {
+        //         const element = obj[index];
+        //         const fix = {
+        //             idAnnouncement: data.id,
+        //             idGroup: groups[i].id,
+        //             idDivision: element.id
+        //         }
+        //         memberDivision.push(fix)
+        //     }
+        // }
+
+        // const announcementMember = await prisma.announcementMember.createMany({
+        //     data: memberDivision,
+        // });
+
+        const memberNotif = await prisma.divisionMember.findMany({
+            where: {
+                Division: {
+                    AnnouncementMember: {
+                        some: {
+                            idAnnouncement: data.id
+                        }
+                    }
                 }
-                memberDivision.push(fix)
+            },
+            select: {
+                idUser: true
             }
+        })
+
+
+
+        const dataNotif = memberNotif.map((v: any) => ({
+            ..._.omit(v, ["idUser"]),
+            idUserTo: v.idUser,
+            idUserFrom: userId,
+            category: 'announcement',
+            idContent: data.id,
+            title: 'Pengumuman Baru',
+            desc: 'Anda memiliki pengumuman baru. Silahkan periksa detailnya.'
+        }))
+
+
+
+
+        // const insertNotif = await prisma.notifications.createMany({
+        //     data: dataNotif
+        // })
+
+        for (let index = 0; index < dataNotif.length; index++) {
+
+            const user = dataNotif[index].idUserTo
+            const title = dataNotif[index].title
+            const desc = dataNotif[index].desc
+
+
+            mtqq_client.publish("app_SDM", JSON.stringify({
+                "user": "clzm6swhg000tfgbhm3bau9ti",
+                "title": title,
+                "category": "announcement",
+                "description": desc
+            }))
         }
 
-        const announcementMember = await prisma.announcementMember.createMany({
-            data: memberDivision,
-        });
 
         // create log user
         const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data pengumuman baru', table: 'announcement', data: data.id })
