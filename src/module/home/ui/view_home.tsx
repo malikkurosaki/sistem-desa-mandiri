@@ -25,23 +25,20 @@ export default function ViewHome() {
           <IconNavbar />
         </Group>
       </LayoutNavbarHome>
-      {/* <ReloadButtonTop
+      <ReloadButtonTop
         onReload={
           () => {
             ''
           }
         }
         title='UPDATE'
-      /> */}
-      <NotificationCustome
-        color='#FFFFFFFF'
-        bg='#0A2295FF'
-        borderColor={"#7CBBEFFF"}
+      />
+      {/* <NotificationCustome
         title='Pengumuman'
         desc='Pengumuman Upacara bendera Upacara bendera Upacara bendera Upacara bendera Upacara bendera'
         onClick={() => {''}}
         onClose={() => {''}}
-      />
+      /> */}
       <Box p={20}>
         <Stack >
           <Carosole />

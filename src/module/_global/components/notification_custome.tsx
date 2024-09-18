@@ -3,9 +3,12 @@ import { Box, Center, Flex, Grid, rem, Text, Transition } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import React, { useState } from 'react';
 import { IoCloseOutline, IoNotifications } from 'react-icons/io5';
+import { TEMA } from '../bin/val_global';
+import { useHookstate } from '@hookstate/core';
 
-export default function NotificationCustome({ onClose, title, desc, bg, color, onClick, borderColor }: { onClose: () => void, title: string, desc: string, bg: string, color: string, onClick: () => void, borderColor: string }) {
+export default function NotificationCustome({ onClose, title, desc, onClick }: { onClose: () => void, title: string, desc: string, onClick: () => void, }) {
   const [opened, setOpened] = useState(false);
+  const tema = useHookstate(TEMA)
 
   useShallowEffect(() => {
     const timer = setTimeout(() => {
@@ -49,23 +52,23 @@ export default function NotificationCustome({ onClose, title, desc, bg, color, o
               <Box p={rem(15)} w={"100%"} h={rem(85)} style={{
                 maxWidth: rem(450),
                 zIndex: 999,
-                backgroundColor: bg,
+                backgroundColor: "#ffffff",
                 borderRadius: 15,
-                border: `1px solid ${borderColor}`
+                border: `1px solid ${tema.get().bgTotalKegiatan}`
               }} onClick={onClick}>
                 <Grid>
                   <Grid.Col span={2}>
-                  <Flex justify={'center'} align={"center"}h={"100%"} >
-                    <IoNotifications color={color} size={30}/>
+                    <Flex justify={'center'} align={"center"} h={"100%"} >
+                      <IoNotifications color={tema.get().utama} size={30} />
                     </Flex>
                   </Grid.Col>
                   <Grid.Col span={8}>
-                    <Text c={color} fw={"bold"} lineClamp={1}>{title}</Text>
-                    <Text c={color} lineClamp={1}>{desc}</Text>
+                    <Text fw={"bold"} lineClamp={1}>{title}</Text>
+                    <Text lineClamp={1}>{desc}</Text>
                   </Grid.Col>
                   <Grid.Col span={2}>
-                    <Flex justify={'center'} align={"center"}h={"100%"} >
-                    <IoCloseOutline onClick={reloadData} color={color} size={25}/>
+                    <Flex justify={'center'} align={"center"} h={"100%"} >
+                      <IoCloseOutline onClick={reloadData} size={25} />
                     </Flex>
                   </Grid.Col>
                 </Grid>

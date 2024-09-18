@@ -1,11 +1,14 @@
 "use client"
+import { useHookstate } from '@hookstate/core';
 import { Button, Center, Transition } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import React, { useState } from 'react';
 import { IoReload } from 'react-icons/io5';
+import { TEMA } from '../bin/val_global';
 
 export default function ReloadButtonTop({ onReload, title }: { onReload: () => void, title: string }) {
   const [opened, setOpened] = useState(false);
+  const tema = useHookstate(TEMA)
 
   useShallowEffect(() => {
     const timer = setTimeout(() => {
@@ -40,7 +43,9 @@ export default function ReloadButtonTop({ onReload, title }: { onReload: () => v
                 alignItems: 'center',
               }}
             >
-              <Button leftSection={<IoReload/>} onClick={reloadData} radius={"lg"}>{title}</Button>
+              <Button style={{
+                border: `1px solid ${tema.get().bgTotalKegiatan}`
+              }} leftSection={<IoReload/>} bg={"white"} c={tema.get().utama} onClick={reloadData} radius={"lg"}>{title}</Button>
             </div>
           )}
         </Transition>
