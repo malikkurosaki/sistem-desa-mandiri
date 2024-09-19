@@ -24,6 +24,8 @@ export async function GET(request: Request) {
         const groupId = user.idGroup
         const { searchParams } = new URL(request.url);
         const name = searchParams.get('search');
+        const page = searchParams.get('page');
+        const dataSkip = Number(page) * 10 - 10;
 
         let kondisi: any = {
             idVillage: String(villageId),
@@ -76,6 +78,8 @@ export async function GET(request: Request) {
 
 
         const announcements = await prisma.announcement.findMany({
+            skip: dataSkip,
+            take: 10,
             where: kondisi,
             select: {
                 id: true,
@@ -128,7 +132,8 @@ export async function POST(request: Request) {
 
         let memberDivision = []
 
-        for (var i = 0, l = groups.length; i < l; i++) {2
+        for (var i = 0, l = groups.length; i < l; i++) {
+            2
             var obj = groups[i].Division;
             for (let index = 0; index < obj.length; index++) {
                 const element = obj[index];

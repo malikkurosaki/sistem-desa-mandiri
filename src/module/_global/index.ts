@@ -1,6 +1,6 @@
 import MqttLoad from "./bin/mqtt_load";
 import prisma from "./bin/prisma";
-import { DIR, globalNotifPage, globalRole, pwd_key_config, TEMA } from "./bin/val_global";
+import { currentScroll, DIR, globalNotifPage, globalRole, pwd_key_config, TEMA } from "./bin/val_global";
 import SkeletonAvatar from "./components/skeleton_avatar";
 import SkeletonDetailDiscussionComment from "./components/skeleton_detail_discussion_comment";
 import SkeletonDetailDiscussionMember from "./components/skeleton_detail_discussion_member";
@@ -24,6 +24,7 @@ import ReloadButtonTop from "./components/reload_button_top";
 import ViewFilter from "./view/view_filter";
 import mtqq_client from "./bin/mqtt_client"
 import NotificationCustome from "./components/notification_custome";
+import { ScrollProvider } from "./components/scroll_provider";
 
 export { WARNA };
 export { LayoutLogin };
@@ -55,3 +56,5 @@ export { globalNotifPage }
 export { SkeletonAvatar }
 export { ReloadButtonTop }
 export { NotificationCustome }
+export { ScrollProvider }
+export { currentScroll }
