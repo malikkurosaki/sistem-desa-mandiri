@@ -178,6 +178,9 @@ export default function EditMember({ id }: { id: string }) {
                      size="150"
                      radius={"100"}
                      src={img}
+                     style={{
+                        border: `1px solid ${"#C1BFBFFF"}`
+                      }}
                   />
                </Indicator>
             }

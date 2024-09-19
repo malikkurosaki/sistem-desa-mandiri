@@ -59,6 +59,10 @@ export default function NavbarDetailProject() {
           <Stack pt={10}>
             <SimpleGrid
               cols={{ base: 3, sm: 3, lg: 3 }}
+              style={{
+                alignContent: 'flex-start',
+                alignItems: 'flex-start',
+              }}
             >
               <Flex justify={'center'} align={'center'} direction={'column'}
                 style={{
@@ -67,6 +71,7 @@ export default function NavbarDetailProject() {
                 onClick={() => {
                   router.push(param.id + '/add-task')
                 }}
+                pb={20}
               >
                 <Box>
                   <IoAddCircle size={30} color={tema.get().utama} />
