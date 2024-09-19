@@ -20,6 +20,8 @@ export async function GET(request: Request) {
       const { searchParams } = new URL(request.url);
       const idGroup = searchParams.get("group");
       const name = searchParams.get('search');
+      const page = searchParams.get('page');
+      const dataSkip = Number(page) * 10 - 10;
 
       if (idGroup == "null" || idGroup == undefined) {
          grup = user.idGroup
@@ -56,7 +58,13 @@ export async function GET(request: Request) {
          }
       }
 
+      const totalData = await prisma.division.count({
+         where: kondisi
+      })
+
       const data = await prisma.division.findMany({
+         skip: dataSkip,
+         take: 10,
          where: kondisi,
          select: {
             id: true,
@@ -90,7 +98,7 @@ export async function GET(request: Request) {
       })
 
 
-      return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: allData, filter }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: allData, total: totalData, filter }, { status: 200 });
 
    } catch (error) {
       console.error(error);

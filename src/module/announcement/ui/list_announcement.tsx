@@ -31,13 +31,13 @@ export default function ListAnnouncement() {
             setLoading(true)
          const response = await funGetAllAnnouncement('?search=' + searchQuery + '&page=' + isPage)
          if (response.success) {
-            if (response.data.length > 0) {
+            // if (response.data.length > 0) {
                if (isPage == 1) {
                   setIsData(response?.data)
                } else {
                   setIsData([...isData, ...response?.data])
                }
-            }
+            // }
          } else {
             toast.error(response.message);
          }
