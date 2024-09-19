@@ -14,6 +14,8 @@ export async function GET(request: Request) {
     const name = searchParams.get('search')
     const idGroup = searchParams.get("group");
     const active = searchParams.get("active");
+    const page = searchParams.get('page');
+    const dataSkip = Number(page) * 5 - 5;
     const user = await funGetUserByCookies()
     if (user.id == undefined) {
       return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
@@ -36,6 +38,8 @@ export async function GET(request: Request) {
 
 
     const users = await prisma.user.findMany({
+      skip: dataSkip,
+      take: 5,
       where: {
         isActive: active == 'false' ? false : true,
         idGroup: String(fixGroup),

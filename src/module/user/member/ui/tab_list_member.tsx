@@ -1,9 +1,9 @@
 
-import { globalRole, SkeletonSingle, TEMA, WARNA } from "@/module/_global"
+import { currentScroll, globalRole, SkeletonSingle, TEMA, WARNA } from "@/module/_global"
 import { Box, Text, TextInput, Divider, Avatar, Grid } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { HiMagnifyingGlass } from "react-icons/hi2"
 import { IListMember } from "../lib/type_member"
 import { funGetAllmember } from "../lib/api_member"
@@ -25,14 +25,24 @@ export default function TabListMember() {
    const [nameGroup, setNameGroup] = useState('')
    const tema = useHookstate(TEMA)
 
+   //scroll
+   const { value: containerRef } = useHookstate(currentScroll);
+   const [isPage, setPage] = useState(1)
 
-   async function getAllUser() {
+
+   async function getAllUser(loading: boolean) {
       try {
          setLoading(true)
-         const res = await funGetAllmember('?active=' + status + '&group=' + group + '&search=' + searchQuery)
+         const res = await funGetAllmember('?active=' + status + '&group=' + group + '&search=' + searchQuery + '&page=' + isPage)
          if (res.success) {
-            setDataMember(res.data)
-            setNameGroup(res.filter.name)
+               if (isPage == 1) {
+                  setDataMember(res.data)
+                  setNameGroup(res.filter.name)
+               } else {
+                  setDataMember([...dataMember, ...res.data])
+                  setNameGroup(res.filter.name)
+               }
+         
          } else {
             toast.error(res.message)
          }
@@ -44,9 +54,39 @@ export default function TabListMember() {
       }
    }
 
+   function onSearch(val:string){
+      setSearchQuery(val)
+      setPage(1)
+   }
+
    useShallowEffect(() => {
-      getAllUser()
+      getAllUser(true)
    }, [status, searchQuery])
+
+   useShallowEffect(() => {
+      getAllUser(false)
+   }, [status, isPage])
+
+   useEffect(() => {
+      const handleScroll = async () => {
+         if (containerRef && containerRef.current) {
+            const scrollTop = containerRef.current.scrollTop;
+            const containerHeight = containerRef.current.clientHeight;
+            const scrollHeight = containerRef.current.scrollHeight;
+
+            if (scrollTop + containerHeight >= scrollHeight) {
+               setPage(isPage + 1)
+            }
+
+         }
+      };
+
+      const container = containerRef?.current;
+      container?.addEventListener("scroll", handleScroll);
+      return () => {
+         container?.removeEventListener("scroll", handleScroll);
+      };
+   }, [containerRef, isPage]);
 
    return (
       <>
@@ -63,7 +103,7 @@ export default function TabListMember() {
                radius={30}
                leftSection={<HiMagnifyingGlass size={20} />}
                placeholder="Pencarian"
-               onChange={(e) => setSearchQuery(e.target.value)}
+               onChange={(e) => onSearch(e.target.value)}
                my={10}
             />
             {loading

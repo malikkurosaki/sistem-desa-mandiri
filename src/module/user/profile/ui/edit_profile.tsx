@@ -120,6 +120,9 @@ export default function EditProfile() {
               size="150"
               radius={"100"}
               src={img}
+              style={{
+                border: `1px solid ${"#C1BFBFFF"}`
+              }}
             />
           </Indicator>
         }

@@ -36,7 +36,7 @@ export default function ReloadButtonTop({ onReload, title }: { onReload: () => v
               style={{
                 ...state,
                 zIndex: 999,
-                position: 'absolute',
+                position: 'fixed',
                 top: 90,
                 display: 'flex',
                 justifyContent: 'center',
