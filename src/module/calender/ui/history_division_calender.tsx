@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { IDataCalender, IHistoryCalender } from '../lib/type_calender';
 import { funGetAllCalender, funGetHostory } from '../lib/api_calender';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import moment from 'moment';
 import "moment/locale/id";
 import _ from 'lodash';
@@ -33,10 +33,12 @@ export default function HistoryDivisionCalender() {
       setLoading(false)
     }
   }
-
   useShallowEffect(() => {
     getData()
   }, [searchQuery])
+
+  const isMobile = useMediaQuery('(max-width: 450px)'); 
+
   return (
     <Box>
       <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Riwayat acara" menu />
@@ -93,14 +95,33 @@ export default function HistoryDivisionCalender() {
               :
               isData.map((v, i) => {
                 return (
-                  <Grid key={i} align='center'>
-                    <Grid.Col span={3}>
+                  <Grid key={i} 
+                  style={{
+                    alignContent: 'flex-start',
+                    alignItems: 'flex-start',
+                  }}
+                  >
+                    <Grid.Col span={{
+                      base: isMobile ? 4 : 3,
+                      sm: 3,
+                      xs:3,
+                      md: 3,
+                      lg: 3,
+                      xl: 3
+                    }}>
                       <Flex justify={"center"} direction={'column'}>
                         <Text ta={"center"} fz={20} fw={'bold'}>{moment(v.dateStart).format('D MMM')}</Text>
                         <Text ta={"center"} fz={15}>{moment(v.dateStart).format('dddd')}</Text>
                       </Flex>
                     </Grid.Col>
-                    <Grid.Col span={9}>
+                    <Grid.Col span={{
+                      base: isMobile ? 8 : 9,
+                      md: 9,
+                      lg: 9,
+                      xl: 9,
+                      sm: 9,
+                      xs:9
+                    }}>
                       {v.data.map((d, x) => {
                         return (
                           <Box mb={9} key={x}

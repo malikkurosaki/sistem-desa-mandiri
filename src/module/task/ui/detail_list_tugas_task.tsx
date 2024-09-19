@@ -175,9 +175,15 @@ export default function ListTugasDetailTask() {
             <Box>
                <Stack pt={10}>
                   <SimpleGrid
-                     cols={{ base: 3, sm: 3, lg: 3 }}
+                     cols={{ base: 2, sm: 3, lg: 3 }}
+                     style={{
+                        alignContent: 'flex-start',
+                        alignItems: 'flex-start',
+                      }}
                   >
-                     <Flex onClick={() => { setOpenDrawerStatus(true) }} justify={'center'} align={'center'} direction={'column'} >
+                     <Flex onClick={() => { setOpenDrawerStatus(true) }} justify={'center'} align={'center'} direction={'column'}
+                     pb={20}
+                     >
                         <Box>
                            <AiOutlineFileDone size={30} color={tema.get().utama} />
                         </Box>

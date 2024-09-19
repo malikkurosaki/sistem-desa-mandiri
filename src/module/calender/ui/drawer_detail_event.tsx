@@ -41,13 +41,17 @@ export default function DrawerDetailEvent({ idCalendar }: { idCalendar: string }
       <Stack pt={10}>
         <SimpleGrid
           cols={{ base: 3, sm: 3, lg: 3 }}
+          style={{
+            alignContent: 'flex-start',
+            alignItems: 'flex-start',
+          }}
         >
-          <Flex onClick={() => setModal(true)} justify={'center'} align={'center'} direction={'column'} >
+          <Flex onClick={() => router.push(`/division/${param.id}/calender/${param.detail}/add-member`)} justify={'center'} align={'center'} direction={'column'} >
             <Box>
-              <MdDelete size={30} color={tema.get().utama} />
+              <FaUsers size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text ta={"center"} c={tema.get().utama}>Hapus Acara</Text>
+              <Text c={tema.get().utama} ta={"center"}>Tambah Anggota</Text>
             </Box>
           </Flex>
           <Flex onClick={() => router.push(`/division/${param.id}/calender/update/${idCalendar}`)} justify={'center'} align={'center'} direction={'column'} >
@@ -58,12 +62,12 @@ export default function DrawerDetailEvent({ idCalendar }: { idCalendar: string }
               <Text c={tema.get().utama}>Edit Acara</Text>
             </Box>
           </Flex>
-          <Flex onClick={() => router.push(`/division/${param.id}/calender/${param.detail}/add-member`)} justify={'center'} align={'center'} direction={'column'} >
+          <Flex onClick={() => setModal(true)} justify={'center'} align={'center'} direction={'column'} >
             <Box>
-              <FaUsers size={30} color={tema.get().utama} />
+              <MdDelete size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={tema.get().utama} ta={"center"}>Tambah Anggota</Text>
+              <Text ta={"center"} c={tema.get().utama}>Hapus Acara</Text>
             </Box>
           </Flex>
         </SimpleGrid>
