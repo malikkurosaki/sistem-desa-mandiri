@@ -1,8 +1,8 @@
 'use client'
-import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
+import { currentScroll, globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { HiMagnifyingGlass, HiMiniUserGroup, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
 import { MdAccountCircle } from 'react-icons/md';
@@ -26,6 +26,8 @@ export default function ListDivision() {
   const [nameGroup, setNameGroup] = useState('')
   const roleLogin = useHookstate(globalRole)
   const tema = useHookstate(TEMA)
+  const { value: containerRef } = useHookstate(currentScroll);
+  const [isPage, setPage] = useState(1)
 
   const paddingLift = useMediaQuery('(max-width: 505px)')
 
@@ -34,15 +36,19 @@ export default function ListDivision() {
     setIsList(!isList)
   }
 
-  const fetchData = async (search: string) => {
+  const fetchData = async (loading: boolean) => {
     try {
-      setData([]);
-      setLoading(true);
-      const response = await funGetAllDivision('?search=' + search + '&group=' + group)
+      if (loading)
+        setLoading(true);
+      const response = await funGetAllDivision('?search=' + searchQuery + '&group=' + group + '&page=' + isPage)
       if (response.success) {
-        setData(response.data)
-        setJumlah(response.data.length)
+        setJumlah(response.total)
         setNameGroup(response.filter.name)
+        if (isPage == 1) {
+          setData(response.data)
+        }else{
+          setData([...data, ...response.data])
+        }
       } else {
         toast.error(response.message);
       }
@@ -57,12 +63,38 @@ export default function ListDivision() {
 
   function searchDivision(search: string) {
     setSearchQuery(search)
-    fetchData(search)
+    setPage(1)
   }
 
   useShallowEffect(() => {
-    fetchData(searchQuery)
+    fetchData(true)
   }, [searchQuery])
+
+
+  useShallowEffect(() => {
+    fetchData(false)
+ }, [isPage])
+
+ useEffect(() => {
+  const handleScroll = async () => {
+     if (containerRef && containerRef.current) {
+        const scrollTop = containerRef.current.scrollTop;
+        const containerHeight = containerRef.current.clientHeight;
+        const scrollHeight = containerRef.current.scrollHeight;
+
+        if (scrollTop + containerHeight >= scrollHeight) {
+           setPage(isPage + 1)
+        }
+     }
+  };
+
+  const container = containerRef?.current;
+  container?.addEventListener("scroll", handleScroll);
+
+  return () => {
+     container?.removeEventListener("scroll", handleScroll);
+  };
+}, [containerRef, isPage]);
 
 
   return (
