@@ -1,8 +1,8 @@
 'use client'
-import { TEMA } from "@/module/_global";
+import { currentScroll, TEMA } from "@/module/_global";
 import { Avatar, Badge, Box, Divider, Flex, Grid, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GrChatOption } from "react-icons/gr";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { funGetAllDiscussion } from "../lib/api_discussion";
@@ -18,15 +18,21 @@ export default function ListDiscussion({ id }: { id: string }) {
    const param = useParams<{ id: string }>()
    const [loading, setLoading] = useState(true)
    const tema = useHookstate(TEMA)
+   const router = useRouter()
+   const { value: containerRef } = useHookstate(currentScroll);
+   const [isPage, setPage] = useState(1)
 
-   const getData = async () => {
+   const getData = async (loading: boolean) => {
       try {
-         setLoading(true)
-         const response = await funGetAllDiscussion('?division=' + id + '&search=' + searchQuery)
-         if (
-            response.success
-         ) {
-            setData(response.data)
+         if (loading)
+            setLoading(true)
+         const response = await funGetAllDiscussion('?division=' + id + '&search=' + searchQuery + '&page=' + isPage)
+         if (response.success) {
+            if (isPage == 1) {
+               setData(response.data)
+            } else {
+               setData([...isData, ...response.data])
+            }
          } else {
             toast.error(response.message)
          }
@@ -39,10 +45,36 @@ export default function ListDiscussion({ id }: { id: string }) {
    }
 
    useShallowEffect(() => {
-      getData()
+      setPage(1)
+      getData(true)
    }, [searchQuery])
 
-   const router = useRouter()
+   useShallowEffect(() => {
+      getData(false)
+   }, [isPage])
+
+   useEffect(() => {
+      const handleScroll = async () => {
+         if (containerRef && containerRef.current) {
+            const scrollTop = containerRef.current.scrollTop;
+            const containerHeight = containerRef.current.clientHeight;
+            const scrollHeight = containerRef.current.scrollHeight;
+
+            if (scrollTop + containerHeight >= scrollHeight) {
+               setPage(isPage + 1)
+            }
+         }
+      };
+
+      const container = containerRef?.current;
+      container?.addEventListener("scroll", handleScroll);
+
+      return () => {
+         container?.removeEventListener("scroll", handleScroll);
+      };
+   }, [containerRef, isPage]);
+
+
    return (
       <Box p={20}>
          <TextInput

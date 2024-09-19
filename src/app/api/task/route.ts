@@ -21,7 +21,7 @@ export async function GET(request: Request) {
       const divisi = searchParams.get('division');
       const status = searchParams.get('status');
       const page = searchParams.get('page');
-      const dataSkip = Number(page) * 3 - 3;
+      const dataSkip = Number(page) * 10 - 10;
 
       const cek = await prisma.division.count({
          where: {
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 
       const data = await prisma.divisionProject.findMany({
          skip: dataSkip,
-         take: 3,
+         take: 10,
          where: {
             isActive: true,
             idDivision: String(divisi),
