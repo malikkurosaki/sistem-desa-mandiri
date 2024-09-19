@@ -1,8 +1,8 @@
 "use client"
-import { globalRole, TEMA, WARNA } from '@/module/_global';
+import { currentScroll, globalRole, TEMA, WARNA } from '@/module/_global';
 import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
 import { MdAccountCircle } from 'react-icons/md';
 import { RiCircleFill } from 'react-icons/ri';
@@ -25,14 +25,29 @@ export default function ListProject() {
   const roleLogin = useHookstate(globalRole)
   const [nameGroup, setNameGroup] = useState('')
   const tema = useHookstate(TEMA)
+  const { value: containerRef } = useHookstate(currentScroll)
+  const [isPage, setPage] = useState(1)
+  const [totalData, setTotalData] = useState(0)
+  const isMobile = useMediaQuery('(max-width: 369px)');
+  const paddingLift = useMediaQuery('(max-width: 505px)')
 
-  const fetchData = async () => {
+  const handleList = () => {
+    setIsList(!isList)
+  }
+
+  const fetchData = async (loading: boolean) => {
     try {
-      setLoading(true)
-      const response = await funGetAllProject('?status=' + status + '&search=' + searchQuery + '&group=' + group)
+      if (loading)
+        setLoading(true)
+      const response = await funGetAllProject('?status=' + status + '&search=' + searchQuery + '&group=' + group + '&page=' + isPage)
       if (response.success) {
-        setData(response?.data)
         setNameGroup(response.filter.name)
+        setTotalData(response.total)
+        if (isPage == 1) {
+          setData(response.data)
+        } else {
+          setData([...isData, ...response.data])
+        }
       } else {
         toast.error(response.message);
       }
@@ -47,15 +62,35 @@ export default function ListProject() {
 
 
   useShallowEffect(() => {
-    fetchData();
+    setPage(1)
+    fetchData(true);
   }, [status, searchQuery]);
 
-  const handleList = () => {
-    setIsList(!isList)
-  }
-  const isMobile = useMediaQuery('(max-width: 369px)');
 
-  const paddingLift = useMediaQuery('(max-width: 505px)')
+  useShallowEffect(() => {
+    fetchData(false)
+  }, [isPage])
+
+  useEffect(() => {
+    const handleScroll = async () => {
+      if (containerRef && containerRef.current) {
+        const scrollTop = containerRef.current.scrollTop;
+        const containerHeight = containerRef.current.clientHeight;
+        const scrollHeight = containerRef.current.scrollHeight;
+
+        if (scrollTop + containerHeight + 1 >= scrollHeight) {
+          setPage(isPage + 1)
+        }
+      }
+    };
+
+    const container = containerRef?.current;
+    container?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      container?.removeEventListener("scroll", handleScroll);
+    };
+  }, [containerRef, isPage]);
 
   return (
     <Box mt={20}>
@@ -97,7 +132,7 @@ export default function ListProject() {
           <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
             <Text fw={'bold'} c={tema.get().utama}>Total Kegiatan</Text>
             <Flex justify={'center'} align={'center'} h={'100%'}>
-              <Text fz={40} fw={'bold'} c={tema.get().utama}>{isData.length}</Text>
+              <Text fz={40} fw={'bold'} c={tema.get().utama}>{totalData}</Text>
             </Flex>
           </Box>
         }
