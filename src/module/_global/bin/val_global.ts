@@ -1,5 +1,6 @@
 import { hookstate } from "@hookstate/core"
 import { IGlobalTema } from './type_global';
+import { RefObject } from "react";
 
 export const pwd_key_config = "fchgvjknlmdfnbvghhujlaknsdvjbhknlkmsdbdyu567t8y9u30r4587638y9uipkoeghjvuyi89ipkoefmnrjbhtiu4or9ipkoemnjfbhjiuoijdklnjhbviufojkejnshbiuojijknehgruyu"
 export const globalRole = hookstate<string>('')
@@ -25,3 +26,5 @@ export const globalNotifPage = hookstate({
    load: false,
    category: ''
 })
+
+export const currentScroll = hookstate<RefObject<HTMLDivElement> | null>(null);
