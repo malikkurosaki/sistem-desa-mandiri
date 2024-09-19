@@ -1,7 +1,7 @@
-import { TEMA } from "@/module/_global";
+import { currentScroll, TEMA } from "@/module/_global";
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Progress, Skeleton, Text, TextInput, Title } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from "react-icons/hi2";
 import { MdAccountCircle } from "react-icons/md";
 import { IDataTask } from "../lib/type_task";
@@ -22,20 +22,26 @@ export default function ListDivisionTask() {
    const [loading, setLoading] = useState(true);
    const tema = useHookstate(TEMA)
    const paddingLift = useMediaQuery('(max-width: 505px)')
+   const { value: containerRef } = useHookstate(currentScroll)
+   const [isPage, setPage] = useState(1)
+   const [totalData, setTotalData] = useState(0)
 
    const handleList = () => {
       setIsList(!isList)
    }
 
-   const fetchData = async () => {
+   const fetchData = async (loading: boolean) => {
       try {
-         setData([]);
-         setLoading(true);
-
-         const response = await funGetAllTask('?division=' + param.id + '&status=' + status + '&search=' + searchQuery)
-
+         if (loading)
+            setLoading(true)
+         const response = await funGetAllTask('?division=' + param.id + '&status=' + status + '&search=' + searchQuery + '&page=' + isPage)
          if (response.success) {
-            setData(response?.data)
+            setTotalData(response.total)
+            if (isPage == 1) {
+               setData(response?.data)
+            } else {
+               setData([...isData, ...response.data])
+            }
          } else {
             toast.error(response.message);
          }
@@ -51,8 +57,35 @@ export default function ListDivisionTask() {
 
 
    useShallowEffect(() => {
-      fetchData();
+      setPage(1)
+      fetchData(true);
    }, [status, searchQuery]);
+
+
+   useShallowEffect(() => {
+      fetchData(false)
+   }, [isPage])
+
+   useEffect(() => {
+      const handleScroll = async () => {
+         if (containerRef && containerRef.current) {
+            const scrollTop = containerRef.current.scrollTop;
+            const containerHeight = containerRef.current.clientHeight;
+            const scrollHeight = containerRef.current.scrollHeight;
+
+            if (scrollTop + containerHeight >= scrollHeight) {
+               setPage(isPage + 1)
+            }
+         }
+      };
+
+      const container = containerRef?.current;
+      container?.addEventListener("scroll", handleScroll);
+
+      return () => {
+         container?.removeEventListener("scroll", handleScroll);
+      };
+   }, [containerRef, isPage]);
 
    return (
       <Box py={20}>
@@ -92,7 +125,7 @@ export default function ListDivisionTask() {
                <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
                   <Text fw={'bold'} c={tema.get().utama}>Total Kegiatan</Text>
                   <Flex justify={'center'} align={'center'} h={'100%'}>
-                     <Text fz={40} fw={'bold'} c={tema.get().utama}>{isData.length}</Text>
+                     <Text fz={40} fw={'bold'} c={tema.get().utama}>{totalData}</Text>
                   </Flex>
                </Box>
             }

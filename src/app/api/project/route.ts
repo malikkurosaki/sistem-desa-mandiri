@@ -22,6 +22,8 @@ export async function GET(request: Request) {
         const name = searchParams.get('search');
         const status = searchParams.get('status');
         const idGroup = searchParams.get("group");
+        const page = searchParams.get('page');
+        const dataSkip = Number(page) * 10 - 10;
         const villageId = user.idVillage
         const userId = user.id
 
@@ -73,6 +75,8 @@ export async function GET(request: Request) {
 
 
         const data = await prisma.project.findMany({
+            skip: dataSkip,
+            take: 10,
             where: kondisi,
             select: {
                 id: true,
@@ -95,6 +99,11 @@ export async function GET(request: Request) {
             member: v.ProjectMember.length
         }))
 
+
+        const totalData = await prisma.project.count({
+            where: kondisi
+        })
+
         const filter = await prisma.group.findUnique({
             where: {
                 id: grup
@@ -106,7 +115,7 @@ export async function GET(request: Request) {
         })
 
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kegiatan", data: omitData, filter }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kegiatan", data: omitData, filter, total: totalData }, { status: 200 });
 
     } catch (error) {
         console.error(error);

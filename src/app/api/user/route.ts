@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     const idGroup = searchParams.get("group");
     const active = searchParams.get("active");
     const page = searchParams.get('page');
-    const dataSkip = Number(page) * 5 - 5;
+    const dataSkip = Number(page) * 10 - 10;
     const user = await funGetUserByCookies()
     if (user.id == undefined) {
       return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
@@ -37,46 +37,89 @@ export async function GET(request: Request) {
     })
 
 
-    const users = await prisma.user.findMany({
-      skip: dataSkip,
-      take: 5,
-      where: {
-        isActive: active == 'false' ? false : true,
-        idGroup: String(fixGroup),
-        name: {
-          contains: (name == undefined || name == null) ? "" : name,
-          mode: "insensitive",
-        }
-      },
-      select: {
-        id: true,
-        isActive: true,
-        nik: true,
-        name: true,
-        phone: true,
-        email: true,
-        gender: true,
-        img: true,
-        Position: {
-          select: {
-            name: true,
+    if (page != undefined) {
+      const users = await prisma.user.findMany({
+        skip: dataSkip,
+        take: 10,
+        where: {
+          isActive: active == 'false' ? false : true,
+          idGroup: String(fixGroup),
+          name: {
+            contains: (name == undefined || name == null) ? "" : name,
+            mode: "insensitive",
+          }
+        },
+        select: {
+          id: true,
+          isActive: true,
+          nik: true,
+          name: true,
+          phone: true,
+          email: true,
+          gender: true,
+          img: true,
+          Position: {
+            select: {
+              name: true,
+            },
+          },
+          Group: {
+            select: {
+              name: true,
+            },
           },
         },
-        Group: {
-          select: {
-            name: true,
+      });
+
+      const allData = users.map((v: any) => ({
+        ..._.omit(v, ["Group", "Position"]),
+        group: v.Group.name,
+        position: v.Position.name
+      }))
+
+      return NextResponse.json({ success: true, message: "Berhasil member", data: allData, filter }, { status: 200 });
+    } else {
+      const users = await prisma.user.findMany({
+        where: {
+          isActive: active == 'false' ? false : true,
+          idGroup: String(fixGroup),
+          name: {
+            contains: (name == undefined || name == null) ? "" : name,
+            mode: "insensitive",
+          }
+        },
+        select: {
+          id: true,
+          isActive: true,
+          nik: true,
+          name: true,
+          phone: true,
+          email: true,
+          gender: true,
+          img: true,
+          Position: {
+            select: {
+              name: true,
+            },
+          },
+          Group: {
+            select: {
+              name: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    const allData = users.map((v: any) => ({
-      ..._.omit(v, ["Group", "Position"]),
-      group: v.Group.name,
-      position: v.Position.name
-    }))
+      const allData = users.map((v: any) => ({
+        ..._.omit(v, ["Group", "Position"]),
+        group: v.Group.name,
+        position: v.Position.name
+      }))
 
-    return NextResponse.json({ success: true, message: "Berhasil member", data: allData, filter }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Berhasil member", data: allData, filter }, { status: 200 });
+    }
+
+
   } catch (error) {
     console.error(error);
     return NextResponse.json({ success: false, message: "Gagal mendapatkan member, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
