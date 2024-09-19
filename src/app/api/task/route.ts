@@ -20,6 +20,8 @@ export async function GET(request: Request) {
       const name = searchParams.get('search');
       const divisi = searchParams.get('division');
       const status = searchParams.get('status');
+      const page = searchParams.get('page');
+      const dataSkip = Number(page) * 3 - 3;
 
       const cek = await prisma.division.count({
          where: {
@@ -33,6 +35,8 @@ export async function GET(request: Request) {
       }
 
       const data = await prisma.divisionProject.findMany({
+         skip: dataSkip,
+         take: 3,
          where: {
             isActive: true,
             idDivision: String(divisi),
@@ -73,7 +77,19 @@ export async function GET(request: Request) {
          member: v.DivisionProjectMember.length
       }))
 
-      return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: formatData, }, { status: 200 });
+      const totalData = await prisma.divisionProject.count({
+         where: {
+            isActive: true,
+            idDivision: String(divisi),
+            status: (status == "0" || status == "1" || status == "2" || status == "3") ? Number(status) : 0,
+            title: {
+               contains: (name == undefined || name == "null") ? "" : name,
+               mode: "insensitive"
+            }
+         }
+      })
+
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: formatData, total: totalData }, { status: 200 });
 
    } catch (error) {
       console.error(error);
