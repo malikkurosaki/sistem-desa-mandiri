@@ -144,7 +144,7 @@ export default function CreateAnnouncement() {
                   <IoIosArrowForward />
                </Group>
             </Box>
-            <Box pt={20} mb={60}>
+            <Box pt={20} mb={100}>
                <Text c={tema.get().utama} mb={10}>Divisi Terpilih</Text>
                {(memberGroup.length === 0) ? (
                   <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada anggota</Text>
