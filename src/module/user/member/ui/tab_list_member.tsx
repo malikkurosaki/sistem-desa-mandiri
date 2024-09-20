@@ -116,7 +116,7 @@ export default function TabListMember() {
                      :
                      dataMember.map((v, i) => {
                         return (
-                           <Box key={i}>
+                           <Box key={i} pt={20}>
                               <Box onClick={() => {
                                  router.push(`/member/${v.id}`)
                               }}>
