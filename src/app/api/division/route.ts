@@ -2,7 +2,6 @@ import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 
@@ -108,8 +107,6 @@ export async function GET(request: Request) {
 
 
 
-
-
 // CREATE DATA DIVISI
 export async function POST(request: Request) {
    try {
@@ -118,8 +115,10 @@ export async function POST(request: Request) {
          return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
       }
 
-      const sent = (await request.json());
-      const villaId = user.idVillage
+      const userId = user.id
+      const userRoleLogin = user.idUserRole
+      const sent = (await request.json())
+
       const data = await prisma.division.create({
          data: {
             name: sent.data.name,
@@ -145,9 +144,69 @@ export async function POST(request: Request) {
          data: dataMember
       })
 
-      revalidatePath('/api/divisi/', "page")
-      revalidatePath('/divisi', 'page')
-      revalidateTag('divisi')
+
+      const dataNotif = sent.member.map((v: any) => ({
+         ..._.omit(v, ["idUser", "name", "img"]),
+         idUserTo: v.idUser,
+         idUserFrom: userId,
+         category: 'division',
+         idContent: data.id,
+         title: 'Divisi Baru',
+         desc: 'Terdapat divisi baru. Silahkan periksa detailnya.'
+      }))
+
+      if (userRoleLogin != "supadmin") {
+         const perbekel = await prisma.user.findFirst({
+            where: {
+               isActive: true,
+               idUserRole: "supadmin",
+               idVillage: user.idVillage
+            }
+         })
+
+         dataNotif.push({
+            idUserTo: perbekel?.id,
+            idUserFrom: userId,
+            category: 'division',
+            idContent: data.id,
+            title: 'Divisi Baru',
+            desc: 'Terdapat divisi baru. Silahkan periksa detailnya.'
+         })
+      } else {
+         const atasanGroup = await prisma.user.findMany({
+            where: {
+               isActive: true,
+               idGroup: sent.data.idGroup,
+               AND: {
+                  OR: [
+                     { idUserRole: 'cosupadmin' },
+                     { idUserRole: 'admin' },
+                  ]
+               }
+            },
+            select: {
+               id: true
+            }
+         })
+
+         const omitData = atasanGroup.map((v: any) => ({
+            ..._.omit(v, ["id"]),
+            idUserTo: v.id,
+            idUserFrom: userId,
+            category: 'division',
+            idContent: data.id,
+            title: 'Divisi Baru',
+            desc: 'Terdapat divisi baru. Silahkan periksa detailnya.'
+         }))
+
+         dataNotif.push(...omitData)
+
+      }
+
+      const insertNotif = await prisma.notifications.createMany({
+         data: dataNotif
+      })
+
 
       // create log user
       const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data divisi', table: 'division', data: data.id })

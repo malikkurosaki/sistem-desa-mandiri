@@ -206,6 +206,35 @@ export async function POST(request: Request) {
          })
       }
 
+      const memberDivision = await prisma.divisionMember.findMany({
+         where: {
+            idDivision: idDivision
+         },
+         select: {
+            User: {
+               select: {
+                  id: true
+               }
+            }
+         }
+      })
+
+
+      const dataNotif = memberDivision.map((v: any) => ({
+         ..._.omit(v, ["User"]),
+         idUserTo: v.User.id,
+         idUserFrom: String(user.id),
+         category: 'division/' + idDivision + '/task',
+         idContent: data.id,
+         title: 'Tugas Baru',
+         desc: 'Terdapat tugas baru. Silahkan periksa detailnya.'
+      }))
+
+      const insertNotif = await prisma.notifications.createMany({
+         data: dataNotif
+      })
+
+
       // create log user
       const log = await createLogUser({ act: 'CREATE', desc: 'User membuat tugas divisi baru', table: 'divisionProject', data: data.id })
 
