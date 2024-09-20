@@ -78,7 +78,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
                id: id,
            },
            data: {
-               isActive: false,
+               isRead: true,
            },
        });
 
