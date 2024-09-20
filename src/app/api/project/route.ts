@@ -137,7 +137,7 @@ export async function POST(request: Request) {
 
         const { idGroup, title, task, member } = JSON.parse(dataBody as string)
         const userId = user.id
-
+        const userRoleLogin = user.idUserRole
 
         const data = await prisma.project.create({
             data: {
@@ -197,6 +197,77 @@ export async function POST(request: Request) {
                 }
             }
         }
+
+        const memberNotif = await prisma.projectMember.findMany({
+            where: {
+                idProject: data.id
+            },
+            select: {
+                idUser: true
+            }
+        })
+
+        const dataNotif = memberNotif.map((v: any) => ({
+            ..._.omit(v, ["idUser"]),
+            idUserTo: v.idUser,
+            idUserFrom: userId,
+            category: 'project',
+            idContent: data.id,
+            title: 'Kegiatan Baru',
+            desc: 'Terdapat kegiatan baru. Silahkan periksa detailnya.'
+        }))
+
+        if (userRoleLogin != "supadmin") {
+            const perbekel = await prisma.user.findFirst({
+                where: {
+                    isActive: true,
+                    idUserRole: "supadmin",
+                    idVillage: user.idVillage
+                }
+            })
+
+            dataNotif.push({
+                idUserTo: perbekel?.id,
+                idUserFrom: userId,
+                category: 'project',
+                idContent: data.id,
+                title: 'Kegiatan Baru',
+                desc: 'Terdapat kegiatan baru. Silahkan periksa detailnya.'
+            })
+        } else {
+            const atasanGroup = await prisma.user.findMany({
+                where: {
+                    isActive: true,
+                    idGroup: idGroup,
+                    AND: {
+                        OR: [
+                            { idUserRole: 'cosupadmin' },
+                            { idUserRole: 'admin' },
+                        ]
+                    }
+                },
+                select:{
+                    id: true
+                }
+            })
+
+            const omitData = atasanGroup.map((v: any) => ({
+                ..._.omit(v, ["id"]),
+                idUserTo: v.id,
+                idUserFrom: userId,
+                category: 'project',
+                idContent: data.id,
+                title: 'Kegiatan Baru',
+                desc: 'Terdapat kegiatan baru. Silahkan periksa detailnya.'
+            }))
+
+            dataNotif.push(...omitData)
+
+        }
+
+        const insertNotif = await prisma.notifications.createMany({
+            data: dataNotif
+        })
 
 
         // create log user

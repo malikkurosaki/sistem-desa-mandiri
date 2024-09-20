@@ -117,6 +117,7 @@ export async function POST(request: Request) {
         const { title, desc, groups } = (await request.json());
         const villaId = user.idVillage
         const userId = user.id
+        const userRoleLogin = user.idUserRole
 
         const data = await prisma.announcement.create({
             data: {
@@ -177,27 +178,43 @@ export async function POST(request: Request) {
             desc: 'Anda memiliki pengumuman baru. Silahkan periksa detailnya.'
         }))
 
+        if (userRoleLogin != "supadmin") {
+            const perbekel = await prisma.user.findFirst({
+                where: {
+                    isActive: true,
+                    idUserRole: "supadmin",
+                    idVillage: user.idVillage
+                }
+            })
 
-
+            dataNotif.push({
+                idUserTo: perbekel?.id,
+                idUserFrom: userId,
+                category: 'announcement',
+                idContent: data.id,
+                title: 'Pengumuman Baru',
+                desc: 'Anda memiliki pengumuman baru. Silahkan periksa detailnya.'
+            })
+        }
 
         const insertNotif = await prisma.notifications.createMany({
             data: dataNotif
         })
 
-        for (let index = 0; index < dataNotif.length; index++) {
+        // for (let index = 0; index < dataNotif.length; index++) {
 
-            const user = dataNotif[index].idUserTo
-            const title = dataNotif[index].title
-            const desc = dataNotif[index].desc
+        //     const user = dataNotif[index].idUserTo
+        //     const title = dataNotif[index].title
+        //     const desc = dataNotif[index].desc
 
 
-            mtqq_client.publish("app_SDM", JSON.stringify({
-                "user": "clzm6swhg000tfgbhm3bau9ti",
-                "title": title,
-                "category": "announcement",
-                "description": desc
-            }))
-        }
+        //     mtqq_client.publish("app_SDM", JSON.stringify({
+        //         "user": "clzm6swhg000tfgbhm3bau9ti",
+        //         "title": title,
+        //         "category": "announcement",
+        //         "description": desc
+        //     }))
+        // }
 
 
         // create log user
