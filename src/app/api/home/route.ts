@@ -358,6 +358,25 @@ export async function GET(request: Request) {
             date: moment(v.dateStart).format("ll"),
             user: v.User.name
          }))
+      } else if (kategori == "header") {
+         const total = await prisma.notifications.count({
+            where: {
+               isActive: true,
+               isRead: false,
+               idUserTo: user.id
+            }
+         })
+
+         const desa = await prisma.village.findUnique({
+            where: {
+               id: idVillage
+            }
+         })
+
+         allData = {
+            totalNotif: total,
+            village: desa?.name
+         }
       }
 
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan data", data: allData }, { status: 200 });
