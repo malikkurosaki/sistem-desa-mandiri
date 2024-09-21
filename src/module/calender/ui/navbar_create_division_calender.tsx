@@ -243,10 +243,11 @@ export default function NavbarCreateDivisionCalender() {
               setTouched({ ...touched, repeatValue: false })
             }}
             onBlur={() => setTouched({ ...touched, repeatValue: true })}
+            // TODO :: NANTI DIPERBAIKI
             error={
               touched.repeatValue && (
-                isData.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : null ||
-                  Number(isData.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh 0" : null
+                isData.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : "" 
+                // || Number(isData.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh 0" : ""
               )
             }
           />
