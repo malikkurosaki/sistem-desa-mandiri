@@ -18,14 +18,14 @@ export default function ViewHome() {
   return (
     <>
       <HeaderHome />
-      <ReloadButtonTop
+      {/* <ReloadButtonTop
         onReload={
           () => {
             ''
           }
         }
         title='UPDATE'
-      />
+      /> */}
       {/* <NotificationCustome
         title='Pengumuman'
         desc='Pengumuman Upacara bendera Upacara bendera Upacara bendera Upacara bendera Upacara bendera'

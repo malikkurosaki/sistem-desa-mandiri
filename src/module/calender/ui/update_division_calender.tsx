@@ -297,8 +297,8 @@ export default function UpdateDivisionCalender() {
                 onBlur={() => setTouched({ ...touched, repeatValue: true })}
                 error={
                   touched.repeatValue && (
-                    isDataCalender?.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : null ||
-                      Number(isDataCalender?.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh dibawah 1" : null
+                    isDataCalender?.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : null 
+                    // || Number(isDataCalender?.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh dibawah 1" : null
                   )
                 }
               />
