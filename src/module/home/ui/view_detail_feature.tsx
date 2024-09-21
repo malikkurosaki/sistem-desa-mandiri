@@ -36,7 +36,7 @@ export default function ViewDetailFeature() {
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={tema.get().utama}>Divisi</Text>
+                <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Divisi</Text>
               </Center>
             </Box>
             <Box onClick={() => router.push('/project?status=0&group=null')}>
@@ -52,7 +52,7 @@ export default function ViewDetailFeature() {
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={tema.get().utama}>Kegiatan</Text>
+                <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Kegiatan</Text>
               </Center>
             </Box>
             <Box onClick={() => router.push('/announcement')}>
@@ -68,7 +68,7 @@ export default function ViewDetailFeature() {
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={tema.get().utama}>Pengumuman</Text>
+                <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Pengumuman</Text>
               </Center>
             </Box>
             <Box onClick={() => router.push('/member')}>
@@ -84,7 +84,7 @@ export default function ViewDetailFeature() {
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={tema.get().utama}>Anggota</Text>
+                <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Anggota</Text>
               </Center>
             </Box>
             <Box onClick={() => router.push('/position')}>
@@ -100,7 +100,7 @@ export default function ViewDetailFeature() {
                 </ActionIcon>
               </Center>
               <Center>
-                <Text fz={15} c={tema.get().utama}>Jabatan</Text>
+                <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Jabatan</Text>
               </Center>
             </Box>
             {
@@ -119,7 +119,7 @@ export default function ViewDetailFeature() {
                     </ActionIcon>
                   </Center>
                   <Center>
-                    <Text fz={15} c={tema.get().utama}>Grup</Text>
+                    <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Grup</Text>
                   </Center>
                 </Box>
                 <Box onClick={() => router.push('/color-palette')}>
@@ -135,7 +135,7 @@ export default function ViewDetailFeature() {
                     </ActionIcon>
                   </Center>
                   <Center>
-                    <Text fz={15} c={tema.get().utama}>Tema</Text>
+                    <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Tema</Text>
                   </Center>
                 </Box>
               </>

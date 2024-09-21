@@ -116,7 +116,7 @@ export default function Profile() {
               <Grid.Col span={5}>
                 <Group>
                   <FaSquarePhone size={25} />
-                  <Text fz={15}>No Telpon</Text>
+                  <Text fz={15}>No Telepon</Text>
                 </Group>
               </Grid.Col>
               <Grid.Col span={7}>
