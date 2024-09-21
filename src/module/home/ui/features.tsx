@@ -14,7 +14,7 @@ export default function Features() {
   return (
     <>
       <Box pt={10}>
-        <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Features</Text>
+        <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Fitur</Text>
         <SimpleGrid
           cols={{ base: 4, sm: 4, lg: 4 }}
         >

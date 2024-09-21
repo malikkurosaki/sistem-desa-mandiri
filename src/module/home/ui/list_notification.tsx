@@ -220,6 +220,9 @@ export default function ListNotification() {
                         mt={10}
                         fz={15}
                         c={v.isRead == false ? tema.get().utama : "gray"}
+                        onClick={() => {
+                          onReadNotif(v.category, v.idContent, v.id);
+                        }}
                       >
                         {v.desc}
                       </Text>
