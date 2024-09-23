@@ -134,7 +134,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
           borderBottom: `1px solid ${"#E0DFDF"}`
         }}>
           {selectedFiles.length > 0 ? (
-            <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
+            <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"}  withControls={false}>
               {selectedFiles.map((v: any, i: any) => {
                 return (
                   <Carousel.Slide key={i}>

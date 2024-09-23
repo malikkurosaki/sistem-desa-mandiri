@@ -138,15 +138,20 @@ export default function CreateProject() {
     <Box>
       <LayoutNavbarNew back="/project" title="tambah Kegiatan" menu />
       <Box p={20}>
-        <Stack>
+        <Box>
           {
             (roleLogin.get() == "supadmin") && (
               <Select
                 placeholder="Grup"
                 label="Grup"
                 size="md"
+                styles={{
+                  input: {
+                    border: `1px solid ${"#D6D8F6"}`,
+                    borderRadius: 10,
+                  },
+                }}
                 required
-                radius={40}
                 data={dataGroup?.map((pro: any) => ({
                   value: String(pro.id),
                   label: pro.name
@@ -174,6 +179,7 @@ export default function CreateProject() {
                 borderRadius: 10,
               },
             }}
+            mt={10}
             required withAsterisk
             placeholder="Nama Kegiatan"
             size="md"
@@ -189,7 +195,7 @@ export default function CreateProject() {
               )
             }
           />
-          <Box onClick={() => { setOpenTugas(true) }}>
+          <Box onClick={() => { setOpenTugas(true) }} mt={15}>
             <Group
               justify="space-between"
               p={10}
@@ -213,11 +219,12 @@ export default function CreateProject() {
               // setOpenDrawer(true)
               openRef.current?.()
             }
+            mt={15}
           >
             <Text>Upload File</Text>
             <IoIosArrowDropright size={25} />
           </Group>
-          <Box onClick={() => { onToChooseAnggota() }}>
+          <Box onClick={() => { onToChooseAnggota() }} mt={15}>
             <Group
               justify="space-between"
               p={10}
@@ -230,7 +237,7 @@ export default function CreateProject() {
               <IoIosArrowDropright size={25} />
             </Group>
           </Box>
-        </Stack>
+        </Box>
         <Box pb={100}>
 
           {
