@@ -1,4 +1,4 @@
-import { currentScroll, globalRole, SkeletonSingle, TEMA } from "@/module/_global"
+import { currentScroll, globalRole, SkeletonSingle, SkeletonUser, TEMA } from "@/module/_global"
 import { Box, Text, TextInput, Divider, Avatar, Grid, Group, ActionIcon, Skeleton } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -100,35 +100,13 @@ export default function TabListMember() {
             />
             {roleLogin.get() == 'supadmin' && <Text mt={10}>Filter by: {nameGroup}</Text>}
             {loading
-               ? Array(6)
+               ?
+               Array(6)
                   .fill(null)
                   .map((_, i) => (
-                     <Box key={i} mb={20}>
-                        <Group
-                           align="center"
-                           style={{
-                              border: `1px solid ${tema.get().bgTotalKegiatan}`,
-                              padding: 10,
-                              borderRadius: 10,
-                              cursor: "pointer",
-                           }}
-                        >
-                           <Box>
-                              <ActionIcon
-                                 variant="light"
-                                 bg={tema.get().bgTotalKegiatan}
-                                 size={50}
-                                 radius={100}
-                                 aria-label="icon"
-                              >
-                                 <Skeleton height={25} width={25} />
-                              </ActionIcon>
-                           </Box>
-                           <Box>
-                              <Skeleton height={20} width={100} />
-                           </Box>
-                        </Group>
-                     </Box>
+                     <Box key={i} mb={10}>
+                     <SkeletonUser/>
+                   </Box>
                   ))
                :
                <Box>

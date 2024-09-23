@@ -25,6 +25,8 @@ import ViewFilter from "./view/view_filter";
 import mtqq_client from "./bin/mqtt_client"
 import NotificationCustome from "./components/notification_custome";
 import { ScrollProvider } from "./components/scroll_provider";
+import SkeletonUser from "./components/skeleton_user";
+import SkeletonList from "./components/skeleton_list";
 
 export { WARNA };
 export { LayoutLogin };
@@ -58,3 +60,5 @@ export { ReloadButtonTop }
 export { NotificationCustome }
 export { ScrollProvider }
 export { currentScroll }
+export { SkeletonUser }
+export { SkeletonList }

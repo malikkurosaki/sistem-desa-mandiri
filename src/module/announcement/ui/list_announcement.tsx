@@ -1,5 +1,5 @@
 'use client'
-import { currentScroll, globalNotifPage, SkeletonSingle, TEMA, WARNA } from '@/module/_global';
+import { currentScroll, globalNotifPage, SkeletonSingle, SkeletonUser, TEMA, WARNA } from '@/module/_global';
 import { ActionIcon, Box, Center, Divider, Grid, Group, Spoiler, Stack, Text, TextInput } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { TfiAnnouncement } from "react-icons/tfi";
@@ -63,13 +63,6 @@ export default function ListAnnouncement() {
    }, [isPage])
 
 
-   // useShallowEffect(() => {
-   //    if (load.get().category == "announcement") {
-   //       console.log('masuk sinii', load.get().load)
-   //       fetchData()
-   //    }
-   // }, [load.get().load])
-
 
    useEffect(() => {
       const handleScroll = async () => {
@@ -111,8 +104,8 @@ export default function ListAnnouncement() {
             ? Array(6)
                .fill(null)
                .map((_, i) => (
-                  <Box key={i}>
-                     <SkeletonSingle />
+                  <Box key={i} mt={10}>
+                     <SkeletonUser />
                   </Box>
                ))
             : (isData.length === 0) ?
@@ -135,7 +128,7 @@ export default function ListAnnouncement() {
                               <Grid.Col span={10}>
                                  <Grid onClick={() => {
                                     router.push(`/announcement/${v.id}`)
-                                 }} mb={10}>
+                                 }}>
                                     <Grid.Col span={{
                                        base: 7,
                                        xl: 8
@@ -158,7 +151,7 @@ export default function ListAnnouncement() {
                               </Grid.Col>
                            </Grid>
                         </Box>
-                        <Divider my={15} />
+                        <Divider my={20} />
                      </Box>
                   )
                })}
