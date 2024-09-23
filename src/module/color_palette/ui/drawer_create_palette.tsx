@@ -11,7 +11,7 @@ export default function DrawerCreatePalette() {
   return (
     <Box>
       <SimpleGrid
-        cols={{ base: 2, sm: 3, lg: 3 }}
+        cols={{ base: 3, sm: 3, lg: 3 }}
       >
         <Flex justify={'center'} align={'center'} direction={'column'}
         onClick={() => router.push('/color-palette/create')}

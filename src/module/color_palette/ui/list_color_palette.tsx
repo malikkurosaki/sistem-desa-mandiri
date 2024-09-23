@@ -25,6 +25,7 @@ export default function ListColorPalette() {
   const [isChooseVillage, setChooseVillage] = useState('')
   const refresh = useHookstate(globalRefreshTheme)
   const [loading, setLoading] = useState(true)
+  const [dataIsUse, setIsUse] = useState(false)
 
   async function loadData() {
     try {
@@ -80,6 +81,7 @@ export default function ListColorPalette() {
                   setChooseName(v.name)
                   setChooseVillage(v.idVillage)
                   setOpenTambahan(true)
+                  setIsUse(v.isUse)
                 }}
               >
                 <Group justify='space-between' align='center'>
@@ -124,7 +126,7 @@ export default function ListColorPalette() {
       </LayoutDrawer>
 
       <LayoutDrawer opened={isOpenTambahan} title={isChooseName} onClose={() => setOpenTambahan(false)}>
-        <DrawerPaletEditEndDefault id={isChooseId} idVillage={isChooseVillage} />
+        <DrawerPaletEditEndDefault id={isChooseId} idVillage={isChooseVillage} isUse={dataIsUse} />
       </LayoutDrawer>
     </Box>
   );
