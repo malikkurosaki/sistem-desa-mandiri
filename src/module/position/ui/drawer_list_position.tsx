@@ -78,9 +78,8 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
          <Stack pt={10}>
             <SimpleGrid
                cols={{ base: 2, sm: 3, lg: 3 }}
-               onClick={() => setOpenDrawerGroup(true)}
             >
-               <Flex justify={'center'} align={'center'} direction={'column'} >
+               <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => setOpenDrawerGroup(true)}>
                   <Box>
                      <IoAddCircle size={30} color={tema.get().utama} />
                   </Box>
@@ -102,7 +101,13 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
             </SimpleGrid>
          </Stack>
          <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Tambah Jabatan'} size="lg">
-            <Box pt={10} pos={"relative"} h={"70vh"}>
+            <Box pt={10} pos={"relative"} h={{
+               base: "69vh",
+               sm: "69vh",
+               lg: "69vh",
+               xl: "70vh"
+               
+            }}>
                {
                   roleLogin.get() == "supadmin" &&
                   <Select

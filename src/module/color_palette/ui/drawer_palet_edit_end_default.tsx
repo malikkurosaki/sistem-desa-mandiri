@@ -10,7 +10,7 @@ import { IoColorPalette } from 'react-icons/io5';
 import { funChangeTheme, funDeleteTheme, funGetThemeById } from '../lib/api_theme';
 import { globalRefreshTheme } from '../lib/val_theme';
 
-export default function DrawerPaletEditEndDefault({ id, idVillage }: { id: string, idVillage: string }) {
+export default function DrawerPaletEditEndDefault({ id, idVillage, isUse }: { id: string, idVillage: string, isUse: boolean }) {
   const router = useRouter()
   const [isModal, setModal] = useState(false)
   const [isModalDel, setModalDel] = useState(false)
@@ -71,13 +71,14 @@ export default function DrawerPaletEditEndDefault({ id, idVillage }: { id: strin
                 <Text ta={'center'} c={tema.get().utama}>Edit</Text>
               </Box>
             </Flex>
-
-            <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => { setModalDel(true) }} >
+            <Flex justify={'center'} align={'center'} direction={'column'} onClick={() => {
+              isUse !== true ? setModalDel(true) : undefined
+            }}>
               <Box>
-                <FaTrash size={30} color={tema.get().utama} />
+                <FaTrash size={30} color={isUse !== true ? tema.get().utama : "gray"} />
               </Box>
               <Box>
-                <Text ta={'center'} c={tema.get().utama}>Hapus</Text>
+                <Text ta={'center'} c={isUse !== true ? tema.get().utama : "gray"}>Hapus</Text>
               </Box>
             </Flex>
           </>
