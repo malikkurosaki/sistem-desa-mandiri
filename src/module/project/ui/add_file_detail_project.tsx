@@ -100,9 +100,9 @@ export default function AddFileDetailProject() {
                   }}
                   activateOnClick={false}
                   maxSize={3 * 1024 ** 2}
-                  accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+                  accept={['image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
                   onReject={(files) => {
-                     return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+                     return toast.error('File yang diizinkan: .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
                   }}
                >
                </Dropzone>

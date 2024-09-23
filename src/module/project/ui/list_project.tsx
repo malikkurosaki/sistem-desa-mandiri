@@ -1,5 +1,5 @@
 "use client"
-import { currentScroll, globalRole, SkeletonList, SkeletonUser, TEMA, WARNA } from '@/module/_global';
+import { currentScroll, globalRole, SkeletonList, TEMA } from '@/module/_global';
 import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -257,7 +257,7 @@ export default function ListProject() {
                               <Avatar>
                                 <MdAccountCircle size={32} color={tema.get().utama} />
                               </Avatar>
-                              <Avatar>+{v.member - 1}</Avatar>
+                              <Avatar>{(v.member == 0) ? "0" : "+" + (v.member - 1)}</Avatar>
                             </Avatar.Group>
                           </Group>
                         </Box>

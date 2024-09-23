@@ -1,10 +1,9 @@
 "use client";
 import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
-import { Avatar, Box, Button, Center, Divider, Flex, Grid, Group, rem, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Avatar, Box, Button, Divider, Flex, Grid, Group, rem, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
-import { BsFiletypeCsv } from "react-icons/bs";
 import ResultsDateAndTask from "./results_date-and_task";
 import ResultsFile from "./results_file";
 import LayoutModal from "@/module/_global/layout/layout_modal";
@@ -374,9 +373,9 @@ export default function CreateProject() {
         }}
         activateOnClick={false}
         maxSize={3 * 1024 ** 2}
-        accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+        accept={['image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
         onReject={(files) => {
-          return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+          return toast.error('File yang diizinkan: .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
         }}
       ></Dropzone>
 
@@ -399,9 +398,9 @@ export default function CreateProject() {
             }}
             activateOnClick={false}
             maxSize={3 * 1024 ** 2}
-            accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+            accept={['image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
             onReject={(files) => {
-              return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+              return toast.error('File yang diizinkan: .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
             }}
           >
             <Box onClick={() => openRef.current?.()}>

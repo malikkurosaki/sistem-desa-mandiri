@@ -6,6 +6,7 @@ import { useMediaQuery } from '@mantine/hooks';
 export default function LayoutModal({ opened, onClose, description, onYes }: { opened: boolean, onClose: () => void, description: string, onYes: (val: boolean) => void }) {
   const [isValModal, setValModal] = useState(opened)
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const [loading, setLoading] = useState(false)
   return (
     <Modal styles={{
       body: {
@@ -26,13 +27,19 @@ export default function LayoutModal({ opened, onClose, description, onYes }: { o
       >
         {isMobile ?
           <>
-            <Button fullWidth size="lg" radius={'xl'} bg={'green'} onClick={() => onYes(true)}>YA</Button>
+            <Button loading={loading} fullWidth size="lg" radius={'xl'} bg={'green'} onClick={() => {
+              setLoading(true)
+              onYes(true)
+            }}>YA</Button>
             <Button fullWidth size="lg" radius={'xl'} bg={'#F1C1CF'} c={'#D30B30'} onClick={() => onYes(false)}>TIDAK</Button>
           </>
           :
           <>
             <Button fullWidth size="lg" radius={'xl'} bg={'#F1C1CF'} c={'#D30B30'} onClick={() => onYes(false)}>TIDAK</Button>
-            <Button fullWidth size="lg" radius={'xl'} bg={'green'} onClick={() => onYes(true)}>YA</Button>
+            <Button loading={loading} fullWidth size="lg" radius={'xl'} bg={'green'} onClick={() => {
+              setLoading(true)
+              onYes(true)
+            }}>YA</Button>
           </>
 
         }
