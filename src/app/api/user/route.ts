@@ -69,6 +69,9 @@ export async function GET(request: Request) {
             },
           },
         },
+        orderBy: {
+          name: 'asc'
+        }
       });
 
       const allData = users.map((v: any) => ({
@@ -108,6 +111,9 @@ export async function GET(request: Request) {
             },
           },
         },
+        orderBy: {
+          name: 'asc'
+        }
       });
 
       const allData = users.map((v: any) => ({

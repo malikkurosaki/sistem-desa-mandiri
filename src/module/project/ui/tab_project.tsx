@@ -1,6 +1,6 @@
 "use client"
 import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from '@/module/_global';
-import { ActionIcon, Box, Button, Flex, Group, Indicator, Progress, rem, SimpleGrid, Tabs } from '@mantine/core';
+import { ActionIcon, Box, Button, Flex, rem } from '@mantine/core';
 import React, { useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { RiProgress3Line } from "react-icons/ri";
@@ -11,7 +11,6 @@ import { IoCloseCircleOutline } from 'react-icons/io5';
 import ListProject from './list_project';
 import MenuDrawerProject from './menu_drawer_project';
 import { useHookstate } from '@hookstate/core';
-import { Carousel } from '@mantine/carousel';
 
 export default function TabProject() {
   const [openDrawer, setOpenDrawer] = useState(false)
