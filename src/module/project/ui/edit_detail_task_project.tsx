@@ -76,7 +76,7 @@ export default function EditDetailTaskProject() {
 
    return (
       <Box>
-         <LayoutNavbarNew back="" title={"Edit Detail Kegiatan"} menu />
+         <LayoutNavbarNew back="" title={"Edit Tanggal dan tugas"} menu />
          <Box p={20}>
             <Group
                justify="center"
@@ -140,7 +140,7 @@ export default function EditDetailTaskProject() {
                            borderRadius: 10,
                         },
                      }}
-                     placeholder="Input Nama Tahapan"
+                     placeholder="Input Judul Tahapan"
                      label="Judul Tahapan"
                      required
                      size="md"
@@ -149,7 +149,7 @@ export default function EditDetailTaskProject() {
                      onBlur={() => setTouched({ ...touched, title: true })}
                      error={
                         touched.title && (
-                           name == "" ? "Judul Tidak Boleh Kosong" : null
+                           name == "" ? "Judul Tahapan Tidak Boleh Kosong" : null
                         )
                      }
                   />

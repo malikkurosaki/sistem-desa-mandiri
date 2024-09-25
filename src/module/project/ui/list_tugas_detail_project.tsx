@@ -96,23 +96,27 @@ export default function ListTugasDetailProject() {
           style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,
-            padding: 20,
+            // padding: 10,
           }}
+          pl={20}
+          pr={20}
         >
           {
             loading ? <>
+              <Box pl={5} pr={5} pt={20} pb={20}>
               <SkeletonDetailListTugasTask />
+              </Box>
             </> :
               isData.length === 0 ? <Text>Tidak ada tugas</Text> :
                 isData.map((item, index) => {
                   return (
-                    <Box key={index} mb={20}>
+                    <Box key={index}>
                       <Box onClick={() => {
                         setIdData(item.id)
                         setStatusData(item.status)
                         setOpenDrawer(true)
-                      }}>
-                        <Checkbox color="teal" size="md" checked={(item.status === 1) ? true : false} disabled
+                      }} my={18}>
+                        <Checkbox  color="teal" size="md" checked={(item.status === 1) ? true : false} disabled
                           label={item.status === 1 ? 'Sudah Selesai' : 'Belum Selesai'}
                         />
                         <Box mt={20}>
@@ -134,7 +138,7 @@ export default function ListTugasDetailProject() {
                             </Grid>
                           </Box>
                           <Box>
-                            <SimpleGrid cols={{ base: 1, sm: 2, lg: 2 }} mt={20}>
+                            <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} my={20}>
                               <Box>
                                 <Text>Tanggal Mulai</Text>
                                 <Group
@@ -161,7 +165,7 @@ export default function ListTugasDetailProject() {
                           </Box>
                         </Box>
                       </Box>
-                      <Divider my={"lg"} />
+                      <Divider my={20}/>
                     </Box>
                   )
                 })
@@ -209,7 +213,7 @@ export default function ListTugasDetailProject() {
         </LayoutDrawer>
 
         <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
-          description="Apakah Anda yakin ingin menghapus Kegiatan ini?"
+          description="Apakah Anda yakin ingin menghapus Tahapan Tugas ini?"
           onYes={(val) => {
             if (val) {
               onDelete()
@@ -219,11 +223,10 @@ export default function ListTugasDetailProject() {
 
         <LayoutDrawer opened={openDrawerStatus} title={'Status'} onClose={() => setOpenDrawerStatus(false)}>
           <Box>
-            <Stack pt={10}>
               {
                 valStatusDetailProject.map((item, index) => {
                   return (
-                    <Box mb={5} key={index} onClick={() => { onUpdateStatus(item.value) }}>
+                    <Box key={index} onClick={() => { onUpdateStatus(item.value) }}>
                       <Flex justify={"space-between"} align={"center"}>
                         <Group>
                           <Text style={{
@@ -245,13 +248,11 @@ export default function ListTugasDetailProject() {
                           {statusData === item.value ? <FaCheck style={{ marginRight: 10 }} /> : ""}
                         </Text>
                       </Flex>
-                      <Divider my={"md"} />
+                      <Divider my={20} />
                     </Box>
                   )
                 })
               }
-
-            </Stack>
           </Box>
         </LayoutDrawer>
 

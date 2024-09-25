@@ -191,15 +191,7 @@ export default function ListProject() {
                                     {v.title}
                                   </Text>
                                 </Box>
-
                               </Box>
-                              <RiCircleFill size={12} color={
-                                v.status === 0 ? '#1372C4' :
-                                  v.status === 1 ? '#C5771A' :
-                                    v.status === 2 ? '#0B6025' :
-                                      v.status === 3 ? '#BB1F1F' :
-                                        ""
-                              } />
                             </Group>
                           </Grid.Col>
                         </Grid>
