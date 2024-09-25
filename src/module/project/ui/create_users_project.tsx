@@ -137,7 +137,7 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
         borderBottom: `1px solid ${"#E0DFDF"}`
       }}>
         {selectedFiles.length > 0 ? (
-          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"}  withControls={false}>
+          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withControls={false}>
             {selectedFiles.map((v: any, i: any) => {
               return (
                 <Carousel.Slide key={i}>
@@ -180,12 +180,17 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
                   </Box>
                 ))
               :
-              dataMember.map((v, index) => {
-                const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id);
-                return (
-                  <Box mb={10} key={index} onClick={() => handleFileClick(index)}>
-                    <Grid align='center'>
-                      <Grid.Col  span={{
+              (dataMember.length === 0) ?
+                <Stack align="stretch" justify="center" w={"100%"} h={"60vh"}>
+                  <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
+                </Stack>
+                :
+                dataMember.map((v, index) => {
+                  const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id);
+                  return (
+                    <Box mb={10} key={index} onClick={() => handleFileClick(index)}>
+                      <Grid align='center'>
+                        <Grid.Col span={{
                           base: 1,
                           xs: 1,
                           sm: 1,
@@ -193,9 +198,9 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
                           lg: 1,
                           xl: 1,
                         }}>
-                        <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
-                      </Grid.Col>
-                      <Grid.Col span={{
+                          <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
+                        </Grid.Col>
+                        <Grid.Col span={{
                           base: 11,
                           xs: 11,
                           sm: 11,
@@ -203,20 +208,20 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
                           lg: 11,
                           xl: 11,
                         }}>
-                        <Flex justify='space-between' align={"center"}>
-                          <Flex direction={'column'} align="flex-start" justify="flex-start">
-                            <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
+                          <Flex justify='space-between' align={"center"}>
+                            <Flex direction={'column'} align="flex-start" justify="flex-start">
+                              <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
+                            </Flex>
+                            {isSelected ? <FaCheck /> : null}
                           </Flex>
-                          {isSelected ? <FaCheck /> : null}
-                        </Flex>
-                      </Grid.Col>
-                    </Grid>
-                    <Box mt={10}>
-                      <Divider my={10} />
+                        </Grid.Col>
+                      </Grid>
+                      <Box mt={10}>
+                        <Divider my={10} />
+                      </Box>
                     </Box>
-                  </Box>
-                );
-              })
+                  );
+                })
             }
           </Box>
         </Stack>

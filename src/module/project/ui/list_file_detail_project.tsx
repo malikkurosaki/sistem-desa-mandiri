@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funDeleteFileProject, funGetOneProjectById } from '../lib/api_project';
 import { useParams } from 'next/navigation';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { IDataFileProject } from '../lib/type_project';
 import { BsFileTextFill, BsFiletypeCsv, BsFiletypeHeic, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from 'react-icons/bs';
 import LayoutModal from '@/module/_global/layout/layout_modal';
@@ -24,6 +24,7 @@ export default function ListFileDetailProject() {
   const [isOpenModalView, setOpenModalView] = useState(false)
   const [isExtension, setExtension] = useState('')
   const tema = useHookstate(TEMA)
+  const isMobile = useMediaQuery("(max-width: 350px)");
 
   async function getOneData() {
     try {
@@ -110,20 +111,35 @@ export default function ListFileDetailProject() {
                         setOpenDrawer(true)
                       }}
                     >
-                      <Grid gutter={"sm"} justify='flex-start' align='flex-start'>
-                        <Grid.Col span={"auto"}>
-                          <Center >
-                            {item.extension == "pdf" && <BsFiletypePdf size={30} />}
-                            {item.extension == "csv" && <BsFiletypeCsv size={30} />}
-                            {item.extension == "png" && <BsFiletypePng size={30} />}
-                            {item.extension == "jpg" || item.extension == "jpeg" && <BsFiletypeJpg size={30} />}
-                            {item.extension == "heic" && <BsFiletypeHeic size={30} />}
-                          </Center>
+                      <Grid justify='center' align='center'>
+                        <Grid.Col span={{
+                          base: 1.5,
+                          xs: 1,
+                          sm: 1,
+                          md: 1,
+                          lg: 1,
+                          xl: 1,
+                        }}>
+                            {item.extension == "pdf" && <BsFiletypePdf size={ 30} />}
+                            {item.extension == "csv" && <BsFiletypeCsv size={ 30} />}
+                            {item.extension == "png" && <BsFiletypePng size={ 30} />}
+                            {item.extension == "jpg" && <BsFiletypeJpg size={ 30} />}
+                            {item.extension == "jpeg" && <BsFiletypeJpg size={ 30} />}
+                            {item.extension == "heic" && <BsFiletypeHeic size={ 30} />}
                         </Grid.Col>
-                        <Grid.Col span={10}>
+                        <Grid.Col
+                          span={{
+                            base: 10.5,
+                            xs: 11,
+                            sm: 11,
+                            md: 11,
+                            lg: 11,
+                            xl: 11,
+                          }}
+                        >
                           <Text style={{
                             overflowWrap: "break-word"
-                          }}>{item.name + '.' + item.extension}</Text>
+                          }} pl={isMobile ? 10 : 0} truncate="end">{item.name + '.' + item.extension}</Text>
                         </Grid.Col>
                       </Grid>
                       <Group>
@@ -136,7 +152,7 @@ export default function ListFileDetailProject() {
 
 
 
-        <LayoutDrawer opened={openDrawer} title={<Text lineClamp={1}>{nameData}</Text>} onClose={() => setOpenDrawer(false)}>
+        <LayoutDrawer opened={openDrawer} title={<Text truncate="end">{nameData}</Text>} onClose={() => setOpenDrawer(false)}>
           <Box>
             <Stack pt={10}>
               <SimpleGrid

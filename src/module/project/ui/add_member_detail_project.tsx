@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { IDataMemberProject, IDataMemberProjectDetail } from '../lib/type_project';
 import toast from 'react-hot-toast';
 import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Skeleton, Stack, Text, TextInput } from '@mantine/core';
 import { LayoutNavbarNew, SkeletonSingle, TEMA, WARNA } from '@/module/_global';
 import { FaCheck } from 'react-icons/fa6';
@@ -26,6 +26,7 @@ export default function AddMemberDetailProject() {
   const [onClickSearch, setOnClickSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const tema = useHookstate(TEMA)
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
 
 
   async function getData() {
@@ -231,20 +232,32 @@ export default function AddMemberDetailProject() {
               return (
                 <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
                   <Grid align='center'>
-                    <Grid.Col span={{
-                      base: 3,
-                      xl: 2
-                    }}>
+                    <Grid.Col
+                    span={{
+                      base: 1,
+                      xs: 1,
+                      sm: 1,
+                      md: 1,
+                      lg: 1,
+                      xl: 1,
+                    }}
+                    >
                       <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
                     </Grid.Col>
-                    <Grid.Col span={{
-                      base: 9,
-                      xl: 10
-                    }}>
+                    <Grid.Col
+                    span={{
+                      base: 11,
+                      xs: 11,
+                      sm: 11,
+                      md: 11,
+                      lg: 11,
+                      xl: 11,
+                    }}
+                    >
                       <Flex justify='space-between' align={"center"}>
                         <Flex direction={'column'} align="flex-start" justify="flex-start">
-                          <Text lineClamp={1}>{v.name}</Text>
-                          <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota" : ""}</Text>
+                          <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
+                          <Text c={"dimmed"} pl={isMobile2 ? 40 : 30}>{(found) ? "sudah menjadi anggota" : ""}</Text>
                         </Flex>
                         {isSelected ? <FaCheck /> : null}
                       </Flex>
