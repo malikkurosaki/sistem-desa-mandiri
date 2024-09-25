@@ -1,5 +1,5 @@
 "use client"
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funEditDetailProject, funGetDetailProject } from '../lib/api_project';
@@ -14,6 +14,7 @@ import { useHookstate } from '@hookstate/core';
 export default function EditDetailTaskProject() {
    const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
    const [name, setName] = useState("")
+   const [idProject, setIdProject] = useState("")
    const param = useParams<{ id: string }>()
    const [openModal, setOpenModal] = useState(false)
    const [loading, setLoading] = useState(true)
@@ -21,6 +22,7 @@ export default function EditDetailTaskProject() {
    const [touched, setTouched] = useState({
       title: false,
    });
+   const router = useRouter()
 
    async function onSubmit() {
       if (value[0] == null || value[1] == null)
@@ -39,6 +41,7 @@ export default function EditDetailTaskProject() {
 
          if (res.success) {
             toast.success(res.message);
+            router.push('/project/' + idProject)
          } else {
             toast.error(res.message);
          }
@@ -53,6 +56,7 @@ export default function EditDetailTaskProject() {
          setLoading(true)
          const res = await funGetDetailProject(param.id);
          if (res.success) {
+            setIdProject(res.data.idProject)
             setName(res.data.title)
             setValue([
                new Date(moment(res.data.dateStart).format('YYYY-MM-DD')),
@@ -98,16 +102,16 @@ export default function EditDetailTaskProject() {
                   {loading ?
                      <Skeleton height={45} mt={20} radius={10} />
                      :
-                     <> 
-                     <Text>Tanggal Mulai</Text>
-                     <Group
-                        justify="center"
-                        bg={"white"}
-                        h={45}
-                        style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
-                     >
-                        <Text>{value[0] ? `${moment(value[0]).format('DD-MM-YYYY')}` : ""}</Text>
-                     </Group>
+                     <>
+                        <Text>Tanggal Mulai</Text>
+                        <Group
+                           justify="center"
+                           bg={"white"}
+                           h={45}
+                           style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
+                        >
+                           <Text>{value[0] ? `${moment(value[0]).format('DD-MM-YYYY')}` : ""}</Text>
+                        </Group>
                      </>
                   }
                </Box>
@@ -164,24 +168,24 @@ export default function EditDetailTaskProject() {
             {loading ?
                <Skeleton height={50} radius={30} />
                :
-            <Button
-               c={"white"}
-               bg={tema.get().utama}
-               size="lg"
-               radius={30}
-               fullWidth
-               onClick={() => {
-                  if (
-                     name !== ""
-                  ) {
-                     setOpenModal(true)
-                  } else {
-                     toast.error("Judul Tidak Boleh Kosong")
-                  }
-               }}
-            >
-               Simpan
-            </Button>
+               <Button
+                  c={"white"}
+                  bg={tema.get().utama}
+                  size="lg"
+                  radius={30}
+                  fullWidth
+                  onClick={() => {
+                     if (
+                        name !== ""
+                     ) {
+                        setOpenModal(true)
+                     } else {
+                        toast.error("Judul Tidak Boleh Kosong")
+                     }
+                  }}
+               >
+                  Simpan
+               </Button>
             }
          </Box>
 
