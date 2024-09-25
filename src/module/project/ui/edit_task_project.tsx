@@ -22,7 +22,7 @@ export default function EditTaskProject() {
 
   function onVerification() {
     if (name == "")
-      return toast.error("Error! harus memasukkan judul tugas")
+      return toast.error("Error! harus memasukkan judul Kegiatan")
 
     setOpenModal(true)
   }
@@ -79,7 +79,7 @@ export default function EditTaskProject() {
                 borderRadius: 10,
               },
             }}
-            placeholder="Tugas"
+            placeholder="Input Kegiatan"
             label="Judul Kegiatan"
             required
             size="md"
@@ -90,7 +90,7 @@ export default function EditTaskProject() {
             }}
             error={
               touched.name && (
-                name == "" ? "Judul Tidak Boleh Kosong" : null
+                name == "" ? "Judul Kegiatan Tidak Boleh Kosong" : null
               )
             }
             onBlur={() => setTouched({ ...touched, name: true })}
@@ -121,7 +121,7 @@ export default function EditTaskProject() {
 
 
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
-        description="Apakah Anda yakin ingin mengedit tugas ini?"
+        description="Apakah Anda yakin ingin mengedit Kegiatan ini?"
         onYes={(val) => {
           if (val) {
             onSubmit()

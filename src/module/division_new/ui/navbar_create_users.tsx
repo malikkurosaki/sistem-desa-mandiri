@@ -1,8 +1,8 @@
 "use client"
-import { LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
+import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Indicator, Input, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { HiChevronLeft, HiMagnifyingGlass } from 'react-icons/hi2';
@@ -23,6 +23,7 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
   const [loading, setLoading] = useState(true)
   const [onClickSearch, setOnClickSearch] = useState(false)
   const tema = useHookstate(TEMA)
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
 
   const handleFileClick = (index: number) => {
     if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
@@ -88,123 +89,141 @@ export default function NavbarCreateUsers({ grup, onClose }: { grup?: string, on
         menu={<ActionIcon onClick={handleSearchClick} variant="light" bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="search">
           <HiMagnifyingGlass size={20} color='white' />
         </ActionIcon>} />
-        {/* SEARCH */}
-        {onClickSearch
-          ? (
-            <Box
-              pos={'fixed'} top={0} p={rem(20)} w={"100%"} style={{
-                maxWidth: rem(550),
-                zIndex: 9999,
-                backgroundColor: `${tema.get().utama}`,
-                borderBottomLeftRadius: 20,
-                borderBottomRightRadius: 20,
-              }}>
-              <Grid justify='center' align='center' gutter={'lg'}>
-                <Grid.Col span={1}>
-                  <ActionIcon onClick={handleClose} variant="subtle" color='white' size="lg" mt={5} radius="lg" aria-label="search">
-                    <IoArrowBackOutline size={30} />
-                  </ActionIcon>
-                </Grid.Col>
-                <Grid.Col span={11}>
-                  <TextInput
-                    styles={{
-                      input: {
-                        color: "white",
-                        borderRadius: '#A3A3A3',
-                        borderColor: `${tema.get().utama}`,
-                        backgroundColor: `${tema.get().utama}`,
-                      },
-                    }}
-                    size="md"
-                    radius={30}
-                    placeholder="Pencarian"
-                    onChange={(e) => loadData(e.target.value)}
-                  />
-                </Grid.Col>
-              </Grid>
-            </Box>
-          )
-          : null
-        }
-        {/* Close User */}
-        <Box pos={'fixed'} top={80} pl={rem(20)} pr={rem(20)} pt={rem(20)} pb={rem(5)} w={"100%"} style={{
-          maxWidth: rem(550),
-          zIndex: 100,
-          backgroundColor: `${tema.get().bgUtama}`,
-          borderBottom: `1px solid ${"#E0DFDF"}`
-        }}>
-          {selectedFiles.length > 0 ? (
-            <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"}  withControls={false}>
-              {selectedFiles.map((v: any, i: any) => {
-                return (
-                  <Carousel.Slide key={i}>
-                    <Box w={{
-                      base: 70,
-                      xl: 70
-                    }}
-                      onClick={() => { handleXMember(v.idUser) }}
-                    >
-                      <Center>
-                        <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
-                          <Avatar style={{
-                            border: `2px solid ${tema.get().utama}`
-                          }} src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
-                        </Indicator>
-                      </Center>
-                      <Text ta={"center"} lineClamp={1}>{v.name}</Text>
-                    </Box>
-                  </Carousel.Slide>
-                )
-              })}
-            </Carousel>
-          ) : (
-            <Box h={rem(81)}>
-              <Flex justify={"center"} align={'center'} h={"100%"}>
-                <Text ta={'center'} fz={14}>Tidak ada anggota yang dipilih</Text>
-              </Flex>
-            </Box>
-          )}
-        </Box>
+      {/* SEARCH */}
+      {onClickSearch
+        ? (
+          <Box
+            pos={'fixed'} top={0} p={rem(20)} w={"100%"} style={{
+              maxWidth: rem(550),
+              zIndex: 9999,
+              backgroundColor: `${tema.get().utama}`,
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 20,
+            }}>
+            <Grid justify='center' align='center' gutter={'lg'}>
+              <Grid.Col span={1}>
+                <ActionIcon onClick={handleClose} variant="subtle" color='white' size="lg" mt={5} radius="lg" aria-label="search">
+                  <IoArrowBackOutline size={30} />
+                </ActionIcon>
+              </Grid.Col>
+              <Grid.Col span={11}>
+                <TextInput
+                  styles={{
+                    input: {
+                      color: "white",
+                      borderRadius: '#A3A3A3',
+                      borderColor: `${tema.get().utama}`,
+                      backgroundColor: `${tema.get().utama}`,
+                    },
+                  }}
+                  size="md"
+                  radius={30}
+                  placeholder="Pencarian"
+                  onChange={(e) => loadData(e.target.value)}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
+        )
+        : null
+      }
+      {/* Close User */}
+      <Box pos={'fixed'} top={80} pl={rem(20)} pr={rem(20)} pt={rem(20)} pb={rem(5)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 100,
+        backgroundColor: `${tema.get().bgUtama}`,
+        borderBottom: `1px solid ${"#E0DFDF"}`
+      }}>
+        {selectedFiles.length > 0 ? (
+          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withControls={false}>
+            {selectedFiles.map((v: any, i: any) => {
+              return (
+                <Carousel.Slide key={i}>
+                  <Box w={{
+                    base: 70,
+                    xl: 70
+                  }}
+                    onClick={() => { handleXMember(v.idUser) }}
+                  >
+                    <Center>
+                      <Indicator inline size={25} offset={7} position="bottom-end" color="red" withBorder label={<IoClose />}>
+                        <Avatar style={{
+                          border: `2px solid ${tema.get().utama}`
+                        }} src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
+                      </Indicator>
+                    </Center>
+                    <Text ta={"center"} lineClamp={1}>{v.name}</Text>
+                  </Box>
+                </Carousel.Slide>
+              )
+            })}
+          </Carousel>
+        ) : (
+          <Box h={rem(81)}>
+            <Flex justify={"center"} align={'center'} h={"100%"}>
+              <Text ta={'center'} fz={14}>Tidak ada anggota yang dipilih</Text>
+            </Flex>
+          </Box>
+        )}
+      </Box>
       <Box p={20}>
         <Stack>
           <Box pt={100} mb={100}>
             {loading ?
               Array(6)
-              .fill(null)
-              .map((_, i) => (
-                <Box key={i}>
-                  <SkeletonSingle />
-                </Box>
-              ))
-              : dataMember.map((v, index) => {
-                const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id);
-                return (
-                  <Box mb={15} key={index} onClick={() => handleFileClick(index)}>
-                    <Grid align='center'>
-                      <Grid.Col span={{
-                        base: 3,
-                        xl: 2
-                      }}>
-                        <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
-                      </Grid.Col>
-                      <Grid.Col span={{
-                        base: 9,
-                        xl: 10
-                      }}>
-                        <Flex justify='space-between' align={"center"}>
-                          <Flex direction={'column'} align="flex-start" justify="flex-start">
-                            <Text lineClamp={1}>{v.name}</Text>
-                          </Flex>
-                          {isSelected ? <FaCheck /> : null}
-                        </Flex>
-                      </Grid.Col>
-                    </Grid>
-                    <Box mt={10}>
-                      <Divider size={"xs"} />
-                    </Box>
+                .fill(null)
+                .map((_, i) => (
+                  <Box key={i}>
+                    <SkeletonList />
                   </Box>
-                );
-              })
+                ))
+              :
+              (dataMember.length === 0) ?
+                <Stack align="stretch" justify="center" w={"100%"} h={"60vh"}>
+                  <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
+                </Stack>
+                :
+                dataMember.map((v, index) => {
+                  const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id);
+                  return (
+                    <Box mb={10} key={index} onClick={() => handleFileClick(index)}>
+                      <Grid align='center'>
+                        <Grid.Col
+                          span={{
+                            base: 1,
+                            xs: 1,
+                            sm: 1,
+                            md: 1,
+                            lg: 1,
+                            xl: 1,
+                          }}
+                        >
+                          <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
+                        </Grid.Col>
+                        <Grid.Col
+                          span={{
+                            base: 11,
+                            xs: 11,
+                            sm: 11,
+                            md: 11,
+                            lg: 11,
+                            xl: 11,
+                          }}
+                        >
+                          <Flex justify='space-between' align={"center"}>
+                            <Flex direction={'column'} align="flex-start" justify="flex-start">
+                              <Text lineClamp={1}  pl={isMobile2 ? 40 : 30}>{v.name}</Text>
+                            </Flex>
+                            {isSelected ? <FaCheck /> : null}
+                          </Flex>
+                        </Grid.Col>
+                      </Grid>
+                      <Box mt={10}>
+                        <Divider my={10} />
+                      </Box>
+                    </Box>
+                  );
+                })
             }
           </Box>
         </Stack>

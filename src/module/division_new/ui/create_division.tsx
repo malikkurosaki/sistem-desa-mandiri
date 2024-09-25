@@ -125,7 +125,7 @@ export default function CreateDivision() {
                                 label="Grup"
                                 size="md"
                                 required
-                                radius={40}
+                                radius={10}
                                 data={dataGroup?.map((pro: any) => ({
                                     value: String(pro.id),
                                     label: pro.name
@@ -148,7 +148,7 @@ export default function CreateDivision() {
                         label="Nama Divisi"
                         size="md"
                         required
-                        radius={40}
+                        radius={10}
                         value={body.name}
                         onChange={(val) => { setBody({ ...body, name: val.target.value }) }}
                         onBlur={() => setTouched({ ...touched, name: true })}

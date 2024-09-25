@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Skeleton, Stack, Text, TextInput } from '@mantine/core';
-import { LayoutNavbarNew, SkeletonSingle, TEMA, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA, WARNA } from '@/module/_global';
 import { FaCheck } from 'react-icons/fa6';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
@@ -32,7 +32,7 @@ export default function AddMemberDetailProject() {
   async function getData() {
     try {
       setLoading(true)
-      const response = await funGetAllMemberById('?search=' + searchQuery, param.id )
+      const response = await funGetAllMemberById('?search=' + searchQuery, param.id)
       if (response.success) {
         setData(response.data.member)
       } else {
@@ -57,7 +57,7 @@ export default function AddMemberDetailProject() {
     if (selectedFiles.some((i: any) => i.idUser == isData[index].idUser)) {
       setSelectedFiles(selectedFiles.filter((i: any) => i.idUser != isData[index].idUser))
     } else {
-      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name, img: isData[index].img  }])
+      setSelectedFiles([...selectedFiles, { idUser: isData[index].idUser, name: isData[index].name, img: isData[index].img }])
     }
   };
 
@@ -221,55 +221,60 @@ export default function AddMemberDetailProject() {
             .fill(null)
             .map((_, i) => (
               <Box key={i} mb={10}>
-                <SkeletonSingle />
+                <SkeletonList />
               </Box>
             ))
           :
-          <Box mt={15} mb={100}>
-            {isData.map((v, i) => {
-              const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
-              const found = isDataMember.some((i: any) => i.idUser == v.idUser)
-              return (
-                <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
-                  <Grid align='center'>
-                    <Grid.Col
-                    span={{
-                      base: 1,
-                      xs: 1,
-                      sm: 1,
-                      md: 1,
-                      lg: 1,
-                      xl: 1,
-                    }}
-                    >
-                      <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
-                    </Grid.Col>
-                    <Grid.Col
-                    span={{
-                      base: 11,
-                      xs: 11,
-                      sm: 11,
-                      md: 11,
-                      lg: 11,
-                      xl: 11,
-                    }}
-                    >
-                      <Flex justify='space-between' align={"center"}>
-                        <Flex direction={'column'} align="flex-start" justify="flex-start">
-                          <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
-                          <Text c={"dimmed"} pl={isMobile2 ? 40 : 30}>{(found) ? "sudah menjadi anggota" : ""}</Text>
+          (isData.length === 0) ?
+            <Stack align="stretch" justify="center" w={"100%"} h={"60vh"}>
+              <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
+            </Stack>
+            :
+            <Box mt={15} mb={100}>
+              {isData.map((v, i) => {
+                const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
+                const found = isDataMember.some((i: any) => i.idUser == v.idUser)
+                return (
+                  <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
+                    <Grid align='center'>
+                      <Grid.Col
+                        span={{
+                          base: 1,
+                          xs: 1,
+                          sm: 1,
+                          md: 1,
+                          lg: 1,
+                          xl: 1,
+                        }}
+                      >
+                        <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
+                      </Grid.Col>
+                      <Grid.Col
+                        span={{
+                          base: 11,
+                          xs: 11,
+                          sm: 11,
+                          md: 11,
+                          lg: 11,
+                          xl: 11,
+                        }}
+                      >
+                        <Flex justify='space-between' align={"center"}>
+                          <Flex direction={'column'} align="flex-start" justify="flex-start">
+                            <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
+                            <Text c={"dimmed"} pl={isMobile2 ? 40 : 30}>{(found) ? "sudah menjadi anggota" : ""}</Text>
+                          </Flex>
+                          {isSelected ? <FaCheck /> : null}
                         </Flex>
-                        {isSelected ? <FaCheck /> : null}
-                      </Flex>
-                    </Grid.Col>
-                  </Grid>
-                  <Box mt={10}>
-                    <Divider size={"xs"} />
+                      </Grid.Col>
+                    </Grid>
+                    <Box mt={10}>
+                      <Divider size={"xs"} />
+                    </Box>
                   </Box>
-                </Box>
-              );
-            })}
-          </Box>
+                );
+              })}
+            </Box>
         }
       </Box>
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{

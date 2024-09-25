@@ -1,5 +1,5 @@
 "use client"
-import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
+import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Button, Divider, Flex, Grid, Group, Skeleton, Stack, Text } from '@mantine/core';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
@@ -150,30 +150,16 @@ export default function InformationDivision() {
             </Box>
             <Box mt={15}>
               {loading ?
-                <Group
-                  align="center"
-                  style={{
-                    border: `1px solid ${"#DCEED8"}`,
-                    padding: 10,
-                    borderRadius: 10,
-                    cursor: "pointer",
-                  }}
-                >
-                  <Box>
-                    <ActionIcon
-                      variant="light"
-                      bg={"#DCEED8"}
-                      size={50}
-                      radius={100}
-                      aria-label="icon"
-                    >
-                      <Skeleton height={25} width={25} />
-                    </ActionIcon>
-                  </Box>
-                  <Box>
-                    <Skeleton height={20} width={100} />
-                  </Box>
-                </Group>
+                <Box>
+                  <Grid p={10} align="center">
+                    <Grid.Col span={2}>
+                      <Skeleton w={50} h={50} radius={100} />
+                    </Grid.Col>
+                    <Grid.Col span={9}>
+                      <Skeleton w={"80%"} h={20} />
+                    </Grid.Col>
+                  </Grid>
+                </Box>
                 :
 
                 ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
@@ -193,7 +179,7 @@ export default function InformationDivision() {
                     .fill(null)
                     .map((_, i) => (
                       <Box key={i}>
-                        <SkeletonSingle />
+                        <SkeletonList />
                       </Box>
                     ))
                   : member.map((v, i) => {

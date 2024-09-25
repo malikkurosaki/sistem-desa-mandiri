@@ -9,7 +9,7 @@ export default function EventReport({ data, tgl }: { data: IDataReportDivision[]
 
   return (
     <Box>
-      <Text mb={20} mt={10} ta={'center'} fw={"bold"}>EVENT <br /> {tgl}</Text>
+      <Text mb={20} mt={10} ta={'center'} fw={"bold"}>ACARA <br /> {tgl}</Text>
       {
         _.isEmpty(data)
           ?

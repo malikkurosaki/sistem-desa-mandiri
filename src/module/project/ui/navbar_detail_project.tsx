@@ -19,12 +19,14 @@ export default function NavbarDetailProject() {
   const [isOpen, setOpen] = useState(false)
   const roleLogin = useHookstate(globalRole)
   const tema = useHookstate(TEMA)
+  const [reason, setReason] = useState("")
 
   async function getOneData() {
     try {
       const res = await funGetOneProjectById(param.id, 'data');
       if (res.success) {
         setName(res.data.title);
+        setReason(res.data.reason);
       } else {
         toast.error(res.message);
       }
@@ -69,15 +71,17 @@ export default function NavbarDetailProject() {
                   cursor: 'pointer'
                 }}
                 onClick={() => {
-                  router.push(param.id + '/add-task')
+                  reason == null ?
+                    router.push(param.id + '/add-task')
+                    : null
                 }}
                 pb={20}
               >
                 <Box>
-                  <IoAddCircle size={30} color={tema.get().utama} />
+                  <IoAddCircle size={30} color={reason == null ? tema.get().utama : "gray"} />
                 </Box>
                 <Box>
-                  <Text c={tema.get().utama} ta='center'>Tambah Tugas</Text>
+                  <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Tambah Tugas</Text>
                 </Box>
               </Flex>
 
@@ -86,14 +90,16 @@ export default function NavbarDetailProject() {
                   cursor: 'pointer'
                 }}
                 onClick={() => {
-                  router.push(param.id + '/add-file')
+                  reason == null ?
+                    router.push(param.id + '/add-file')
+                    : null
                 }}
               >
                 <Box>
-                  <FaFileCirclePlus size={30} color={tema.get().utama} />
+                  <FaFileCirclePlus size={30} color={reason == null ? tema.get().utama : "gray"} />
                 </Box>
                 <Box>
-                  <Text c={tema.get().utama} ta='center'>Tambah file</Text>
+                  <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Tambah file</Text>
                 </Box>
               </Flex>
 
@@ -105,14 +111,16 @@ export default function NavbarDetailProject() {
                       cursor: 'pointer'
                     }}
                     onClick={() => {
-                      router.push(param.id + '/add-member')
+                      reason == null ?
+                        router.push(param.id + '/add-member')
+                        : null
                     }}
                   >
                     <Box>
-                      <FaUsers size={30} color={tema.get().utama} />
+                      <FaUsers size={30} color={reason == null ? tema.get().utama : "gray"} />
                     </Box>
                     <Box>
-                      <Text c={tema.get().utama} ta='center'>Tambah anggota</Text>
+                      <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Tambah anggota</Text>
                     </Box>
                   </Flex>
 
@@ -120,13 +128,17 @@ export default function NavbarDetailProject() {
                     style={{
                       cursor: 'pointer'
                     }}
-                    onClick={() => { router.push(param.id + '/edit') }}
+                    onClick={() => {
+                      reason == null ?
+                        router.push(param.id + '/edit')
+                        : null
+                    }}
                   >
                     <Box>
-                      <FaPencil size={30} color={tema.get().utama} />
+                      <FaPencil size={30} color={reason == null ? tema.get().utama : "gray"} />
                     </Box>
                     <Box>
-                      <Text c={tema.get().utama} ta='center'>Edit</Text>
+                      <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Edit</Text>
                     </Box>
                   </Flex>
 
@@ -134,13 +146,17 @@ export default function NavbarDetailProject() {
                     style={{
                       cursor: 'pointer'
                     }}
-                    onClick={() => { router.push(param.id + '/cancel') }}
+                    onClick={() => {
+                      reason == null ?
+                        router.push(param.id + '/cancel')
+                        : null
+                    }}
                   >
                     <Box>
-                      <MdCancel size={30} color={tema.get().utama} />
+                      <MdCancel size={30} color={reason == null ? tema.get().utama : "gray"} />
                     </Box>
                     <Box>
-                      <Text c={tema.get().utama} ta='center'>Batal</Text>
+                      <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Batal</Text>
                     </Box>
                   </Flex>
                 </>
