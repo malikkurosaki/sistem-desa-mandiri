@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, SkeletonSingle, TEMA } from "@/module/_global";
+import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from "@/module/_global";
 import { funGetDivisionById, funGetSearchMemberDivision, IDataMemberDivision } from "@/module/division_new";
 import {
    ActionIcon,
@@ -19,7 +19,7 @@ import {
    Text,
    TextInput,
 } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
@@ -44,6 +44,7 @@ export default function AddMemberDetailTask() {
    const [onClickSearch, setOnClickSearch] = useState(false)
    const [searchQuery, setSearchQuery] = useState('')
    const tema = useHookstate(TEMA)
+   const isMobile2 = useMediaQuery("(max-width: 438px)");
 
 
    async function getData() {
@@ -211,7 +212,7 @@ export default function AddMemberDetailTask() {
             borderBottom: `1px solid ${"#E0DFDF"}`
          }}>
             {selectedFiles.length > 0 ? (
-               <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"}  withControls={false}>
+               <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withControls={false}>
                   {selectedFiles.map((v: any, i: any) => {
                      return (
                         <Carousel.Slide key={i}>
@@ -255,43 +256,56 @@ export default function AddMemberDetailTask() {
                .fill(null)
                .map((_, i) => (
                   <Box key={i}>
-                     <SkeletonSingle />
+                     <SkeletonList />
                   </Box>
                ))
                :
-               <Box mt={15} mb={100}>
-                  {isData.map((v, i) => {
-                     const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
-                     const found = isDataMember.some((i: any) => i.idUser == v.idUser)
-                     return (
-                        <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
-                           <Grid align='center'>
-                              <Grid.Col span={{
-                                 base: 3,
-                                 xl: 2
-                              }}>
-                                 <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
-                              </Grid.Col>
-                              <Grid.Col span={{
-                                 base: 9,
-                                 xl: 10
-                              }}>
-                                 <Flex justify='space-between' align={"center"}>
-                                    <Flex direction={'column'} align="flex-start" justify="flex-start">
-                                       <Text lineClamp={1}>{v.name}</Text>
-                                       <Text c={"dimmed"}>{(found) ? "sudah menjadi anggota" : ""}</Text>
+               (isData.length === 0) ?
+                  <Stack align="stretch" justify="center" w={"100%"} h={"60vh"}>
+                     <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
+                  </Stack>
+                  :
+                  <Box mt={15} mb={100}>
+                     {isData.map((v, i) => {
+                        const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
+                        const found = isDataMember.some((i: any) => i.idUser == v.idUser)
+                        return (
+                           <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
+                              <Grid align='center'>
+                                 <Grid.Col span={{
+                                    base: 1,
+                                    xs: 1,
+                                    sm: 1,
+                                    md: 1,
+                                    lg: 1,
+                                    xl: 1,
+                                 }}>
+                                    <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
+                                 </Grid.Col>
+                                 <Grid.Col span={{
+                                    base: 11,
+                                    xs: 11,
+                                    sm: 11,
+                                    md: 11,
+                                    lg: 11,
+                                    xl: 11,
+                                 }}>
+                                    <Flex justify='space-between' align={"center"}>
+                                       <Flex direction={'column'} align="flex-start" justify="flex-start">
+                                          <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
+                                          <Text c={"dimmed"} pl={isMobile2 ? 40 : 30}>{(found) ? "sudah menjadi anggota" : ""}</Text>
+                                       </Flex>
+                                       {isSelected ? <FaCheck /> : null}
                                     </Flex>
-                                    {isSelected ? <FaCheck /> : null}
-                                 </Flex>
-                              </Grid.Col>
-                           </Grid>
-                           <Box mt={10}>
-                              <Divider size={"xs"} />
+                                 </Grid.Col>
+                              </Grid>
+                              <Box mt={10}>
+                                 <Divider size={"xs"} />
+                              </Box>
                            </Box>
-                        </Box>
-                     );
-                  })}
-               </Box>
+                        );
+                     })}
+                  </Box>
             }
          </Box>
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{

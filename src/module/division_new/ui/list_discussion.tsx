@@ -19,6 +19,7 @@ export default function ListDiscussionOnDetailDivision() {
   const [loading, setLoading] = useState(true);
   const isMobile = useMediaQuery('(max-width: 399px)');
   const tema = useHookstate(TEMA)
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
 
   async function fetchData() {
     try {
@@ -81,23 +82,40 @@ export default function ListDiscussionOnDetailDivision() {
             return (
               <Box key={i} p={10}>
                 <Box style={{
-                    borderRadius: 10,
-                    border: `1px solid ${"#D6D8F6"}`,
-                    padding: 10,
-                  }}
+                  borderRadius: 10,
+                  border: `1px solid ${"#D6D8F6"}`,
+                  padding: 10,
+                }}
                   onClick={() => router.push(`${param.id}/discussion/${v.id}`)}
                 >
-                  <Group>
-                    <GoDiscussionClosed size={25} />
-                    <Box w={{
-                     base: isMobile ? 180 : 230,
-                      md: 400
-                    }}>
-                      <Text fw={"bold"} truncate="end" fz={isMobile ? 14 : 16}>
+                  <Grid align='center'>
+                    <Grid.Col
+                      span={{
+                        base: 1,
+                        xs: 1,
+                        sm: 1,
+                        md: 1,
+                        lg: 1,
+                        xl: 1,
+                      }}
+                    >
+                      <GoDiscussionClosed size={25} />
+                    </Grid.Col>
+                    <Grid.Col
+                      span={{
+                        base: 11,
+                        xs: 11,
+                        sm: 11,
+                        md: 11,
+                        lg: 11,
+                        xl: 11,
+                      }}
+                    >
+                      <Text fw={"bold"} truncate="end" pl={isMobile2 ? 10 : 0} fz={isMobile ? 14 : 16}>
                         {v.desc}
                       </Text>
-                    </Box>
-                  </Group>
+                    </Grid.Col>
+                  </Grid>
                   <Grid align="center" mt={20}>
                     <Grid.Col span={{
                       base: 7,

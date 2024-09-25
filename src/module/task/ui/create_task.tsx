@@ -113,7 +113,7 @@ export default function CreateTask() {
                 borderRadius: 10,
               },
             }}
-            placeholder="Nama Tugas"
+            placeholder="Judul Tugas"
             size="md"
             label="Judul Tugas"
             value={title}
@@ -125,7 +125,7 @@ export default function CreateTask() {
             required
             error={
               touched.title && (
-                title == "" ? "Nama Tidak Boleh Kosong" : null
+                title == "" ? "Judul Tugas Tidak Boleh Kosong" : null
               )
             }
           />

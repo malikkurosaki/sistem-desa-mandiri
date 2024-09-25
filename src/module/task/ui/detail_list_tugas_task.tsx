@@ -26,6 +26,27 @@ export default function ListTugasDetailTask() {
    const router = useRouter()
    const refresh = useHookstate(globalRefreshTask)
    const tema = useHookstate(TEMA)
+   const [reason, setReason] = useState("")
+
+   async function getOneDataCancel() {
+      try {
+         const res = await funGetTaskDivisionById(param.detail, 'data');
+         if (res.success) {
+            setReason(res.data.reason);
+         } else {
+            toast.error(res.message);
+         }
+
+      } catch (error) {
+         console.error(error);
+         toast.error("Gagal mendapatkan data tugas divisi, coba lagi nanti");
+      }
+   }
+
+   useShallowEffect(() => {
+      getOneDataCancel();
+   }, [param.detail])
+
    async function getOneData() {
       try {
          setLoading(true)
@@ -97,13 +118,16 @@ export default function ListTugasDetailTask() {
             style={{
                borderRadius: 10,
                border: `1px solid ${"#D6D8F6"}`,
-               padding: 20,
             }}
+            pl={20}
+            pr={20}
          >
             {
                loading ?
                   <>
-                     <SkeletonDetailListTugasTask />
+                     <Box pl={5} pr={5} pt={20} pb={20}>
+                        <SkeletonDetailListTugasTask />
+                     </Box>
                   </>
                   :
                   isData.length === 0 ? <Text>Tidak ada tugas</Text> :
@@ -113,8 +137,10 @@ export default function ListTugasDetailTask() {
                               <Box onClick={() => {
                                  setIdData(item.id)
                                  setStatusData(item.status)
-                                 setOpenDrawer(true)
-                              }}>
+                                 reason == null ?
+                                    setOpenDrawer(true)
+                                    : setOpenDrawer(false)
+                              }} my={18}>
                                  <Checkbox color="teal" size="md" checked={(item.status === 1) ? true : false} disabled
                                     label={item.status === 1 ? 'Sudah Selesai' : 'Belum Selesai'}
                                  />
@@ -137,7 +163,7 @@ export default function ListTugasDetailTask() {
                                        </Grid>
                                     </Box>
                                     <Box>
-                                       <SimpleGrid cols={{ base: 1, sm: 2, lg: 2 }} mt={20}>
+                                       <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} my={20}>
                                           <Box>
                                              <Text>Tanggal Mulai</Text>
                                              <Group
@@ -164,7 +190,7 @@ export default function ListTugasDetailTask() {
                                     </Box>
                                  </Box>
                               </Box>
-                              <Divider my={"lg"} />
+                              <Divider my={20} />
                            </Box>
                         )
                      })
@@ -179,10 +205,10 @@ export default function ListTugasDetailTask() {
                      style={{
                         alignContent: 'flex-start',
                         alignItems: 'flex-start',
-                      }}
+                     }}
                   >
                      <Flex onClick={() => { setOpenDrawerStatus(true) }} justify={'center'} align={'center'} direction={'column'}
-                     pb={20}
+                        pb={20}
                      >
                         <Box>
                            <AiOutlineFileDone size={30} color={tema.get().utama} />

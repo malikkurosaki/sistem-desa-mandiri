@@ -59,7 +59,7 @@ export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: bool
             <HiChevronLeft size={20} color='white' />
           </ActionIcon>
         </Box>
-      } title={"Tanggal Tugas"} menu />
+      } title={"Tanggal dan Tugas"} menu />
       <Box p={20}>
         <Group
           justify="center"
@@ -108,8 +108,8 @@ export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: bool
                 borderRadius: 10,
               },
             }}
-            placeholder="Input Nama Tahapan"
-            label="Judul Tugas"
+            placeholder="Input Judul Tahapan"
+            label="Judul Tahapan"
             required
             size="md"
             value={title}
@@ -118,7 +118,7 @@ export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: bool
               setTouched({ ...touched, title: false })
             }}
             onBlur={() => setTouched({ ...touched, title: true })}
-            error={touched.title && title == "" ? "Judul Tugas Tidak Boleh Kosong" : null}
+            error={touched.title && title == "" ? "Judul Tahapan Tidak Boleh Kosong" : null}
           />
         </Stack>
       </Box>

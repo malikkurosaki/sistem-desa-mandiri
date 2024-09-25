@@ -25,6 +25,26 @@ export default function ListFileDetailTask() {
    const [isOpenModalView, setOpenModalView] = useState(false)
    const [isExtension, setExtension] = useState('')
    const tema = useHookstate(TEMA)
+   const [reason, setReason] = useState("")
+
+   async function getOneDataCancel() {
+      try {
+         const res = await funGetTaskDivisionById(param.detail, 'data');
+         if (res.success) {
+            setReason(res.data.reason);
+         } else {
+            toast.error(res.message);
+         }
+
+      } catch (error) {
+         console.error(error);
+         toast.error("Gagal mendapatkan data tugas divisi, coba lagi nanti");
+      }
+   }
+
+   useShallowEffect(() => {
+      getOneDataCancel();
+   }, [param.detail])
 
    async function getOneData() {
       try {
@@ -116,12 +136,13 @@ export default function ListFileDetailTask() {
                                        {item.extension == "pdf" && <BsFiletypePdf size={25} />}
                                        {item.extension == "csv" && <BsFiletypeCsv size={25} />}
                                        {item.extension == "png" && <BsFiletypePng size={25} />}
-                                       {(item.extension == "jpg" || item.extension == "jpeg") && <BsFiletypeJpg size={25} />}
+                                       {item.extension == "jpg" && <BsFiletypeJpg size={25} />}
+                                       {item.extension == "jpeg" && <BsFiletypeJpg size={25} />}
                                        {item.extension == "heic" && <BsFiletypeHeic size={25} />}
                                     </Center>
                                  </Grid.Col>
                                  <Grid.Col span={10}>
-                                    <Text>{item.name + '.' + item.extension}</Text>
+                                    <Text truncate={'end'}>{item.name + '.' + item.extension}</Text>
                                  </Grid.Col>
                               </Grid>
                               <Group>
@@ -149,12 +170,16 @@ export default function ListFileDetailTask() {
                         </Box>
                      </Flex>
 
-                     <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
+                     <Flex onClick={() => {
+                        reason == null ?
+                        setOpenModal(true)
+                        : setOpenModal(false)
+                     }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>
-                           <FaTrash size={30} color={tema.get().utama} />
+                           <FaTrash size={30} color={reason == null ? tema.get().utama : "gray"} />
                         </Box>
                         <Box>
-                           <Text c={tema.get().utama}>Hapus file</Text>
+                           <Text c={reason == null ? tema.get().utama : "gray"}>Hapus file</Text>
                         </Box>
                      </Flex>
                   </SimpleGrid>

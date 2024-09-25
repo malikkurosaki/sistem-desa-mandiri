@@ -89,7 +89,7 @@ export default function EditDetailTask() {
 
    return (
       <Box>
-         <LayoutNavbarNew back="" title={"Edit Detail Tugas"} menu />
+         <LayoutNavbarNew back="" title={"Edit Tanggal dan Tugas"} menu />
          <Box p={20}>
             <Group
                justify="center"
@@ -153,9 +153,9 @@ export default function EditDetailTask() {
                            borderRadius: 10,
                         },
                      }}
-                     label={"Nama Tahapan"}
+                     label={"Judul Tahapan"}
                      required
-                     placeholder="Input Nama Tahapan"
+                     placeholder="Input Judul Tahapan"
                      size="md"
                      value={title}
                      onChange={(e) => { setTitle(e.target.value) }}

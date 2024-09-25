@@ -120,8 +120,8 @@ export default function AddDetailTask() {
                         borderRadius: 10,
                      },
                   }}
-                  label="Tahapan"
-                  placeholder="Input Nama Tahapan"
+                  label="Judul Tahapan"
+                  placeholder="Input Judul Tahapan"
                   size="md"
                   required
                   value={title}
@@ -133,7 +133,7 @@ export default function AddDetailTask() {
                   onBlur={() => setTouched({ ...touched, title: true })}
                   error={
                      touched.title && (
-                        title == "" ? "Tahapan Tidak Boleh Kosong" : null
+                        title == "" ? "Judul Tahapan Tidak Boleh Kosong" : null
                      )
                   }
                />
