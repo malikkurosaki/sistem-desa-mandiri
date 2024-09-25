@@ -25,6 +25,27 @@ export default function ListFileDetailProject() {
   const [isExtension, setExtension] = useState('')
   const tema = useHookstate(TEMA)
   const isMobile = useMediaQuery("(max-width: 350px)");
+  const [reason, setReason] = useState("")
+
+  async function getOneDataCancel() {
+    try {
+      const res = await funGetOneProjectById(param.id, 'data');
+      console.log(res.data)
+      if (res.success) {
+        setReason(res.data.reason);
+      } else {
+        toast.error(res.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan data Kegiatan, coba lagi nanti");
+    }
+  }
+
+  useShallowEffect(() => {
+    getOneDataCancel();
+  }, [param.id])
 
   async function getOneData() {
     try {
@@ -120,12 +141,12 @@ export default function ListFileDetailProject() {
                           lg: 1,
                           xl: 1,
                         }}>
-                            {item.extension == "pdf" && <BsFiletypePdf size={ 30} />}
-                            {item.extension == "csv" && <BsFiletypeCsv size={ 30} />}
-                            {item.extension == "png" && <BsFiletypePng size={ 30} />}
-                            {item.extension == "jpg" && <BsFiletypeJpg size={ 30} />}
-                            {item.extension == "jpeg" && <BsFiletypeJpg size={ 30} />}
-                            {item.extension == "heic" && <BsFiletypeHeic size={ 30} />}
+                          {item.extension == "pdf" && <BsFiletypePdf size={30} />}
+                          {item.extension == "csv" && <BsFiletypeCsv size={30} />}
+                          {item.extension == "png" && <BsFiletypePng size={30} />}
+                          {item.extension == "jpg" && <BsFiletypeJpg size={30} />}
+                          {item.extension == "jpeg" && <BsFiletypeJpg size={30} />}
+                          {item.extension == "heic" && <BsFiletypeHeic size={30} />}
                         </Grid.Col>
                         <Grid.Col
                           span={{
@@ -167,12 +188,16 @@ export default function ListFileDetailProject() {
                   </Box>
                 </Flex>
 
-                <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
+                <Flex onClick={() => {
+                  reason == null ?
+                    setOpenModal(true)
+                    : setOpenModal(false)
+                }} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
-                    <FaTrash size={30} color={tema.get().utama} />
+                    <FaTrash size={30} color={reason == null ? tema.get().utama : "gray"} />
                   </Box>
                   <Box>
-                    <Text c={tema.get().utama}>Hapus file</Text>
+                    <Text c={reason == null ? tema.get().utama : "gray"}>Hapus file</Text>
                   </Box>
                 </Flex>
               </SimpleGrid>

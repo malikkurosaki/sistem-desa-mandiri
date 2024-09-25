@@ -48,7 +48,7 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
         </Box>
       } />
       <Box p={20}>
-        <TextInput
+        {/* <TextInput
           styles={{
             input: {
               color: tema.get().utama,
@@ -60,8 +60,8 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
           radius={30}
           leftSection={<HiMagnifyingGlass size={20} />}
           placeholder="Pencarian"
-        />
-        <Box pt={20}>
+        /> */}
+        <Box mb={100}>
           <Checkbox.Group value={value} onChange={setValue}>
             {
               (member.length === 0) ? (
@@ -91,7 +91,7 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
                       </Grid.Col>
                     </Grid>
                     <Box mt={10}>
-                      <Divider size={"xs"} />
+                      <Divider my={10} />
                     </Box>
                   </Box>
                 );

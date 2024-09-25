@@ -33,7 +33,7 @@ export default function DrawerDetailDivision() {
                      <TbReportAnalytics size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={tema.get().utama}>Report Divisi</Text>
+                     <Text c={tema.get().utama}>Laporan Divisi</Text>
                   </Box>
                </Flex>
             </SimpleGrid>

@@ -25,6 +25,27 @@ export default function ListTugasDetailProject() {
   const [isOpenModal, setOpenModal] = useState(false)
   const router = useRouter()
   const tema = useHookstate(TEMA)
+  const [reason, setReason] = useState("")
+
+  async function getOneDataCancel() {
+    try {
+      const res = await funGetOneProjectById(param.id, 'data');
+      console.log(res.data)
+      if (res.success) {
+        setReason(res.data.reason);
+      } else {
+        toast.error(res.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan data Kegiatan, coba lagi nanti");
+    }
+  }
+
+  useShallowEffect(() => {
+    getOneDataCancel();
+  }, [param.id])
 
   async function getOneData() {
     try {
@@ -111,10 +132,12 @@ export default function ListTugasDetailProject() {
                 isData.map((item, index) => {
                   return (
                     <Box key={index}>
-                      <Box onClick={() => {
+                      <Box onClick={() =>  {
                         setIdData(item.id)
                         setStatusData(item.status)
-                        setOpenDrawer(true)
+                        reason == null ?
+                          setOpenDrawer(true)
+                          :  setOpenDrawer(false)
                       }} my={18}>
                         <Checkbox  color="teal" size="md" checked={(item.status === 1) ? true : false} disabled
                           label={item.status === 1 ? 'Sudah Selesai' : 'Belum Selesai'}

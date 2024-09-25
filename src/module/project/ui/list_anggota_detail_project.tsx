@@ -23,6 +23,27 @@ export default function ListAnggotaDetailProject() {
   const router = useRouter()
   const roleLogin = useHookstate(globalRole)
   const tema = useHookstate(TEMA)
+  const [reason, setReason] = useState("")
+
+  async function getOneDataCancel() {
+    try {
+      const res = await funGetOneProjectById(param.id, 'data');
+      console.log(res.data)
+      if (res.success) {
+        setReason(res.data.reason);
+      } else {
+        toast.error(res.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan data Kegiatan, coba lagi nanti");
+    }
+  }
+
+  useShallowEffect(() => {
+    getOneDataCancel();
+  }, [param.id])
 
   async function getOneData() {
     try {
@@ -98,7 +119,9 @@ const isMobile = useMediaQuery('(max-width: 369px)');
                         <Grid align='center' mt={10}
                           onClick={() => {
                             setDataChoose({ id: v.idUser, name: v.name })
-                            setOpenDrawer(true)
+                            reason == null ?
+                              setOpenDrawer(true)
+                              : setOpenDrawer(false)
                           }}
                         >
                           <Grid.Col span={9}>

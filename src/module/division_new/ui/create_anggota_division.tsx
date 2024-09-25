@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
+import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { funGetUserByCookies } from '@/module/auth';
 import { funGetAllmember, TypeUser } from '@/module/user';
@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaCheck } from 'react-icons/fa6';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { IDataMemberDivision } from '../lib/type_division';
 import { funAddDivisionMember, funGetDivisionById } from '../lib/api_division';
 import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
@@ -28,6 +28,7 @@ export default function CreateAnggotaDivision() {
   const [loading, setLoading] = useState(true)
   const [onClickSearch, setOnClickSearch] = useState(false)
   const tema = useHookstate(TEMA)
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
 
   const handleFileClick = (index: number) => {
     if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
@@ -185,10 +186,15 @@ export default function CreateAnggotaDivision() {
             .fill(null)
             .map((_, i) => (
               <Box key={i}>
-                <SkeletonSingle />
+                <SkeletonList />
               </Box>
             ))
           :
+          (dataMember.length === 0) ?
+            <Stack align="stretch" justify="center" w={"100%"} h={"60vh"}>
+              <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
+            </Stack>
+            :
           <Box pt={90} mb={100}>
             {dataMember.map((v: any, index: any) => {
               const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id)
@@ -196,14 +202,32 @@ export default function CreateAnggotaDivision() {
               return (
                 <Box my={10} key={index} onClick={() => (!found) ? handleFileClick(index) : null}>
                   <Grid align='center' >
-                    <Grid.Col span={2}>
+                    <Grid.Col
+                    span={{
+                      base: 1,
+                      xs: 1,
+                      sm: 1,
+                      md: 1,
+                      lg: 1,
+                      xl: 1,
+                    }}
+                    >
                       <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
                     </Grid.Col>
-                    <Grid.Col span={10}>
+                    <Grid.Col
+                     span={{
+                      base: 11,
+                      xs: 11,
+                      sm: 11,
+                      md: 11,
+                      lg: 11,
+                      xl: 11,
+                    }}
+                    >
                       <Flex justify='space-between' align={"center"}>
                         <Flex direction={'column'} align="flex-start" justify="flex-start">
-                          <Text pl={{ base: 10, xl: 0 }} lineClamp={1}>{v.name}</Text>
-                          <Text pl={{ base: 10, xl: 0 }} c={"dimmed"} lineClamp={1}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
+                          <Text pl={isMobile2 ? 40 : 30} lineClamp={1}>{v.name}</Text>
+                          <Text pl={isMobile2 ? 40 : 30} c={"dimmed"} lineClamp={1}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
                         </Flex>
                         {isSelected ? <FaCheck /> : null}
                       </Flex>
