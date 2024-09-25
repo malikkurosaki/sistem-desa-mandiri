@@ -17,7 +17,7 @@ export default function NavbarDivisionTask() {
 
    return (
       <>
-         <LayoutNavbarNew back={`/division/${param.id}`} title="Divisi - Tugas"
+         <LayoutNavbarNew back={`/division/${param.id}`} title="Tugas Divisi"
             menu={((roleLogin.get() != "user" && roleLogin.get() != "coadmin") || adminLogin.get()) ?
                <ActionIcon variant="light" onClick={() => setOpenDrawer(true)} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
                   <HiMenu size={20} color='white' />

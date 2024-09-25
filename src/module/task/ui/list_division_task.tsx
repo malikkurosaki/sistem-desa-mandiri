@@ -1,4 +1,4 @@
-import { currentScroll, TEMA } from "@/module/_global";
+import { currentScroll, SkeletonList, TEMA } from "@/module/_global";
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Progress, Skeleton, Text, TextInput, Title } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -117,70 +117,80 @@ export default function ListDivisionTask() {
             </Grid.Col>
          </Grid>
          <Box pt={20}>
-            {loading ?
-               <Box>
-                  <Skeleton width={"100%"} height={100} radius={"md"} />
-               </Box>
-               :
-               <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
-                  <Text fw={'bold'} c={tema.get().utama}>Total Kegiatan</Text>
-                  <Flex justify={'center'} align={'center'} h={'100%'}>
-                     <Text fz={40} fw={'bold'} c={tema.get().utama}>{totalData}</Text>
-                  </Flex>
-               </Box>
-            }
+            <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
+               <Text fw={'bold'} c={tema.get().utama}>Total Tugas</Text>
+               <Flex justify={'center'} align={'center'} h={'100%'}>
+                  <Text fz={40} fw={'bold'} c={tema.get().utama}>{totalData}</Text>
+               </Flex>
+            </Box>
             {isList ? (
                <Box pt={20}>
-                  {isData.map((v, i) => {
-                     return (
-                        <Box key={i}>
-                           <Grid align='center'>
-                              <Grid.Col span={{
-                                 base: 1,
-                                 xs: 1,
-                                 sm: 1,
-                                 md: 1,
-                                 lg: 1,
-                                 xl: 1
-                              }}>
-                                 <Group onClick={() => router.push(`task/${v.id}`)}>
-                                    <Center>
-                                       <ActionIcon
-                                          variant="gradient"
-                                          size={50}
-                                          aria-label="Gradient action icon"
-                                          radius={100}
-                                          bg={tema.get().bgFiturDivision}
-                                       >
-                                          <HiMiniPresentationChartBar size={25} color={tema.get().utama} />
-                                       </ActionIcon>
-                                    </Center>
-                                 </Group>
-                              </Grid.Col>
-                              <Grid.Col span={{
-                                 base: 11,
-                                 xs: 11,
-                                 sm: 11,
-                                 md: 11,
-                                 lg: 11,
-                                 xl: 11,
-                              }}>
-                                 <Box>
-                                    <Box w={{
-                                       base: 280,
-                                       xl: 430
-                                    }}>
-                                       <Text truncate="end" pl={paddingLift ? 30 : 20}>
-                                          {v.title}
-                                       </Text>
-                                    </Box>
+                  {
+                     loading ?
+                        Array(3)
+                           .fill(null)
+                           .map((_, i) => (
+                              <Box key={i}>
+                                 <SkeletonList />
+                              </Box>
+                           ))
+                        :
+                        _.isEmpty(isData)
+                           ?
+                           <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                              <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Tugas</Text>
+                           </Box>
+                           :
+                           isData.map((v, i) => {
+                              return (
+                                 <Box key={i}>
+                                    <Grid align='center'>
+                                       <Grid.Col span={{
+                                          base: 1,
+                                          xs: 1,
+                                          sm: 1,
+                                          md: 1,
+                                          lg: 1,
+                                          xl: 1
+                                       }}>
+                                          <Group onClick={() => router.push(`task/${v.id}`)}>
+                                             <Center>
+                                                <ActionIcon
+                                                   variant="gradient"
+                                                   size={50}
+                                                   aria-label="Gradient action icon"
+                                                   radius={100}
+                                                   bg={tema.get().bgFiturDivision}
+                                                >
+                                                   <HiMiniPresentationChartBar size={25} color={tema.get().utama} />
+                                                </ActionIcon>
+                                             </Center>
+                                          </Group>
+                                       </Grid.Col>
+                                       <Grid.Col span={{
+                                          base: 11,
+                                          xs: 11,
+                                          sm: 11,
+                                          md: 11,
+                                          lg: 11,
+                                          xl: 11,
+                                       }}>
+                                          <Box>
+                                             <Box w={{
+                                                base: 280,
+                                                xl: 430
+                                             }}>
+                                                <Text truncate="end" pl={paddingLift ? 30 : 20}>
+                                                   {v.title}
+                                                </Text>
+                                             </Box>
+                                          </Box>
+                                       </Grid.Col>
+                                    </Grid>
+                                    <Divider my="sm" />
                                  </Box>
-                              </Grid.Col>
-                           </Grid>
-                           <Divider my="sm" />
-                        </Box>
-                     );
-                  })}
+                              );
+                           })}
                </Box>
             ) : (
                <Box pt={20}>

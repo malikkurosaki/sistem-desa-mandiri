@@ -21,12 +21,14 @@ export default function NavbarDetailDivisionTask() {
    const roleLogin = useHookstate(globalRole)
    const adminLogin = useHookstate(globalIsAdminDivision)
    const tema = useHookstate(TEMA)
+   const [reason, setReason] = useState("")
 
    async function getOneData() {
       try {
          const res = await funGetTaskDivisionById(param.detail, 'data');
          if (res.success) {
             setName(res.data.title);
+            setReason(res.data.reason);
          } else {
             toast.error(res.message);
          }
@@ -40,7 +42,6 @@ export default function NavbarDetailDivisionTask() {
    useShallowEffect(() => {
       getOneData();
    }, [param.detail])
-
 
    return (
       <>
@@ -66,22 +67,24 @@ export default function NavbarDetailDivisionTask() {
                      style={{
                         alignContent: 'flex-start',
                         alignItems: 'flex-start',
-                      }}
+                     }}
                   >
                      <Flex justify={'center'} align={'center'} direction={'column'}
                         style={{
                            cursor: 'pointer'
                         }}
                         onClick={() => {
-                           router.push(param.detail + '/add-task')
+                           reason == null ?
+                              router.push(param.detail + '/add-task')
+                              : null
                         }}
                         pb={20}
                      >
                         <Box>
-                           <IoAddCircle size={30} color={tema.get().utama} />
+                           <IoAddCircle size={30} color={reason == null ? tema.get().utama : "gray"} />
                         </Box>
                         <Box>
-                           <Text c={tema.get().utama} ta='center'>Tambah Tugas</Text>
+                           <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Tambah Tugas</Text>
                         </Box>
                      </Flex>
 
@@ -90,14 +93,16 @@ export default function NavbarDetailDivisionTask() {
                            cursor: 'pointer'
                         }}
                         onClick={() => {
-                           router.push(param.detail + '/add-file')
+                           reason == null ?
+                              router.push(param.detail + '/add-file')
+                              : null
                         }}
                      >
                         <Box>
-                           <FaFileCirclePlus size={30} color={tema.get().utama} />
+                           <FaFileCirclePlus size={30} color={reason == null ? tema.get().utama : "gray"} />
                         </Box>
                         <Box>
-                           <Text c={tema.get().utama} ta='center'>Tambah file</Text>
+                           <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Tambah file</Text>
                         </Box>
                      </Flex>
 
@@ -108,25 +113,16 @@ export default function NavbarDetailDivisionTask() {
                                  style={{
                                     cursor: 'pointer'
                                  }}
-                                 onClick={() => { router.push(param.detail + '/add-member') }} >
+                                 onClick={() => {
+                                    reason == null ?
+                                       router.push(param.detail + '/add-member')
+                                       : null
+                                 }} >
                                  <Box>
-                                    <FaUsers size={30} color={tema.get().utama} />
+                                    <FaUsers size={30} color={reason == null ? tema.get().utama : "gray"} />
                                  </Box>
                                  <Box>
-                                    <Text c={tema.get().utama} ta='center'>Tambah anggota</Text>
-                                 </Box>
-                              </Flex>
-
-                              <Flex justify={'center'} align={'center'} direction={'column'}
-                                 style={{
-                                    cursor: 'pointer'
-                                 }}
-                                 onClick={() => { router.push(param.detail + '/edit') }} >
-                                 <Box>
-                                    <FaPencil size={30} color={tema.get().utama} />
-                                 </Box>
-                                 <Box>
-                                    <Text c={tema.get().utama} ta='center'>Edit</Text>
+                                    <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Tambah anggota</Text>
                                  </Box>
                               </Flex>
 
@@ -134,12 +130,33 @@ export default function NavbarDetailDivisionTask() {
                                  style={{
                                     cursor: 'pointer'
                                  }}
-                                 onClick={() => { router.push(param.detail + '/cancel') }} >
+                                 onClick={() => {
+                                    reason == null ?
+                                       router.push(param.detail + '/edit')
+                                       : null
+                                 }} >
                                  <Box>
-                                    <MdCancel size={30} color={tema.get().utama} />
+                                    <FaPencil size={30} color={reason == null ? tema.get().utama : "gray"} />
                                  </Box>
                                  <Box>
-                                    <Text c={tema.get().utama} ta='center'>Batal</Text>
+                                    <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Edit</Text>
+                                 </Box>
+                              </Flex>
+
+                              <Flex justify={'center'} align={'center'} direction={'column'}
+                                 style={{
+                                    cursor: 'pointer'
+                                 }}
+                                 onClick={() => {
+                                    reason == null ?
+                                       router.push(param.detail + '/cancel')
+                                       : null
+                                 }} >
+                                 <Box>
+                                    <MdCancel size={30} color={reason == null ? tema.get().utama : "gray"} />
+                                 </Box>
+                                 <Box>
+                                    <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Batal</Text>
                                  </Box>
                               </Flex>
                            </> : <></>

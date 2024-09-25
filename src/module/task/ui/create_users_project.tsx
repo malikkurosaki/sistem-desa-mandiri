@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, SkeletonSingle, TEMA } from "@/module/_global";
+import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from "@/module/_global";
 import { funGetDivisionById, funGetSearchMemberDivision, IDataMemberDivision } from "@/module/division_new";
 import { useHookstate } from "@hookstate/core";
 import {
@@ -15,10 +15,11 @@ import {
   Indicator,
   rem,
   Skeleton,
+  Stack,
   Text,
   TextInput,
 } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
@@ -41,6 +42,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
   const [onClickSearch, setOnClickSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const tema = useHookstate(TEMA)
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
 
 
   async function getData() {
@@ -192,7 +194,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
         borderBottom: `1px solid ${"#E0DFDF"}`
       }}>
         {selectedFiles.length > 0 ? (
-          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"}  withControls={false}>
+          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withControls={false}>
             {selectedFiles.map((v: any, i: any) => {
               return (
                 <Carousel.Slide key={i}>
@@ -242,9 +244,14 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
               .fill(null)
               .map((_, i) => (
                 <Box key={i} mb={15}>
-                  <SkeletonSingle />
+                  <SkeletonList />
                 </Box>
               ))
+            :
+            (isData.length === 0) ?
+            <Stack align="stretch" justify="center" w={"100%"} h={"60vh"}>
+              <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
+            </Stack>
             :
             isData.map((v, i) => {
               const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
@@ -252,18 +259,26 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
                 <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
                   <Grid align='center'>
                     <Grid.Col span={{
-                      base: 3,
-                      xl: 2
+                      base: 1,
+                      xs: 1,
+                      sm: 1,
+                      md: 1,
+                      lg: 1,
+                      xl: 1
                     }}>
                       <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
                     </Grid.Col>
                     <Grid.Col span={{
-                      base: 9,
-                      xl: 10
+                      base: 11,
+                      xs: 11,
+                      sm: 11,
+                      md: 11,
+                      lg: 11,
+                      xl: 11,
                     }}>
                       <Flex justify='space-between' align={"center"}>
                         <Flex direction={'column'} align="flex-start" justify="flex-start">
-                          <Text lineClamp={1}>{v.name}</Text>
+                          <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
                         </Flex>
                         {isSelected ? <FaCheck /> : null}
                       </Flex>

@@ -72,8 +72,8 @@ export async function GET(request: Request, context: { params: { id: string } })
 
          const fix = dataProgress.map((v: any) => ({
             ..._.omit(v, ["dateStart", "dateEnd"]),
-            dateStart: moment(v.dateStart).format("DD MMMM YYYY"),
-            dateEnd: moment(v.dateEnd).format("DD MMMM YYYY"),
+            dateStart: moment(v.dateStart).format("DD-MM-YYYY"),
+            dateEnd: moment(v.dateEnd).format("DD-MM-YYYY"),
          }))
 
          allData = fix
