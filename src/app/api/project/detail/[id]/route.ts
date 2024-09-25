@@ -206,7 +206,9 @@ export async function POST(request: Request, context: { params: { id: string } }
         }
 
         const { id } = context.params;
-        const { name, dateStart, dateEnd } = (await request.json());
+        const { title, dateStart, dateEnd } = (await request.json());
+
+
 
         const dataTask = await prisma.projectTask.count({
             where: {
@@ -228,7 +230,7 @@ export async function POST(request: Request, context: { params: { id: string } }
                 id
             },
             data: {
-                title: name,
+                title,
                 dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
                 dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
             }

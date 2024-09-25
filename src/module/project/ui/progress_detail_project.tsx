@@ -42,7 +42,6 @@ export default function ProgressDetailProject() {
   async function getOneDataCancel() {
     try {
       const res = await funGetOneProjectById(param.id, 'data');
-      console.log(res.data)
       if (res.success) {
         setReason(res.data.reason);
       } else {

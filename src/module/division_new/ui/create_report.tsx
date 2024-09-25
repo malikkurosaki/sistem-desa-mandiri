@@ -66,13 +66,23 @@ export default function CreateReport() {
       onReport(val, value)
     }
 
+    if (val == null || val == "") {
+      setTampil(false)
+      toast.error("Error! harus memilih grup")
+    }
     setIsGroup(String(val))
   }
 
   function onChangeDate(val: any) {
-    if (val != null && val != "" && isGroup != "" && isGroup != null) {
+    if (val != null && val != "" && isGroup != "" && isGroup != "null") {
       onReport(isGroup, val)
     }
+
+    if (isGroup == null || isGroup == "") {
+      setTampil(false)
+      toast.error("Error! harus memilih grup")
+    }
+
     setValue(val)
   }
 
