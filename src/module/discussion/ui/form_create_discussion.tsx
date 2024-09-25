@@ -70,7 +70,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
    return (
       <Box >
          <Box p={20} >
-            <Grid gutter={0} pt={10}>
+            <Grid  pt={10}>
                <Grid.Col span={2}>
                   <Avatar src={img} alt="it's me" size="lg" />
                </Grid.Col>
@@ -82,7 +82,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                            input: {
                               border: 'none',
                               backgroundColor: 'transparent',
-                              height: "70vh"
+                              height: "50vh"
                            }
                         }}
                         value={isData.desc}
