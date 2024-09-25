@@ -62,7 +62,7 @@ export default function HistoryDivisionCalender() {
           <Box bg={tema.get().bgTotalKegiatan} style={{
             borderRadius: 10,
             padding: 20
-          }}>
+          }} h={"100vh"}>
             {loading ?
               Array(6)
                 .fill(null)
@@ -90,7 +90,7 @@ export default function HistoryDivisionCalender() {
               _.isEmpty(isData)
               ?
               <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-                 <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada history</Text>
+                 <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Acara</Text>
               </Box>
               :
               isData.map((v, i) => {

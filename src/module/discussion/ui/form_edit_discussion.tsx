@@ -107,7 +107,7 @@ export default function FormEditDiscussion() {
                            input: {
                               border: 'none',
                               backgroundColor: 'transparent',
-                              height: "70vh"
+                              height: "50vh"
                            }
                         }}
                         value={isDataOne}
