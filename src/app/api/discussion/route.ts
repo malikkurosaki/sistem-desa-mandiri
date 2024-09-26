@@ -40,12 +40,10 @@ export async function GET(request: Request) {
             where: {
                isActive: true,
                idDivision: idDivision,
-               User: {
-                  name: {
-                     contains: (name == undefined || name == "null") ? "" : name,
-                     mode: "insensitive"
-                  }
-               }
+               desc: {
+                  contains: (name == undefined || name == "null") ? "" : name,
+                  mode: "insensitive"
+               },
             },
             orderBy: {
                createdAt: 'desc'
