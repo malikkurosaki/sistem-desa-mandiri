@@ -145,6 +145,9 @@ export default function ListFileDetailProject() {
                           {item.extension == "png" && <BsFiletypePng size={30} />}
                           {item.extension == "jpg" && <BsFiletypeJpg size={30} />}
                           {item.extension == "jpeg" && <BsFiletypeJpg size={30} />}
+                          {item.extension == "PNG" && <BsFiletypePng size={30} />}
+                          {item.extension == "JPG" && <BsFiletypeJpg size={30} />}
+                          {item.extension == "JPEG" && <BsFiletypeJpg size={30} />}
                           {item.extension == "heic" && <BsFiletypeHeic size={30} />}
                         </Grid.Col>
                         <Grid.Col

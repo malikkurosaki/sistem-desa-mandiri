@@ -521,28 +521,24 @@ export default function NavbarDocumentDivision() {
             {isMobile2 ? (
               <Breadcrumbs
                 separator={<GoChevronRight />}
-                separatorMargin="md"
-                mt="xs"
+                my="xs"
                 style={{ cursor: "pointer" }}
               >
                 {dataJalur.slice(0, 3).map((v, i) => {
                   return (
-                    <>
-                      <Box w={50}>
-                        <Text
-                          onClick={() => router.push("?path=" + v.id)}
-                          key={i}
-                          style={{
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            maxWidth: "100%",
-                          }}
-                        >
-                          {v.name}
-                        </Text>
-                      </Box>
-                    </>
+                    <Text
+                      onClick={() => router.push("?path=" + v.id)}
+                      key={i}
+                      style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        maxWidth: "100%",
+                      }}
+                      truncate={"end"}
+                    >
+                      {v.name}
+                    </Text>
                   );
                 })}
                 {dataJalur.length > 3 && (
@@ -574,8 +570,7 @@ export default function NavbarDocumentDivision() {
             ) : (
               <Breadcrumbs
                 separator={<GoChevronRight />}
-                separatorMargin="md"
-                mt="xs"
+                my="xs"
                 style={{ cursor: "pointer" }}
               >
                 {dataJalur.slice(0, 4).map((v, i) => {
