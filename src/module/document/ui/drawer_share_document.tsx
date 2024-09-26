@@ -17,8 +17,9 @@ import {
   ActionIcon,
   ScrollArea,
   Skeleton,
+  Grid,
 } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -39,6 +40,7 @@ export default function DrawerShareDocument({
   const refresh = useHookstate(globalRefreshDocument);
   const tema = useHookstate(TEMA);
   const [loading, setLoading] = useState(true);
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
 
   async function onShare() {
     try {
@@ -100,8 +102,8 @@ export default function DrawerShareDocument({
   };
 
   return (
-    <Box pt={10}>
-      <Box mt={10}>
+    <Box>
+      <Box>
         <ScrollArea
           h={{
             base: "58vh",
@@ -154,8 +156,15 @@ export default function DrawerShareDocument({
                     );
                     return (
                       <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
-                        <Flex justify={"space-between"} align={"center"}>
-                          <Group>
+                        <Grid align='center'>
+                          <Grid.Col span={{
+                            base: 1,
+                            xs: 1,
+                            sm: 1,
+                            md: 1,
+                            lg: 1,
+                            xl: 1,
+                          }}>
                             <ActionIcon
                               variant="light"
                               color="gray"
@@ -165,34 +174,30 @@ export default function DrawerShareDocument({
                             >
                               <FaUsers fontSize={40} />
                             </ActionIcon>
-                            <Stack align="flex-start" justify="flex-start">
-                              <Text
-                                style={{
-                                  cursor: "pointer",
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
-                                {v.name}
-                              </Text>
-                            </Stack>
-                          </Group>
-                          <Text
-                            style={{
-                              cursor: "pointer",
-                              display: "flex",
-                              alignItems: "center",
-                              paddingLeft: 20,
-                            }}
-                          >
-                            {isSelected ? (
-                              <FaCheck style={{ marginRight: 10 }} />
-                            ) : (
-                              ""
-                            )}
-                          </Text>
-                        </Flex>
-                        <Divider my={"md"} />
+                          </Grid.Col>
+                          <Grid.Col span={{
+                            base: 11,
+                            xs: 11,
+                            sm: 11,
+                            md: 11,
+                            lg: 11,
+                            xl: 11,
+                          }}>
+                            <Flex justify='space-between' align={"center"}>
+                              <Flex direction={'column'} align="flex-start" justify="flex-start">
+                                <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
+                              </Flex>
+                              {isSelected ? (
+                                <FaCheck style={{ marginRight: 10 }} />
+                              ) : (
+                                ""
+                              )}
+                            </Flex>
+                          </Grid.Col>
+                        </Grid>
+                        <Box mt={10}>
+                          <Divider my={10} />
+                        </Box>
                       </Box>
                     );
                   })}

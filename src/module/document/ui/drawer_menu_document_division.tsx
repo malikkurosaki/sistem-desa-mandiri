@@ -1,6 +1,6 @@
 "use clent"
 import { LayoutDrawer, TEMA } from '@/module/_global';
-import { ActionIcon, Box, Button, Divider, Flex, Grid, Modal, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Box, Button, Center, Divider, Flex, Grid, Modal, Progress, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -24,6 +24,7 @@ export default function DrawerMenuDocumentDivision() {
   const openRef = useRef<() => void>(null)
   const [fileForm, setFileForm] = useState<any>()
   const tema = useHookstate(TEMA)
+  const [loading, setLoading] = useState(false)
 
   const [bodyFolder, setBodyFolder] = useState({
     name: '',
@@ -49,101 +50,112 @@ export default function DrawerMenuDocumentDivision() {
 
   async function onUploadFile(data: any) {
     try {
+      setLoading(true)
       const fd = new FormData()
       fd.append(`file`, data)
       fd.append("data", JSON.stringify({
         idPath: (path == undefined || path == '' || path == null) ? 'home' : path,
         idDivision: param.id
       }))
-
+      setOpenModal(false)
+      // setOpenDrawerDocument(false)
       const res = await funUploadFileDocument(fd)
+
       if (!res.success) {
         toast.error(res.message)
       }
+      setLoading(false)
     } catch (error) {
       console.error(error);
       toast.error("Gagal upload file, coba lagi nanti");
+      setLoading(false)
     }
-
     refresh.set(true)
-    setOpenModal(false)
     setOpenDrawerDocument(false)
   }
 
+
   return (
     <Box>
-      <Stack pt={10}>
-        <SimpleGrid
-          cols={{ base: 2, sm: 3, lg: 3 }}
-          onClick={() => setOpenDrawerDocument(true)}
-        >
-          <Flex justify={'center'} align={'center'} direction={'column'} >
-            <Box>
-              <IoAddCircle size={30} color={tema.get().utama} />
-            </Box>
-            <Box >
-              <Text c={tema.get().utama}>Tambah Dokumen</Text>
-            </Box>
-          </Flex>
-        </SimpleGrid>
-      </Stack>
+      {loading ? (
+        <Box >
+          <Progress mt={"10vh"} size="lg" value={100} animated />
+          <Text ta={"center"}>Loading...</Text>
+        </Box>
+      ) :
+        (
+          <Stack pt={10}>
+            <SimpleGrid
+              cols={{ base: 2, sm: 3, lg: 3 }}
+              onClick={() => setOpenDrawerDocument(true)}
+            >
+              <Flex justify={'center'} align={'center'} direction={'column'} >
+                <Box>
+                  <IoAddCircle size={30} color={tema.get().utama} />
+                </Box>
+                <Box >
+                  <Text c={tema.get().utama}>Tambah Dokumen</Text>
+                </Box>
+              </Flex>
+            </SimpleGrid>
+          </Stack>
+        )
+      }
 
       <LayoutDrawer opened={openDrawerDocument} onClose={() => setOpenDrawerDocument(false)} title={''}>
-        <SimpleGrid
-          cols={{ base: 2, sm: 2, lg: 2 }}
-          onClick={() => setOpenDrawerDocument(true)}
-        >
+        {loading ? (
+          <Box >
+            <Progress mt={"10vh"} size="lg" value={100} animated />
+            <Text ta={"center"}>Loading...</Text>
+          </Box>
+        ) :
+          (
+            <SimpleGrid
+              cols={{ base: 2, sm: 2, lg: 2 }}
+              onClick={() => setOpenDrawerDocument(true)}
+            >
+              <Flex onClick={() => setOpenModal(true)} justify={'center'} align={'center'} direction={'column'} mb={20} >
+                <Box>
+                  <ActionIcon variant="filled" color="#DFE8EA" size={61} radius="xl" aria-label="Settings">
+                    <FaFolderClosed size={40} color={tema.get().utama} />
+                  </ActionIcon>
+                </Box>
+                <Box mt={10}>
+                  <Text c={tema.get().utama}>Membuat Folder</Text>
+                </Box>
+              </Flex>
+              <Dropzone
+                openRef={openRef}
+                onDrop={async (files) => {
+                  if (!files || _.isEmpty(files))
+                    return toast.error('Tidak ada file yang dipilih')
+                  onUploadFile(files[0])
+                }}
+                activateOnClick={false}
+                maxSize={3 * 1024 ** 2}
+                accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+                onReject={(files) => {
+                  refresh.set(true)
+                  setOpenModal(false)
+                  setOpenDrawerDocument(false)
+                  toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+                }}
+              >
+                <Flex justify={'center'} align={'center'} direction={'column'} mb={20} onClick={() => openRef.current?.()}>
+                  <Box>
+                    <ActionIcon variant="filled" color="#DFE8EA" size={61} radius="xl" aria-label="Settings">
+                      <HiDocumentText size={40} color={tema.get().utama} />
+                    </ActionIcon>
+                  </Box>
+                  <Box mt={10}>
+                    <Text c={tema.get().utama}>Upload File</Text>
+                  </Box>
+                </Flex>
+              </Dropzone>
 
-          <Flex onClick={() => setOpenModal(true)} justify={'center'} align={'center'} direction={'column'} mb={20} >
-            <Box>
-              <ActionIcon variant="filled" color="#DFE8EA" size={61} radius="xl" aria-label="Settings">
-                <FaFolderClosed size={40} color={tema.get().utama} />
-              </ActionIcon>
-            </Box>
-            <Box mt={10}>
-              <Text c={tema.get().utama}>Membuat Folder</Text>
-            </Box>
-          </Flex>
-          <Dropzone
-            openRef={openRef}
-            onDrop={async (files) => {
-              if (!files || _.isEmpty(files))
-                return toast.error('Tidak ada file yang dipilih')
-              onUploadFile(files[0])
-            }}
-            activateOnClick={false}
-            maxSize={3 * 1024 ** 2}
-            accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
-            onReject={(files) => {
-              refresh.set(true)
-              setOpenModal(false)
-              setOpenDrawerDocument(false)
-              toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
-            }}
-          >
-            <Flex justify={'center'} align={'center'} direction={'column'} mb={20} onClick={() => openRef.current?.()}>
-              <Box>
-                <ActionIcon variant="filled" color="#DFE8EA" size={61} radius="xl" aria-label="Settings">
-                  <HiDocumentText size={40} color={tema.get().utama} />
-                </ActionIcon>
-              </Box>
-              <Box mt={10}>
-                <Text c={tema.get().utama}>Upload File</Text>
-              </Box>
-            </Flex>
-          </Dropzone>
-
-          {/* <Flex justify={'center'} align={'center'} direction={'column'} mb={20} >
-            <Box>
-              <ActionIcon variant="filled" color="#DFE8EA" size={61} radius="xl" aria-label="Settings">
-                <FaRegImage size={40} color={tema.get().utama} />
-              </ActionIcon>
-            </Box>
-            <Box mt={10}>
-              <Text c={tema.get().utama}>Upload Foto</Text>
-            </Box>
-          </Flex> */}
-        </SimpleGrid>
+            </SimpleGrid>
+          )
+        }
       </LayoutDrawer>
 
 

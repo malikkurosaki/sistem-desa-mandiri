@@ -208,7 +208,6 @@ export default function NavbarCreateDivisionCalender() {
             data={[
               { value: 'once', label: 'Acara 1 Kali' },
               { value: 'daily', label: 'Setiap Hari' },
-              // { value: 'weekdays', label: 'Hari Kerja (Sen - Jum)' },
               { value: 'weekly', label: 'Mingguan' },
               { value: 'monthly', label: 'Bulanan' },
               { value: 'yearly', label: 'Tahunan' },
@@ -226,31 +225,60 @@ export default function NavbarCreateDivisionCalender() {
               )
             }
           />
-          <TextInput styles={{
-            input: {
-              border: `1px solid ${"#D6D8F6"}`,
-              borderRadius: 10,
-            },
-          }}
-            type='number'
-            required
-            label="Jumlah pengulangan"
-            size="md"
-            placeholder='Jumlah pengulangan'
-            value={isData.repeatValue}
-            onChange={(event) => {
-              setData({ ...isData, repeatValue: String(event.currentTarget.value) })
-              setTouched({ ...touched, repeatValue: false })
+          {isData.repeatEventTyper == "once" ?
+            <TextInput styles={{
+              input: {
+                border: `1px solid ${"#D6D8F6"}`,
+                borderRadius: 10,
+              },
             }}
-            onBlur={() => setTouched({ ...touched, repeatValue: true })}
-            // TODO :: NANTI DIPERBAIKI
-            error={
-              touched.repeatValue && (
-                isData.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : "" 
-                // || Number(isData.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh 0" : ""
-              )
-            }
-          />
+              type='number'
+              required
+              label="Jumlah pengulangan"
+              size="md"
+              disabled
+              placeholder='Jumlah pengulangan'
+              value={isData.repeatValue}
+              onChange={(event) => {
+                setData({ ...isData, repeatValue: String(event.currentTarget.value) })
+                setTouched({ ...touched, repeatValue: false })
+              }}
+              onBlur={() => setTouched({ ...touched, repeatValue: true })}
+              // TODO :: NANTI DIPERBAIKI
+              error={
+                touched.repeatValue && (
+                  isData.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : ""
+                  // || Number(isData.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh 0" : ""
+                )
+              }
+            />
+            :
+            <TextInput styles={{
+              input: {
+                border: `1px solid ${"#D6D8F6"}`,
+                borderRadius: 10,
+              },
+            }}
+              type='number'
+              required
+              label="Jumlah pengulangan"
+              size="md"
+              placeholder='Jumlah pengulangan'
+              value={isData.repeatValue}
+              onChange={(event) => {
+                setData({ ...isData, repeatValue: String(event.currentTarget.value) })
+                setTouched({ ...touched, repeatValue: false })
+              }}
+              onBlur={() => setTouched({ ...touched, repeatValue: true })}
+              // TODO :: NANTI DIPERBAIKI
+              error={
+                touched.repeatValue && (
+                  isData.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : ""
+                  // || Number(isData.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh 0" : ""
+                )
+              }
+            />
+          }
           <Textarea styles={{
             input: {
               border: `1px solid ${"#D6D8F6"}`,

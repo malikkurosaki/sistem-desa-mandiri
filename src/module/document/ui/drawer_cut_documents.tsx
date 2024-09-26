@@ -133,12 +133,12 @@ export default function DrawerCutDocuments({
           </Grid.Col>
         </Grid>
       </Box>
-      <Box p={10} pb={60}>
+      <Box  pb={60}>
         <Box>
           <Breadcrumbs
             separator={<GoChevronRight />}
             separatorMargin="md"
-            mt="xs"
+            mb={10}
           >
             {dataJalur.map((v, i) => {
               return (
@@ -156,9 +156,9 @@ export default function DrawerCutDocuments({
         <ScrollArea
           h={{
             base: "55vh",
-            xl: "58vh",
-            md: "57vh",
-            sm: "58vh",
+            xl: "56vh",
+            md: "56vh",
+            sm: "56vh",
           }}
           type="scroll"
           scrollbarSize={2}
@@ -205,7 +205,7 @@ export default function DrawerCutDocuments({
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    height: "60vh",
+                    height: "50vh",
                   }}
                 >
                   <Text c="dimmed" ta={"center"} fs={"italic"}>
