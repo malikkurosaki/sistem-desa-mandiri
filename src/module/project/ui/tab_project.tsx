@@ -26,12 +26,12 @@ export default function TabProject() {
     {
       id: "0",
       title: "Segera",
-      icon: <RiProgress3Line style={iconStyle} />
+      icon: <TbClockPause style={iconStyle} />
     },
     {
       id: "1",
       title: "Dikerjakan",
-      icon: <TbClockPause style={iconStyle} />
+      icon: <RiProgress3Line style={iconStyle} />
     },
     {
       id: "2",
@@ -73,7 +73,7 @@ export default function TabProject() {
                 color={
                   status == item.id
                     ? "white"
-                    : tema.get().utama
+                    : (status == null && item.id == "0") ? "white" : tema.get().utama
                 }
                 key={index}
                 onClick={() => { router.push("?status=" + item.id + "&group=" + group) }}
@@ -81,8 +81,8 @@ export default function TabProject() {
                 radius={"xl"}
                 bg={
                   status == item.id
-                    ? tema.get().utama
-                    : "transparent"
+                    ? tema.get().bgFiturDivision
+                    : (status == null && item.id == "0") ? tema.get().bgFiturDivision : "transparent"
                 }
                 leftSection={item.icon}
               >

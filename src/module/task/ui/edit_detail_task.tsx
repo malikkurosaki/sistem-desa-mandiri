@@ -32,6 +32,7 @@ export default function EditDetailTask() {
    const param = useParams<{ id: string, detail: string }>()
    const [openModal, setOpenModal] = useState(false)
    const [loading, setLoading] = useState(true)
+   const [idTugas, setIdTugas] = useState("")
    const tema = useHookstate(TEMA)
 
    async function onSubmit() {
@@ -50,6 +51,7 @@ export default function EditDetailTask() {
 
          if (res.success) {
             toast.success(res.message);
+            router.push(`/division/${param.id}/task/${idTugas}`)
          } else {
             toast.error(res.message);
          }
@@ -65,6 +67,7 @@ export default function EditDetailTask() {
          setLoading(true)
          const res = await funGetDetailTask(param.detail);
          if (res.success) {
+            setIdTugas(res.data.idProject)
             setTitle(res.data.title)
             setValue([
                new Date(moment(res.data.dateStart).format('YYYY-MM-DD')),

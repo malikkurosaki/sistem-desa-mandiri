@@ -118,9 +118,8 @@ export default function ListTugasDetailTask() {
             style={{
                borderRadius: 10,
                border: `1px solid ${"#D6D8F6"}`,
+               padding:20
             }}
-            pl={20}
-            pr={20}
          >
             {
                loading ?
@@ -130,7 +129,7 @@ export default function ListTugasDetailTask() {
                      </Box>
                   </>
                   :
-                  isData.length === 0 ? <Text>Tidak ada tugas</Text> :
+                  isData.length === 0 ? <Text c={"dimmed"} ta={"center"} fs={"italic"}>Tidak ada tugas</Text> :
                      isData.map((item, index) => {
                         return (
                            <Box key={index}>

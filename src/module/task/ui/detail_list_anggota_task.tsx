@@ -100,9 +100,8 @@ export default function ListAnggotaDetailTask() {
                   style={{
                      border: `1px solid ${"#C7D6E8"}`,
                      borderRadius: 10,
+                     padding: 20
                   }}
-                  px={20}
-                  py={10}
                >
                   {
                      loading ?
@@ -114,7 +113,7 @@ export default function ListAnggotaDetailTask() {
                               </Box>
                            ))
                         :
-                        isData.length === 0 ? <Text>Tidak ada anggota</Text> :
+                        isData.length === 0 ? <Text c={"dimmed"} ta={"center"} fs={"italic"}>Tidak ada anggota</Text> :
                            isData.map((v, i) => {
                               return (
                                  <Box key={i}>

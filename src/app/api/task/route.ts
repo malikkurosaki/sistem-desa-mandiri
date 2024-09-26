@@ -68,6 +68,9 @@ export async function GET(request: Request) {
                   idUser: true
                }
             }
+         },
+         orderBy: {
+            createdAt: "desc"
          }
       });
 
