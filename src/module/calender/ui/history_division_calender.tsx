@@ -37,7 +37,7 @@ export default function HistoryDivisionCalender() {
     getData()
   }, [searchQuery])
 
-  const isMobile = useMediaQuery('(max-width: 450px)'); 
+  const isMobile = useMediaQuery('(max-width: 450px)');
 
   return (
     <Box>
@@ -59,83 +59,69 @@ export default function HistoryDivisionCalender() {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <Box mt={30}>
-          <Box bg={tema.get().bgTotalKegiatan} style={{
-            borderRadius: 10,
-            padding: 20
-          }} h={"100vh"}>
+          <Box>
             {loading ?
               Array(6)
                 .fill(null)
                 .map((_, i) => (
-                  <Box key={i} mb={10}>
-                    <Grid >
-                      <Grid.Col span={2}>
-                        <Flex justify={"center"} direction={'column'}>
-                          <Skeleton height={30} width={"100%"} radius={"md"} />
-                          <Skeleton height={20} width={"100%"} radius={"md"} mt={10} />
-                        </Flex>
-                      </Grid.Col>
-                      <Grid.Col span={'auto'}>
-                        {[...Array(1)].map((_, x) => (
-                          <Box mb={10} key={x}>
-                            <Skeleton height={20} width={"100%"} radius={"md"} />
-                            <Skeleton height={20} width={"100%"} radius={"md"} mt={10} />
-                          </Box>
-                        ))}
-                      </Grid.Col>
-                    </Grid>
+                  <Box key={i} mb={20}>
+                    <Skeleton height={100} width={"100%"} radius={10} />
                   </Box>
                 ))
               :
               _.isEmpty(isData)
-              ?
-              <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-                 <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Acara</Text>
-              </Box>
-              :
-              isData.map((v, i) => {
-                return (
-                  <Grid key={i} 
-                  style={{
-                    alignContent: 'flex-start',
-                    alignItems: 'flex-start',
-                  }}
-                  >
-                    <Grid.Col span={{
-                      base: isMobile ? 4 : 3,
-                      sm: 3,
-                      xs:3,
-                      md: 3,
-                      lg: 3,
-                      xl: 3
-                    }}>
-                      <Flex justify={"center"} direction={'column'}>
-                        <Text ta={"center"} fz={20} fw={'bold'}>{moment(v.dateStart).format('D MMM')}</Text>
-                        <Text ta={"center"} fz={15}>{moment(v.dateStart).format('dddd')}</Text>
-                      </Flex>
-                    </Grid.Col>
-                    <Grid.Col span={{
-                      base: isMobile ? 8 : 9,
-                      md: 9,
-                      lg: 9,
-                      xl: 9,
-                      sm: 9,
-                      xs:9
-                    }}>
-                      {v.data.map((d, x) => {
-                        return (
-                          <Box mb={9} key={x}
-                          onClick={() => router.push(`/division/${param.id}/calender/${d.id}`)}
-                          >
-                            <Text fw={"bold"} lineClamp={1}>{d.title}</Text>
-                            <Text>{d.timeStart} | {d.timeEnd}</Text>
-                          </Box>
-                        )
-                      })}
-                    </Grid.Col>
-                  </Grid>
-                )
-              })
+                ?
+                <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+                  <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Acara</Text>
+                </Box>
+                :
+                isData.map((v, i) => {
+                  return (
+                    <Box bg={tema.get().bgTotalKegiatan} style={{
+                      borderRadius: 10,
+                    }} mb={20} p={20} key={i}>
+                      <Grid
+                        style={{
+                          alignContent: 'flex-start',
+                          alignItems: 'flex-start',
+                        }}
+                      >
+                        <Grid.Col span={{
+                          base: isMobile ? 4 : 3,
+                          sm: 3,
+                          xs: 3,
+                          md: 3,
+                          lg: 3,
+                          xl: 3
+                        }}>
+                          <Flex justify={"center"} direction={'column'}>
+                            <Text ta={"center"} fz={20} fw={'bold'}>{moment(v.dateStart).format('D MMM')}</Text>
+                            <Text ta={"center"} fz={15}>{moment(v.dateStart).format('dddd')}</Text>
+                          </Flex>
+                        </Grid.Col>
+                        <Grid.Col span={{
+                          base: isMobile ? 8 : 9,
+                          md: 9,
+                          lg: 9,
+                          xl: 9,
+                          sm: 9,
+                          xs: 9
+                        }}>
+                          {v.data.map((d, x) => {
+                            return (
+                              <Box mb={9} key={x}
+                                onClick={() => router.push(`/division/${param.id}/calender/${d.id}`)}
+                              >
+                                <Text fw={"bold"} lineClamp={1}>{d.title}</Text>
+                                <Text>{d.timeStart} | {d.timeEnd}</Text>
+                              </Box>
+                            )
+                          })}
+                        </Grid.Col>
+                      </Grid>
+                    </Box>
+                  )
+                })
             }
           </Box>
         </Box>
