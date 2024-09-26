@@ -75,7 +75,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                dateEnd: true,
             },
             orderBy: {
-               status: 'desc'
+               createdAt: 'asc'
             }
          })
 
@@ -200,6 +200,34 @@ export async function POST(request: Request, context: { params: { id: string } }
             id: true
          }
       });
+
+      // const cek progress 
+      const dataTask = await prisma.divisionProjectTask.findMany({
+         where: {
+            isActive: true,
+            idProject: id
+         }
+      })
+
+      const semua = dataTask.length
+      const selesai = _.filter(dataTask, { status: 1 }).length
+      const progress = Math.ceil((selesai / semua) * 100)
+      let statusProject = 1
+
+      if (progress == 100) {
+         statusProject = 2
+      } else if (progress == 0) {
+         statusProject = 0
+      }
+
+      const updProject = await prisma.divisionProject.update({
+         where: {
+            id: id
+         },
+         data: {
+            status: statusProject
+         }
+      })
 
       // create log user
       const log = await createLogUser({ act: 'CREATE', desc: 'User menambahkan detail tugas divisi', table: 'divisionProjectTask', data: create.id })

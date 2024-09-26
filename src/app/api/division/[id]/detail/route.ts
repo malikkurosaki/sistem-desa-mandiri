@@ -86,7 +86,12 @@ export async function GET(request: Request, context: { params: { id: string } })
                idDivision: String(id),
                status: 0,
                isActive: true,
-               dateStart: new Date()
+               dateStart: new Date(),
+               DivisionProject: {
+                  status: {
+                     lt: 3
+                  }
+               }
             },
             select: {
                id: true,
