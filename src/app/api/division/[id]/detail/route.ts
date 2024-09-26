@@ -119,6 +119,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                id: true,
                name: true,
                extension: true,
+               path: true,
             },
             orderBy: {
                createdAt: "desc"
