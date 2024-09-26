@@ -72,10 +72,10 @@ export default function ListTaskOnDetailDivision() {
                   <Box p={20} w={{
                      base: isMobile ? 230 : 300,
                      md: 400
-                  }} onClick={() => router.push(`/task/${v.id}`)} bg={tema.get().utama} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
-                     <Text fw={'bold'} c={tema.get().bgUtama} lineClamp={1}>{_.startCase(v.title)}</Text>
+                  }} onClick={() => router.push(`/task/${v.id}`)} bg={"white"}  style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
+                     <Text fw={'bold'} c={tema.get().utama} lineClamp={1}>{_.startCase(v.title)}</Text>
                      <Group justify="space-between" mt={20}>
-                        <Group gap={5} align="center" c={"#CFCDCD"}>
+                        <Group gap={5} align="center">
                            <CiClock2 size={18} />
                            <Text fz={13}>{v.dateStart}</Text>
                         </Group >

@@ -78,21 +78,22 @@ export default function ProgressDetailTask() {
 
    return (
       <Box mt={10}>
-         {reason !== null ?
-            (
-               <Box mb={10}>
-                  <Box p={15} bg={"#FFF2CD"} style={{
-                     borderRadius: 10,
-                  }}>
-                     <Group align='center'>
-                        <IoIosWarning size={25} />
-                        <Text fw={"bold"}>Tugas dibatalkan</Text>
-                     </Group>
-                     <Text mt={5} truncate="end">{reason}</Text>
+         {loading ? "" :
+            reason !== null ?
+               (
+                  <Box mb={10}>
+                     <Box p={15} bg={"#FFF2CD"} style={{
+                        borderRadius: 10,
+                     }}>
+                        <Group align='center'>
+                           <IoIosWarning size={25} />
+                           <Text fw={"bold"}>Tugas dibatalkan</Text>
+                        </Group>
+                        <Text mt={5} truncate="end">{reason}</Text>
+                     </Box>
                   </Box>
-               </Box>
-            )
-            : null
+               )
+               : null
          }
          {loading ?
             <Skeleton width={"100%"} height={100} radius={"md"} />

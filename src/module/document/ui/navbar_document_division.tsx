@@ -526,19 +526,15 @@ export default function NavbarDocumentDivision() {
               >
                 {dataJalur.slice(0, 3).map((v, i) => {
                   return (
+                    <Box p={5}>
                     <Text
                       onClick={() => router.push("?path=" + v.id)}
                       key={i}
-                      style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        maxWidth: "100%",
-                      }}
-                      truncate={"end"}
+                      truncate="end"
                     >
                       {v.name}
                     </Text>
+                  </Box>
                   );
                 })}
                 {dataJalur.length > 3 && (
@@ -575,13 +571,15 @@ export default function NavbarDocumentDivision() {
               >
                 {dataJalur.slice(0, 4).map((v, i) => {
                   return (
-                    <Text
-                      onClick={() => router.push("?path=" + v.id)}
-                      key={i}
-                      truncate="end"
-                    >
-                      {v.name}
-                    </Text>
+                    <Box p={5}>
+                      <Text
+                        onClick={() => router.push("?path=" + v.id)}
+                        key={i}
+                        truncate="end"
+                      >
+                        {v.name}
+                      </Text>
+                    </Box>
                   );
                 })}
                 {dataJalur.length > 4 && (

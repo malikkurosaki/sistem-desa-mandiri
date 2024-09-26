@@ -131,14 +131,17 @@ export default function ListFileDetailTask() {
                               }}
                            >
                               <Grid gutter={"sm"} justify='flex-start' align='flex-start'>
-                                 <Grid.Col span={"auto"}>
+                                 <Grid.Col span={2}>
                                     <Center >
-                                       {item.extension == "pdf" && <BsFiletypePdf size={25} />}
-                                       {item.extension == "csv" && <BsFiletypeCsv size={25} />}
-                                       {item.extension == "png" && <BsFiletypePng size={25} />}
-                                       {item.extension == "jpg" && <BsFiletypeJpg size={25} />}
-                                       {item.extension == "jpeg" && <BsFiletypeJpg size={25} />}
-                                       {item.extension == "heic" && <BsFiletypeHeic size={25} />}
+                                       {item.extension == "pdf" && <BsFiletypePdf size={30} />}
+                                       {item.extension == "csv" && <BsFiletypeCsv size={30} />}
+                                       {item.extension == "png" && <BsFiletypePng size={30} />}
+                                       {item.extension == "jpg" && <BsFiletypeJpg size={30} />}
+                                       {item.extension == "jpeg" && <BsFiletypeJpg size={30} />}
+                                       {item.extension == "PNG" && <BsFiletypePng size={30} />}
+                                       {item.extension == "JPG" && <BsFiletypeJpg size={30} />}
+                                       {item.extension == "JPEG" && <BsFiletypeJpg size={30} />}
+                                       {item.extension == "heic" && <BsFiletypeHeic size={30} />}
                                     </Center>
                                  </Grid.Col>
                                  <Grid.Col span={10}>
@@ -155,7 +158,7 @@ export default function ListFileDetailTask() {
 
 
 
-         <LayoutDrawer opened={openDrawer} title={<Text lineClamp={1}>{nameData}</Text>} onClose={() => setOpenDrawer(false)}>
+         <LayoutDrawer opened={openDrawer} title={<Text truncate={'end'}>{nameData}</Text>} onClose={() => setOpenDrawer(false)}>
             <Box>
                <Stack pt={10}>
                   <SimpleGrid
@@ -172,8 +175,8 @@ export default function ListFileDetailTask() {
 
                      <Flex onClick={() => {
                         reason == null ?
-                        setOpenModal(true)
-                        : setOpenModal(false)
+                           setOpenModal(true)
+                           : setOpenModal(false)
                      }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>
                            <FaTrash size={30} color={reason == null ? tema.get().utama : "gray"} />
