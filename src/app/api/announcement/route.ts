@@ -5,7 +5,6 @@ import moment from "moment";
 import "moment/locale/id";
 import { NextResponse } from "next/server";
 import { createLogUser } from '@/module/user';
-import mtqq_client from "../../../module/_global/bin/mqtt_client";
 
 export const dynamic = 'force-dynamic'
 
@@ -200,22 +199,6 @@ export async function POST(request: Request) {
         const insertNotif = await prisma.notifications.createMany({
             data: dataNotif
         })
-
-        // for (let index = 0; index < dataNotif.length; index++) {
-
-        //     const user = dataNotif[index].idUserTo
-        //     const title = dataNotif[index].title
-        //     const desc = dataNotif[index].desc
-
-
-        //     mtqq_client.publish("app_SDM", JSON.stringify({
-        //         "user": "clzm6swhg000tfgbhm3bau9ti",
-        //         "title": title,
-        //         "category": "announcement",
-        //         "description": desc
-        //     }))
-        // }
-
 
         // create log user
         const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data pengumuman baru', table: 'announcement', data: data.id })
