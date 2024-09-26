@@ -19,7 +19,7 @@ export default function ProgressDetailProject() {
   const [loading, setLoading] = useState(true)
   const tema = useHookstate(TEMA)
   const [reason, setReason] = useState("")
-  
+
   async function getOneData() {
     try {
       setLoading(true)
@@ -76,22 +76,23 @@ export default function ProgressDetailProject() {
   return (
     <>
       <Box mt={10}>
-        {reason !== null ? 
-          (
-            <Box mb={10}>
-            <Box p={15} bg={"#FFF2CD"} style={{
-              borderRadius: 10,
-              }}>
-              <Group align='center'>
-                <IoIosWarning size={25}/>
-                <Text fw={"bold"}>Kegiatan dibatalkan</Text>
-                </Group>
-                <Text mt={5} truncate="end">{reason}</Text>
-            </Box>
-            </Box>
-        )
-          : null
-      }
+        {loading ? "" :
+          reason !== null ?
+            (
+              <Box mb={10}>
+                <Box p={15} bg={"#FFF2CD"} style={{
+                  borderRadius: 10,
+                }}>
+                  <Group align='center'>
+                    <IoIosWarning size={25} />
+                    <Text fw={"bold"}>Kegiatan dibatalkan</Text>
+                  </Group>
+                  <Text mt={5} truncate="end">{reason}</Text>
+                </Box>
+              </Box>
+            )
+            : null
+        }
         {loading ?
           <Skeleton width={"100%"} height={100} radius={"md"} />
           :

@@ -71,13 +71,13 @@ export default function ListDocumentOnDetailDivision() {
                   <Carousel.Slide key={v.id}>
                      <UnstyledButton onClick={() => router.push(`/division/${param.id}/document`)}>
                         <Stack gap={0} w={isMobile ? 100 : 170}>
-                           <Paper withBorder shadow="sm" radius={12} >
+                           <Box bg={"white"} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }} >
                               <Center p={"md"}>
                                  <Image w={isMobile ? 50 : 75} src={(v.extension == "pdf") ? iconContainer(ICON.PDF) : iconContainer(ICON.IMAGE)} alt="image" />
                               </Center>
-                           </Paper>
+                           </Box>
                            <Box>
-                              <Text c={"dimmed"}ta={"center"} lineClamp={1} fz={isMobile? 14 : 16}>{v.name + '.' + v.extension}</Text>
+                              <Text c={"dimmed"} ta={"center"} lineClamp={1} fz={isMobile ? 14 : 16}>{v.name + '.' + v.extension}</Text>
                            </Box>
                         </Stack>
                      </UnstyledButton>
