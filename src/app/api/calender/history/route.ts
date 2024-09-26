@@ -5,7 +5,7 @@ import { funGetUserByCookies } from "@/module/auth";
 import { prisma } from "@/module/_global";
 import _ from "lodash";
 
-// GET HSITORY 
+// GET HISTORY 
 export async function GET(request: Request) {
     try {
         const user = await funGetUserByCookies()
@@ -33,6 +33,9 @@ export async function GET(request: Request) {
                 where: {
                     isActive: true,
                     idDivision: idDivision,
+                    dateEnd: {
+                        lte: new Date()
+                    },
                     DivisionCalendar: {
                         title: {
                             contains: (name == undefined || name == "null") ? "" : name,
