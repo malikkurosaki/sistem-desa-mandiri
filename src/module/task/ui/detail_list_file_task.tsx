@@ -109,7 +109,7 @@ export default function ListFileDetailTask() {
                         </Box>
                      ))
                   :
-                  isData.length === 0 ? <Text>Tidak ada file</Text> :
+                  isData.length === 0 ? <Text c={"dimmed"} ta={"center"} fs={"italic"}>Tidak ada file</Text> :
                      isData.map((item, index) => {
                         return (
                            <Box

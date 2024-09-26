@@ -44,14 +44,23 @@ export async function GET(request: Request, context: { params: { id: string } })
             }
          })
 
-         const semua = dataProgress.length
-         const selesai = _.filter(dataProgress, { status: 1 }).length
-         const progress = Math.ceil((selesai / semua) * 100)
+         if (dataProgress.length > 0) {
+            const semua = dataProgress.length
+            const selesai = _.filter(dataProgress, { status: 1 }).length
+            const progress = Math.ceil((selesai / semua) * 100)
 
-         allData = {
-            progress: progress,
-            lastUpdate: moment(dataProgress[0].updatedAt).format("DD MMMM YYYY"),
+            allData = {
+               progress: progress,
+               lastUpdate: moment(dataProgress[0]?.updatedAt).format("DD MMMM YYYY"),
+            }
+         } else {
+            allData = {
+               progress: 0,
+               lastUpdate: '1 Januari 1999',
+            }
          }
+
+
       } else if (kategori == "task") {
          const dataProgress = await prisma.divisionProjectTask.findMany({
             where: {

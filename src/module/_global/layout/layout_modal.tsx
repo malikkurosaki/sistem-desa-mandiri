@@ -30,6 +30,7 @@ export default function LayoutModal({ opened, onClose, description, onYes }: { o
             <Button loading={loading} fullWidth size="lg" radius={'xl'} bg={'green'} onClick={() => {
               setLoading(true)
               onYes(true)
+              setLoading(false)
             }}>YA</Button>
             <Button fullWidth size="lg" radius={'xl'} bg={'#F1C1CF'} c={'#D30B30'} onClick={() => onYes(false)}>TIDAK</Button>
           </>
@@ -39,6 +40,7 @@ export default function LayoutModal({ opened, onClose, description, onYes }: { o
             <Button loading={loading} fullWidth size="lg" radius={'xl'} bg={'green'} onClick={() => {
               setLoading(true)
               onYes(true)
+              setLoading(false)
             }}>YA</Button>
           </>
 
