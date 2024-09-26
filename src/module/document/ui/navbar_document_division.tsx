@@ -526,10 +526,10 @@ export default function NavbarDocumentDivision() {
               >
                 {dataJalur.slice(0, 3).map((v, i) => {
                   return (
-                    <Box p={5}>
+                    <Box p={5}key={i}>
                     <Text
                       onClick={() => router.push("?path=" + v.id)}
-                      key={i}
+                      
                       truncate="end"
                     >
                       {v.name}
@@ -571,10 +571,10 @@ export default function NavbarDocumentDivision() {
               >
                 {dataJalur.slice(0, 4).map((v, i) => {
                   return (
-                    <Box p={5}>
+                    <Box p={5} key={i}>
                       <Text
                         onClick={() => router.push("?path=" + v.id)}
-                        key={i}
+                        
                         truncate="end"
                       >
                         {v.name}
