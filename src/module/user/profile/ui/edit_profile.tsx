@@ -1,33 +1,17 @@
 "use client";
 import { LayoutNavbarNew, TEMA } from "@/module/_global";
-import {
-  Avatar,
-  Box,
-  Button,
-  Flex,
-  Indicator,
-  Modal,
-  rem,
-  Select,
-  Skeleton,
-  Stack,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import toast from "react-hot-toast";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { useRef, useState } from "react";
-import { IEditDataProfile, IProfileById } from "../lib/type_profile";
-import {
-  funEditProfileByCookies,
-  funGetProfileByCookies,
-} from "../lib/api_profile";
-import { useShallowEffect } from "@mantine/hooks";
-import { FaCamera, FaShare } from "react-icons/fa6";
+import { useHookstate } from "@hookstate/core";
+import { Avatar, Box, Button, Indicator, rem, Select, Skeleton, Stack, Text, TextInput } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
+import { useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
-import { useHookstate } from "@hookstate/core";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { FaCamera } from "react-icons/fa6";
+import { funEditProfileByCookies, funGetProfileByCookies, } from "../lib/api_profile";
+import { IEditDataProfile, IProfileById } from "../lib/type_profile";
 
 export default function EditProfile() {
   const [isValModal, setValModal] = useState(false);
@@ -38,6 +22,7 @@ export default function EditProfile() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const tema = useHookstate(TEMA);
+  const [loadingKonfirmasi, setLoadingKonfirmasi] = useState(false);
 
   const [touched, setTouched] = useState({
     nik: false,
@@ -78,7 +63,7 @@ export default function EditProfile() {
   async function onEditProfile(val: boolean) {
     try {
       if (val) {
-
+        setLoadingKonfirmasi(true)
         const fd = new FormData();
         fd.append("file", imgForm);
         fd.append("data", JSON.stringify(data));
@@ -96,6 +81,55 @@ export default function EditProfile() {
     } catch (error) {
       console.error(error);
       toast.error("Gagal edit profil, coba lagi nanti");
+    } finally {
+      setLoadingKonfirmasi(false)
+    }
+  }
+
+
+  function onCheck() {
+    if (Object.values(touched).some((v) => v == true))
+      return false
+    setValModal(true)
+  }
+
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'nik') {
+      setData({ ...data, nik: val })
+      if (val === "" || val.length !== 16) {
+        setTouched({ ...touched, nik: true })
+      } else {
+        setTouched({ ...touched, nik: false })
+      }
+    } else if (kategori == 'name') {
+      setData({ ...data, name: val })
+      if (val === "") {
+        setTouched({ ...touched, name: true })
+      } else {
+        setTouched({ ...touched, name: false })
+      }
+    } else if (kategori == 'phone') {
+      setData({ ...data, phone: val })
+      if (val == "" || !(val.length >= 10 && val.length <= 15)) {
+        setTouched({ ...touched, phone: true })
+      } else {
+        setTouched({ ...touched, phone: false })
+      }
+    } else if (kategori == 'email') {
+      setData({ ...data, email: val })
+      if (val == "" || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val)) {
+        setTouched({ ...touched, email: true })
+      } else {
+        setTouched({ ...touched, email: false })
+      }
+    } else if (kategori == 'gender') {
+      setData({ ...data, gender: val })
+      if (val == "" || val == "null") {
+        setTouched({ ...touched, gender: true })
+      } else {
+        setTouched({ ...touched, gender: false })
+      }
     }
   }
 
@@ -149,18 +183,18 @@ export default function EditProfile() {
         )}
         {loading ? (
           <>
-            <Skeleton height={40} mt={20} radius={30} />
-            <Skeleton height={40} mt={20} radius={30} />
-            <Skeleton height={40} mt={20} radius={30} />
-            <Skeleton height={40} mt={20} radius={30} />
-            <Skeleton height={40} mt={20} radius={30} />
+            <Skeleton height={40} mt={20} radius={10} />
+            <Skeleton height={40} mt={20} radius={10} />
+            <Skeleton height={40} mt={20} radius={10} />
+            <Skeleton height={40} mt={20} radius={10} />
+            <Skeleton height={40} mt={20} radius={10} />
           </>
         ) : (
           <>
             <TextInput
               size="md"
               type="number"
-              radius={30}
+              radius={10}
               placeholder="NIK"
               withAsterisk
               label="NIK"
@@ -172,12 +206,8 @@ export default function EditProfile() {
                   borderColor: tema.get().utama,
                 },
               }}
-              onChange={(e) => {
-                setData({ ...data, nik: e.target.value });
-                setTouched({ ...touched, nik: false });
-              }}
+              onChange={(e) => { onValidation('nik', e.target.value) }}
               value={data.nik}
-              onBlur={() => setTouched({ ...touched, nik: true })}
               error={
                 touched.nik &&
                 (data.nik === ""
@@ -190,7 +220,7 @@ export default function EditProfile() {
             <TextInput
               size="md"
               type="text"
-              radius={30}
+              radius={10}
               placeholder="Nama"
               withAsterisk
               label="Nama"
@@ -202,12 +232,8 @@ export default function EditProfile() {
                   borderColor: tema.get().utama,
                 },
               }}
-              onChange={(e) => {
-                setData({ ...data, name: e.target.value });
-                setTouched({ ...touched, name: false });
-              }}
+              onChange={(e) => { onValidation('name', e.target.value) }}
               value={data.name}
-              onBlur={() => setTouched({ ...touched, name: true })}
               error={
                 touched.name &&
                 (data.name == "" ? "Nama Tidak Boleh Kosong" : null)
@@ -216,7 +242,7 @@ export default function EditProfile() {
             <TextInput
               size="md"
               type="email"
-              radius={30}
+              radius={10}
               placeholder="Email"
               withAsterisk
               label="Email"
@@ -228,19 +254,15 @@ export default function EditProfile() {
                   borderColor: tema.get().utama,
                 },
               }}
-              onChange={(e) => {
-                setData({ ...data, email: e.target.value });
-                setTouched({ ...touched, email: false });
-              }}
+              onChange={(e) => { onValidation('email', e.target.value) }}
               value={data.email}
-              onBlur={() => setTouched({ ...touched, email: true })}
               error={
                 touched.email &&
                 (data.email == ""
                   ? "Email Tidak Boleh Kosong"
                   : !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-                        data.email
-                      )
+                    data.email
+                  )
                     ? "Email tidak valid"
                     : null)
               }
@@ -248,7 +270,7 @@ export default function EditProfile() {
             <TextInput
               size="md"
               type="number"
-              radius={30}
+              radius={10}
               placeholder="8xx xxxx xxxx"
               withAsterisk
               label="Nomor Telepon"
@@ -261,15 +283,12 @@ export default function EditProfile() {
                 },
               }}
               leftSection={<Text>+62</Text>}
-              onChange={(e) => {
-                setData({ ...data, phone: e.target.value });
-                setTouched({ ...touched, phone: false });
-              }}
+              onChange={(e) => { onValidation('phone', e.target.value); }}
               value={data.phone}
-              onBlur={() => setTouched({ ...touched, phone: true })}
               error={
                 touched.phone &&
-                (data.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" : null)
+                (data.phone == "" ? "Nomor Telepon Tidak Boleh Kosong"
+                  : !(data.phone.length >= 10 && data.phone.length <= 15) ? "Nomor Telepon Tidak Valid" : null)
               }
             />
             <Select
@@ -279,7 +298,7 @@ export default function EditProfile() {
               size="md"
               required
               withAsterisk
-              radius={30}
+              radius={10}
               styles={{
                 input: {
                   color: tema.get().utama,
@@ -297,15 +316,11 @@ export default function EditProfile() {
                   label: "Perempuan",
                 },
               ]}
-              onChange={(val: any) => {
-                setData({ ...data, gender: val });
-                setTouched({ ...touched, gender: false });
-              }}
+              onChange={(val: any) => { onValidation('gender', val) }}
               value={data.gender}
-              onBlur={() => setTouched({ ...touched, gender: true })}
               error={
                 touched.gender &&
-                (data.gender == "" ? "Jenis Kelamin Tidak Boleh Kosong" : null)
+                (data.gender == "" || data.gender == null ? "Jenis Kelamin Tidak Boleh Kosong" : null)
               }
             />
           </>
@@ -328,28 +343,17 @@ export default function EditProfile() {
           <Button
             c={"white"}
             bg={tema.get().utama}
-            size="md"
+            size="lg"
             radius={30}
             fullWidth
-            onClick={() => {
-              if (
-                data.nik !== "" &&
-                data.name !== "" &&
-                data.email !== "" &&
-                data.phone !== "" &&
-                data.gender !== ""
-              ) {
-                setValModal(true);
-              } else {
-                toast.error("Mohon lengkapi semua form");
-              }
-            }}
+            onClick={() => { onCheck() }}
           >
             Simpan
           </Button>
         )}
       </Box>
       <LayoutModal
+        loading={loadingKonfirmasi}
         opened={isValModal}
         onClose={() => setValModal(false)}
         description="Apakah Anda yakin ingin
