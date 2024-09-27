@@ -1,16 +1,17 @@
 "use client"
-import { LayoutNavbarNew, TEMA } from '@/module/_global';
+import { currentScroll, LayoutNavbarNew, TEMA } from '@/module/_global';
 import { Box, Center, Flex, Grid, Group, Skeleton, Text, TextInput } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { IDataCalender, IHistoryCalender } from '../lib/type_calender';
-import { funGetAllCalender, funGetHostory } from '../lib/api_calender';
+import { IHistoryCalender } from '../lib/type_calender';
+import { funGetHostory } from '../lib/api_calender';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import moment from 'moment';
 import "moment/locale/id";
 import _ from 'lodash';
 import { useHookstate } from '@hookstate/core';
+import toast from 'react-hot-toast';
 
 export default function HistoryDivisionCalender() {
   const [isData, setData] = useState<IHistoryCalender[]>([])
@@ -19,13 +20,25 @@ export default function HistoryDivisionCalender() {
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const tema = useHookstate(TEMA)
+  const isMobile = useMediaQuery('(max-width: 450px)');
+  const { value: containerRef } = useHookstate(currentScroll);
+  const [isPage, setPage] = useState(1)
 
 
-  const getData = async () => {
+  const getData = async (loading: boolean) => {
     try {
-      setLoading(true)
-      const response = await funGetHostory('?division=' + param.id + '&search=' + searchQuery)
-      setData(response.data)
+      if (loading)
+        setLoading(true)
+      const response = await funGetHostory('?division=' + param.id + '&search=' + searchQuery + '&page=' + isPage)
+      if (response.success) {
+        if (isPage == 1) {
+          setData(response.data)
+        } else {
+          setData([...isData, ...response?.data])
+        }
+      } else {
+        toast.error(response.message)
+      }
       setLoading(false)
     } catch (error) {
       console.error(error)
@@ -33,11 +46,41 @@ export default function HistoryDivisionCalender() {
       setLoading(false)
     }
   }
+
+  function onSearch(val: string) {
+    setSearchQuery(val)
+    setPage(1)
+  }
+
   useShallowEffect(() => {
-    getData()
+    getData(true)
   }, [searchQuery])
 
-  const isMobile = useMediaQuery('(max-width: 450px)');
+  useShallowEffect(() => {
+    getData(false)
+  }, [isPage])
+
+
+  useEffect(() => {
+    const handleScroll = async () => {
+      if (containerRef && containerRef.current) {
+        const scrollTop = containerRef.current.scrollTop;
+        const containerHeight = containerRef.current.clientHeight;
+        const scrollHeight = containerRef.current.scrollHeight;
+        if (scrollTop + containerHeight + 1 >= scrollHeight) {
+          setPage(isPage + 1)
+        }
+      }
+    };
+
+    const container = containerRef?.current;
+    container?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      container?.removeEventListener("scroll", handleScroll);
+    };
+  }, [containerRef, isPage]);
+
 
   return (
     <Box>
@@ -56,7 +99,7 @@ export default function HistoryDivisionCalender() {
           leftSection={<HiMagnifyingGlass size={20} />}
           placeholder="Pencarian"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => onSearch(e.target.value)}
         />
         <Box mt={30}>
           <Box>

@@ -16,6 +16,8 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const idDivision = searchParams.get("division");
         const name = searchParams.get('search');
+        const page = searchParams.get('page');
+        const dataSkip = Number(page) * 10 - 10;
 
         if (idDivision != "null" && idDivision != null && idDivision != undefined) {
             const cekDivision = await prisma.division.count({
@@ -30,6 +32,8 @@ export async function GET(request: Request) {
             }
 
             const data = await prisma.divisionCalendarReminder.findMany({
+                skip: dataSkip,
+                take: 10,
                 where: {
                     isActive: true,
                     idDivision: idDivision,
