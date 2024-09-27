@@ -73,11 +73,11 @@ export default function ListTaskOnDetailDivision() {
                      base: isMobile ? 230 : 300,
                      md: 400
                   }} onClick={() => router.push(`/task/${v.id}`)} bg={"white"}  style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
-                     <Text fw={'bold'} c={tema.get().utama} lineClamp={1}>{_.startCase(v.title)}</Text>
+                     <Text fw={'bold'} c={tema.get().utama} lineClamp={1}>{v.title+' - '+ v.projectTitle}</Text>
                      <Group justify="space-between" mt={20}>
                         <Group gap={5} align="center">
                            <CiClock2 size={18} />
-                           <Text fz={13}>{v.dateStart}</Text>
+                           <Text fz={13}>{v.dateStart} - {v.dateEnd}</Text>
                         </Group >
                      </Group>
                   </Box>
