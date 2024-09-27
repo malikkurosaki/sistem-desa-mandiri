@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Group, Indicator, Skeleton, Text } from '@mantine/core';
+import { Box, Divider, Flex, Grid, Group, Indicator, Skeleton, Text } from '@mantine/core';
 import { DatePicker, DatePickerProps } from '@mantine/dates';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -134,28 +134,36 @@ export default function DateEventDivision() {
                   <Box onClick={() => router.push(`/division/${param.id}/calender/${event.id}`)} bg={bgColor} pl={15} p={10} style={{
                     borderRadius: 10
                   }} h={113}>
-                    <Group>
-                      <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
-                      <Flex direction={'column'}>
-                        <Text fz={isMobile ? 14 : 16}>{event.timeStart} - {event.timeEnd}</Text>
-                        <Box w={{
-                          base: isMobile ? 220 : 280,
-                          xl: 430
-                        }}>
+                    <Grid align='center'>
+                      <Grid.Col span={{
+                        base: 0.5,
+                        xs: 0.5,
+                        sm: 0.5,
+                        md: 0.5,
+                        lg: 0.5,
+                        xl: 0.5,
+                      }}>
+                        <Divider h={92} size="lg" orientation="vertical" color={colorDivider} />
+                      </Grid.Col>
+                      <Grid.Col span={{
+                        base: 11,
+                        xs: 11,
+                        sm: 11,
+                        md: 11,
+                        lg: 11,
+                        xl: 11,
+                      }}>
+                        <Flex direction={'column'}>
+                          <Text fz={isMobile ? 14 : 16}>{event.timeStart} - {event.timeEnd}</Text>
                           <Text fw={"bold"} lineClamp={1}>
                             {_.startCase(event.title)}
                           </Text>
-                        </Box>
-                        <Box w={{
-                          base: isMobile ? 230 : 280,
-                          xl: 420
-                        }}>
                           <Text lineClamp={1}>
                             Dibuat oleh : {event.user_name}
                           </Text>
-                        </Box>
-                      </Flex>
-                    </Group>
+                        </Flex>
+                      </Grid.Col>
+                    </Grid>
                   </Box>
                 </Box>
               )

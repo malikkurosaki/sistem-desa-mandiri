@@ -145,7 +145,7 @@ export default function ListPositionActive() {
                           <Box
                             w={{
                               base: 220,
-                              xl: 400
+                              xl: 500
                             }}
                           >
                             <Text fw={"bold"} c={tema.get().utama} lineClamp={1}>

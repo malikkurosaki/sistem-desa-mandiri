@@ -1,6 +1,6 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, TEMA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, CopyButton, Divider, Flex, Grid, Group, SimpleGrid, Skeleton, Spoiler, Stack, Text, Tooltip } from '@mantine/core';
+import { LayoutDrawer, LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
+import { ActionIcon, Avatar, Box, Center, CopyButton, Divider, Flex, Grid, Group, SimpleGrid, Skeleton, Spoiler, Stack, Text, Tooltip } from '@mantine/core';
 import React, { useState } from 'react';
 import { BsCalendar2Event, BsCalendarDate } from 'react-icons/bs';
 import { MdEventNote, MdOutlineFormatListBulleted } from "react-icons/md";
@@ -11,7 +11,7 @@ import { HiMenu } from 'react-icons/hi';
 import DrawerDetailEvent from './drawer_detail_event';
 import { useParams, useRouter } from 'next/navigation';
 import { funDeleteMemberCalender, funGetOneCalender } from '../lib/api_calender';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import moment from "moment";
 import "moment/locale/id";
 import { IDataDetailByIdCalender, IDataDetailByIdMember } from '../lib/type_calender';
@@ -33,6 +33,8 @@ export default function DetailEventDivision() {
   const router = useRouter()
   const [dataChoose, setDataChoose] = useState({ id: '', name: '' })
   const tema = useHookstate(TEMA)
+  const isMobile2 = useMediaQuery("(max-width: 460px)");
+  const isMobile = useMediaQuery('(max-width: 369px)');
 
 
   const getData = async () => {
@@ -89,60 +91,116 @@ export default function DetailEventDivision() {
             borderRadius: 10
           }}>
             <Stack>
-              <Grid gutter={"lg"}>
-                <Grid.Col span={{
-                  base: 2,
-                  xl: 1
-                }}>
-                  <BsCalendar2Event size={25} color={tema.get().utama} />
+              <Grid align='center'>
+                <Grid.Col
+                  span={{
+                    base: 1.5,
+                    xs: 1.5,
+                    sm: 1.5,
+                    md: 1.5,
+                    lg: 1.5,
+                    xl: 1.5,
+                  }}
+                >
+                  <Center>
+                    <BsCalendar2Event size={25} color={tema.get().utama} />
+                  </Center>
                 </Grid.Col>
-                <Grid.Col span={{
-                  base: 10,
-                  xl: 11
-                }}>
-                  <Text>{isDataCalender?.title}</Text>
-                </Grid.Col>
-              </Grid>
-              <Grid gutter={"lg"}>
-                <Grid.Col span={{
-                  base: 2,
-                  xl: 1
-                }}>
-                  <BsCalendarDate size={25} color={tema.get().utama} />
-                </Grid.Col>
-                <Grid.Col span={{
-                  base: 10,
-                  xl: 11
-                }}>
-                  <Text>{moment(isDataCalender?.dateStart).format('LL')}</Text>
-                </Grid.Col>
-              </Grid>
-              <Grid gutter={"lg"}>
-                <Grid.Col span={{
-                  base: 2,
-                  xl: 1
-                }}>
-                  <LuClock size={25} color={tema.get().utama} />
-                </Grid.Col>
-                <Grid.Col span={{
-                  base: 10,
-                  xl: 11
-                }}>
-                  <Text>{isDataCalender?.timeStart}  | {isDataCalender?.timeEnd} </Text>
+                <Grid.Col
+                  span={{
+                    base: 10.5,
+                    xs: 10.5,
+                    sm: 10.5,
+                    md: 10.5,
+                    lg: 10.5,
+                    xl: 10.5,
+                  }}
+                >
+                  <Text lineClamp={1} pl={isMobile2 ? 5 : 0}>{isDataCalender?.title}</Text>
                 </Grid.Col>
               </Grid>
-              <Grid gutter={"lg"}>
-                <Grid.Col span={{
-                  base: 2,
-                  xl: 1
-                }}>
-                  <BsCalendarDate size={25} color={tema.get().utama} />
+              <Grid>
+                <Grid.Col
+                  span={{
+                    base: 1.5,
+                    xs: 1.5,
+                    sm: 1.5,
+                    md: 1.5,
+                    lg: 1.5,
+                    xl: 1.5,
+                  }}
+                >
+                  <Center>
+                    <BsCalendarDate size={25} color={tema.get().utama} />
+                  </Center>
                 </Grid.Col>
-                <Grid.Col span={{
-                  base: 10,
-                  xl: 11
-                }}>
-                  <Text>
+                <Grid.Col
+                  span={{
+                    base: 10.5,
+                    xs: 10.5,
+                    sm: 10.5,
+                    md: 10.5,
+                    lg: 10.5,
+                    xl: 10.5,
+                  }}
+                >
+                  <Text lineClamp={1} pl={isMobile2 ? 5 : 0}>{moment(isDataCalender?.dateStart).format('LL')}</Text>
+                </Grid.Col>
+              </Grid>
+              <Grid>
+                <Grid.Col
+                  span={{
+                    base: 1.5,
+                    xs: 1.5,
+                    sm: 1.5,
+                    md: 1.5,
+                    lg: 1.5,
+                    xl: 1.5,
+                  }}
+                >
+                  <Center>
+                    <LuClock size={25} color={tema.get().utama} />
+                  </Center>
+                </Grid.Col>
+                <Grid.Col
+                  span={{
+                    base: 10.5,
+                    xs: 10.5,
+                    sm: 10.5,
+                    md: 10.5,
+                    lg: 10.5,
+                    xl: 10.5,
+                  }}
+                >
+                  <Text lineClamp={1} pl={isMobile2 ? 5 : 0}>{isDataCalender?.timeStart}  | {isDataCalender?.timeEnd} </Text>
+                </Grid.Col>
+              </Grid>
+              <Grid>
+                <Grid.Col
+                  span={{
+                    base: 1.5,
+                    xs: 1.5,
+                    sm: 1.5,
+                    md: 1.5,
+                    lg: 1.5,
+                    xl: 1.5,
+                  }}
+                >
+                  <Center>
+                    <BsCalendarDate size={25} color={tema.get().utama} />
+                  </Center>
+                </Grid.Col>
+                <Grid.Col
+                  span={{
+                    base: 10.5,
+                    xs: 10.5,
+                    sm: 10.5,
+                    md: 10.5,
+                    lg: 10.5,
+                    xl: 10.5,
+                  }}
+                >
+                  <Text lineClamp={1} pl={isMobile2 ? 5 : 0}>
                     {isDataCalender?.repeatEventTyper.toString() === 'once' ? 'Acara 1 Kali' :
                       isDataCalender?.repeatEventTyper.toString() === 'daily' ? 'Setiap Hari' :
                         // isDataCalender?.repeatEventTyper.toString() === 'weekdays' ? 'Hari Kerja (senin - jumat)' :
@@ -153,24 +211,38 @@ export default function DetailEventDivision() {
                   </Text>
                 </Grid.Col>
               </Grid>
-              <Grid gutter={"lg"}>
-                <Grid.Col span={{
-                  base: 2,
-                  xl: 1
-                }}>
-                  <LuLink size={25} color={tema.get().utama} />
+              <Grid>
+                <Grid.Col
+                  span={{
+                    base: 1.5,
+                    xs: 1.5,
+                    sm: 1.5,
+                    md: 1.5,
+                    lg: 1.5,
+                    xl: 1.5,
+                  }}
+                >
+                  <Center>
+                    <LuLink size={25} color={tema.get().utama} />
+                  </Center>
                 </Grid.Col>
-                <Grid.Col span={{
-                  base: 10,
-                  xl: 11
-                }}>
+                <Grid.Col
+                  span={{
+                    base: 10.5,
+                    xs: 10.5,
+                    sm: 10.5,
+                    md: 10.5,
+                    lg: 10.5,
+                    xl: 10.5,
+                  }}
+                >
                   {isDataCalender?.linkMeet ? (
                     <Group justify='space-between'>
                       <Box w={{
                         base: 170,
                         xl: 380
                       }}>
-                        <Text lineClamp={1}>{isDataCalender?.linkMeet}</Text>
+                        <Text lineClamp={1} pl={isMobile2 ? 5 : 0}>{isDataCalender?.linkMeet}</Text>
                       </Box>
                       <CopyButton value={String(isDataCalender?.linkMeet)} timeout={2000}>
                         {({ copied, copy }) => (
@@ -192,20 +264,34 @@ export default function DetailEventDivision() {
                   }
                 </Grid.Col>
               </Grid>
-              <Grid gutter={"lg"}>
-                <Grid.Col span={{
-                  base: 2,
-                  xl: 1
-                }}>
-                  <MdOutlineFormatListBulleted size={25} color={tema.get().utama} />
+              <Grid>
+                <Grid.Col
+                  span={{
+                    base: 1.5,
+                    xs: 1.5,
+                    sm: 1.5,
+                    md: 1.5,
+                    lg: 1.5,
+                    xl: 1.5,
+                  }}
+                >
+                  <Center>
+                    <MdOutlineFormatListBulleted size={25} color={tema.get().utama} />
+                  </Center>
                 </Grid.Col>
-                <Grid.Col span={{
-                  base: 10,
-                  xl: 11
-                }}>
+                <Grid.Col
+                  span={{
+                    base: 10.5,
+                    xs: 10.5,
+                    sm: 10.5,
+                    md: 10.5,
+                    lg: 10.5,
+                    xl: 10.5,
+                  }}
+                >
                   {isDataCalender?.desc ? (
                     <Spoiler maxHeight={80} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
-                      <Text>{isDataCalender?.desc}</Text>
+                      <Text pl={isMobile2 ? 5 : 0}>{isDataCalender?.desc}</Text>
                     </Spoiler>
                   ) : (
                     <Text>-</Text>
@@ -225,8 +311,8 @@ export default function DetailEventDivision() {
                   border: `1px solid ${"#C7D6E8"}`,
                   borderRadius: 10,
                 }}
+                p={10}
                 px={20}
-                pb={20}
               >
                 {Array(4)
                   .fill(null)
@@ -234,7 +320,7 @@ export default function DetailEventDivision() {
                     <Box
                       key={i}
                     >
-                      <SkeletonSingle />
+                      <SkeletonList/>
                     </Box>
                   ))}
               </Box>
@@ -252,8 +338,8 @@ export default function DetailEventDivision() {
                     border: `1px solid ${"#C7D6E8"}`,
                     borderRadius: 10,
                   }}
+                  p={10}
                   px={20}
-                  pt={20}
                 >
                   {
                     isLengthMember == 0 ? (
@@ -270,21 +356,29 @@ export default function DetailEventDivision() {
                                 setOpenDrawerUser(true)
                               }} key={i}>
                                 <Box my={10}>
-                                  <Grid align='center' gutter={"lg"}>
+                                  <Grid align='center'>
                                     <Grid.Col span={{
-                                      base: 3,
-                                      xl: 2
+                                      base: 1,
+                                      xs: 1,
+                                      sm: 1,
+                                      md: 1,
+                                      lg: 1,
+                                      xl: 1,
                                     }}>
-                                      <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
+                                      <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
                                     </Grid.Col>
                                     <Grid.Col span={{
-                                      base: 9,
-                                      xl: 10
+                                      base: 11,
+                                      xs: 11,
+                                      sm: 11,
+                                      md: 11,
+                                      lg: 11,
+                                      xl: 11,
                                     }}>
                                       <Flex justify='space-between' align={"center"}>
                                         <Flex direction={'column'} align="flex-start" justify="flex-start">
-                                          <Text lineClamp={1}>{v.name}</Text>
-                                          <Text c={"#5A687D"} fz={14} lineClamp={1}>
+                                          <Text lineClamp={1} pl={isMobile ? 35 : 40}>{v.name}</Text>
+                                          <Text c={"#5A687D"} fz={14} lineClamp={1} pl={isMobile ? 35 : 40}>
                                             {v.email}
                                           </Text>
                                         </Flex>
@@ -319,7 +413,7 @@ export default function DetailEventDivision() {
                 onClick={() => { router.push('/member/' + dataChoose.id) }}
                 justify={'center'} align={'center'} direction={'column'} >
                 <Box>
-                  <FaUser size={30} color={tema.get().utama} />
+                  <FaUser size={25} color={tema.get().utama} />
                 </Box>
                 <Box>
                   <Text c={tema.get().utama}>Lihat profil</Text>
@@ -328,7 +422,7 @@ export default function DetailEventDivision() {
 
               <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
                 <Box>
-                  <IoIosCloseCircle size={30} color={tema.get().utama} />
+                  <IoIosCloseCircle size={25} color={tema.get().utama} />
                 </Box>
                 <Box>
                   <Text c={tema.get().utama}>Keluarkan anggota</Text>

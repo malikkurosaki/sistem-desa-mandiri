@@ -238,7 +238,7 @@ export default function NavbarCreateDivisionCalender() {
               size="md"
               disabled
               placeholder='Jumlah pengulangan'
-              value={isData.repeatValue}
+              value={"1"}
               onChange={(event) => {
                 setData({ ...isData, repeatValue: String(event.currentTarget.value) })
                 setTouched({ ...touched, repeatValue: false })
@@ -265,6 +265,7 @@ export default function NavbarCreateDivisionCalender() {
               size="md"
               placeholder='Jumlah pengulangan'
               value={isData.repeatValue}
+              min={1}
               onChange={(event) => {
                 setData({ ...isData, repeatValue: String(event.currentTarget.value) })
                 setTouched({ ...touched, repeatValue: false })
@@ -273,8 +274,8 @@ export default function NavbarCreateDivisionCalender() {
               // TODO :: NANTI DIPERBAIKI
               error={
                 touched.repeatValue && (
-                  isData.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : ""
-                  // || Number(isData.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh 0" : ""
+                  isData.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" :
+                    Number(isData.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh di bawah 1" : ""
                 )
               }
             />
