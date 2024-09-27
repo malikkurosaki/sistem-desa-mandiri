@@ -20,6 +20,7 @@ import { IDataGroup } from "../lib/type_group";
 import { useSearchParams } from "next/navigation";
 import _ from "lodash";
 import { useHookstate } from "@hookstate/core";
+import { globalRefreshGroup } from "../lib/val_group";
 
 
 export default function ListGroupActive() {
@@ -31,6 +32,7 @@ export default function ListGroupActive() {
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams()
+  const refresh = useHookstate(globalRefreshGroup)
   const status = searchParams.get('active')
   const tema = useHookstate(TEMA)
 
@@ -59,7 +61,7 @@ export default function ListGroupActive() {
 
   useShallowEffect(() => {
     fetchData();
-  }, [status, searchQuery]);
+  }, [status, searchQuery, refresh.get()]);
 
   return (
     <Box pt={20}>

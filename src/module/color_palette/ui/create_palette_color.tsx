@@ -6,8 +6,11 @@ import React, { useState } from 'react';
 import { funCreateTheme } from '../lib/api_theme';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import LayoutModal from '@/module/_global/layout/layout_modal';
 
 export default function CreatePaletteColor() {
+  const [isValModal, setValModal] = useState(false);
+  const [loadingKonfirmasi, setLoadingKonfirmasi] = useState(false);
   const tema = useHookstate(TEMA)
   const router = useRouter()
   const [touched, setTouched] = useState({
@@ -30,20 +33,87 @@ export default function CreatePaletteColor() {
     bgTotalKegiatan: '',
   })
 
-  async function onSubmit() {
+  async function onSubmit(val: boolean) {
     try {
-      const res = await funCreateTheme(isWarna)
-      if (res.success) {
-        toast.success(res.message);
-        router.push('/color-palette')
-      } else {
-        toast.error(res.message);
+      if (val) {
+        setLoadingKonfirmasi(true)
+        const res = await funCreateTheme(isWarna)
+        if (res.success) {
+          setValModal(false);
+          toast.success(res.message);
+          router.push('/color-palette')
+        } else {
+          toast.error(res.message);
+        }
       }
-
+      setValModal(false);
     } catch (error) {
       toast.error("Gagal menambahkan tema, coba lagi nanti");
+    } finally {
+      setLoadingKonfirmasi(false)
     }
   }
+
+  function onCheck() {
+    if (Object.values(touched).some((v) => v == true))
+      return false
+    setValModal(true)
+  }
+
+  function onValidation(kategori: string, val: string) {
+    console.log('ini',val)
+    if (kategori == 'name') {
+      setWarna({ ...isWarna, name: val })
+      if (val === "") {
+        setTouched({ ...touched, name: true })
+      } else {
+        setTouched({ ...touched, name: false })
+      }
+    } else if (kategori == 'utama') {
+      setWarna({ ...isWarna, utama: val })
+      if (val === "") {
+        setTouched({ ...touched, utama: true })
+      } else {
+        setTouched({ ...touched, utama: false })
+      }
+    } else if (kategori == 'bgUtama') {
+      setWarna({ ...isWarna, bgUtama: val })
+      if (val === "") {
+        setTouched({ ...touched, bgUtama: true })
+      } else {
+        setTouched({ ...touched, bgUtama: false })
+      }
+    } else if (kategori == 'bgIcon') {
+      setWarna({ ...isWarna, bgIcon: val })
+      if (val === "") {
+        setTouched({ ...touched, bgIcon: true })
+      } else  {
+        setTouched({ ...touched, bgIcon: false })
+      } 
+    } else if (kategori == 'bgFiturHome') {
+      setWarna({ ...isWarna, bgFiturHome: val })
+      if (val === "") {
+        setTouched({ ...touched, bgFiturHome: true })
+      } else {
+        setTouched({ ...touched, bgFiturHome: false })
+      }
+    } else if (kategori == 'bgFiturDivision') {
+      setWarna({ ...isWarna, bgFiturDivision: val })
+      if (val === "") {
+        setTouched({ ...touched, bgFiturDivision: true })
+      } else {
+        setTouched({ ...touched, bgFiturDivision: false })
+      }
+    } else if (kategori == 'bgTotalKegiatan') {
+      setWarna({ ...isWarna, bgTotalKegiatan: val })
+      if (val === "") {
+        setTouched({ ...touched, bgTotalKegiatan: true })
+      } else {
+        setTouched({ ...touched, bgTotalKegiatan: false })
+      }
+    } 
+  }
+
   return (
     <Box>
       <LayoutNavbarNew back='/color-palette' title='Tambah Tema' menu />
@@ -57,8 +127,7 @@ export default function CreatePaletteColor() {
             radius="md"
             onChange={
               (e) => {
-                setWarna({ ...isWarna, name: e.target.value })
-                setTouched({ ...touched, name: true })
+                onValidation('name', e.target.value) 
               }
             }
             error={
@@ -73,10 +142,9 @@ export default function CreatePaletteColor() {
             required
             size="md"
             radius="md"
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, utama: color })
-                setTouched({ ...touched, utama: true })
+            onChange={
+              (e) => {
+                onValidation('utama', e) 
               }
             }
             error={
@@ -91,10 +159,9 @@ export default function CreatePaletteColor() {
             required
             size="md"
             radius="md"
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, bgUtama: color })
-                setTouched({ ...touched, bgUtama: true })
+            onChange={
+              (e) => {
+                onValidation('bgUtama', e) 
               }
             }
             error={
@@ -109,10 +176,9 @@ export default function CreatePaletteColor() {
             required
             size="md"
             radius="md"
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, bgIcon: color })
-                setTouched({ ...touched, bgIcon: true })
+            onChange={
+              (e) => {
+                onValidation('bgIcon', e) 
               }
             }
             error={
@@ -127,10 +193,9 @@ export default function CreatePaletteColor() {
             required
             size="md"
             radius="md"
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, bgFiturHome: color })
-                setTouched({ ...touched, bgFiturHome: true })
+            onChange={
+              (e) => {
+                onValidation('bgFiturHome', e) 
               }
             }
             error={
@@ -145,10 +210,9 @@ export default function CreatePaletteColor() {
             required
             size="md"
             radius="md"
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, bgFiturDivision: color })
-                setTouched({ ...touched, bgFiturDivision: true })
+            onChange={
+              (e) => {
+                onValidation('bgFiturDivision', e) 
               }
             }
             error={
@@ -163,10 +227,9 @@ export default function CreatePaletteColor() {
             required
             size="md"
             radius="md"
-            onChangeEnd={
-              (color) => {
-                setWarna({ ...isWarna, bgTotalKegiatan: color })
-                setTouched({ ...touched, bgTotalKegiatan: true })
+            onChange={
+              (e) => {
+                onValidation('bgTotalKegiatan', e) 
               }
             }
             error={
@@ -257,11 +320,21 @@ export default function CreatePaletteColor() {
           size="lg"
           radius={30}
           fullWidth
-          onClick={() => { onSubmit() }}
+          onClick={() => { onCheck() }}
         >
           Simpan
         </Button>
       </Box>
+      <LayoutModal
+        loading={loadingKonfirmasi}
+        opened={isValModal}
+        onClose={() => setValModal(false)}
+        description="Apakah Anda yakin ingin
+        melakukan perubahan data?"
+        onYes={(val) => {
+          onSubmit(val);
+        }}
+      />
     </Box>
   );
 }
