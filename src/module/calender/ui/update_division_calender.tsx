@@ -290,7 +290,7 @@ export default function UpdateDivisionCalender() {
                   size="md"
                   disabled
                   placeholder='Jumlah pengulangan'
-                  defaultValue={isDataCalender?.repeatValue}
+                  defaultValue={"1"}
                   onChange={(event) => {
                     setDataCalender({ ...isDataCalender, repeatValue: String(event.currentTarget.value) })
                     setTouched({ ...touched, repeatValue: false })
@@ -314,6 +314,7 @@ export default function UpdateDivisionCalender() {
                   required
                   label="Jumlah pengulangan"
                   size="md"
+                  min={1}
                   placeholder='Jumlah pengulangan'
                   defaultValue={isDataCalender?.repeatValue}
                   onChange={(event) => {
@@ -323,8 +324,8 @@ export default function UpdateDivisionCalender() {
                   onBlur={() => setTouched({ ...touched, repeatValue: true })}
                   error={
                     touched.repeatValue && (
-                      isDataCalender?.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : null
-                      // || Number(isDataCalender?.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh dibawah 1" : null
+                      isDataCalender?.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" :
+                        Number(isDataCalender?.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh di bawah 1" : ""
                     )
                   }
                 />

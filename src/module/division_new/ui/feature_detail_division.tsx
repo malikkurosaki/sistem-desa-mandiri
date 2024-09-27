@@ -44,7 +44,7 @@ export default function FeatureDetailDivision() {
 
   return (
     <Box pt={10}>
-      <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Features</Text>
+      <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Fitur</Text>
       <SimpleGrid
         cols={{ base: 2, sm: 2, lg: 2 }}
         style={{

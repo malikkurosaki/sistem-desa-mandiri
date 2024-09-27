@@ -20,7 +20,8 @@ export default function HistoryDivisionCalender() {
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const tema = useHookstate(TEMA)
-  const isMobile = useMediaQuery('(max-width: 450px)');
+  const isMobile = useMediaQuery('(max-width: 509px)');
+  const isMobile2 = useMediaQuery('(max-width: 436px)');
   const { value: containerRef } = useHookstate(currentScroll);
   const [isPage, setPage] = useState(1)
 
@@ -122,41 +123,38 @@ export default function HistoryDivisionCalender() {
                   return (
                     <Box bg={tema.get().bgTotalKegiatan} style={{
                       borderRadius: 10,
-                    }} mb={20} p={20} key={i}>
+                    }} mb={20} p={15} key={i}>
                       <Grid
-                        style={{
-                          alignContent: 'flex-start',
-                          alignItems: 'flex-start',
-                        }}
+                      align={isData.length <= 1 ? "center" : "flex-start"}
                       >
                         <Grid.Col span={{
-                          base: isMobile ? 4 : 3,
-                          sm: 3,
-                          xs: 3,
-                          md: 3,
-                          lg: 3,
-                          xl: 3
-                        }}>
+                            base: isMobile2 ? 2.5 : 2,
+                            xs: 2,
+                            sm: 2,
+                            md: 2,
+                            lg: 2,
+                            xl: 2,
+                          }}>
                           <Flex justify={"center"} direction={'column'}>
-                            <Text ta={"center"} fz={20} fw={'bold'}>{moment(v.dateStart).format('D MMM')}</Text>
-                            <Text ta={"center"} fz={15}>{moment(v.dateStart).format('dddd')}</Text>
+                            <Text ta={"center"} fz={ isMobile ? 16 : 20} fw={'bold'}>{moment(v.dateStart).format('D MMM')}</Text>
+                            <Text ta={"center"} fz={ isMobile ? 13 : 15}>{moment(v.dateStart).format('dddd')}</Text>
                           </Flex>
                         </Grid.Col>
                         <Grid.Col span={{
-                          base: isMobile ? 8 : 9,
-                          md: 9,
-                          lg: 9,
-                          xl: 9,
-                          sm: 9,
-                          xs: 9
-                        }}>
+                            base: isMobile2 ? 9.5 : 10,
+                            xs: 10,
+                            sm: 10,
+                            md: 10,
+                            lg: 10,
+                            xl: 10,
+                          }}>
                           {v.data.map((d, x) => {
                             return (
-                              <Box mb={9} key={x}
+                              <Box mb={10} key={x}
                                 onClick={() => router.push(`/division/${param.id}/calender/${d.id}`)}
                               >
-                                <Text fw={"bold"} lineClamp={1}>{d.title}</Text>
-                                <Text>{d.timeStart} | {d.timeEnd}</Text>
+                                <Text fw={"bold"} fz={isMobile ? 13 : 16} lineClamp={1}>{d.title}</Text>
+                                <Text fz={isMobile ? 13 : 16}>{d.timeStart} | {d.timeEnd}</Text>
                               </Box>
                             )
                           })}

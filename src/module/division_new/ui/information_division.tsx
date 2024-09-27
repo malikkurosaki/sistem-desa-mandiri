@@ -30,7 +30,7 @@ export default function InformationDivision() {
   const [isOpenModal, setOpenModal] = useState(false)
   const roleLogin = useHookstate(globalRole)
   const [isAdmin, setAdmin] = useState(false)
-  const isMobile = useMediaQuery('(max-width: 369px)');
+  const isMobile = useMediaQuery('(max-width: 455px)');
   const tema = useHookstate(TEMA)
 
   async function getOneData() {
@@ -175,7 +175,7 @@ export default function InformationDivision() {
             <Box pt={10}>
               <Box mb={10}>
                 {loading
-                  ? Array(3)
+                  ? Array(6)
                     .fill(null)
                     .map((_, i) => (
                       <Box key={i}>
@@ -193,18 +193,13 @@ export default function InformationDivision() {
                             }
                           }}
                         >
-                          <Grid.Col span={9}>
-                            <Group>
+                          <Grid.Col span={1}>
                               <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
-                              <Box w={{
-                                base: isMobile ? 130 : 140,
-                                xl: 270
-                              }}>
-                                <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
+                          </Grid.Col>
+                          <Grid.Col span={8}>
+                                <Text c={tema.get().utama} fw={"bold"} truncate="end" pl={isMobile ? 25 : 30} fz={isMobile ? 14 : 16}>
                                   {v.name}
                                 </Text>
-                              </Box>
-                            </Group>
                           </Grid.Col>
                           <Grid.Col span={3}>
                             <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
