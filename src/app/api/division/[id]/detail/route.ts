@@ -86,7 +86,12 @@ export async function GET(request: Request, context: { params: { id: string } })
                idDivision: String(id),
                status: 0,
                isActive: true,
-               dateStart: new Date(),
+               dateStart: {
+                  lte: new Date()
+               },
+               dateEnd: {
+                  gte: new Date()
+               },
                DivisionProject: {
                   status: {
                      lt: 3
@@ -98,13 +103,22 @@ export async function GET(request: Request, context: { params: { id: string } })
                title: true,
                dateStart: true,
                dateEnd: true,
+               DivisionProject: {
+                  select: {
+                     title: true
+                  }
+               }
+            },
+            orderBy: {
+               dateEnd: "asc"
             }
          })
 
          allData = tugas.map((v: any) => ({
-            ..._.omit(v, ["dateStart", "dateEnd"]),
-            dateStart: moment(v.dateStart).format("LL"),
-            dateEnd: moment(v.dateEnd).format("LL")
+            ..._.omit(v, ["dateStart", "dateEnd", "DivisionProject"]),
+            dateStart: moment(v.dateStart).format("ll"),
+            dateEnd: moment(v.dateEnd).format("ll"),
+            projectTitle: v.DivisionProject.title
          }))
       } else if (kategori == "new-file") {
          allData = await prisma.divisionDocumentFolderFile.findMany({

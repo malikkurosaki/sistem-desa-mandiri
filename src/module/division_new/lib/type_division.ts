@@ -33,7 +33,8 @@ export interface IDataTaskOnDetailDivision {
    id: string,
    title: string,
    dateStart: string,
-   dateEnd: string
+   dateEnd: string,
+   projectTitle: string
 }
 
 export interface IDataKalenderOnDetailDivision {
