@@ -1,20 +1,20 @@
 "use client"
-import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
+import { LayoutNavbarNew, SkeletonList, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { funGetUserByCookies } from '@/module/auth';
 import { funGetAllmember, TypeUser } from '@/module/user';
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Stack, Text, TextInput } from '@mantine/core';
+import { useHookstate } from '@hookstate/core';
+import { Carousel } from '@mantine/carousel';
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Indicator, rem, Stack, Text, TextInput } from '@mantine/core';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaCheck } from 'react-icons/fa6';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
-import { IDataMemberDivision } from '../lib/type_division';
-import { funAddDivisionMember, funGetDivisionById } from '../lib/api_division';
 import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
-import { Carousel } from '@mantine/carousel';
-import { useHookstate } from '@hookstate/core';
+import { funAddDivisionMember, funGetDivisionById } from '../lib/api_division';
+import { IDataMemberDivision } from '../lib/type_division';
 
 
 export default function CreateAnggotaDivision() {

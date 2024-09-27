@@ -1,13 +1,11 @@
 'use client'
 import { Box, Button, Flex, Image, Modal, rem } from '@mantine/core';
 import dynamic from 'next/dynamic';
-import React, { useState } from 'react';
+import { useState } from 'react';
 const PdfToImage = dynamic(() => import('./../components/pdf_viewer').then((mod) => mod.default), { ssr: false });
 
 export default function LayoutModal({ opened, onClose, extension, fitur, file }: { opened: boolean, onClose: () => void, extension: string, fitur: string, file: string }) {
-   const [isValModal, setValModal] = useState(opened)
    const [zoom, setZoom] = useState(1)
-   const filePdf = '/file/' + fitur + '/' + file
 
    const handleZoomIn = () => {
       setZoom(zoom + 0.1)

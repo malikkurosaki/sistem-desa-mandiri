@@ -526,15 +526,15 @@ export default function NavbarDocumentDivision() {
               >
                 {dataJalur.slice(0, 3).map((v, i) => {
                   return (
-                    <Box p={5}key={i}>
-                    <Text
-                      onClick={() => router.push("?path=" + v.id)}
-                      
-                      truncate="end"
-                    >
-                      {v.name}
-                    </Text>
-                  </Box>
+                    <Box p={5} key={i}>
+                      <Text
+                        onClick={() => router.push("?path=" + v.id)}
+
+                        truncate="end"
+                      >
+                        {v.name}
+                      </Text>
+                    </Box>
                   );
                 })}
                 {dataJalur.length > 3 && (
@@ -574,7 +574,7 @@ export default function NavbarDocumentDivision() {
                     <Box p={5} key={i}>
                       <Text
                         onClick={() => router.push("?path=" + v.id)}
-                        
+
                         truncate="end"
                       >
                         {v.name}
@@ -673,7 +673,14 @@ export default function NavbarDocumentDivision() {
                       <Box mt={10} mb={10}>
                         <Grid align="center">
                           <Grid.Col
-                            span={2}
+                            span={{
+                              base: 1,
+                              xs: 1,
+                              sm: 1,
+                              md: 1,
+                              lg: 1,
+                              xl: 1,
+                            }}
                             onClick={() => {
                               if (
                                 v.category == "FOLDER" &&
@@ -728,7 +735,16 @@ export default function NavbarDocumentDivision() {
                               </Box>
                             </Group>
                           </Grid.Col>
-                          <Grid.Col span={10}>
+                          <Grid.Col
+                            span={{
+                              base: 11,
+                              xs: 11,
+                              sm: 11,
+                              md: 11,
+                              lg: 11,
+                              xl: 11,
+                            }}
+                          >
                             <Group justify="space-between" align="center">
                               <Flex
                                 direction={"column"}
@@ -759,12 +775,12 @@ export default function NavbarDocumentDivision() {
                                     xs: 380,
                                   }}
                                 >
-                                  <Text lineClamp={1}>
+                                  <Text lineClamp={1} pl={isMobile2 ? 30 : 25}>
                                     {v.category == "FOLDER"
                                       ? v.name
                                       : v.name + "." + v.extension}
                                   </Text>
-                                  <Text fz={10}>{v.updatedAt}</Text>
+                                  <Text fz={10} pl={isMobile2 ? 30 : 25}>{v.updatedAt}</Text>
                                 </Box>
                               </Flex>
                               <Checkbox

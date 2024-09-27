@@ -3,30 +3,27 @@ import {
   funGetListDivisionByIdDivision,
   IDataDivison,
 } from "@/module/division_new";
-import { IDataMemberTaskDivision } from "@/module/task/lib/type_task";
+import { useHookstate } from "@hookstate/core";
 import {
+  ActionIcon,
   Box,
-  Select,
   Button,
-  Avatar,
   Divider,
   Flex,
+  Grid,
   Group,
-  Stack,
-  Text,
-  ActionIcon,
   ScrollArea,
   Skeleton,
-  Grid,
+  Stack,
+  Text
 } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaCheck, FaUsers } from "react-icons/fa6";
-import { IShareDivision } from "../lib/type_document";
 import { funShareDocument } from "../lib/api_document";
-import { useHookstate } from "@hookstate/core";
+import { IShareDivision } from "../lib/type_document";
 import { globalRefreshDocument } from "../lib/val_document";
 
 export default function DrawerShareDocument({
@@ -185,7 +182,7 @@ export default function DrawerShareDocument({
                           }}>
                             <Flex justify='space-between' align={"center"}>
                               <Flex direction={'column'} align="flex-start" justify="flex-start">
-                                <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
+                                <Text lineClamp={1} pl={isMobile2 ? 30 : 25}>{v.name}</Text>
                               </Flex>
                               {isSelected ? (
                                 <FaCheck style={{ marginRight: 10 }} />
