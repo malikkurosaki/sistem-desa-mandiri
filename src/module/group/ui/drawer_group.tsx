@@ -1,25 +1,25 @@
-import { LayoutDrawer, TEMA, WARNA } from "@/module/_global";
+import { LayoutDrawer, TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import {
   Box,
   Button,
-  Center,
   Flex,
-  Group,
   SimpleGrid,
   Stack,
   Text,
-  TextInput,
+  TextInput
 } from "@mantine/core";
-import React, { useState } from "react";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { IoAddCircle } from "react-icons/io5";
 import { funCreateGroup } from "../lib/api_group";
-import toast from "react-hot-toast";
-import { useHookstate } from "@hookstate/core";
+import { globalRefreshGroup } from "../lib/val_group";
 
 export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) => void; }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false);
   const [namaGroup, setNamaGroup] = useState("");
   const tema = useHookstate(TEMA)
+  const refresh = useHookstate(globalRefreshGroup)
   const [touched, setTouched] = useState({
     name: false,
   });
@@ -31,6 +31,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
 
       if (response.success) {
         toast.success(response.message);
+        refresh.set(!refresh.get())
         setOpenDrawerGroup(false)
         onSuccess(true)
       } else {
@@ -41,6 +42,23 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
       console.error(error);
       toast.error("Gagal menambahkan grup, coba lagi nanti");
     }
+  }
+
+  function onCheck() {
+    if (Object.values(touched).some((v) => v == true))
+      return false
+    createData()
+  }
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'name') {
+      setNamaGroup(val)
+      if (val == "" || val.length < 3) {
+        setTouched({ ...touched, name: true })
+      } else {
+        setTouched({ ...touched, name: false })
+      }
+    } 
   }
 
   return (
@@ -80,11 +98,14 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
             required
             placeholder="Grup"
             onChange={(e) => {
-              setNamaGroup(e.target.value)
-              setTouched({ ...touched, name: false })
+              onValidation('name', e.target.value)
             }}
-            error={touched.name ? "Error! harus memasukkan grup" : ""}
-            onBlur={() => setTouched({ ...touched, name: true })}
+            error={
+              touched.name &&
+              (namaGroup == "" ? "Error! harus memasukkan grup" :
+                namaGroup.length < 3 ? "Masukkan Minimal 3 karakter" : ""
+              )
+            }
           />
           <Box mt={"xl"}>
             <Button
@@ -93,7 +114,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
               size="lg"
               radius={30}
               fullWidth
-              onClick={createData}
+              onClick={() => { onCheck() }}
             >
               Simpan
             </Button>

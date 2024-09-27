@@ -1,30 +1,29 @@
 "use client";
-import { LayoutDrawer, TEMA, WARNA } from "@/module/_global";
+import { LayoutDrawer, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
 import {
   Box,
   Button,
-  Center,
   Flex,
-  Group,
   SimpleGrid,
   Stack,
   Text,
-  TextInput,
+  TextInput
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
-import { IoAddCircle, IoCloseCircleOutline } from "react-icons/io5";
 import { funEditGroup, funEditStatusGroup, funGetGroupById } from "../lib/api_group";
-import { useHookstate } from "@hookstate/core";
+import { globalRefreshGroup } from "../lib/val_group";
 
 export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdated: (val: boolean) => void; id: string; isActive: boolean; }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false);
   const [isModal, setModal] = useState(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const refresh = useHookstate(globalRefreshGroup)
   const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     name: false,
@@ -57,6 +56,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
       const res = await funEditGroup(id, { name });
       if (res.success) {
         toast.success(res.message);
+        refresh.set(!refresh.get())
         setOpenDrawerGroup(false);
         onUpdated(true);
       } else {
@@ -67,6 +67,23 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
       toast.error("Edit grup gagal, coba lagi nanti");
     } finally {
       setLoading(false);
+    }
+  }
+
+  function onCheck() {
+    if (Object.values(touched).some((v) => v == true))
+      return false
+    isUpdate()
+  }
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'name') {
+      setName(val)
+      if (val == "" || val.length < 3) {
+        setTouched({ ...touched, name: true })
+      } else {
+        setTouched({ ...touched, name: false })
+      }
     }
   }
 
@@ -141,17 +158,18 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
             size="lg"
             value={name}
             onChange={(e) => {
-              setName(e.target.value)
-              setTouched({ ...touched, name: false })
+              onValidation('name', e.target.value)
             }}
-            onBlur={() => setTouched({ ...touched, name: true })}
-            error={touched.name ? "Error! harus memasukkan grup" : ""}
+            error={
+              touched.name &&
+              (name == "" ? "Error! harus memasukkan grup" :
+                name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
+              )
+            }
             radius={10}
             placeholder="Grup"
             label="Grup"
             required
-
-
           />
           <Box mt={"xl"}>
             <Button
@@ -160,7 +178,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
               size="lg"
               radius={30}
               fullWidth
-              onClick={isUpdate}
+              onClick={() => { onCheck() }}
               loading={loading}
             >
               Simpan
