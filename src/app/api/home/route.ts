@@ -85,10 +85,20 @@ export async function GET(request: Request) {
                   isActive: true,
                }
             }
-         } else {
+         } else if (roleUser == "admin" || roleUser == "cosupadmin") {
             kondisi = {
                isActive: true,
                idGroup: idGroup
+            }
+         } else {
+            kondisi = {
+               isActive: true,
+               idGroup: idGroup,
+               DivisionMember: {
+                  some: {
+                     idUser: user.id
+                  }
+               }
             }
          }
 
@@ -274,6 +284,7 @@ export async function GET(request: Request) {
                dateEnd: true,
                createdAt: true,
                status: true,
+               idDivision:true,
                DivisionCalendar: {
                   select: {
                      title: true,

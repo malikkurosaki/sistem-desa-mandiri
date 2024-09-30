@@ -21,7 +21,7 @@ function ViewLogin() {
   const focusTrapRef = useFocusTrap()
   const router = useRouter()
   const textInfo =
-    "Kami akan mengirim kode verifikasi melalui WhatsApp, guna mengonfirmasikan nomor Anda.";
+    "Kami akan mengirimkan kode verifikasi melalui WhatsApp untuk mengonfirmasi nomor Anda.";
 
   const [isPhone, setPhone] = useState("")
   const [isOTP, setOTP] = useState<any>(null)
