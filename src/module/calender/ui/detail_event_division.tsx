@@ -320,7 +320,7 @@ export default function DetailEventDivision() {
                     <Box
                       key={i}
                     >
-                      <SkeletonList/>
+                      <SkeletonList />
                     </Box>
                   ))}
               </Box>
@@ -365,7 +365,7 @@ export default function DetailEventDivision() {
                                       lg: 1,
                                       xl: 1,
                                     }}>
-                                      <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
+                                      <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={'lg'} />
                                     </Grid.Col>
                                     <Grid.Col span={{
                                       base: 11,
@@ -375,14 +375,11 @@ export default function DetailEventDivision() {
                                       lg: 11,
                                       xl: 11,
                                     }}>
-                                      <Flex justify='space-between' align={"center"}>
-                                        <Flex direction={'column'} align="flex-start" justify="flex-start">
-                                          <Text lineClamp={1} pl={isMobile ? 35 : 40}>{v.name}</Text>
-                                          <Text c={"#5A687D"} fz={14} lineClamp={1} pl={isMobile ? 35 : 40}>
-                                            {v.email}
-                                          </Text>
-                                        </Flex>
-                                      </Flex>
+                                      <Text lineClamp={1} pl={isMobile2 ? 40 : 30} fz={isMobile ? 15 : 16}>{v.name}</Text>
+                                      <Text c={"#5A687D"} truncate="end" fz={isMobile ? 12 : 14} pl={isMobile2 ? 40 : 30}
+                                        style={{
+                                          overflowWrap: "break-word"
+                                        }}>{v.email}</Text>
                                     </Grid.Col>
                                   </Grid>
                                   <Box mt={10}>
