@@ -1,7 +1,7 @@
 'use client'
 import { TEMA, WARNA } from "@/module/_global";
 import { Carousel } from "@mantine/carousel";
-import { Box, Card, Flex, Title, Text, Progress, Stack, Skeleton } from "@mantine/core";
+import { Box, Card, Flex, Title, Text, Progress, Stack, Skeleton, ActionIcon } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,6 +10,8 @@ import { funGetHome } from "../lib/api_home";
 import { IDataHomeKegiatan } from "../lib/type_home";
 import _ from "lodash";
 import { useHookstate } from "@hookstate/core";
+import { MdMoreVert } from "react-icons/md";
+import { IoIosArrowDropright } from "react-icons/io";
 
 export default function ListProjects() {
    const router = useRouter()
@@ -41,7 +43,7 @@ export default function ListProjects() {
    useShallowEffect(() => {
       fetchData();
    }, []);
-   
+
    const isMobile = useMediaQuery('(max-width: 369px)');
 
    return (
@@ -59,7 +61,7 @@ export default function ListProjects() {
                      <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada kegiatan terbaru</Text>
                   </Box>
                   :
-                  <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"}  withControls={false}>
+                  <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withControls={false}>
                      {isData.map((v) =>
                         <Carousel.Slide key={v.id} pb={20}>
                            <Box w={{
@@ -86,6 +88,15 @@ export default function ListProjects() {
                            </Box>
                         </Carousel.Slide>
                      )}
+
+                     {/* MORE ICON */}
+                     {/* <Flex justify={"center"} direction={"column"} align={"center"} onClick={() => { }}>
+                        <ActionIcon variant="subtle" color="gray" >
+                           <IoIosArrowDropright size={40} />
+                        </ActionIcon>
+                        <Text ta={"center"} c={"dimmed"}>Lihat</Text>
+                        <Text ta={"center"} c={"dimmed"} w={100}>Lebih Banyak</Text>
+                     </Flex> */}
                   </Carousel>
             }
          </Box>
