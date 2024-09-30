@@ -1,7 +1,7 @@
 'use client'
 import { TEMA, WARNA } from "@/module/_global";
 import { Carousel } from "@mantine/carousel";
-import { Box, Card, Flex, Title, Text, Skeleton } from "@mantine/core";
+import { Box, Card, Flex, Title, Text, Skeleton, ActionIcon } from "@mantine/core";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,6 +10,7 @@ import { funGetHome } from "../lib/api_home";
 import toast from "react-hot-toast";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useHookstate } from "@hookstate/core";
+import { MdMoreVert, MdOutlineReadMore } from "react-icons/md";
 
 export default function ListDivisi() {
    const router = useRouter()
@@ -63,7 +64,7 @@ export default function ListDivisi() {
                      {isData.map((v) =>
                         <Carousel.Slide key={v.id} pb={20}>
                            <Box w={{
-                             base: isMobile ? 230 : 300,
+                              base: isMobile ? 230 : 300,
                               md: 400
                            }}>
                               <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
@@ -82,6 +83,15 @@ export default function ListDivisi() {
                            </Box>
                         </Carousel.Slide>
                      )}
+
+                     {/* MORE ICON */}
+                     {/* <Flex justify={"center"} direction={"column"} align={"center"} onClick={() => { }}>
+                        <ActionIcon variant="subtle" color="gray" >
+                           <IoIosArrowDropright size={40} />
+                        </ActionIcon>
+                        <Text ta={"center"} c={"dimmed"}>Lihat</Text>
+                        <Text ta={"center"} c={"dimmed"} w={100}>Lebih Banyak</Text>
+                     </Flex> */}
                   </Carousel>
             }
          </Box>
