@@ -1,5 +1,5 @@
 import { ViewFilter } from '@/module/_global';
-import { TabProject, ViewProject } from '@/module/project';
+import { TabProject } from '@/module/project';
 import React from 'react';
 
 function Page({ searchParams }: { searchParams: { page: string } }) {
