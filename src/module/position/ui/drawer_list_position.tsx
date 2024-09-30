@@ -73,6 +73,30 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
       }
    }
 
+   function onCheck() {
+      if (Object.values(touched).some((v) => v == true))
+        return false
+      onSubmit()
+   }
+   
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'name') {
+         setListData({...listData, name: val})
+        if (val == "" || val.length < 3) {
+          setTouched({ ...touched, name: true })
+        } else {
+          setTouched({ ...touched, name: false })
+        }
+      } else if (kategori == 'idGroup') {
+         setListData({ ...listData, idGroup: val })
+         if (val == "") {
+            setTouched({ ...touched, idGroup: true })
+         } else {
+            setTouched({ ...touched, idGroup: false })
+         }
+      }
+    }
+
    return (
       <Box>
          <Stack pt={10}>
@@ -102,9 +126,9 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
          </Stack>
          <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Tambah Jabatan'} size="lg">
             <Box pt={10} pos={"relative"} h={{
-               base: "69vh",
-               sm: "69vh",
-               lg: "69vh",
+               base: "65vh",
+               sm: "67vh",
+               lg: "67vh",
                xl: "70vh"
                
             }}>
@@ -125,13 +149,9 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      radius={10}
                      mb={5}
                      withAsterisk
-                     onChange={(val: any) => {
-                        setListData({
-                           ...listData,
-                           idGroup: val
-                        })
-                        setTouched({ ...touched, idGroup: false })
-                     }}
+                     onChange={(e: any) => 
+                        { onValidation('idGroup', e) }
+                     }
                      styles={{
                         input: {
                            color: tema.get().utama,
@@ -144,8 +164,6 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                            listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
                         )
                      }
-                     onFocus={() => setTouched({ ...touched, idGroup: true })}
-                     onBlur={() => setTouched({ ...touched, idGroup: true })}
                   />
                }
                <TextInput
@@ -159,22 +177,15 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                   }}
                   my={15}
                   size="md"
-                  onChange={(event: any) => {
-                     setListData({
-                        ...listData,
-                        name: event.target.value
-                     })
-                     setTouched({ ...touched, name: false })
-                  }}
+                  onChange={(e) => { onValidation('name', e.target.value) }}
                   radius={10}
                   placeholder="Nama Jabatan"
                   error={
-                     touched.name && (
-                        listData.name == "" ? "Nama Jabatan Tidak Boleh Kosong" : null
+                     touched.name &&
+                     (listData.name == "" ? "Error! harus memasukkan Nama Jabatan" :
+                        listData.name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
                      )
-                  }
-                  onFocus={() => setTouched({ ...touched, name: true })}
-                  onBlur={() => setTouched({ ...touched, name: true })}
+                   }
                   required
                />
                <Box pos={"absolute"} bottom={10} left={0} right={0}>
@@ -184,7 +195,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      size="lg"
                      radius={30}
                      fullWidth
-                     onClick={onSubmit}
+                     onClick={() => { onCheck() }}
                   >
                      SIMPAN
                   </Button>

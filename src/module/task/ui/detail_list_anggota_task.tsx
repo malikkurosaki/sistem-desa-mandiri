@@ -1,6 +1,6 @@
 'use client'
-import { globalRole, LayoutDrawer, SkeletonSingle, TEMA } from "@/module/_global";
-import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack, Grid } from "@mantine/core";
+import { globalRole, LayoutDrawer, SkeletonList, SkeletonSingle, TEMA } from "@/module/_global";
+import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack, Grid, Divider } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -25,6 +25,7 @@ export default function ListAnggotaDetailTask() {
    const roleLogin = useHookstate(globalRole)
    const adminLogin = useHookstate(globalIsAdminDivision)
    const isMobile = useMediaQuery('(max-width: 369px)');
+   const isMobile2 = useMediaQuery("(max-width: 438px)");
    const tema = useHookstate(TEMA)
    const [reason, setReason] = useState("")
 
@@ -109,7 +110,7 @@ export default function ListAnggotaDetailTask() {
                            .fill(null)
                            .map((_, i) => (
                               <Box key={i}>
-                                 <SkeletonSingle />
+                                 <SkeletonList />
                               </Box>
                            ))
                         :
@@ -121,23 +122,19 @@ export default function ListAnggotaDetailTask() {
                                        onClick={() => {
                                           setDataChoose({ id: v.idUser, name: v.name })
                                           reason == null ?
-                                          setOpenDrawer(true)
-                                          : setOpenDrawer(false)
+                                             setOpenDrawer(true)
+                                             : setOpenDrawer(false)
                                        }}
                                     >
-                                       <Grid.Col span={9}>
-                                          <Group>
-                                             <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
-                                             <Box w={{
-                                                base: isMobile ? 130 : 140,
-                                                xl: 270
-                                             }}>
-                                                <Flex direction={'column'} align="flex-start" justify="flex-start">
-                                                   <Text lineClamp={1} fz={isMobile ? 14 : 16}>{v.name}</Text>
-                                                   <Text c={"#5A687D"} lineClamp={1} fz={isMobile ? 10 : 14}>{v.email}</Text>
-                                                </Flex>
-                                             </Box>
-                                          </Group>
+                                       <Grid.Col span={1}>
+                                          <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={'lg'} />
+                                       </Grid.Col>
+                                       <Grid.Col span={8}>
+                                          <Text lineClamp={1} pl={isMobile2 ? 40 : 30} fz={isMobile ? 15 : 16}>{v.name}</Text>
+                                          <Text c={"#5A687D"} truncate="end" fz={isMobile ? 12 : 14} pl={isMobile2 ? 40 : 30}
+                                             style={{
+                                                overflowWrap: "break-word"
+                                             }}>{v.email}</Text>
                                        </Grid.Col>
                                        <Grid.Col span={3}>
                                           <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
@@ -145,6 +142,9 @@ export default function ListAnggotaDetailTask() {
                                           </Text>
                                        </Grid.Col>
                                     </Grid>
+                                    <Box mt={10}>
+                                       <Divider my={10} />
+                                    </Box>
                                  </Box>
                               );
                            })}

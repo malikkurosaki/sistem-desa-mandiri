@@ -31,6 +31,7 @@ export default function InformationDivision() {
   const roleLogin = useHookstate(globalRole)
   const [isAdmin, setAdmin] = useState(false)
   const isMobile = useMediaQuery('(max-width: 455px)');
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
   const tema = useHookstate(TEMA)
 
   async function getOneData() {
@@ -164,8 +165,8 @@ export default function InformationDivision() {
 
                 ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
                   <Group align='center' onClick={() => router.push('/division/add-member/' + param.id)}>
-                    <Avatar size={isMobile ? 'md' : 'lg'}>
-                      <AiOutlineUserAdd size={isMobile ? 25 : 30} color={tema.get().utama} />
+                    <Avatar size={'lg'}>
+                      <AiOutlineUserAdd size={30} color={tema.get().utama} />
                     </Avatar>
                     <Text fz={isMobile ? 14 : 16}>Tambah Anggota</Text>
                   </Group>
@@ -194,10 +195,10 @@ export default function InformationDivision() {
                           }}
                         >
                           <Grid.Col span={1}>
-                              <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
+                              <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={'lg'} />
                           </Grid.Col>
                           <Grid.Col span={8}>
-                                <Text c={tema.get().utama} fw={"bold"} truncate="end" pl={isMobile ? 25 : 30} fz={isMobile ? 14 : 16}>
+                                <Text c={tema.get().utama} fw={"bold"} truncate="end" pl={isMobile2 ? 40 : 30} fz={isMobile ? 14 : 16}>
                                   {v.name}
                                 </Text>
                           </Grid.Col>

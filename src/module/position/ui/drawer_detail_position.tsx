@@ -96,6 +96,23 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
       getOneData()
    }, [refresh.get()])
 
+   function onCheck() {
+      if (Object.values(touched).some((v) => v == true))
+        return false
+      onSubmit()
+   }
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'name') {
+         setData({...data, name: val})
+        if (val == "" || val.length < 3) {
+          setTouched({ ...touched, name: true })
+        } else {
+          setTouched({ ...touched, name: false })
+        }
+      }
+    }
+
    async function nonActive(val: boolean) {
       try {
          if (val) {
@@ -156,7 +173,6 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                {loading ?
                   <Box>
                      <Skeleton height={40} mt={6} radius={10} />
-                     <Skeleton height={40} mt={15} radius={10} />
                   </Box>
                   :
                   <Box>
@@ -172,16 +188,14 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                         required
                         size="md"
                         value={String(data.name)}
-                        onChange={(e) => {
-                           setData({ ...data, name: e.target.value })
-                           setTouched({ ...touched, name: false })
-                        }}
+                        onChange={(e) => { onValidation('name', e.target.value) }}
                         onBlur={() => setTouched({ ...touched, name: true })}
                         error={
-                           touched.name && (
-                              data.name == "" ? "Nama Jabatan Tidak Boleh Kosong" : null
+                           touched.name &&
+                           (data.name == "" ? "Error! harus memasukkan Nama Jabatan" :
+                              data.name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
                            )
-                        }
+                         }
                         radius={10}
                         placeholder="Nama Jabatan"
                      />
