@@ -284,6 +284,7 @@ export async function GET(request: Request) {
                dateEnd: true,
                createdAt: true,
                status: true,
+               idDivision:true,
                DivisionCalendar: {
                   select: {
                      title: true,
