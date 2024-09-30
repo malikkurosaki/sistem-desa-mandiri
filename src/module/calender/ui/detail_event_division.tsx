@@ -116,7 +116,9 @@ export default function DetailEventDivision() {
                     xl: 10.5,
                   }}
                 >
-                  <Text lineClamp={1} pl={isMobile2 ? 5 : 0}>{isDataCalender?.title}</Text>
+                  <Text style={{
+                    overflowWrap: "break-word"
+                  }} pl={isMobile2 ? 5 : 0}>{isDataCalender?.title}</Text>
                 </Grid.Col>
               </Grid>
               <Grid>

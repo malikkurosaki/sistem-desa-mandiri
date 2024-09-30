@@ -19,6 +19,7 @@ export default function EditAnnouncement() {
    const [isChooseDivisi, setChooseDivisi] = useState(false)
    const param = useParams<{ id: string }>()
    const [loading, setLoading] = useState(true)
+   const [loadingSubmit, setLoadingSubmit] = useState(false)
    const router = useRouter()
    const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
@@ -84,6 +85,7 @@ export default function EditAnnouncement() {
 
    async function onSubmit() {
       try {
+         setLoadingSubmit(true)
          const response = await funEditAnnouncement(param.id, {
             title: body.title,
             desc: body.desc,
@@ -92,15 +94,18 @@ export default function EditAnnouncement() {
 
          if (response.success) {
             toast.success(response.message)
+            setLoadingSubmit(false)
             router.push(`/announcement/${param.id}`)
          } else {
             toast.error(response.message)
          }
+         setLoadingSubmit(false)
       } catch (error) {
          console.error(error)
          toast.error("Gagal mengedit pengumuman, coba lagi nanti");
+      } finally {
+         setLoadingSubmit(false)
       }
-
       setOpen(false)
    }
 
@@ -109,6 +114,31 @@ export default function EditAnnouncement() {
 
    if (isChooseDivisi) return <EditChooseMember onClose={() => { setChooseDivisi(false) }} />
 
+
+   function onCheck() {
+      if (Object.values(touched).some((v) => v == true))
+         return false
+      setOpen(true)
+   }
+
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'title') {
+         setBody({ ...body, title: val })
+         if (val === "") {
+            setTouched({ ...touched, title: true })
+         } else {
+            setTouched({ ...touched, title: false })
+         }
+      } else if (kategori == 'desc') {
+         setBody({ ...body, desc: val })
+         if (val === "") {
+            setTouched({ ...touched, desc: true })
+         } else {
+            setTouched({ ...touched, desc: false })
+         }
+      }
+   }
 
    return (
       <>
@@ -139,11 +169,7 @@ export default function EditAnnouncement() {
                         },
                      }}
                      value={body.title}
-                     onChange={(val) => {
-                        setBody({ ...body, title: val.target.value })
-                        setTouched({ ...touched, title: false })
-                     }}
-                     onBlur={() => setTouched({ ...touched, title: true })}
+                     onChange={(e) => { onValidation('title', e.target.value) }}
                      error={
                         touched.title && (
                            body.title == "" ? "Judul Tidak Boleh Kosong" : null
@@ -165,27 +191,22 @@ export default function EditAnnouncement() {
                         },
                      }}
                      value={body.desc}
-                     onChange={(val) => {
-                        setBody({ ...body, desc: val.target.value })
-                        setTouched({ ...touched, desc: false })
-                     }}
-                     onBlur={() => setTouched({ ...touched, desc: true })}
+                     onChange={(e) => { onValidation('desc', e.target.value) }}
                      error={
                         touched.desc && (
                            body.desc == "" ? "Pengumuman Tidak Boleh Kosong" : null
                         )
                      }
-
                   />
-                  <Box pt={10}  w={"100%"}>
+                  <Box pt={10} w={"100%"}>
                      <Group justify="space-between" style={{
-                     border: `1px solid ${tema.get().utama}`,
-                     maxWidth: rem(550),
+                        border: `1px solid ${tema.get().utama}`,
+                        maxWidth: rem(550),
                         padding: 10,
                         borderRadius: 10
-                  }}
-                 
-                     onClick={() => { setChooseDivisi(true) }}
+                     }}
+
+                        onClick={() => { setChooseDivisi(true) }}
                      >
                         <Text size="sm">
                            Tambah divisi penerima pengumuman
@@ -250,22 +271,13 @@ export default function EditAnnouncement() {
                   size="lg"
                   radius={30}
                   fullWidth
-                  onClick={() => {
-                     if (
-                        body.title !== "" &&
-                        body.desc !== ""
-                     ) {
-                        setOpen(true)
-                     } else {
-                        toast.error("Isi data dengan lengkap")
-                     }
-                  }}
+                  onClick={() => { onCheck() }}
                >
                   Simpan
                </Button>
             }
          </Box>
-         <LayoutModal opened={isOpen} onClose={() => setOpen(false)}
+         <LayoutModal opened={isOpen} loading={loadingSubmit} onClose={() => setOpen(false)}
             description="Apakah Anda yakin ingin mengubah data?"
             onYes={(val) => {
                if (val) {

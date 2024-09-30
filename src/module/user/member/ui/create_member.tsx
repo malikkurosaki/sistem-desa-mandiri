@@ -97,16 +97,6 @@ export default function CreateMember() {
     }
   }
 
-  async function changeGrup(val: any) {
-    setListPosition([]);
-    setListData({
-      ...listData,
-      idGroup: val,
-      idPosition: "",
-    });
-
-    getAllPosition(val);
-  }
 
   async function onSubmit(val: boolean) {
     try {
@@ -150,6 +140,78 @@ export default function CreateMember() {
     getAllUserRole();
     getLogin()
   }, []);
+
+  function onCheck() {
+    if (Object.values(touched).some((v) => v == true))
+      return false
+    setModal(true)
+  }
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'nik') {
+      setListData({ ...listData, nik: val })
+      if (val === "" || val.length !== 16) {
+        setTouched({ ...touched, nik: true })
+      } else {
+        setTouched({ ...touched, nik: false })
+      }
+    } else if (kategori == 'name') {
+      setListData({ ...listData, name: val })
+      if (val === "") {
+        setTouched({ ...touched, name: true })
+      } else {
+        setTouched({ ...touched, name: false })
+      }
+    } else if (kategori == 'phone') {
+      setListData({ ...listData, phone: val })
+      if (val == "" || !(val.length >= 10 && val.length <= 15)) {
+        setTouched({ ...touched, phone: true })
+      } else {
+        setTouched({ ...touched, phone: false })
+      }
+    } else if (kategori == 'email') {
+      setListData({ ...listData, email: val })
+      if (val == "" || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val)) {
+        setTouched({ ...touched, email: true })
+      } else {
+        setTouched({ ...touched, email: false })
+      }
+    } else if (kategori == 'gender') {
+      setListData({ ...listData, gender: val })
+      if (val == "" || val == "null") {
+        setTouched({ ...touched, gender: true })
+      } else {
+        setTouched({ ...touched, gender: false })
+      }
+    } else if (kategori == 'idGroup') {
+      setListData({ ...listData, idGroup: val, idPosition: "", })
+      if (val === "") {
+        setTouched({ ...touched, idGroup: true })
+      } else {
+        setTouched({ ...touched, idGroup: false })
+      }
+    } else if (kategori == 'idPosition') {
+      setListData({ ...listData, idPosition: val })
+      if (val === "") {
+        setTouched({ ...touched, idPosition: true })
+      } else {
+        setTouched({ ...touched, idPosition: false })
+      }
+    } else if (kategori == 'idUserRole') {
+      setListData({ ...listData, idUserRole: val })
+      if (val === "") {
+        setTouched({ ...touched, idUserRole: true })
+      } else {
+        setTouched({ ...touched, idUserRole: false })
+      }
+    }
+  }
+
+  async function changeGrup(val: any) {
+    setListPosition([]);
+    onValidation('idGroup', val)
+    getAllPosition(val);
+  }
 
 
   return (
@@ -204,11 +266,7 @@ export default function CreateMember() {
                 }))
                 : []
             }
-            onChange={(val: any) => {
-              changeGrup(val);
-              setTouched({ ...touched, idGroup: false })
-            }}
-            onBlur={() => setTouched({ ...touched, idGroup: true })}
+            onChange={(val: any) => { changeGrup(val) }}
             error={
               touched.idGroup && (
                 listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
@@ -239,16 +297,8 @@ export default function CreateMember() {
               }))
               : []
           }
-          onChange={(val: any) => {
-            setListData({
-              ...listData,
-              idPosition: val,
-            })
-            setTouched({ ...touched, idPosition: false })
-          }
-          }
+          onChange={(val: any) => { onValidation('idPosition', val) }}
           value={listData.idPosition == "" ? null : listData.idPosition}
-          onBlur={() => setTouched({ ...touched, idPosition: true })}
           error={
             touched.idPosition && (
               listData.idPosition == "" ? "Jabatan Tidak Boleh Kosong" : null
@@ -278,15 +328,7 @@ export default function CreateMember() {
               }))
               : []
           }
-          onChange={(val: any) => {
-            setListData({
-              ...listData,
-              idUserRole: val,
-            })
-            setTouched({ ...touched, idUserRole: false })
-          }
-          }
-          onBlur={() => setTouched({ ...touched, idUserRole: true })}
+          onChange={(val: any) => { onValidation('idUserRole', val) }}
           error={
             touched.idUserRole && (
               listData.idUserRole == "" ? "Role Tidak Boleh Kosong" : null
@@ -308,11 +350,7 @@ export default function CreateMember() {
               borderColor: tema.get().utama,
             },
           }}
-          onChange={(event: any) => {
-            setListData({ ...listData, nik: event.target.value });
-            setTouched({ ...touched, nik: false });
-          }}
-          onBlur={() => setTouched({ ...touched, nik: true })}
+          onChange={(e) => { onValidation('nik', e.target.value) }}
           error={
             touched.nik && (
               listData.nik === "" ? "NIK Tidak Boleh Kosong" :
@@ -335,15 +373,7 @@ export default function CreateMember() {
               borderColor: tema.get().utama,
             },
           }}
-          onChange={(event: any) => {
-            setListData({
-              ...listData,
-              name: event.target.value,
-            })
-            setTouched({ ...touched, name: false })
-          }
-          }
-          onBlur={() => setTouched({ ...touched, name: true })}
+          onChange={(e) => { onValidation('name', e.target.value) }}
           error={
             touched.name && (
               listData.name == "" ? "Nama Tidak Boleh Kosong" : null
@@ -365,15 +395,7 @@ export default function CreateMember() {
               borderColor: tema.get().utama,
             },
           }}
-          onChange={(event: any) => {
-            setListData({
-              ...listData,
-              email: event.target.value,
-            })
-            setTouched({ ...touched, email: false })
-          }
-          }
-          onBlur={() => setTouched({ ...touched, email: true })}
+          onChange={(e) => { onValidation('email', e.target.value) }}
           error={
             touched.email && (
               listData.email == "" ? "Email Tidak Boleh Kosong" :
@@ -397,15 +419,7 @@ export default function CreateMember() {
               borderColor: tema.get().utama,
             },
           }}
-          onChange={(event: any) => {
-            setListData({
-              ...listData,
-              phone: "62" + event.target.value,
-            })
-            setTouched({ ...touched, phone: false })
-          }
-          }
-          onBlur={() => setTouched({ ...touched, phone: true })}
+          onChange={(e) => { onValidation('phone', e.target.value); }}
           error={
             touched.phone && (
               listData.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" :
@@ -432,15 +446,7 @@ export default function CreateMember() {
             { value: "M", label: "Laki-laki" },
             { value: "F", label: "Perempuan" },
           ]}
-          onChange={(val: any) => {
-            setListData({
-              ...listData,
-              gender: val,
-            })
-            setTouched({ ...touched, gender: false })
-          }
-          }
-          onBlur={() => setTouched({ ...touched, gender: true })}
+          onChange={(val: any) => { onValidation('gender', val) }}
           error={
             touched.gender && (
               listData.gender == "" ? "Jenis Kelamin Tidak Boleh Kosong" : null
@@ -459,22 +465,7 @@ export default function CreateMember() {
           size="md"
           radius={30}
           fullWidth
-          onClick={() => {
-            if (
-              listData.nik !== "" &&
-              listData.name !== "" &&
-              listData.email !== "" &&
-              listData.phone !== "" &&
-              listData.gender !== "" &&
-              listData.idGroup !== "" &&
-              listData.idPosition !== "" &&
-              listData.idUserRole !== ""
-            ) {
-              setModal(true);
-            } else {
-              toast.error("Mohon lengkapi semua form");
-            }
-          }}
+          onClick={() => { onCheck() }}
         >
           Simpan
         </Button>
