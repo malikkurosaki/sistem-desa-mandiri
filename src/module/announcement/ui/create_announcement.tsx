@@ -77,6 +77,31 @@ export default function CreateAnnouncement() {
 
    if (isChooseMember) return <CreateUsersAnnouncement onClose={() => { setIsChooseMember(false) }} />
 
+   function onCheck() {
+      if (Object.values(touched).some((v) => v == true))
+        return false
+      setOpen(true)
+   }
+   
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'title') {
+         setisData({ ...isData, title: val })
+         if (val === "") {
+           setTouched({ ...touched, title: true })
+         } else {
+           setTouched({ ...touched, title: false })
+         }
+      } else if (kategori == 'desc') {
+        setisData({ ...isData, desc: val })
+        if (val === "") {
+          setTouched({ ...touched, desc: true })
+        } else {
+          setTouched({ ...touched, desc: false })
+        }
+      } 
+    }
+
    return (
       <Box>
          <LayoutNavbarNew back="/announcement/" title="Tambah Pengumuman" menu={<></>} />
@@ -93,11 +118,7 @@ export default function CreateAnnouncement() {
                   },
                }}
                value={isData.title}
-               onChange={(e) => {
-                  setisData({ ...isData, title: e.target.value })
-                  setTouched({ ...touched, title: false })
-               }}
-               onBlur={() => setTouched({ ...touched, title: true })}
+               onChange={(e) => { onValidation('title', e.target.value) }}
                error={
                   touched.title && (
                      isData.title == "" ? "Judul Tidak Boleh Kosong" : null
@@ -119,11 +140,7 @@ export default function CreateAnnouncement() {
                   },
                }}
                value={isData.desc}
-               onChange={(e) => {
-                  setisData({ ...isData, desc: e.target.value })
-                  setTouched({ ...touched, desc: false })
-               }}
-               onBlur={() => setTouched({ ...touched, desc: true })}
+               onChange={(e) => { onValidation('desc', e.target.value) }}
                error={
                   touched.desc && (
                      isData.desc == "" ? "Pengumuman Tidak Boleh Kosong" : null
@@ -175,16 +192,7 @@ export default function CreateAnnouncement() {
                size="lg"
                radius={30}
                fullWidth
-               onClick={() => { 
-                  if (
-                     isData.title !== "" &&
-                     isData.desc !== "" 
-                  ) {
-                     setOpen(true)
-                  } else {
-                     toast.error("Isi data dengan lengkap")
-                  }
-                }}
+               onClick={() => { onCheck() }}
             >
                Simpan
             </Button>

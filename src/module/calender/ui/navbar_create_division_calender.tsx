@@ -25,6 +25,7 @@ export default function NavbarCreateDivisionCalender() {
   const param = useParams<{ id: string, detail: string }>()
   const tema = useHookstate(TEMA)
   const isMobile = useMediaQuery('(max-width: 369px)');
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
   const [touched, setTouched] = useState({
     title: false,
     dateStart: false,
@@ -331,18 +332,13 @@ export default function NavbarCreateDivisionCalender() {
                           <Box key={i}>
                             <Grid align='center' mt={10}
                             >
-                              <Grid.Col span={9}>
-                                <Group>
-                                  <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
-                                  <Box w={{
-                                    base: isMobile ? 130 : 140,
-                                    xl: 270
-                                  }}>
-                                    <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16} >
-                                      {v.name}
-                                    </Text>
-                                  </Box>
-                                </Group>
+                              <Grid.Col span={1}>
+                                <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={'lg'} />
+                              </Grid.Col>
+                              <Grid.Col span={8}>
+                                <Text c={tema.get().utama} fw={"bold"} lineClamp={1} pl={isMobile2 ? 40 : 30} fz={isMobile ? 14 : 16} >
+                                  {v.name}
+                                </Text>
                               </Grid.Col>
                               <Grid.Col span={3}>
                                 <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>

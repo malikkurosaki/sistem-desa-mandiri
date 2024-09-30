@@ -101,15 +101,6 @@ export default function EditMember({ id }: { id: string }) {
       }
    }
 
-   async function changeGrup(val: any) {
-      setListPosition([])
-      setData({
-         ...data,
-         idGroup: val,
-         idPosition: ""
-      })
-      getAllPosition(val)
-   }
 
    useShallowEffect(() => {
       getAllGroup()
@@ -140,6 +131,65 @@ export default function EditMember({ id }: { id: string }) {
 
       } catch (error) {
          toast.error('Error');
+      }
+   }
+
+   function onCheck() {
+      if (Object.values(touched).some((v) => v == true))
+         return false
+      setModal(true)
+   }
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'nik') {
+         setData({ ...data, nik: val })
+         if (val === "" || val.length !== 16) {
+            setTouched({ ...touched, nik: true })
+         } else {
+            setTouched({ ...touched, nik: false })
+         }
+      } else if (kategori == 'name') {
+         setData({ ...data, name: val })
+         if (val === "") {
+            setTouched({ ...touched, name: true })
+         } else {
+            setTouched({ ...touched, name: false })
+         }
+      } else if (kategori == 'phone') {
+         setData({ ...data, phone: val })
+         if (val == "" || !(val.length >= 10 && val.length <= 15)) {
+            setTouched({ ...touched, phone: true })
+         } else {
+            setTouched({ ...touched, phone: false })
+         }
+      } else if (kategori == 'email') {
+         setData({ ...data, email: val })
+         if (val == "" || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val)) {
+            setTouched({ ...touched, email: true })
+         } else {
+            setTouched({ ...touched, email: false })
+         }
+      } else if (kategori == 'gender') {
+         setData({ ...data, gender: val })
+         if (val == "" || val == "null") {
+            setTouched({ ...touched, gender: true })
+         } else {
+            setTouched({ ...touched, gender: false })
+         }
+      } else if (kategori == 'idPosition') {
+         setData({ ...data, idPosition: val })
+         if (val === "") {
+            setTouched({ ...touched, idPosition: true })
+         } else {
+            setTouched({ ...touched, idPosition: false })
+         }
+      } else if (kategori == 'idUserRole') {
+         setData({ ...data, idUserRole: val })
+         if (val === "") {
+            setTouched({ ...touched, idUserRole: true })
+         } else {
+            setTouched({ ...touched, idUserRole: false })
+         }
       }
    }
 
@@ -180,7 +230,7 @@ export default function EditMember({ id }: { id: string }) {
                      src={img}
                      style={{
                         border: `1px solid ${"#C1BFBFFF"}`
-                      }}
+                     }}
                   />
                </Indicator>
             }
@@ -196,36 +246,6 @@ export default function EditMember({ id }: { id: string }) {
                </>
                :
                <>
-
-                  {/* <Select
-                     placeholder="Pilih Grup" label="Grup" w={"100%"} size="md" required withAsterisk radius={30}
-                     styles={{
-                        input: {
-                           color: tema.get().utama,
-                           borderRadius: tema.get().utama,
-                           borderColor: tema.get().utama,
-                        },
-                     }}
-                     data={
-                        listGroup
-                           ? listGroup.map((data) => ({
-                              value: data.id,
-                              label: data.name,
-                           }))
-                           : []
-                     }
-                     onChange={(val: any) => {
-                        changeGrup(val)
-                        setTouched({ ...touched, idGroup: false })
-                     }}
-                     value={data?.idGroup}
-                     onBlur={() => setTouched({ ...touched, idGroup: true })}
-                     error={
-                        touched.idGroup && (
-                           data.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
-                        )
-                     }
-                  /> */}
                   <Select
                      placeholder="Pilih Jabatan" label="Jabatan" w={"100%"} size="md" required withAsterisk radius={30}
                      styles={{
@@ -243,12 +263,8 @@ export default function EditMember({ id }: { id: string }) {
                            }))
                            : []
                      }
-                     onChange={(val: any) => {
-                        setData({ ...data, idPosition: val })
-                        setTouched({ ...touched, idPosition: false })
-                     }}
+                     onChange={(val: any) => { onValidation('idPosition', val) }}
                      value={(data?.idPosition == "") ? null : data.idPosition}
-                     onBlur={() => setTouched({ ...touched, idPosition: true })}
                      error={
                         touched.idPosition && (
                            data.idPosition == "" ? "Jabatan Tidak Boleh Kosong" : null
@@ -272,12 +288,8 @@ export default function EditMember({ id }: { id: string }) {
                            }))
                            : []
                      }
-                     onChange={(val: any) => {
-                        setData({ ...data, idUserRole: val })
-                        setTouched({ ...touched, idUserRole: false })
-                     }}
+                     onChange={(val: any) => { onValidation('idUserRole', val) }}
                      value={data?.idUserRole}
-                     onBlur={() => setTouched({ ...touched, idUserRole: true })}
                      error={
                         touched.idUserRole && (
                            data.idUserRole == "" ? "Role Tidak Boleh Kosong" : null
@@ -293,12 +305,8 @@ export default function EditMember({ id }: { id: string }) {
                            borderColor: tema.get().utama,
                         },
                      }}
-                     onChange={(e) => {
-                        setData({ ...data, nik: e.target.value })
-                        setTouched({ ...touched, nik: false })
-                     }}
+                     onChange={(e) => { onValidation('nik', e.target.value) }}
                      value={data.nik}
-                     onBlur={() => setTouched({ ...touched, nik: true })}
                      error={
                         touched.nik && (
                            data.nik === "" ? "NIK Tidak Boleh Kosong" :
@@ -315,10 +323,7 @@ export default function EditMember({ id }: { id: string }) {
                            borderColor: tema.get().utama,
                         },
                      }}
-                     onChange={(e) => {
-                        setData({ ...data, name: e.target.value })
-                        setTouched({ ...touched, name: false })
-                     }}
+                     onChange={(e) => { onValidation('name', e.target.value) }}
                      value={data.name}
                      onBlur={() => setTouched({ ...touched, name: true })}
                      error={
@@ -336,12 +341,8 @@ export default function EditMember({ id }: { id: string }) {
                            borderColor: tema.get().utama,
                         },
                      }}
-                     onChange={(e) => {
-                        setData({ ...data, email: e.target.value })
-                        setTouched({ ...touched, email: false })
-                     }}
+                     onChange={(e) => { onValidation('email', e.target.value) }}
                      value={data.email}
-                     onBlur={() => setTouched({ ...touched, email: true })}
                      error={
                         touched.email && (
                            data.email == "" ? "Email Tidak Boleh Kosong" :
@@ -360,12 +361,8 @@ export default function EditMember({ id }: { id: string }) {
                      }}
                      placeholder="8xxx xxxx xxxx"
                      leftSection={<Text>+62</Text>}
-                     onChange={(e) => {
-                        setData({ ...data, phone: e.target.value })
-                        setTouched({ ...touched, phone: false })
-                     }}
+                     onChange={(e) => { onValidation('phone', e.target.value); }}
                      value={data.phone}
-                     onBlur={() => setTouched({ ...touched, phone: true })}
                      error={
                         touched.phone && (
                            data.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" :
@@ -394,12 +391,8 @@ export default function EditMember({ id }: { id: string }) {
                            }
                         ]
                      }
-                     onChange={(val: any) => {
-                        setData({ ...data, gender: val })
-                        setTouched({ ...touched, gender: false })
-                     }}
+                     onChange={(val: any) => { onValidation('gender', val) }}
                      value={data.gender}
-                     onBlur={() => setTouched({ ...touched, gender: true })}
                      error={
                         touched.gender && (
                            data.gender == "" ? "Gender Tidak Boleh Kosong" : null
@@ -423,22 +416,7 @@ export default function EditMember({ id }: { id: string }) {
                   size="md"
                   radius={30}
                   fullWidth
-                  onClick={() => {
-                     if (
-                        data.nik !== "" &&
-                        data.name !== "" &&
-                        data.email !== "" &&
-                        data.phone !== "" &&
-                        data.gender !== "" &&
-                        data.idGroup !== "" &&
-                        data.idPosition !== "" &&
-                        data.idUserRole !== ""
-                     ) {
-                        setModal(true);
-                     } else {
-                        toast.error("Mohon lengkapi semua form");
-                     }
-                  }}
+                  onClick={() => { onCheck() }}
                >
                   Simpan
                </Button>

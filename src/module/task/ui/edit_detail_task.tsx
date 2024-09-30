@@ -34,6 +34,9 @@ export default function EditDetailTask() {
    const [loading, setLoading] = useState(true)
    const [idTugas, setIdTugas] = useState("")
    const tema = useHookstate(TEMA)
+   const [touched, setTouched] = useState({
+      title: false,
+   });
 
    async function onSubmit() {
       if (value[0] == null || value[1] == null)
@@ -89,6 +92,23 @@ export default function EditDetailTask() {
       getOneData();
    }, [param.detail])
 
+   function onCheck() {
+      if (Object.values(touched).some((v) => v == true))
+         return false
+      setOpenModal(true)
+   }
+
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'title') {
+         setTitle(val)
+         if (val === "") {
+            setTouched({ ...touched, title: true })
+         } else {
+            setTouched({ ...touched, title: false })
+         }
+      }
+   }
 
    return (
       <Box>
@@ -161,7 +181,14 @@ export default function EditDetailTask() {
                      placeholder="Input Judul Tahapan"
                      size="md"
                      value={title}
-                     onChange={(e) => { setTitle(e.target.value) }}
+                     error={
+                        touched.title &&
+                        (title == "" ? "Error! harus memasukkan Judul Tahapan" : ""
+                        )
+                      }
+                     onChange={(e) => {
+                        onValidation('title', e.target.value)
+                      }}
                   />
                }
             </Stack>
@@ -180,7 +207,7 @@ export default function EditDetailTask() {
                   size="lg"
                   radius={30}
                   fullWidth
-                  onClick={() => { setOpenModal(true) }}
+                  onClick={() => { onCheck() }}
                >
                   Simpan
                </Button>
