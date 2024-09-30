@@ -66,7 +66,7 @@ export default function ListTaskOnDetailDivision() {
                      : <></>
             }
          </Group>
-         <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
+         <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withControls={false}>
             {data.map((v, i) =>
                <Carousel.Slide key={v.id}>
                   <Box p={20} w={{

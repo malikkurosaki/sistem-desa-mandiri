@@ -59,9 +59,9 @@ export default function ListDivisi() {
                      <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada divisi</Text>
                   </Box>
                   :
-                  <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withIndicators withControls={false}>
+                  <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withControls={false}>
                      {isData.map((v) =>
-                        <Carousel.Slide key={v.id}>
+                        <Carousel.Slide key={v.id} pb={20}>
                            <Box w={{
                              base: isMobile ? 230 : 300,
                               md: 400
