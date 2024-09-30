@@ -49,7 +49,7 @@ export default function EditPaletteColor() {
       setLoading(false)
     } catch (error) {
       console.error(error)
-      toast.error("Gagal menambahkan tema, coba lagi nanti");
+      toast.error("Gagal mendapatkan data, coba lagi nanti");
     } finally {
       setLoading(false)
     }
@@ -72,6 +72,65 @@ export default function EditPaletteColor() {
     } catch (error) {
       console.error(error)
       toast.error("Gagal mengedit tema, coba lagi nanti");
+    }
+  }
+
+  function onCheck() {
+    if (Object.values(touched).some((v) => v == true))
+      return false
+    setModal(true)
+  }
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'name') {
+      setWarna({ ...isWarna, name: val })
+      if (val === "") {
+        setTouched({ ...touched, name: true })
+      } else {
+        setTouched({ ...touched, name: false })
+      }
+    } else if (kategori == 'utama') {
+      setWarna({ ...isWarna, utama: val })
+      if (val === "" || val.substring(0, 1) !== '#') {
+        setTouched({ ...touched, utama: true })
+      } else {
+        setTouched({ ...touched, utama: false })
+      }
+    } else if (kategori == 'bgUtama') {
+      setWarna({ ...isWarna, bgUtama: val })
+      if (val === "" || val.substring(0, 1) !== '#') {
+        setTouched({ ...touched, bgUtama: true })
+      } else {
+        setTouched({ ...touched, bgUtama: false })
+      }
+    } else if (kategori == 'bgIcon') {
+      setWarna({ ...isWarna, bgIcon: val })
+      if (val === "" || val.substring(0, 1) !== '#') {
+        setTouched({ ...touched, bgIcon: true })
+      } else {
+        setTouched({ ...touched, bgIcon: false })
+      }
+    } else if (kategori == 'bgFiturHome') {
+      setWarna({ ...isWarna, bgFiturHome: val })
+      if (val === "" || val.substring(0, 1) !== '#') {
+        setTouched({ ...touched, bgFiturHome: true })
+      } else {
+        setTouched({ ...touched, bgFiturHome: false })
+      }
+    } else if (kategori == 'bgFiturDivision') {
+      setWarna({ ...isWarna, bgFiturDivision: val })
+      if (val === "" || val.substring(0, 1) !== '#') {
+        setTouched({ ...touched, bgFiturDivision: true })
+      } else {
+        setTouched({ ...touched, bgFiturDivision: false })
+      }
+    } else if (kategori == 'bgTotalKegiatan') {
+      setWarna({ ...isWarna, bgTotalKegiatan: val })
+      if (val === "" || val.substring(0, 1) !== '#') {
+        setTouched({ ...touched, bgTotalKegiatan: true })
+      } else {
+        setTouched({ ...touched, bgTotalKegiatan: false })
+      }
     }
   }
 
@@ -102,8 +161,7 @@ export default function EditPaletteColor() {
               value={isWarna.name}
               onChange={
                 (e) => {
-                  setWarna({ ...isWarna, name: e.target.value })
-                  setTouched({ ...touched, name: true })
+                  onValidation('name', e.target.value)
                 }
               }
               error={
@@ -119,15 +177,15 @@ export default function EditPaletteColor() {
               size="md"
               radius="md"
               value={isWarna.utama}
-              onChangeEnd={
-                (color) => {
-                  setWarna({ ...isWarna, utama: color })
-                  setTouched({ ...touched, utama: true })
+              onChange={
+                (e) => {
+                  onValidation('utama', e)
                 }
               }
               error={
                 touched.utama && (
-                  isWarna.utama == "" ? "Warna Utama Tidak Boleh Kosong" : null
+                  isWarna.utama == "" ? "Warna Utama Tidak Boleh Kosong" :
+                    isWarna.utama.substring(0, 1) !== '#' ? "Kode Warna Tidak Valid" : null
                 )
               }
             />
@@ -138,15 +196,15 @@ export default function EditPaletteColor() {
               size="md"
               radius="md"
               value={isWarna.bgUtama}
-              onChangeEnd={
-                (color) => {
-                  setWarna({ ...isWarna, bgUtama: color })
-                  setTouched({ ...touched, bgUtama: true })
+              onChange={
+                (e) => {
+                  onValidation('bgUtama', e)
                 }
               }
               error={
                 touched.bgUtama && (
-                  isWarna.bgUtama == "" ? "Background Utama Tidak Boleh Kosong" : null
+                  isWarna.bgUtama == "" ? "Background Utama Tidak Boleh Kosong" :
+                    isWarna.bgUtama.substring(0, 1) !== '#' ? "Kode Warna Tidak Valid" : null
                 )
               }
             />
@@ -157,15 +215,15 @@ export default function EditPaletteColor() {
               size="md"
               radius="md"
               value={isWarna.bgIcon}
-              onChangeEnd={
-                (color) => {
-                  setWarna({ ...isWarna, bgIcon: color })
-                  setTouched({ ...touched, bgIcon: true })
+              onChange={
+                (e) => {
+                  onValidation('bgIcon', e)
                 }
               }
               error={
                 touched.bgIcon && (
-                  isWarna.bgIcon == "" ? "Background Icon Tidak Boleh Kosong" : null
+                  isWarna.bgIcon == "" ? "Background Icon Tidak Boleh Kosong" :
+                    isWarna.bgIcon.substring(0, 1) !== '#' ? "Kode Warna Tidak Valid" : null
                 )
               }
             />
@@ -176,15 +234,15 @@ export default function EditPaletteColor() {
               size="md"
               radius="md"
               value={isWarna.bgFiturHome}
-              onChangeEnd={
-                (color) => {
-                  setWarna({ ...isWarna, bgFiturHome: color })
-                  setTouched({ ...touched, bgFiturHome: true })
+              onChange={
+                (e) => {
+                  onValidation('bgFiturHome', e)
                 }
               }
               error={
                 touched.bgFiturHome && (
-                  isWarna.bgFiturHome == "" ? "Background Fitur Home Tidak Boleh Kosong" : null
+                  isWarna.bgFiturHome == "" ? "Background Fitur Home Tidak Boleh Kosong" :
+                    isWarna.bgFiturHome.substring(0, 1) !== '#' ? "Kode Warna Tidak Valid" : null
                 )
               }
             />
@@ -195,15 +253,15 @@ export default function EditPaletteColor() {
               size="md"
               radius="md"
               value={isWarna.bgFiturDivision}
-              onChangeEnd={
-                (color) => {
-                  setWarna({ ...isWarna, bgFiturDivision: color })
-                  setTouched({ ...touched, bgFiturDivision: true })
+              onChange={
+                (e) => {
+                  onValidation('bgFiturDivision', e)
                 }
               }
               error={
                 touched.bgFiturDivision && (
-                  isWarna.bgFiturDivision == "" ? "Background Fitur Divisi Tidak Boleh Kosong" : null
+                  isWarna.bgFiturDivision == "" ? "Background Fitur Divisi Tidak Boleh Kosong" :
+                    isWarna.bgFiturDivision.substring(0, 1) !== '#' ? "Kode Warna Tidak Valid" : null
                 )
               }
             />
@@ -214,15 +272,15 @@ export default function EditPaletteColor() {
               size="md"
               radius="md"
               value={isWarna.bgTotalKegiatan}
-              onChangeEnd={
-                (color) => {
-                  setWarna({ ...isWarna, bgTotalKegiatan: color })
-                  setTouched({ ...touched, bgTotalKegiatan: true })
+              onChange={
+                (e) => {
+                  onValidation('bgTotalKegiatan', e)
                 }
               }
               error={
                 touched.bgTotalKegiatan && (
-                  isWarna.bgTotalKegiatan == "" ? "Background Total Kegiatan Tidak Boleh Kosong" : null
+                  isWarna.bgTotalKegiatan == "" ? "Background Total Kegiatan Tidak Boleh Kosong" :
+                    isWarna.bgTotalKegiatan.substring(0, 1) !== '#' ? "Kode Warna Tidak Valid" : null
                 )
               }
             />
@@ -314,7 +372,7 @@ export default function EditPaletteColor() {
             radius={30}
             fullWidth
             onClick={() => {
-              setModal(true)
+              onCheck()
             }}
           >
             Simpan

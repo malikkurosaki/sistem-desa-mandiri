@@ -7,6 +7,7 @@ import { funCreateTheme } from '../lib/api_theme';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import _ from 'lodash';
 
 export default function CreatePaletteColor() {
   const [isValModal, setValModal] = useState(false);
@@ -61,7 +62,6 @@ export default function CreatePaletteColor() {
   }
 
   function onValidation(kategori: string, val: string) {
-    console.log('ini',val)
     if (kategori == 'name') {
       setWarna({ ...isWarna, name: val })
       if (val === "") {
@@ -71,47 +71,47 @@ export default function CreatePaletteColor() {
       }
     } else if (kategori == 'utama') {
       setWarna({ ...isWarna, utama: val })
-      if (val === "") {
+      if (val === "" || val.substring(0, 1) !== '#') {
         setTouched({ ...touched, utama: true })
       } else {
         setTouched({ ...touched, utama: false })
       }
     } else if (kategori == 'bgUtama') {
       setWarna({ ...isWarna, bgUtama: val })
-      if (val === "") {
+      if (val === "" || val.substring(0, 1) !== '#') {
         setTouched({ ...touched, bgUtama: true })
       } else {
         setTouched({ ...touched, bgUtama: false })
       }
     } else if (kategori == 'bgIcon') {
       setWarna({ ...isWarna, bgIcon: val })
-      if (val === "") {
+      if (val === "" || val.substring(0, 1) !== '#') {
         setTouched({ ...touched, bgIcon: true })
-      } else  {
+      } else {
         setTouched({ ...touched, bgIcon: false })
-      } 
+      }
     } else if (kategori == 'bgFiturHome') {
       setWarna({ ...isWarna, bgFiturHome: val })
-      if (val === "") {
+      if (val === "" || val.substring(0, 1) !== '#') {
         setTouched({ ...touched, bgFiturHome: true })
       } else {
         setTouched({ ...touched, bgFiturHome: false })
       }
     } else if (kategori == 'bgFiturDivision') {
       setWarna({ ...isWarna, bgFiturDivision: val })
-      if (val === "") {
+      if (val === "" || val.substring(0, 1) !== '#') {
         setTouched({ ...touched, bgFiturDivision: true })
       } else {
         setTouched({ ...touched, bgFiturDivision: false })
       }
     } else if (kategori == 'bgTotalKegiatan') {
       setWarna({ ...isWarna, bgTotalKegiatan: val })
-      if (val === "") {
+      if (val === "" || val.substring(0, 1) !== '#') {
         setTouched({ ...touched, bgTotalKegiatan: true })
       } else {
         setTouched({ ...touched, bgTotalKegiatan: false })
       }
-    } 
+    }
   }
 
   return (
@@ -127,7 +127,7 @@ export default function CreatePaletteColor() {
             radius="md"
             onChange={
               (e) => {
-                onValidation('name', e.target.value) 
+                onValidation('name', e.target.value)
               }
             }
             error={
@@ -144,12 +144,13 @@ export default function CreatePaletteColor() {
             radius="md"
             onChange={
               (e) => {
-                onValidation('utama', e) 
+                onValidation('utama', e)
               }
             }
             error={
               touched.utama && (
-                isWarna.utama == "" ? "Warna Utama Tidak Boleh Kosong" : null
+                isWarna.utama == "" ? "Warna Utama Tidak Boleh Kosong" :
+                  isWarna.utama.substring(0, 1) != "#" ? "Kode Warna Tidak Valid" : null
               )
             }
           />
@@ -161,12 +162,13 @@ export default function CreatePaletteColor() {
             radius="md"
             onChange={
               (e) => {
-                onValidation('bgUtama', e) 
+                onValidation('bgUtama', e)
               }
             }
             error={
               touched.bgUtama && (
-                isWarna.bgUtama == "" ? "Background Utama Tidak Boleh Kosong" : null
+                isWarna.bgUtama == "" ? "Background Utama Tidak Boleh Kosong" :
+                  isWarna.bgUtama.substring(0, 1) != "#" ? "Kode Warna Tidak Valid" : null
               )
             }
           />
@@ -178,12 +180,13 @@ export default function CreatePaletteColor() {
             radius="md"
             onChange={
               (e) => {
-                onValidation('bgIcon', e) 
+                onValidation('bgIcon', e)
               }
             }
             error={
               touched.bgIcon && (
-                isWarna.bgIcon == "" ? "Background Icon Tidak Boleh Kosong" : null
+                isWarna.bgIcon == "" ? "Background Icon Tidak Boleh Kosong" :
+                  isWarna.bgIcon.substring(0, 1) != "#" ? "Kode Warna Tidak Valid" : null
               )
             }
           />
@@ -195,12 +198,13 @@ export default function CreatePaletteColor() {
             radius="md"
             onChange={
               (e) => {
-                onValidation('bgFiturHome', e) 
+                onValidation('bgFiturHome', e)
               }
             }
             error={
               touched.bgFiturHome && (
-                isWarna.bgFiturHome == "" ? "Background Fitur Home Tidak Boleh Kosong" : null
+                isWarna.bgFiturHome == "" ? "Background Fitur Home Tidak Boleh Kosong" :
+                  isWarna.bgFiturHome.substring(0, 1) != "#" ? "Kode Warna Tidak Valid" : null
               )
             }
           />
@@ -212,12 +216,13 @@ export default function CreatePaletteColor() {
             radius="md"
             onChange={
               (e) => {
-                onValidation('bgFiturDivision', e) 
+                onValidation('bgFiturDivision', e)
               }
             }
             error={
               touched.bgFiturDivision && (
-                isWarna.bgFiturDivision == "" ? "Background Fitur Divisi Tidak Boleh Kosong" : null
+                isWarna.bgFiturDivision == "" ? "Background Fitur Divisi Tidak Boleh Kosong" :
+                  isWarna.bgFiturDivision.substring(0, 1) != "#" ? "Kode Warna Tidak Valid" : null
               )
             }
           />
@@ -229,12 +234,13 @@ export default function CreatePaletteColor() {
             radius="md"
             onChange={
               (e) => {
-                onValidation('bgTotalKegiatan', e) 
+                onValidation('bgTotalKegiatan', e)
               }
             }
             error={
               touched.bgTotalKegiatan && (
-                isWarna.bgTotalKegiatan == "" ? "Background Total Kegiatan Tidak Boleh Kosong" : null
+                isWarna.bgTotalKegiatan == "" ? "Background Total Kegiatan Tidak Boleh Kosong" : 
+                  isWarna.bgTotalKegiatan.substring(0, 1) != "#" ? "Kode Warna Tidak Valid" : null  
               )
             }
           />
