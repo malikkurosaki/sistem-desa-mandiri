@@ -26,12 +26,6 @@ export default function ViewHome() {
         }
         title='UPDATE'
       /> */}
-      {/* <NotificationCustome
-        title='Pengumuman'
-        desc='Pengumuman Upacara bendera Upacara bendera Upacara bendera Upacara bendera Upacara bendera'
-        onClick={() => {''}}
-        onClose={() => {''}}
-      /> */}
       <Box p={20}>
         <Stack >
           <Carosole />

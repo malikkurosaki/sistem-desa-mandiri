@@ -13,14 +13,14 @@ export default function NotificationCustome({ onClose, title, desc, onClick }: {
   useShallowEffect(() => {
     const timer = setTimeout(() => {
       setOpened(true);
-    }, 2000);
+    },50);
     return () => clearTimeout(timer);
   }, []);
 
   useShallowEffect(() => {
     const timer = setTimeout(() => {
       setOpened(false)
-    }, 6000);
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -42,7 +42,7 @@ export default function NotificationCustome({ onClose, title, desc, onClick }: {
                 ...state,
                 zIndex: 999,
                 position: 'fixed',
-                top: 50,
+                top: 10,
                 display: 'flex',
                 margin: 20,
                 justifyContent: 'center',
