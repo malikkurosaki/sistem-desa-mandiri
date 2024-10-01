@@ -15,7 +15,8 @@ export function RealtimePage({ wibuKey }: { wibuKey: string }) {
 
    async function onTekan() {
       setData({
-         name: Math.random().toString(),
+         title: Math.random().toString(),
+         desc: 'Anda memiliki pengumuman baru. Silahkan periksa detailnya.'
       })
    }
    return (
