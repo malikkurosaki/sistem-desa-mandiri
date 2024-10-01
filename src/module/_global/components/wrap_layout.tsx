@@ -34,7 +34,7 @@ export default function WrapLayout({ children, role, theme, user }: { children: 
 
    return (
       <>
-         {JSON.stringify(data)}
+         {/* {JSON.stringify(data)} */}
          {
             tampilNotif &&
             <NotificationCustome
