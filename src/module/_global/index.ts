@@ -1,5 +1,5 @@
 import prisma from "./bin/prisma";
-import { currentScroll, DIR, globalNotifPage, globalRole, pwd_key_config, TEMA } from "./bin/val_global";
+import { currentScroll, DIR, globalNotifPage, globalRole, keyWibu, pwd_key_config, TEMA } from "./bin/val_global";
 import SkeletonAvatar from "./components/skeleton_avatar";
 import SkeletonDetailDiscussionComment from "./components/skeleton_detail_discussion_comment";
 import SkeletonDetailDiscussionMember from "./components/skeleton_detail_discussion_member";
@@ -58,3 +58,4 @@ export { ScrollProvider }
 export { currentScroll }
 export { SkeletonUser }
 export { SkeletonList }
+export { keyWibu }

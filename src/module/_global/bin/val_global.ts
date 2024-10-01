@@ -13,6 +13,8 @@ export const DIR = {
 
 }
 
+export const keyWibu= 'padahariminggukuturutayahkekotanaikdelmanistimewakududukdimuka'
+
 export const TEMA = hookstate<IGlobalTema>({
    utama: "#19345E",
    bgUtama: "#F4F9FD",
