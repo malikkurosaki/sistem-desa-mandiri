@@ -1,19 +1,18 @@
 'use client'
-import { LayoutNavbarNew, TEMA, WARNA } from "@/module/_global";
+import { keyWibu, LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
-import { Avatar, Box, Button, Flex, Group, rem, Stack, Text, Textarea, TextInput } from "@mantine/core";
+import { Box, Button, Flex, Group, rem, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { IoIosArrowForward } from "react-icons/io";
-import CreateUsersAnnouncement from "./create_users_announcement";
-import { globalMemberAnnouncement } from "../lib/val_announcement";
+import { useWibuRealtime } from "wibu-realtime";
 import { funCreateAnnouncement } from "../lib/api_announcement";
-import { GroupData, ICreateData, IGroupData } from "../lib/type_announcement";
-import { useRouter } from "next/navigation";
-
-
+import { GroupData } from "../lib/type_announcement";
+import { globalMemberAnnouncement } from "../lib/val_announcement";
+import CreateUsersAnnouncement from "./create_users_announcement";
 
 export default function CreateAnnouncement() {
    const [isOpen, setOpen] = useState(false)
@@ -22,6 +21,10 @@ export default function CreateAnnouncement() {
    const [selectedFiles, setSelectedFiles] = useState<any>([])
    const router = useRouter()
    const tema = useHookstate(TEMA)
+   const [data, setData] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
 
    const [isChooseMember, setIsChooseMember] = useState(false)
@@ -32,8 +35,7 @@ export default function CreateAnnouncement() {
    const [touched, setTouched] = useState({
       title: false,
       desc: false
-    });
-
+   });
 
    async function onSubmit() {
       try {
@@ -45,11 +47,7 @@ export default function CreateAnnouncement() {
 
          if (response.success) {
             toast.success(response.message)
-            // setisData({
-            //    ...isData,
-            //    title: "",
-            //    desc: "",
-            // })
+            setData(response.notif)
             memberGroup.set([])
             router.push('/announcement')
          } else {
@@ -79,28 +77,28 @@ export default function CreateAnnouncement() {
 
    function onCheck() {
       if (Object.values(touched).some((v) => v == true))
-        return false
+         return false
       setOpen(true)
    }
-   
+
 
    function onValidation(kategori: string, val: string) {
       if (kategori == 'title') {
          setisData({ ...isData, title: val })
          if (val === "") {
-           setTouched({ ...touched, title: true })
+            setTouched({ ...touched, title: true })
          } else {
-           setTouched({ ...touched, title: false })
+            setTouched({ ...touched, title: false })
          }
       } else if (kategori == 'desc') {
-        setisData({ ...isData, desc: val })
-        if (val === "") {
-          setTouched({ ...touched, desc: true })
-        } else {
-          setTouched({ ...touched, desc: false })
-        }
-      } 
-    }
+         setisData({ ...isData, desc: val })
+         if (val === "") {
+            setTouched({ ...touched, desc: true })
+         } else {
+            setTouched({ ...touched, desc: false })
+         }
+      }
+   }
 
    return (
       <Box>
@@ -123,7 +121,7 @@ export default function CreateAnnouncement() {
                   touched.title && (
                      isData.title == "" ? "Judul Tidak Boleh Kosong" : null
                   )
-                }
+               }
             />
             <Textarea
                size="md"
@@ -145,7 +143,7 @@ export default function CreateAnnouncement() {
                   touched.desc && (
                      isData.desc == "" ? "Pengumuman Tidak Boleh Kosong" : null
                   )
-                }
+               }
             />
             <Box pt={10}>
                <Group justify="space-between" style={{

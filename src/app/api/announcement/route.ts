@@ -203,7 +203,7 @@ export async function POST(request: Request) {
         // create log user
         const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data pengumuman baru', table: 'announcement', data: data.id })
 
-        return NextResponse.json({ success: true, message: "Berhasil membuat pengumuman" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil membuat pengumuman", notif: dataNotif }, { status: 200 });
 
     } catch (error) {
         console.error(error);
