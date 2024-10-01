@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
@@ -109,6 +110,7 @@ export async function GET(request: Request) {
                select: {
                   DivisionDocumentFolderFile: {
                      select: {
+                        idStorage: true, 
                         id: true,
                         category: true,
                         name: true,
@@ -128,6 +130,7 @@ export async function GET(request: Request) {
 
             formatDataShare = dataShare.map((v: any) => ({
                ..._.omit(v, ["DivisionDocumentFolderFile"]),
+               idStorage: v.DivisionDocumentFolderFile.idStorage,
                id: v.DivisionDocumentFolderFile.id,
                category: v.DivisionDocumentFolderFile.category,
                name: v.DivisionDocumentFolderFile.name,
@@ -155,6 +158,7 @@ export async function GET(request: Request) {
             category: true,
             name: true,
             extension: true,
+            idStorage: true,
             path: true,
             User: {
                select: {
@@ -181,7 +185,7 @@ export async function GET(request: Request) {
          allData.push(...formatDataShare)
       }
 
-      const formatData = _.orderBy(allData, ['category', 'name'])
+      const formatData = _.orderBy(allData, ['category', 'name'], ['desc', 'asc']);
 
       let pathNow = path
       let jalur = []
@@ -215,7 +219,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: formatData, jalur }, { status: 200 });
 
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mendapatkan item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -281,11 +285,17 @@ export async function POST(request: Request) {
             extension: "folder",
             createdBy: user.id,
          },
+         select: {
+            id: true
+         }
       });
+
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User membuat folder baru', table: 'divisionDocumentFolderFile', data: data.id })
 
       return NextResponse.json({ success: true, message: "Berhasil membuat folder baru" }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal membuat folder, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
@@ -339,10 +349,13 @@ export async function PUT(request: Request) {
       })
 
 
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User mengubah nama file atau folder', table: 'divisionDocumentFolderFile', data: id })
+
 
       return NextResponse.json({ success: true, message: "Berhasil mengubah nama item" }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengubah nama item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
@@ -370,10 +383,13 @@ export async function DELETE(request: Request) {
          })
       }
 
+      // create log user
+      const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus file atau folder', table: 'divisionDocumentFolderFile', data: '' })
+
 
       return NextResponse.json({ success: true, message: "Berhasil menghapus item" }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal menghapus item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };

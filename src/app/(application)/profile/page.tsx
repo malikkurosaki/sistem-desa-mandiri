@@ -1,8 +1,8 @@
-import { ViewProfile } from "@/module/user";
+import { Profile } from "@/module/user";
 
 function Page() {
    return (
-      <ViewProfile />
+      <Profile />
    )
 }
 

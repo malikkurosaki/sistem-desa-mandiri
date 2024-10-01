@@ -1,9 +1,11 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import {
    Box,
    Button,
    Input,
+   rem,
+   Skeleton,
    Stack,
    Textarea,
    TextInput,
@@ -14,6 +16,7 @@ import toast from "react-hot-toast";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funEditTask, funGetTaskDivisionById } from "../lib/api_task";
 import { useShallowEffect } from "@mantine/hooks";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function EditTask() {
@@ -21,9 +24,11 @@ export default function EditTask() {
    const [title, setTitle] = useState("")
    const [openModal, setOpenModal] = useState(false)
    const param = useParams<{ id: string, detail: string }>()
+   const [loading, setLoading] = useState(true)
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       title: false,
-    });
+   });
 
    function onVerification() {
       if (title == "")
@@ -42,23 +47,26 @@ export default function EditTask() {
             toast.error(res.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal mengedit tugas, coba lagi nanti")
       }
    }
 
    async function getOneData() {
       try {
+         setLoading(true)
          const res = await funGetTaskDivisionById(param.detail, 'data');
          if (res.success) {
             setTitle(res.data.title);
          } else {
             toast.error(res.message);
          }
-
+         setLoading(false);
       } catch (error) {
          console.error(error);
          toast.error("Gagal mendapatkan data tugas divisi, coba lagi nanti");
+      } finally {
+         setLoading(false);
       }
    }
 
@@ -69,38 +77,50 @@ export default function EditTask() {
 
 
    return (
-      <Box pos={"relative"} h={"100vh"}>
+      <Box >
          <LayoutNavbarNew back="" title={"Edit Judul Tugas"} menu />
          <Box p={20}>
             <Stack pt={15}>
-               <TextInput
-                  styles={{
-                     input: {
-                        border: `1px solid ${"#D6D8F6"}`,
-                        borderRadius: 10,
-                     },
-                  }}
-                  required
-                  placeholder="Tugas"
-                  label="Judul Tugas"
-                  size="md"
-                  value={title}
-                  onChange={(e) => {
-                     setTitle(e.target.value) 
-                     setTouched({ ...touched, title: false })
-                  }}
-                  error={
-                     touched.title && (
-                       title == "" ? "Error! harus memasukkan judul tugas" : null
-                     )
-                   }
-                  onBlur={() => setTouched({ ...touched, title: true })}
-               />
+               {loading ?
+                  <Skeleton height={40} mt={20} radius={10} />
+                  :
+                  <TextInput
+                     styles={{
+                        input: {
+                           border: `1px solid ${"#D6D8F6"}`,
+                           borderRadius: 10,
+                        },
+                     }}
+                     required
+                     placeholder="Tugas"
+                     label="Judul Tugas"
+                     size="md"
+                     value={title}
+                     onChange={(e) => {
+                        setTitle(e.target.value)
+                        setTouched({ ...touched, title: false })
+                     }}
+                     error={
+                        touched.title && (
+                           title == "" ? "Error! harus memasukkan judul tugas" : null
+                        )
+                     }
+                     onBlur={() => setTouched({ ...touched, title: true })}
+                  />
+               }
             </Stack>
-            <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`,
+         }}>
+            {loading ?
+               <Skeleton height={50} radius={30} />
+               :
                <Button
                   c={"white"}
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
                   size="lg"
                   radius={30}
                   fullWidth
@@ -108,7 +128,8 @@ export default function EditTask() {
                >
                   Simpan
                </Button>
-            </Box>
+            }
+
          </Box>
 
 

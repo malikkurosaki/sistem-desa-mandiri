@@ -3,11 +3,12 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funCreateDetailProject } from '../lib/api_project';
-import { Box, Button, Group, Input, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { Box, Button, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
 import { DatePicker } from '@mantine/dates';
 import moment from 'moment';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
 
 export default function AddDetailTaskProject() {
    const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
@@ -15,6 +16,7 @@ export default function AddDetailTaskProject() {
    const [name, setName] = useState("")
    const [openModal, setOpenModal] = useState(false)
    const param = useParams<{ id: string }>()
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       name: false,
    });
@@ -45,7 +47,7 @@ export default function AddDetailTaskProject() {
             toast.error(res.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal menambahkan tugas, coba lagi nanti")
       }
    }
@@ -66,7 +68,7 @@ export default function AddDetailTaskProject() {
                   value={value}
                   onChange={setValue}
                   size="md"
-                  c={WARNA.biruTua}
+                  c={tema.get().utama}
                />
             </Group>
             <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
@@ -82,7 +84,7 @@ export default function AddDetailTaskProject() {
                   </Group>
                </Box>
                <Box>
-                  <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+                  <Text>Tanggal Berakhir</Text>
                   <Group
                      justify="center"
                      bg={"white"}
@@ -93,7 +95,7 @@ export default function AddDetailTaskProject() {
                   </Group>
                </Box>
             </SimpleGrid>
-            <Stack pt={15}>
+            <Stack pt={15} pb={100}>
                <TextInput
                   styles={{
                      input: {
@@ -118,18 +120,22 @@ export default function AddDetailTaskProject() {
                   }
                />
             </Stack>
-            <Box mt={"xl"}>
-               <Button
-                  c={"white"}
-                  bg={WARNA.biruTua}
-                  size="lg"
-                  radius={30}
-                  fullWidth
-                  onClick={() => { onVerification() }}
-               >
-                  Simpan
-               </Button>
-            </Box>
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`,
+         }}>
+            <Button
+               c={"white"}
+               bg={tema.get().utama}
+               size="lg"
+               radius={30}
+               fullWidth
+               onClick={() => { onVerification() }}
+            >
+               Simpan
+            </Button>
          </Box>
 
 

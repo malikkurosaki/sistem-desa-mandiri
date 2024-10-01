@@ -1,4 +1,4 @@
-import { seederAdmin, seederAdminRole, seederDesa, seederGroup, seederPosition, seederUser, seederUserRole } from '@/module/seeder';
+import { seederAdmin, seederAdminRole, seederDesa, seederGroup, seederPosition, seederTheme, seederUser, seederUserRole } from '@/module/seeder';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient()
 
@@ -43,6 +43,34 @@ async function main() {
       })
    }
 
+   // THEME
+   for (let data of seederTheme) {
+      await prisma.colorTheme.upsert({
+         where: {
+            id: data.id
+         },
+         update: {
+            name: data.name,
+            utama: data.utama,
+            bgUtama: data.bgUtama,
+            bgIcon: data.bgIcon,
+            bgFiturHome: data.bgFiturHome,
+            bgFiturDivision: data.bgFiturDivisi,
+            bgTotalKegiatan: data.bgTotalKegiatan
+         },
+         create: {
+            id: data.id,
+            name: data.name,
+            utama: data.utama,
+            bgUtama: data.bgUtama,
+            bgIcon: data.bgIcon,
+            bgFiturHome: data.bgFiturHome,
+            bgFiturDivision: data.bgFiturDivisi,
+            bgTotalKegiatan: data.bgTotalKegiatan
+         }
+      })
+   }
+
    // DESA
    for (let data of seederDesa) {
       await prisma.village.upsert({
@@ -51,12 +79,14 @@ async function main() {
          },
          update: {
             name: data.name,
-            desc: data.desc
+            desc: data.desc,
+            idTheme: "theme1"
          },
          create: {
             id: data.id,
             name: data.name,
-            desc: data.desc
+            desc: data.desc,
+            idTheme: "theme1"
          }
       })
    }
@@ -127,7 +157,7 @@ async function main() {
             idUserRole: data.idUserRole,
             nik: data.nik,
             name: data.name,
-            phone: data.phone,
+            // phone: data.phone,
             email: data.email,
             gender: data.gender
          },

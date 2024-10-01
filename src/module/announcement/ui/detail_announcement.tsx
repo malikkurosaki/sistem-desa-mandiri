@@ -1,5 +1,5 @@
 "use client"
-import { ActionIcon, Box, Flex, Grid, Group, List, Skeleton, Spoiler, Stack, Text } from "@mantine/core";
+import { ActionIcon, Box, Center, Flex, Grid, Group, List, Skeleton, Spoiler, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { BsCardText } from "react-icons/bs";
@@ -57,36 +57,43 @@ export default function DetailAnnouncement({ id }: { id: string }) {
                         <Skeleton height={18} width={150} />
                      </Box>
                   </Group>
-                  <Grid gutter={'md'}>
-                     <Grid.Col span={1}>
-                        <ActionIcon
-                           variant="light"
-                           bg={"#DCEED8"}
-                           size={30}
-                           radius={100}
-                           aria-label="icon"
-                        >
-                           <Skeleton height={25} width={40} />
-                        </ActionIcon>
-                     </Grid.Col>
-                     <Grid.Col span={11}>
-                        <Spoiler maxHeight={100} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
-                           <Skeleton mt={5} ml={5} height={18} width={150} />
-                        </Spoiler>
-                     </Grid.Col>
-                  </Grid>
+                  <Group>
+                     <ActionIcon
+                        variant="light"
+                        bg={"#DCEED8"}
+                        size={30}
+                        radius={100}
+                        aria-label="icon"
+                     >
+                        <Skeleton height={25} width={40} />
+                     </ActionIcon>
+                     <Box>
+                        <Skeleton height={18} width={150} />
+                     </Box>
+                  </Group>
+
                </Stack>
                :
                <Stack>
-                  <Group>
-                     <TfiAnnouncement size={25} />
-                     <Text fw={'bold'}>{isData?.title}</Text>
-                  </Group>
                   <Grid gutter={'md'}>
-                     <Grid.Col span={1}>
-                        <BsCardText size={25} />
+                     <Grid.Col span={2}>
+                        <Center>
+                           <TfiAnnouncement size={30} />
+                        </Center>
                      </Grid.Col>
-                     <Grid.Col span={11}>
+                     <Grid.Col span={10}>
+                        <Spoiler maxHeight={100} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
+                           <Text fw={'bold'}>{isData?.title}</Text>
+                        </Spoiler>
+                     </Grid.Col>
+                  </Grid>
+                  <Grid gutter={'md'}>
+                     <Grid.Col span={2}>
+                        <Center>
+                           <BsCardText size={30} />
+                        </Center>
+                     </Grid.Col>
+                     <Grid.Col span={10}>
                         <Spoiler maxHeight={100} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
                            <Text>{isData?.desc}</Text>
                         </Spoiler>
@@ -108,10 +115,12 @@ export default function DetailAnnouncement({ id }: { id: string }) {
                      return (
                         <Box key={i} mb={10}>
                            <Text>{isMember[v]?.[0].group}</Text>
-                           <List>
+                           <List ml={10}>
                               {
                                  isMember[v].map((item: any, x: any) => {
-                                    return <List.Item key={x}>{item.division}</List.Item>
+                                    return <List.Item key={x}>
+                                       <Text lineClamp={1}>{item.division}</Text>
+                                    </List.Item>
                                  })
                               }
                            </List>

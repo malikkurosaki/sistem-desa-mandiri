@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -30,13 +31,16 @@ export async function GET(request: Request) {
             id: true,
             name: true,
             isActive: true
+         },
+         orderBy: {
+            name: 'asc'
          }
       });
 
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan grup", data, }, { status: 200 });
 
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mendapatkan grup, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -56,6 +60,9 @@ export async function POST(request: Request) {
             name,
             idVillage: String(villaId)
          },
+         select: {
+            id: true
+         }
       });
 
       revalidatePath('/api/group?active=true', "page")
@@ -63,9 +70,13 @@ export async function POST(request: Request) {
       revalidatePath('/group?active=true', 'page')
       revalidateTag('group')
 
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data grup', table: 'group', data: data.id })
+
+
       return NextResponse.json({ success: true, message: "Berhasil menambahkan grup", data, }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal menambahkan grup, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };

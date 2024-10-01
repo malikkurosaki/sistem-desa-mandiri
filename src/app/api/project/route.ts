@@ -1,9 +1,9 @@
-import { prisma } from "@/module/_global";
+import { DIR, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
-
+import { createLogUser } from "@/module/user";
 
 
 // GET ALL DATA PROJECT
@@ -13,28 +13,69 @@ export async function GET(request: Request) {
         if (user.id == undefined) {
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
-
+        const roleUser = user.idUserRole
         const { searchParams } = new URL(request.url);
 
+        let grup
         const name = searchParams.get('search');
         const status = searchParams.get('status');
+        const idGroup = searchParams.get("group");
+        const page = searchParams.get('page');
+        const dataSkip = Number(page) * 10 - 10;
         const villageId = user.idVillage
-        const groupId = user.idGroup
         const userId = user.id
 
+        if (idGroup == "null" || idGroup == undefined) {
+            grup = user.idGroup
+        } else {
+            grup = idGroup
+        }
 
-        const data = await prisma.project.findMany({
+        const cek = await prisma.group.count({
             where: {
+                id: grup,
+                isActive: true
+            }
+        })
+
+        if (cek == 0) {
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan data kegiatan, data tidak ditemukan", }, { status: 404 });
+        }
+
+        let kondisi: any = {
+            isActive: true,
+            idVillage: String(villageId),
+            idGroup: grup,
+            title: {
+                contains: (name == undefined || name == "null") ? "" : name,
+                mode: "insensitive"
+            },
+            status: (status == "0" || status == "1" || status == "2" || status == "3") ? Number(status) : 0
+        }
+
+        if (roleUser != "supadmin" && roleUser != "cosupadmin" && roleUser != "admin") {
+            kondisi = {
                 isActive: true,
                 idVillage: String(villageId),
-                idGroup: String(groupId),
-                createdBy: String(userId),
+                idGroup: grup,
                 title: {
                     contains: (name == undefined || name == "null") ? "" : name,
                     mode: "insensitive"
                 },
-                status: (status == "0" || status == "1" || status == "2" || status == "3") ? Number(status) : 0
-            },
+                status: (status == "0" || status == "1" || status == "2" || status == "3") ? Number(status) : 0,
+                ProjectMember: {
+                    some: {
+                        idUser: String(userId)
+                    }
+                }
+            }
+        }
+
+
+        const data = await prisma.project.findMany({
+            skip: dataSkip,
+            take: 10,
+            where: kondisi,
             select: {
                 id: true,
                 title: true,
@@ -48,6 +89,9 @@ export async function GET(request: Request) {
                         idUser: true
                     }
                 }
+            },
+            orderBy:{
+                createdAt: 'desc'
             }
         })
 
@@ -57,11 +101,26 @@ export async function GET(request: Request) {
         }))
 
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan project", data: omitData, }, { status: 200 });
+        const totalData = await prisma.project.count({
+            where: kondisi
+        })
+
+        const filter = await prisma.group.findUnique({
+            where: {
+                id: grup
+            },
+            select: {
+                id: true,
+                name: true
+            }
+        })
+
+
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kegiatan", data: omitData, filter, total: totalData }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -73,9 +132,13 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
 
-        const { idGroup, title, task, member, file } = (await request.json())
-        const userId = user.id
+        const body = await request.formData()
+        const dataBody = body.get("data")
+        const cekFile = body.has("file0")
 
+        const { idGroup, title, task, member } = JSON.parse(dataBody as string)
+        const userId = user.id
+        const userRoleLogin = user.idUserRole
 
         const data = await prisma.project.create({
             data: {
@@ -105,7 +168,7 @@ export async function POST(request: Request) {
 
         if (member.length > 0) {
             const dataMember = member.map((v: any) => ({
-                ..._.omit(v, ["idUser", "name"]),
+                ..._.omit(v, ["idUser", "name", "img"]),
                 idProject: data.id,
                 idUser: v.idUser,
             }))
@@ -115,32 +178,102 @@ export async function POST(request: Request) {
             })
         }
 
-        let fileFix: any[] = []
-
-        if (file.length > 0) {
-            file.map((v: any, index: any) => {
-                const f: any = file[index].get('file')
-                const fName = f.name
-                const fExt = fName.split(".").pop()
-                // funUploadFile(fName, f)
-
-                const dataFile = {
-                    name: fName,
-                    extension: fExt,
-                    idProject: data.id,
+        if (cekFile) {
+            for (var pair of body.entries()) {
+                if (String(pair[0]).substring(0, 4) == "file") {
+                    const file = body.get(pair[0]) as File
+                    const fExt = file.name.split(".").pop()
+                    const fName = file.name.replace("." + fExt, "")
+                    const upload = await funUploadFile({ file: file, dirId: DIR.project })
+                    if (upload.success) {
+                        await prisma.projectFile.create({
+                            data: {
+                                idStorage: upload.data.id,
+                                idProject: data.id,
+                                name: fName,
+                                extension: String(fExt)
+                            }
+                        })
+                    }
                 }
+            }
+        }
 
-                fileFix.push(dataFile)
+        const memberNotif = await prisma.projectMember.findMany({
+            where: {
+                idProject: data.id
+            },
+            select: {
+                idUser: true
+            }
+        })
+
+        const dataNotif = memberNotif.map((v: any) => ({
+            ..._.omit(v, ["idUser"]),
+            idUserTo: v.idUser,
+            idUserFrom: userId,
+            category: 'project',
+            idContent: data.id,
+            title: 'Kegiatan Baru',
+            desc: 'Terdapat kegiatan baru. Silahkan periksa detailnya.'
+        }))
+
+        if (userRoleLogin != "supadmin") {
+            const perbekel = await prisma.user.findFirst({
+                where: {
+                    isActive: true,
+                    idUserRole: "supadmin",
+                    idVillage: user.idVillage
+                }
             })
 
-            const insertFile = await prisma.divisionProjectFile.createMany({
-                data: fileFix
+            dataNotif.push({
+                idUserTo: perbekel?.id,
+                idUserFrom: userId,
+                category: 'project',
+                idContent: data.id,
+                title: 'Kegiatan Baru',
+                desc: 'Terdapat kegiatan baru. Silahkan periksa detailnya.'
             })
+        } else {
+            const atasanGroup = await prisma.user.findMany({
+                where: {
+                    isActive: true,
+                    idGroup: idGroup,
+                    AND: {
+                        OR: [
+                            { idUserRole: 'cosupadmin' },
+                            { idUserRole: 'admin' },
+                        ]
+                    }
+                },
+                select:{
+                    id: true
+                }
+            })
+
+            const omitData = atasanGroup.map((v: any) => ({
+                ..._.omit(v, ["id"]),
+                idUserTo: v.id,
+                idUserFrom: userId,
+                category: 'project',
+                idContent: data.id,
+                title: 'Kegiatan Baru',
+                desc: 'Terdapat kegiatan baru. Silahkan periksa detailnya.'
+            }))
+
+            dataNotif.push(...omitData)
 
         }
 
+        const insertNotif = await prisma.notifications.createMany({
+            data: dataNotif
+        })
 
-        return NextResponse.json({ success: true, message: "Berhasil membuat kegiatan", data: data, }, { status: 200 });
+
+        // create log user
+        const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data kegiatan', table: 'project', data: data.id })
+        return NextResponse.json({ success: true, message: "Berhasil membuat kegiatan" }, { status: 200 });
 
     } catch (error) {
         console.error(error);

@@ -1,12 +1,14 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import {
+  ActionIcon,
   Avatar,
   Box,
   Button,
   Flex,
   Group,
   Input,
+  rem,
   SimpleGrid,
   Stack,
   Text,
@@ -18,12 +20,15 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import moment from "moment";
 import { IFormDateProject } from "../lib/type_project";
+import { HiChevronLeft } from "react-icons/hi2";
+import { useHookstate } from "@hookstate/core";
 
 
-export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateProject) => void }) {
+export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: boolean) => void, onSet: (val: IFormDateProject) => void }) {
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const router = useRouter()
   const [title, setTitle] = useState("")
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     title: false
   });
@@ -35,7 +40,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
     if (title == "")
       return toast.error("Error! harus memasukkan judul tugas")
 
-    onClose(
+    onSet(
       {
         dateStart: value[0],
         dateEnd: value[1],
@@ -47,7 +52,13 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
 
   return (
     <Box>
-      <LayoutNavbarNew back="" title={"Tanggal Tugas"} menu />
+      <LayoutNavbarNew state={
+        <Box>
+          <ActionIcon variant="light" onClick={() => { onClose(true) }} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
+            <HiChevronLeft size={20} color='white' />
+          </ActionIcon>
+        </Box>
+      } title={"Tanggal dan Tugas"} menu />
       <Box p={20}>
         <Group
           justify="center"
@@ -61,7 +72,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
             value={value}
             onChange={setValue}
             size="md"
-            c={WARNA.biruTua}
+            c={tema.get().utama}
           />
         </Group>
         <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
@@ -77,7 +88,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
             </Group>
           </Box>
           <Box>
-            <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+            <Text>Tanggal Berakhir</Text>
             <Group
               justify="center"
               bg={"white"}
@@ -88,7 +99,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
             </Group>
           </Box>
         </SimpleGrid>
-        <Stack pt={15}>
+        <Stack pt={15} pb={100}>
           <TextInput
             styles={{
               input: {
@@ -96,7 +107,7 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
                 borderRadius: 10,
               },
             }}
-            placeholder="Input Nama Tahapan"
+            placeholder="Input Judul Tahapan"
             label="Judul Tahapan"
             required
             size="md"
@@ -108,15 +119,20 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
             onBlur={() => setTouched({ ...touched, title: true })}
             error={
               touched.title && (
-                title == "" ? "Judul Tidak Boleh Kosong" : null
+                title == "" ? "Judul Tahapan Tidak Boleh Kosong" : null
               )
             }
           />
         </Stack>
-        <Box mt={"xl"}>
+      </Box>
+        <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`,
+         }}>
           <Button
             c={"white"}
-            bg={WARNA.biruTua}
+            bg={tema.get().utama}
             size="lg"
             radius={30}
             fullWidth
@@ -125,7 +141,6 @@ export default function ViewDateEndTask({ onClose }: { onClose: (val: IFormDateP
             Simpan
           </Button>
         </Box>
-      </Box>
     </Box>
   );
 }

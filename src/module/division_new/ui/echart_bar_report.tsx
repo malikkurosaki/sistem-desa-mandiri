@@ -4,23 +4,26 @@ import EChartsReact from "echarts-for-react";
 import { useShallowEffect } from '@mantine/hooks';
 import * as echarts from 'echarts';
 import { Box } from '@mantine/core';
-import { WARNA } from '@/module/_global';
+import { TEMA,  } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 
-export default function EchartBarReport() {
+export default function EchartBarReport({ data }: { data: any }) {
   const [options, setOptions] = useState<EChartsOption>({});
+  const color = ["#F3C96B", "#9EC97F", "#5971C0"]
+  const tema = useHookstate(TEMA)
 
   useShallowEffect(() => {
-    loadData()
-  }, [])
+    loadData(data)
+  }, [data])
 
-  const loadData = () => {
+  const loadData = (value: any) => {
     const option: EChartsOption = {
       title: {
         text: "DOKUMEN",
         top: '2%',
         left: 'center',
         textStyle: {
-          color: WARNA.biruTua
+          color: tema.get().utama
         }
       },
       tooltip: {
@@ -38,7 +41,7 @@ export default function EchartBarReport() {
       xAxis: [
         {
           type: 'category',
-          data: ['File', 'Folder', 'Documen'],
+          data: value.map(({ name }: any) => name),
           axisLabel: {
             fontSize: 14
           },
@@ -64,33 +67,19 @@ export default function EchartBarReport() {
       ],
       series: [
         {
-          name: 'Direct',
+          name: 'Dokumen',
           type: 'bar',
           barWidth: '70%',
-          data: [
-            {
-              value: 78,
-              name: 'Confidence',
+          data: value.map(
+            (v: any, i: any) =>
+            ({
+              name: v.name,
+              value: v.value,
               itemStyle: {
-                color: "#F3C96B"
-              }
-            },
-            {
-              value: 35,
-              name: 'Supportive',
-              itemStyle: {
-                color: "#9EC97F"
-              }
-            },
-            {
-              value: 58,
-              name: 'Positive',
-              itemStyle: {
-                color: "#5971C0"
-              }
-            },
-
-          ],
+                color: color[i]
+              },
+            })
+          ),
         }
       ]
     };

@@ -1,6 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
-import { stat } from "fs";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
 import "moment/locale/id";
@@ -41,9 +41,11 @@ export async function GET(request: Request, context: { params: { id: string } })
                 desc: true,
                 status: true,
                 createdAt: true,
+                createdBy: true,
                 User: {
                     select: {
-                        name: true
+                        name: true,
+                        img: true
                     }
                 },
                 DivisionDisscussionComment: {
@@ -53,7 +55,8 @@ export async function GET(request: Request, context: { params: { id: string } })
                         createdAt: true,
                         User: {
                             select: {
-                                name: true
+                                name: true,
+                                img: true
                             }
                         }
                     }
@@ -63,16 +66,18 @@ export async function GET(request: Request, context: { params: { id: string } })
 
         const { ...userMember } = data
         const username = data?.User.name
-        const createdAt = moment(data?.createdAt).format("LL")
+        const user_img = data?.User.img
+        const createdAt = moment(data?.createdAt).format("ll")
+        const isCreator = data?.createdBy == user.id
 
 
 
-        const result = { ...userMember, username, createdAt }
+        const result = { ...userMember, username, createdAt, user_img, isCreator }
 
 
         const omitData = _.omit(result, ["User"])
         const comments = omitData.DivisionDisscussionComment.map((comment: any) => {
-            return { ...comment, username: comment.User.name };
+            return { ...comment, username: comment.User.name, img: comment.User.img };
         });
 
 
@@ -85,13 +90,13 @@ export async function GET(request: Request, context: { params: { id: string } })
         return NextResponse.json({ success: true, message: "Berhasil mendapatkan diskusi", data: response }, { status: 200 });
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return NextResponse.json({ success: false, message: "Gagal mendapatkan diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
 
-// ONE OR CLOSE DISCUSSION
+// OPEN OR CLOSE DISCUSSION
 export async function DELETE(request: Request, context: { params: { id: string } }) {
     try {
         const user = await funGetUserByCookies()
@@ -127,10 +132,14 @@ export async function DELETE(request: Request, context: { params: { id: string }
                 status: newStatus
             }
         });
+
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate status diskusi', table: 'divisionDisscussion', data: id })
+
         return NextResponse.json({ success: true, message: "Berhasil mengedit diskusi" }, { status: 200 });
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return NextResponse.json({ success: false, message: "Gagal mengedit diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
@@ -163,9 +172,12 @@ export async function PUT(request: Request, context: { params: { id: string } })
                 isActive: false
             }
         });
+        // create log user
+        const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus data diskusi', table: 'divisionDisscussion', data: id })
+
         return NextResponse.json({ success: true, message: "Berhasil menghapus diskusi" }, { status: 200 });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return NextResponse.json({ success: false, message: "Gagal menghapus diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
@@ -199,10 +211,13 @@ export async function POST(request: Request, context: { params: { id: string } }
                 desc: desc
             }
         });
+
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data diskusi', table: 'divisionDisscussion', data: id })
         return NextResponse.json({ success: true, message: "Berhasil mengedit diskusi" }, { status: 200 });
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return NextResponse.json({ success: false, message: "Gagal mengedit diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

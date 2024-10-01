@@ -60,10 +60,14 @@ export interface IDataMemberTaskDivision {
    idUser: string
    name: string
    email: string
+   img: string
+   position: string
 }
 
 export interface IDataFileTaskDivision {
    id: string
    name: string
-   extension: string
+   extension: string,
+   nameInStorage: string,
+   idStorage: string
 }

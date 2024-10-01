@@ -6,16 +6,10 @@ export const funGetAllTask = async (path?: string) => {
 }
 
 
-export const funCreateTask = async (data: IFormTaskDivision) => {
-   if (data.title.length < 3)
-      return { success: false, message: 'Nama Kegiatan minimal 3 karakter' }
-
+export const funCreateTask = async (data: FormData) => {
    const response = await fetch("/api/task", {
       method: "POST",
-      headers: {
-         "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: data,
    });
    return await response.json().catch(() => null);
 };
@@ -122,6 +116,32 @@ export const funEditTask = async (path: string, data: { title: string }) => {
          "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+};
+
+export const funDeleteFileTask = async (path: string) => {
+   const response = await fetch(`/api/task/file/${path}`, {
+      method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+      },
+   });
+   return await response.json().catch(() => null);
+};
+
+export const funCekNamFileUploadTask = async (path: string, data: FormData) => {
+   const response = await fetch(`/api/task/file/${path}`, {
+      method: "PUT",
+      body: data,
+   });
+   return await response.json().catch(() => null);
+};
+
+export const funAddFileTask = async (path: string, data: FormData) => {
+   const response = await fetch(`/api/task/file/${path}`, {
+      method: "POST",
+      body: data,
    });
    return await response.json().catch(() => null);
 };

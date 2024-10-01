@@ -1,7 +1,9 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
+import "moment/locale/id";
 import { NextResponse } from "next/server";
 
 
@@ -56,12 +58,15 @@ export async function GET(request: Request, context: { params: { id: string } })
             }
          })
 
-         const kalender = await prisma.divisionCalendar.count({
+         const kalender = await prisma.divisionCalendarReminder.count({
             where: {
                idDivision: String(id),
                isActive: true,
                dateStart: {
                   lte: new Date()
+               },
+               DivisionCalendar: {
+                  isActive: true
                }
             }
          })
@@ -81,20 +86,39 @@ export async function GET(request: Request, context: { params: { id: string } })
                idDivision: String(id),
                status: 0,
                isActive: true,
-               dateStart: new Date()
+               dateStart: {
+                  lte: new Date()
+               },
+               dateEnd: {
+                  gte: new Date()
+               },
+               DivisionProject: {
+                  status: {
+                     lt: 3
+                  }
+               }
             },
             select: {
                id: true,
                title: true,
                dateStart: true,
                dateEnd: true,
+               DivisionProject: {
+                  select: {
+                     title: true
+                  }
+               }
+            },
+            orderBy: {
+               dateEnd: "asc"
             }
          })
 
          allData = tugas.map((v: any) => ({
-            ..._.omit(v, ["dateStart", "dateEnd"]),
-            dateStart: moment(v.dateStart).format("LL"),
-            dateEnd: moment(v.dateEnd).format("LL")
+            ..._.omit(v, ["dateStart", "dateEnd", "DivisionProject"]),
+            dateStart: moment(v.dateStart).format("ll"),
+            dateEnd: moment(v.dateEnd).format("ll"),
+            projectTitle: v.DivisionProject.title
          }))
       } else if (kategori == "new-file") {
          allData = await prisma.divisionDocumentFolderFile.findMany({
@@ -109,6 +133,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                id: true,
                name: true,
                extension: true,
+               path: true,
             },
             orderBy: {
                createdAt: "desc"
@@ -141,7 +166,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 
          allData = diskusi.map((v: any) => ({
             ..._.omit(v, ["createdAt", "User"]),
-            date: moment(v.dateStart).format("LL"),
+            date: moment(v.dateStart).format("ll"),
             user: v.User.name
          }))
       }
@@ -152,7 +177,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 
 
    catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -194,6 +219,9 @@ export async function DELETE(request: Request, context: { params: { id: string }
          },
       });
 
+      // create log user
+      const log = await createLogUser({ act: 'DELETE', desc: 'User mengeluarkan anggota divisi', table: 'division', data: idDivision })
+
       return NextResponse.json(
          {
             success: true,
@@ -202,7 +230,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
          { status: 200 }
       );
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -245,6 +273,9 @@ export async function PUT(request: Request, context: { params: { id: string } })
          }
       });
 
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate status anggota divisi', table: 'division', data: idDivision })
+
       return NextResponse.json(
          {
             success: true,
@@ -253,7 +284,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
          { status: 200 }
       );
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengubah status admin divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -290,7 +321,7 @@ export async function POST(request: Request, context: { params: { id: string } }
 
 
       const dataMember = member.map((v: any) => ({
-         ..._.omit(v, ["name"]),
+         ..._.omit(v, ["name", "img"]),
          idUser: v.idUser,
          idDivision: idDivision,
       }))
@@ -299,9 +330,12 @@ export async function POST(request: Request, context: { params: { id: string } }
          data: dataMember
       })
 
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User menambah anggota divisi', table: 'division', data: idDivision })
+
       return NextResponse.json({ success: true, message: "Berhasil menambahkan anggota divisi" }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal menambahkan anggota divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };

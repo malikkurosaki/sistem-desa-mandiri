@@ -1,7 +1,7 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
-import { Box, Button, Select, Stack, Textarea, TextInput } from '@mantine/core';
+import { Box, Button, rem, Select, Skeleton, Stack, Textarea, TextInput } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -9,12 +9,14 @@ import toast from 'react-hot-toast';
 import { funEditDivision, funGetDivisionById } from '../lib/api_division';
 import { funGetAllGroup, IDataGroup } from '@/module/group';
 import { funGetUserByCookies } from '@/module/auth';
+import { useHookstate } from '@hookstate/core';
 
 
 export default function EditDivision() {
   const [openModal, setOpenModal] = useState(false)
   const router = useRouter()
   const param = useParams<{ id: string }>()
+  const tema = useHookstate(TEMA)
   const [loading, setLoading] = useState(false)
   const [body, setBody] = useState<any>({
     idGroup: "",
@@ -62,7 +64,7 @@ export default function EditDivision() {
       }
       setOpenModal(false)
     } catch (error) {
-      console.log(error)
+      console.error(error)
       setOpenModal(false)
       toast.error("Gagal mengedit divisi, coba lagi nanti");
     }
@@ -78,38 +80,55 @@ export default function EditDivision() {
       <LayoutNavbarNew back="" title="Edit Divisi" menu />
       <Box p={20}>
         <Stack>
-          <TextInput
-            placeholder="Judul"
-            label="Judul"
-            size="md"
-            required
-            radius={40}
-            value={body.name}
-            onChange={(e) => {
-              setBody({ ...body, name: e.target.value })
-              setTouched({ ...touched, name: false })
-            }}
-            onBlur={() => setTouched({ ...touched, name: true })}
-            error={
-              touched.name && (
-                body.name == "" ? "Judul Tidak Boleh Kosong" : null
-              )
-            }
-          />
-          <Textarea placeholder="Deskripsi" label="Deskripsi" size="md" radius={10}
-            value={body.desc}
-            onChange={(e) => { setBody({ ...body, desc: e.currentTarget.value }) }}
-            styles={{
-              input: {
-                height: "40vh"
-              }
-            }}
-          />
+          {loading ?
+            <>
+              <Skeleton height={40} mt={20} radius={30} />
+              <Skeleton height={"40vh"} mt={20} radius={10} />
+            </>
+            :
+            <>
+              <TextInput
+                placeholder="Judul"
+                label="Judul"
+                size="md"
+                required
+                radius={40}
+                value={body.name}
+                onChange={(e) => {
+                  setBody({ ...body, name: e.target.value })
+                  setTouched({ ...touched, name: false })
+                }}
+                onBlur={() => setTouched({ ...touched, name: true })}
+                error={
+                  touched.name && (
+                    body.name == "" ? "Judul Tidak Boleh Kosong" : null
+                  )
+                }
+              />
+              <Textarea placeholder="Deskripsi" label="Deskripsi" size="md" radius={10}
+                value={body.desc}
+                onChange={(e) => { setBody({ ...body, desc: e.currentTarget.value }) }}
+                styles={{
+                  input: {
+                    height: "40vh"
+                  }
+                }}
+              />
+            </>
+          }
         </Stack>
-        <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
+      </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${tema.get().bgUtama}`,
+      }}>
+        {loading ?
+          <Skeleton height={50} radius={30} />
+          :
           <Button
             color="white"
-            bg={WARNA.biruTua}
+            bg={tema.get().utama}
             size="lg"
             radius={30}
             fullWidth
@@ -125,7 +144,7 @@ export default function EditDivision() {
           >
             Simpan
           </Button>
-        </Box>
+        }
       </Box>
       <LayoutModal opened={openModal} onClose={() => setOpenModal(false)} description='Apakah Anda yakin ingin edit data'
         onYes={(val) => {

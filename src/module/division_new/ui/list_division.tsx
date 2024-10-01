@@ -1,16 +1,18 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
+import { currentScroll, globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HiMenu } from 'react-icons/hi';
-import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiMiniUserGroup, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
+import { HiMagnifyingGlass, HiMiniUserGroup, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
 import { MdAccountCircle } from 'react-icons/md';
 import DrawerDivision from './drawer_division';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { IDataDivison } from '../lib/type_division';
 import { funGetAllDivision } from '../lib/api_division';
 import toast from 'react-hot-toast';
+import { useHookstate } from '@hookstate/core';
+import _ from 'lodash';
 
 export default function ListDivision() {
   const [isList, setIsList] = useState(false)
@@ -22,21 +24,32 @@ export default function ListDivision() {
   const searchParams = useSearchParams()
   const group = searchParams.get('group')
   const [loading, setLoading] = useState(true)
+  const [nameGroup, setNameGroup] = useState('')
+  const roleLogin = useHookstate(globalRole)
+  const tema = useHookstate(TEMA)
+  const { value: containerRef } = useHookstate(currentScroll);
+  const [isPage, setPage] = useState(1)
+
+  const paddingLift = useMediaQuery('(max-width: 505px)')
 
 
   const handleList = () => {
     setIsList(!isList)
   }
 
-  const fetchData = async (search: string) => {
+  const fetchData = async (loading: boolean) => {
     try {
-      setData([]);
-      setLoading(true);
-      const response = await funGetAllDivision('?search=' + search + '&group=' + group)
-
+      if (loading)
+        setLoading(true);
+      const response = await funGetAllDivision('?search=' + searchQuery + '&group=' + group + '&page=' + isPage)
       if (response.success) {
-        setData(response.data)
-        setJumlah(response.data.length)
+        setJumlah(response.total)
+        setNameGroup(response.filter.name)
+        if (isPage == 1) {
+          setData(response.data)
+        }else{
+          setData([...data, ...response.data])
+        }
       } else {
         toast.error(response.message);
       }
@@ -51,28 +64,57 @@ export default function ListDivision() {
 
   function searchDivision(search: string) {
     setSearchQuery(search)
-    fetchData(search)
+    setPage(1)
   }
 
   useShallowEffect(() => {
-    fetchData(searchQuery)
+    fetchData(true)
   }, [searchQuery])
 
+
+  useShallowEffect(() => {
+    fetchData(false)
+ }, [isPage])
+
+ useEffect(() => {
+  const handleScroll = async () => {
+     if (containerRef && containerRef.current) {
+        const scrollTop = containerRef.current.scrollTop;
+        const containerHeight = containerRef.current.clientHeight;
+        const scrollHeight = containerRef.current.scrollHeight;
+
+        if (scrollTop + containerHeight >= scrollHeight) {
+           setPage(isPage + 1)
+        }
+     }
+  };
+
+  const container = containerRef?.current;
+  container?.addEventListener("scroll", handleScroll);
+
+  return () => {
+     container?.removeEventListener("scroll", handleScroll);
+  };
+}, [containerRef, isPage]);
 
 
   return (
     <Box>
       <LayoutNavbarNew back='/home' title='Divisi'
-        menu={<ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
-          <HiMenu size={20} color='white' />
-        </ActionIcon>} />
+        menu={
+          (roleLogin.get() != "user" && roleLogin.get() != "coadmin") &&
+          <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
+            <HiMenu size={20} color='white' />
+          </ActionIcon>
+        } />
+
       <Box p={20}>
         <Grid justify='center' align='center'>
           <Grid.Col span={10}>
             <TextInput
               styles={{
                 input: {
-                  color: WARNA.biruTua,
+                  color: tema.get().utama,
                   borderRadius: '#A3A3A3',
                   borderColor: '#A3A3A3',
                 },
@@ -85,29 +127,24 @@ export default function ListDivision() {
               onChange={(val) => { searchDivision(val.target.value) }}
             />
           </Grid.Col>
-          <Grid.Col span={'auto'}>
+          <Grid.Col span={2}>
             <Flex justify={'center'}>
               {isList ? (
-                <HiOutlineListBullet size={35} color={WARNA.biruTua} onClick={handleList} />
+                <HiOutlineListBullet size={35} color={tema.get().utama} onClick={handleList} />
               ) : (
-                <HiSquares2X2 size={35} color={WARNA.biruTua} onClick={handleList} />
+                <HiSquares2X2 size={35} color={tema.get().utama} onClick={handleList} />
               )}
             </Flex>
           </Grid.Col>
         </Grid>
         <Box pt={20}>
-          {loading ?
-            <>
-              <Skeleton width={"100%"} height={100} radius={"md"} />
-            </>
-            :
-            <Box bg={WARNA.biruTua} p={10} style={{ borderRadius: 10 }}>
-              <Text fw={'bold'} c={'white'}>Total Divisi</Text>
+          {roleLogin.get() == 'supadmin' && <Text>Filter by: {nameGroup}</Text>}
+            <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
+              <Text fw={'bold'} c={tema.get().utama}>Total Divisi</Text>
               <Flex justify={'center'} align={'center'} h={'100%'}>
-                <Text fz={40} fw={'bold'} c={'white'}>{jumlah}</Text>
+                <Text fz={40} fw={'bold'} c={tema.get().utama}>{jumlah}</Text>
               </Flex>
             </Box>
-          }
         </Box>
         {isList ? (
           <Box pt={20}>
@@ -116,33 +153,62 @@ export default function ListDivision() {
                 .fill(null)
                 .map((_, i) => (
                   <Box key={i}>
-                    <SkeletonSingle />
+                    <SkeletonList/>
                   </Box>
                 ))
+              :
+              _.isEmpty(data)
+              ?
+              <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Divisi</Text>
+              </Box>
               :
               data?.map((v: any, i: any) => {
                 return (
                   <Box key={i}>
-                    <Group justify="space-between" mb={10} onClick={() => router.push(`/division/${v.id}`)}>
-                      <Group>
-                        <Center>
-                          <ActionIcon
-                            variant="gradient"
-                            size={50}
-                            aria-label="Gradient action icon"
-                            radius={100}
-                            gradient={{
-                              from: '#DFDA7C',
-                              to: '#F2AF46',
-                              deg: 174
-                            }}
-                          >
-                            <HiMiniUserGroup size={25} color={WARNA.biruTua} />
-                          </ActionIcon>
-                        </Center>
-                        <Text>{v.name}</Text>
-                      </Group>
-                    </Group>
+                    <Grid align='center' onClick={() => router.push(`/division/${v.id}`)}>
+                      <Grid.Col span={{
+                        base: 1,
+                        xs: 1,
+                        sm: 1,
+                        md: 1,
+                        lg: 1,
+                        xl: 1
+                      }}>
+                        <Group >
+                          <Center>
+                            <ActionIcon
+                              variant="gradient"
+                              size={50}
+                              aria-label="Gradient action icon"
+                              radius={100}
+                              bg={tema.get().bgFiturHome}
+                            >
+                              <HiMiniUserGroup size={25} color={tema.get().utama} />
+                            </ActionIcon>
+                          </Center>
+                        </Group>
+                      </Grid.Col>
+                      <Grid.Col span={{
+                        base: 11,
+                        xs: 11,
+                        sm: 11,
+                        md: 11,
+                        lg: 11,
+                        xl: 11,
+                      }}>
+                        <Box>
+                          <Box w={{
+                            base: 280,
+                            xl: 430
+                          }}>
+                            <Text truncate="end" pl={paddingLift ? 30 : 20}>
+                              {v.name}
+                            </Text>
+                          </Box>
+                        </Box>
+                      </Grid.Col>
+                    </Grid>
                     <Divider my="sm" />
                   </Box>
                 );
@@ -165,9 +231,9 @@ export default function ListDivision() {
                   <Box key={i} mb={20}>
                     <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
                       <Card.Section>
-                        <Box h={120} bg={WARNA.biruTua}>
-                          <Flex justify={'center'} align={'center'} h={"100%"}>
-                            <Title order={3} c={"white"}>{v.name}</Title>
+                        <Box h={120} bg={tema.get().utama}>
+                          <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
+                            <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.name}</Title>
                           </Flex>
                         </Box>
                       </Card.Section>
@@ -176,9 +242,13 @@ export default function ListDivision() {
                         <Group align='center' pt={10} justify='flex-end'>
                           <Avatar.Group>
                             <Avatar>
-                              <MdAccountCircle size={32} color={WARNA.biruTua} />
+                              <MdAccountCircle size={32} color={tema.get().utama} />
                             </Avatar>
-                            <Avatar>+{v.jumlah_member - 1}</Avatar>
+                            <Avatar>
+                              {
+                                (v.jumlah_member == 0) ? "0" : "+" + (v.jumlah_member - 1)
+                              }
+                            </Avatar>
                           </Avatar.Group>
                         </Group>
                       </Box>

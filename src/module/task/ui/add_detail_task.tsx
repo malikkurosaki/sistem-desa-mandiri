@@ -1,5 +1,5 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import {
    Avatar,
    Box,
@@ -7,6 +7,7 @@ import {
    Flex,
    Group,
    Input,
+   rem,
    SimpleGrid,
    Stack,
    Text,
@@ -20,6 +21,7 @@ import { IFormDateTask } from "../lib/type_task";
 import moment from "moment";
 import { funCreateDetailTask } from "../lib/api_task";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function AddDetailTask() {
@@ -28,6 +30,7 @@ export default function AddDetailTask() {
    const [title, setTitle] = useState("")
    const [openModal, setOpenModal] = useState(false)
    const param = useParams<{ id: string, detail: string }>()
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       title: false,
    });
@@ -59,7 +62,7 @@ export default function AddDetailTask() {
             toast.error(res.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal menambahkan tugas, coba lagi nanti")
       }
    }
@@ -82,7 +85,7 @@ export default function AddDetailTask() {
                   value={value}
                   onChange={setValue}
                   size="md"
-                  c={WARNA.biruTua}
+                  c={tema.get().utama}
                />
             </Group>
             <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
@@ -98,7 +101,7 @@ export default function AddDetailTask() {
                   </Group>
                </Box>
                <Box>
-                  <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+                  <Text >Tanggal Berakhir</Text>
                   <Group
                      justify="center"
                      bg={"white"}
@@ -109,7 +112,7 @@ export default function AddDetailTask() {
                   </Group>
                </Box>
             </SimpleGrid>
-            <Stack pt={15}>
+            <Stack pt={15} pb={100}>
                <TextInput
                   styles={{
                      input: {
@@ -117,24 +120,33 @@ export default function AddDetailTask() {
                         borderRadius: 10,
                      },
                   }}
-                  label="Tahapan"
-                  placeholder="Input Nama Tahapan"
+                  label="Judul Tahapan"
+                  placeholder="Input Judul Tahapan"
                   size="md"
                   required
                   value={title}
                   onChange={(e) => {
                      setTitle(e.target.value)
                      setTouched({ ...touched, title: false })
-                     }
+                  }
                   }
                   onBlur={() => setTouched({ ...touched, title: true })}
-                  error={touched.title ? "Tahapan wajib diisi" : undefined}
+                  error={
+                     touched.title && (
+                        title == "" ? "Judul Tahapan Tidak Boleh Kosong" : null
+                     )
+                  }
                />
             </Stack>
-            <Box mt={"xl"}>
+         </Box>
+            <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+               maxWidth: rem(550),
+               zIndex: 999,
+               backgroundColor: `${tema.get().bgUtama}`,
+            }}>
                <Button
                   c={"white"}
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
                   size="lg"
                   radius={30}
                   fullWidth
@@ -143,8 +155,6 @@ export default function AddDetailTask() {
                   Simpan
                </Button>
             </Box>
-         </Box>
-
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menambahkan tugas?"

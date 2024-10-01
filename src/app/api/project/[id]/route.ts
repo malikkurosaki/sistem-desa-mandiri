@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
@@ -66,14 +67,14 @@ export async function GET(request: Request, context: { params: { id: string } })
                     dateEnd: true,
                 },
                 orderBy: {
-                    status: 'desc'
+                    createdAt: 'asc'
                 }
             })
 
             const formatData = dataProgress.map((v: any) => ({
                 ..._.omit(v, ["dateStart", "dateEnd"]),
-                dateStart: moment(v.dateStart).format("DD MMMM YYYY"),
-                dateEnd: moment(v.dateEnd).format("DD MMMM YYYY"),
+                dateStart: moment(v.dateStart).format("DD-MM-YYYY"),
+                dateEnd: moment(v.dateEnd).format("DD-MM-YYYY"),
             }))
 
             allData = formatData
@@ -90,7 +91,8 @@ export async function GET(request: Request, context: { params: { id: string } })
                 select: {
                     id: true,
                     name: true,
-                    extension: true
+                    extension: true,
+                    idStorage: true
                 }
             })
 
@@ -108,9 +110,15 @@ export async function GET(request: Request, context: { params: { id: string } })
                     User: {
                         select: {
                             name: true,
-                            email: true
+                            email: true,
+                            img: true,
+                            Position: {
+                                select: {
+                                    name: true
+                                }
+                            }
                         }
-                    }
+                    },
                 }
             })
 
@@ -118,6 +126,8 @@ export async function GET(request: Request, context: { params: { id: string } })
                 ..._.omit(v, ["User"]),
                 name: v.User.name,
                 email: v.User.email,
+                img: v.User.img,
+                position: v.User.Position.name
             }))
 
             allData = fix
@@ -151,7 +161,7 @@ export async function POST(request: Request, context: { params: { id: string } }
         if (data == 0) {
             return NextResponse.json(
                 {
-                    success: false, message: "Gagal mendapatkan project, data tidak ditemukan",
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -163,14 +173,20 @@ export async function POST(request: Request, context: { params: { id: string } }
                 idProject: id,
                 dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
                 dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
+            },
+            select: {
+                id: true
             }
         })
 
-        return NextResponse.json({ success: true, message: "Detail project berhasil ditambahkan", data: dataCreate, }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data tahapan kegiatan', table: 'projectTask', data: String(dataCreate.id) })
+
+        return NextResponse.json({ success: true, message: "Detail tahapan kegiatan berhasil ditambahkan", data: dataCreate, }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal tambah detail project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal tambah tahapan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -210,11 +226,13 @@ export async function DELETE(request: Request, context: { params: { id: string }
             }
         })
 
-        return NextResponse.json({ success: true, message: "Project berhasil dibatalkan" }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User membatalkan data kegiatan', table: 'project', data: String(id) })
+        return NextResponse.json({ success: true, message: "Kegiatan berhasil dibatalkan" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal membatalkan project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membatalkan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -238,7 +256,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
         if (data == 0) {
             return NextResponse.json(
                 {
-                    success: false, message: "Gagal mendapatkan project, data tidak ditemukan",
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -253,10 +271,13 @@ export async function PUT(request: Request, context: { params: { id: string } })
             }
         })
 
-        return NextResponse.json({ success: true, message: "Project berhasil diubah" }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data kegiatan', table: 'project', data: String(id) })
+
+        return NextResponse.json({ success: true, message: "Kegiatan berhasil diupdate" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengubah project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

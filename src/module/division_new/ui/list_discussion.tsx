@@ -1,7 +1,7 @@
 "use client"
-import { WARNA } from "@/module/_global";
-import { Box, Group, Skeleton, Stack, Text } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { TEMA } from "@/module/_global";
+import { Box, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -9,39 +9,17 @@ import { CiUser, CiClock2 } from "react-icons/ci";
 import { GoDiscussionClosed } from "react-icons/go";
 import { funGetDetailDivisionById } from "../lib/api_division";
 import { IDataDiscussionOnDetailDivision } from "../lib/type_division";
+import { useHookstate } from "@hookstate/core";
 
-const dataDiskusi = [
-  {
-    id: 1,
-    judul: "Mengatasi Limbah Makanan ",
-    user: "Fibra Marcell",
-    date: "21 Juni 2024",
-  },
-  {
-    id: 2,
-    judul: "Pentingnya Menjaga Kelestarian Hutan ",
-    user: "Bayu Tegar",
-    date: "15 Juni 2024",
-  },
-  {
-    id: 3,
-    judul: "Mengatasi Limbah Industri ",
-    user: "Nian Putri",
-    date: "11 Mei 2024",
-  },
-  {
-    id: 4,
-    judul: "Manfaat Sampah Plastik",
-    user: "Budi Prasetyo",
-    date: "10 Mei 2024",
-  },
-];
 
 export default function ListDiscussionOnDetailDivision() {
   const router = useRouter();
   const param = useParams<{ id: string }>()
   const [data, setData] = useState<IDataDiscussionOnDetailDivision[]>([])
   const [loading, setLoading] = useState(true);
+  const isMobile = useMediaQuery('(max-width: 399px)');
+  const tema = useHookstate(TEMA)
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
 
   async function fetchData() {
     try {
@@ -68,7 +46,7 @@ export default function ListDiscussionOnDetailDivision() {
   return (
     <>
       <Box pt={10}>
-        <Text c={WARNA.biruTua} mb={10} fw={"bold"} fz={16}>
+        <Text c={tema.get().utama} mb={10} fw={"bold"} fz={16}>
           Diskusi Terbaru
         </Text>
         <Box
@@ -76,7 +54,7 @@ export default function ListDiscussionOnDetailDivision() {
           style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,
-            padding: 20,
+            padding: 10,
           }}
         >
 
@@ -102,35 +80,72 @@ export default function ListDiscussionOnDetailDivision() {
           }
           {data.map((v, i) => {
             return (
-              <Box
-                key={i}
-                style={{
+              <Box key={i} p={10}>
+                <Box style={{
                   borderRadius: 10,
                   border: `1px solid ${"#D6D8F6"}`,
                   padding: 10,
                 }}
-                mb={10}
-                onClick={() => router.push(`/discussion/${v.id}`)}
-              >
-                <Group>
-                  <GoDiscussionClosed size={25} />
-                  <Box w={{ base: 230, md: 400 }}>
-                    <Text fw={"bold"} truncate="end">
-                      {v.desc}
-                    </Text>
-                  </Box>
-                </Group>
-                <Group justify="space-between" mt={20} c={"#8C8C8C"}>
-                  <Group gap={5} align="center">
-                    <CiUser size={18} />
-                    <Text fz={13}>{v.user}</Text>
-                  </Group>
-                  <Group gap={5} align="center">
-                    <CiClock2 size={18} />
-                    <Text fz={13}>{v.date}</Text>
-                  </Group>
-                </Group>
+                  onClick={() => router.push(`${param.id}/discussion/${v.id}`)}
+                >
+                  <Grid align='center'>
+                    <Grid.Col
+                      span={{
+                        base: 1,
+                        xs: 1,
+                        sm: 1,
+                        md: 1,
+                        lg: 1,
+                        xl: 1,
+                      }}
+                    >
+                      <GoDiscussionClosed size={25} />
+                    </Grid.Col>
+                    <Grid.Col
+                      span={{
+                        base: 11,
+                        xs: 11,
+                        sm: 11,
+                        md: 11,
+                        lg: 11,
+                        xl: 11,
+                      }}
+                    >
+                      <Text fw={"bold"} truncate="end" pl={isMobile2 ? 10 : 0} fz={isMobile ? 14 : 16}>
+                        {v.desc}
+                      </Text>
+                    </Grid.Col>
+                  </Grid>
+                  <Grid align="center" mt={20}>
+                    <Grid.Col span={{
+                      base: 7,
+                      xl: 9
+                    }}>
+                      <Group gap={5} align="center">
+                        <CiUser size={18} />
+                        <Box w={{
+                          base: isMobile ? 110 : 125,
+                          xl: 300
+                        }}>
+                          <Text fz={13} lineClamp={1}>
+                            {v.user}
+                          </Text>
+                        </Box>
+                      </Group>
+                    </Grid.Col>
+                    <Grid.Col span={{
+                      base: 5,
+                      xl: 3
+                    }}>
+                      <Group gap={5} align="center" justify="flex-end">
+                        <CiClock2 size={18} />
+                        <Text fz={isMobile ? 11 : 13}>{v.date}</Text>
+                      </Group>
+                    </Grid.Col>
+                  </Grid>
+                </Box>
               </Box>
+
             );
           })}
         </Box>

@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
@@ -27,7 +28,7 @@ export async function GET(request: Request, context: { params: { id: string } })
       const member = await prisma.divisionMember.findMany({
          where: {
             idDivision: String(id),
-            isActive: true
+            isActive: true,
          },
          select: {
             id: true,
@@ -36,7 +37,8 @@ export async function GET(request: Request, context: { params: { id: string } })
             idUser: true,
             User: {
                select: {
-                  name: true
+                  name: true,
+                  img: true
                }
             }
          },
@@ -47,7 +49,8 @@ export async function GET(request: Request, context: { params: { id: string } })
 
       const fixMember = member.map((v: any) => ({
          ..._.omit(v, ["User"]),
-         name: v.User.name
+         name: v.User.name,
+         img: v.User.img
       }))
 
       const dataFix = {
@@ -59,7 +62,7 @@ export async function GET(request: Request, context: { params: { id: string } })
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan divisi", data: dataFix, }, { status: 200 });
 
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }
@@ -102,6 +105,9 @@ export async function PUT(request: Request, context: { params: { id: string } })
          },
       });
 
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data divisi', table: 'division', data: id })
+
       return NextResponse.json(
          {
             success: true,
@@ -110,7 +116,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
          { status: 200 }
       );
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal mengedit divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 }

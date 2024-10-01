@@ -1,7 +1,7 @@
-import { LayoutDrawer, WARNA } from "@/module/_global"
+import { LayoutDrawer, TEMA, WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { funGetAllGroup, IDataGroup } from "@/module/group"
-import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button } from "@mantine/core"
+import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button, Skeleton } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
@@ -17,6 +17,8 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const [isModal, setModal] = useState(false)
    const refresh = useHookstate(globalRefreshPosition)
+   const [loading, setLoading] = useState(true)
+   const tema = useHookstate(TEMA)
    const [data, setData] = useState<any>({
       id: id,
       name: "",
@@ -26,7 +28,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    const [touched, setTouched] = useState({
       name: false,
       idGroup: false
-    });
+   });
 
    function onCLose() {
       onUpdated(true)
@@ -49,15 +51,19 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
    async function getOneData() {
       try {
+         setLoading(true)
          const res = await funGetOnePosition(id)
          if (res.success) {
             setData(res.data)
          } else {
             toast.error(res.message)
          }
+         setLoading(false)
       } catch (error) {
          console.error(error)
          toast.error("Gagal mendapatkan jabatan, coba lagi nanti");
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -90,6 +96,23 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
       getOneData()
    }, [refresh.get()])
 
+   function onCheck() {
+      if (Object.values(touched).some((v) => v == true))
+        return false
+      onSubmit()
+   }
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'name') {
+         setData({...data, name: val})
+        if (val == "" || val.length < 3) {
+          setTouched({ ...touched, name: true })
+        } else {
+          setTouched({ ...touched, name: false })
+        }
+      }
+    }
+
    async function nonActive(val: boolean) {
       try {
          if (val) {
@@ -105,7 +128,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
          }
          setModal(false);
       } catch (error) {
-         console.log(error);
+         console.error(error);
          setModal(false);
          toast.error("Edit jabatan gagal, coba lagi nanti");
          onUpdated(false);
@@ -124,10 +147,10 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                   onClick={() => setModal(true)}
                >
                   <Box>
-                     <FaToggleOff size={30} color={WARNA.biruTua} />
+                     <FaToggleOff size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua}>{isActive == false ? "Aktifkan" : "Non Aktifkan"}</Text>
+                     <Text c={tema.get().utama}>{isActive == false ? "Aktifkan" : "Non Aktifkan"}</Text>
                   </Box>
                </Flex>
 
@@ -136,81 +159,52 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                   onClick={() => setOpenDrawerGroup(true)}
                >
                   <Box>
-                     <FaPencil size={30} color={WARNA.biruTua} />
+                     <FaPencil size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                     <Text c={WARNA.biruTua} ta='center'>Edit</Text>
+                     <Text c={tema.get().utama} ta='center'>Edit</Text>
                   </Box>
                </Flex>
             </SimpleGrid>
          </Stack>
 
-         <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Edit Jabatan'} size="lg">
-            <Box pt={10} pos={"relative"} h={"70vh"}>
-               <Select
-                  label="Grup"
-                  placeholder="Pilih grup"
-                  size="md"
-                  radius={10}
-                  data={
-                     listGroup
-                        ? listGroup.map((data) => ({
-                           value: data.id,
-                           label: data.name,
-                        }))
-                        : []
-                  }
-                  value={String(data.idGroup)}
-                  mb={5}
-                  onChange={(val) => {
-                     setData({ ...data, idGroup: val })
-                     setTouched({ ...touched, idGroup: false })
-                  }}
-                  withAsterisk
-                  styles={{
-                     input: {
-                        color: WARNA.biruTua,
-                        borderRadius: WARNA.biruTua,
-                        borderColor: WARNA.biruTua,
-                     },
-                  }}
-                  error={
-                     touched.idGroup && (
-                       data.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
-                     )
-                   }
-                  onBlur={() => setTouched({ ...touched, idGroup: true })}
-               />
-               <TextInput
-                  label="Jabatan"
-                  styles={{
-                     input: {
-                        color: WARNA.biruTua,
-                        borderRadius: WARNA.biruTua,
-                        borderColor: WARNA.biruTua,
-                     },
-                  }}
-                  required
-                  my={15}
-                  size="md"
-                  value={String(data.name)}
-                  onChange={(e) => {
-                     setData({ ...data, name: e.target.value })
-                     setTouched({ ...touched, name: false })
-                  }}
-                  onBlur={() => setTouched({ ...touched, name: true })}
-                  error={
-                     touched.name && (
-                       data.name == "" ? "Nama Jabatan Tidak Boleh Kosong" : null
-                     )
-                   }
-                  radius={10}
-                  placeholder="Nama Jabatan"
-               />
+         <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Edit Jabatan'} >
+            <Box pt={10} pos={"relative"} h={"28.5vh"}>
+               {loading ?
+                  <Box>
+                     <Skeleton height={40} mt={6} radius={10} />
+                  </Box>
+                  :
+                  <Box>
+                     <TextInput
+                        label="Jabatan"
+                        styles={{
+                           input: {
+                              color: tema.get().utama,
+                              borderRadius: tema.get().utama,
+                              borderColor: tema.get().utama,
+                           },
+                        }}
+                        required
+                        size="md"
+                        value={String(data.name)}
+                        onChange={(e) => { onValidation('name', e.target.value) }}
+                        onBlur={() => setTouched({ ...touched, name: true })}
+                        error={
+                           touched.name &&
+                           (data.name == "" ? "Error! harus memasukkan Nama Jabatan" :
+                              data.name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
+                           )
+                         }
+                        radius={10}
+                        placeholder="Nama Jabatan"
+                     />
+                  </Box>
+               }
                <Box pos={"absolute"} bottom={10} left={0} right={0}>
                   <Button
                      c={"white"}
-                     bg={WARNA.biruTua}
+                     bg={tema.get().utama}
                      size="lg"
                      radius={30}
                      fullWidth

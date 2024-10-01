@@ -1,27 +1,32 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from '@/module/_global';
+import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from '@/module/_global';
 import { ActionIcon, Box, Flex, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { FaPencil, FaUsers } from 'react-icons/fa6';
+import { FaFileCirclePlus, FaPencil, FaUsers } from 'react-icons/fa6';
 import { HiMenu } from 'react-icons/hi';
 import { IoAddCircle } from 'react-icons/io5';
 import { MdCancel } from 'react-icons/md';
 import { funGetOneProjectById } from '../lib/api_project';
 import { useShallowEffect } from '@mantine/hooks';
+import { useHookstate } from '@hookstate/core';
 
 export default function NavbarDetailProject() {
   const router = useRouter()
   const param = useParams<{ id: string }>()
   const [name, setName] = useState('')
   const [isOpen, setOpen] = useState(false)
+  const roleLogin = useHookstate(globalRole)
+  const tema = useHookstate(TEMA)
+  const [reason, setReason] = useState("")
 
   async function getOneData() {
     try {
       const res = await funGetOneProjectById(param.id, 'data');
       if (res.success) {
         setName(res.data.title);
+        setReason(res.data.reason);
       } else {
         toast.error(res.message);
       }
@@ -41,7 +46,7 @@ export default function NavbarDetailProject() {
       <LayoutNavbarNew back="/project?status=0" title={name} menu={
         <ActionIcon
           variant="light"
-          bg={WARNA.bgIcon}
+          bg={tema.get().bgIcon}
           size="lg"
           radius="lg"
           aria-label="Settings"
@@ -56,20 +61,27 @@ export default function NavbarDetailProject() {
           <Stack pt={10}>
             <SimpleGrid
               cols={{ base: 3, sm: 3, lg: 3 }}
+              style={{
+                alignContent: 'flex-start',
+                alignItems: 'flex-start',
+              }}
             >
               <Flex justify={'center'} align={'center'} direction={'column'}
                 style={{
                   cursor: 'pointer'
                 }}
                 onClick={() => {
-                  router.push(param.id + '/add-task')
+                  reason == null ?
+                    router.push(param.id + '/add-task')
+                    : null
                 }}
+                pb={20}
               >
                 <Box>
-                  <IoAddCircle size={30} color={WARNA.biruTua} />
+                  <IoAddCircle size={30} color={reason == null ? tema.get().utama : "gray"} />
                 </Box>
                 <Box>
-                  <Text c={WARNA.biruTua} ta='center'>Tambah Tugas</Text>
+                  <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Tambah Tugas</Text>
                 </Box>
               </Flex>
 
@@ -78,44 +90,78 @@ export default function NavbarDetailProject() {
                   cursor: 'pointer'
                 }}
                 onClick={() => {
-                  router.push(param.id + '/add-member')
+                  reason == null ?
+                    router.push(param.id + '/add-file')
+                    : null
                 }}
               >
                 <Box>
-                  <FaUsers size={30} color={WARNA.biruTua} />
+                  <FaFileCirclePlus size={30} color={reason == null ? tema.get().utama : "gray"} />
                 </Box>
                 <Box>
-                  <Text c={WARNA.biruTua} ta='center'>Tambah anggota</Text>
+                  <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Tambah file</Text>
                 </Box>
               </Flex>
 
-              <Flex justify={'center'} align={'center'} direction={'column'}
-                style={{
-                  cursor: 'pointer'
-                }}
-                onClick={() => { router.push(param.id + '/cancel') }}
-              >
-                <Box>
-                  <MdCancel size={30} color={WARNA.biruTua} />
-                </Box>
-                <Box>
-                  <Text c={WARNA.biruTua} ta='center'>Batal</Text>
-                </Box>
-              </Flex>
+              {
+                (roleLogin.get() != "user" && roleLogin.get() != "coadmin") &&
+                <>
+                  <Flex justify={'center'} align={'center'} direction={'column'}
+                    style={{
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => {
+                      reason == null ?
+                        router.push(param.id + '/add-member')
+                        : null
+                    }}
+                  >
+                    <Box>
+                      <FaUsers size={30} color={reason == null ? tema.get().utama : "gray"} />
+                    </Box>
+                    <Box>
+                      <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Tambah anggota</Text>
+                    </Box>
+                  </Flex>
 
-              <Flex justify={'center'} align={'center'} direction={'column'}
-                style={{
-                  cursor: 'pointer'
-                }}
-                onClick={() => { router.push(param.id + '/edit') }}
-              >
-                <Box>
-                  <FaPencil size={30} color={WARNA.biruTua} />
-                </Box>
-                <Box>
-                  <Text c={WARNA.biruTua} ta='center'>Edit</Text>
-                </Box>
-              </Flex>
+                  <Flex justify={'center'} align={'center'} direction={'column'}
+                    style={{
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => {
+                      reason == null ?
+                        router.push(param.id + '/edit')
+                        : null
+                    }}
+                  >
+                    <Box>
+                      <FaPencil size={30} color={reason == null ? tema.get().utama : "gray"} />
+                    </Box>
+                    <Box>
+                      <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Edit</Text>
+                    </Box>
+                  </Flex>
+
+                  <Flex justify={'center'} align={'center'} direction={'column'}
+                    style={{
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => {
+                      reason == null ?
+                        router.push(param.id + '/cancel')
+                        : null
+                    }}
+                  >
+                    <Box>
+                      <MdCancel size={30} color={reason == null ? tema.get().utama : "gray"} />
+                    </Box>
+                    <Box>
+                      <Text c={reason == null ? tema.get().utama : "gray"} ta='center'>Batal</Text>
+                    </Box>
+                  </Flex>
+                </>
+              }
+
             </SimpleGrid>
           </Stack>
         </Box>

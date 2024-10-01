@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
@@ -24,7 +25,7 @@ export async function POST(request: Request, context: { params: { id: string } }
         if (data == 0) {
             return NextResponse.json(
                 {
-                    success: false, message: "Gagal mendapatkan project, data tidak ditemukan",
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -32,7 +33,7 @@ export async function POST(request: Request, context: { params: { id: string } }
 
         if (member.length > 0) {
             const dataMember = member.map((v: any) => ({
-                ..._.omit(v, ["idUser", "name"]),
+                ..._.omit(v, ["idUser", "name", "img"]),
                 idProject: id,
                 idUser: v.idUser
             }))
@@ -42,11 +43,13 @@ export async function POST(request: Request, context: { params: { id: string } }
             })
         }
 
-        return NextResponse.json({ success: true, message: "Berhasil menambahkan anggota project" }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'CREATE', desc: 'User menambah anggota kegiatan', table: 'project', data: String(id) })
+        return NextResponse.json({ success: true, message: "Berhasil menambahkan anggota kegiatan" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal menambah anggota project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal menambah anggota kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -85,11 +88,14 @@ export async function DELETE(request: Request, context: { params: { id: string }
             }
         })
 
-        return NextResponse.json({ success: true, message: "Berhasil mengeluarkan anggota project" }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'DELETE', desc: 'User mengeluarkan anggota kegiatan', table: 'project', data: String(id) })
+
+        return NextResponse.json({ success: true, message: "Berhasil mengeluarkan anggota kegiatan" }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -104,6 +110,8 @@ export async function GET(request: Request, context: { params: { id: string } })
         const { id } = context.params
         const groupId = user.idGroup
         const userId = user.id
+        const { searchParams } = new URL(request.url);
+        const name = searchParams.get('search');
 
         const data = await prisma.project.findUnique({
             where: {
@@ -122,44 +130,24 @@ export async function GET(request: Request, context: { params: { id: string } })
             );
         }
 
-
-        // const member = await prisma.projectMember.findMany({
-        //     where: {
-        //         idProject: String(id),
-        //         isActive: true
-        //     },
-        //     select: {
-        //         id: true,
-        //         isLeader: true,
-        //         idUser: true,
-        //         User: {
-        //             select: {
-        //                 name: true
-        //             }
-        //         }
-        //     },
-        //     orderBy: {
-        //         isLeader: 'desc',
-        //     }
-        // })
-
-        // const fixMember = member.map((v: any) => ({
-        //     ..._.omit(v, ["User"]),
-        //     name: v.User.name
-        // }))
-
         const member = await prisma.user.findMany({
             where: {
                 idGroup: String(groupId),
                 id: {
                     not: String(userId)
                 },
-                isActive: true
+                isActive: true,
+                name: {
+                    contains: (name == undefined || name == "null") ? "" : name,
+                    mode: 'insensitive'
+                }
+                
             },
             select: {
                 id: true,
                 name: true,
                 email: true,
+                img: true
             }
         })
 
@@ -167,7 +155,7 @@ export async function GET(request: Request, context: { params: { id: string } })
             idUser: v.id,
             name: v.name,
             email: v.email,
-
+            img: v.img
         }))
 
         const dataFix = {

@@ -1,16 +1,21 @@
 "use client";
-import { WARNA } from "@/module/_global";
+import { globalRole, TEMA, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
-import { Box, Button, Select, Stack, Text, TextInput } from "@mantine/core";
+import { Avatar, Box, Button, Indicator, rem, Select, Stack, Text, TextInput } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { HiUser } from "react-icons/hi2";
 import { IDataPositionMember, IDataROleMember } from "../lib/type_member";
 import { funGetAllPosition } from "@/module/position/lib/api_position";
-import { funCreateMember, funGetRoleUser } from "../lib/api_member";
+import { funCreateMember } from "../lib/api_member";
 import _ from "lodash";
+import { useHookstate } from "@hookstate/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { funGetUserByCookies } from "@/module/auth";
+import { valueRoleUser } from "../../lib/val_user";
+import { FaCamera } from "react-icons/fa6";
+import { Dropzone } from "@mantine/dropzone";
 
 export default function CreateMember() {
   const router = useRouter();
@@ -18,6 +23,11 @@ export default function CreateMember() {
   const [listGroup, setListGorup] = useState<IDataGroup[]>([]);
   const [listPosition, setListPosition] = useState<IDataPositionMember[]>([]);
   const [listUserRole, setListUserRole] = useState<IDataROleMember[]>([]);
+  const roleLogin = useHookstate(globalRole)
+  const [img, setIMG] = useState<any | null>()
+  const [imgForm, setImgForm] = useState<any>()
+  const openRef = useRef<() => void>(null)
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     nik: false,
     name: false,
@@ -54,12 +64,22 @@ export default function CreateMember() {
     }
   }
 
+  async function getLogin() {
+    try {
+      const res = await funGetUserByCookies();
+      if (roleLogin.get() != "supadmin") {
+        getAllPosition(res.idGroup)
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async function getAllPosition(val: any) {
     try {
       if (val != null) {
-        const res = await funGetAllPosition(
-          "?active=true" + "&group=" + `${val}`
-        );
+        const res = await funGetAllPosition("?active=true" + "&group=" + `${val}`);
         setListPosition(res.data);
       } else {
         setListPosition([]);
@@ -71,23 +91,12 @@ export default function CreateMember() {
 
   async function getAllUserRole() {
     try {
-      const res = await funGetRoleUser();
-      setListUserRole(res.data);
+      setListUserRole(valueRoleUser.filter((v) => v.login == roleLogin.get())[0]?.data);
     } catch (error) {
       console.error(error);
     }
   }
 
-  async function changeGrup(val: any) {
-    setListPosition([]);
-    setListData({
-      ...listData,
-      idGroup: val,
-      idPosition: "",
-    });
-
-    getAllPosition(val);
-  }
 
   async function onSubmit(val: boolean) {
     try {
@@ -95,16 +104,21 @@ export default function CreateMember() {
         return;
       }
       if (val) {
-        const res = await funCreateMember({
-          nik: listData.nik,
-          name: listData.name,
-          phone: listData.phone,
-          email: listData.email,
-          gender: listData.gender,
-          idGroup: listData.idGroup,
-          idPosition: listData.idPosition,
-          idUserRole: listData.idUserRole,
-        });
+        const fd = new FormData()
+        fd.append("file", imgForm)
+        fd.append("data", JSON.stringify(
+          {
+            nik: listData.nik,
+            name: listData.name,
+            phone: listData.phone,
+            email: listData.email,
+            gender: listData.gender,
+            idGroup: listData.idGroup,
+            idPosition: listData.idPosition,
+            idUserRole: listData.idUserRole,
+          }
+        ))
+        const res = await funCreateMember(fd);
         if (res.success) {
           toast.success(res.message);
           setModal(false);
@@ -121,59 +135,145 @@ export default function CreateMember() {
     }
   }
 
-  useEffect(() => {
+  useShallowEffect(() => {
     getAllGroup();
     getAllUserRole();
+    getLogin()
   }, []);
+
+  function onCheck() {
+    if (Object.values(touched).some((v) => v == true))
+      return false
+    setModal(true)
+  }
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'nik') {
+      setListData({ ...listData, nik: val })
+      if (val === "" || val.length !== 16) {
+        setTouched({ ...touched, nik: true })
+      } else {
+        setTouched({ ...touched, nik: false })
+      }
+    } else if (kategori == 'name') {
+      setListData({ ...listData, name: val })
+      if (val === "") {
+        setTouched({ ...touched, name: true })
+      } else {
+        setTouched({ ...touched, name: false })
+      }
+    } else if (kategori == 'phone') {
+      setListData({ ...listData, phone: val })
+      if (val == "" || !(val.length >= 10 && val.length <= 15)) {
+        setTouched({ ...touched, phone: true })
+      } else {
+        setTouched({ ...touched, phone: false })
+      }
+    } else if (kategori == 'email') {
+      setListData({ ...listData, email: val })
+      if (val == "" || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val)) {
+        setTouched({ ...touched, email: true })
+      } else {
+        setTouched({ ...touched, email: false })
+      }
+    } else if (kategori == 'gender') {
+      setListData({ ...listData, gender: val })
+      if (val == "" || val == "null") {
+        setTouched({ ...touched, gender: true })
+      } else {
+        setTouched({ ...touched, gender: false })
+      }
+    } else if (kategori == 'idGroup') {
+      setListData({ ...listData, idGroup: val, idPosition: "", })
+      if (val === "") {
+        setTouched({ ...touched, idGroup: true })
+      } else {
+        setTouched({ ...touched, idGroup: false })
+      }
+    } else if (kategori == 'idPosition') {
+      setListData({ ...listData, idPosition: val })
+      if (val === "") {
+        setTouched({ ...touched, idPosition: true })
+      } else {
+        setTouched({ ...touched, idPosition: false })
+      }
+    } else if (kategori == 'idUserRole') {
+      setListData({ ...listData, idUserRole: val })
+      if (val === "") {
+        setTouched({ ...touched, idUserRole: true })
+      } else {
+        setTouched({ ...touched, idUserRole: false })
+      }
+    }
+  }
+
+  async function changeGrup(val: any) {
+    setListPosition([]);
+    onValidation('idGroup', val)
+    getAllPosition(val);
+  }
 
 
   return (
     <Box>
-      <Stack align="center" justify="center" gap="xs" pt={30} px={20}>
-        <Box
-          bg={WARNA.biruTua}
-          py={30}
-          px={50}
-          style={{
-            borderRadius: 10,
+      <Stack align="center" justify="center" gap="xs" pt={30} px={20} pb={100}>
+        <Dropzone
+          openRef={openRef}
+          onDrop={async (files) => {
+            if (!files || _.isEmpty(files))
+              return toast.error('Tidak ada gambar yang dipilih')
+            setImgForm(files[0])
+            const buffer = URL.createObjectURL(new Blob([new Uint8Array(await files[0].arrayBuffer())]))
+            setIMG(buffer)
+          }}
+          activateOnClick={false}
+          maxSize={1 * 1024 ** 2}
+          accept={['image/png', 'image/jpeg', 'image/heic']}
+          onReject={(files) => {
+            return toast.error('File yang diizinkan: .png, .jpg, dan .heic  dengan ukuran maksimal 1 MB')
           }}
         >
-          <HiUser size={100} color={WARNA.bgWhite} />
-        </Box>
-        <Select
-          placeholder="Pilih Grup"
-          label="Grup"
-          w={"100%"}
-          size="md"
-          required
-          withAsterisk
-          radius={30}
-          styles={{
-            input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
-            },
-          }}
-          data={
-            listGroup
-              ? listGroup.map((data) => ({
-                value: data.id,
-                label: data.name,
-              }))
-              : []
-          }
-          onChange={(val: any) => {
-            changeGrup(val);
-            setTouched({ ...touched, idGroup: false })
-          }}
-          onBlur={() => setTouched({ ...touched, idGroup: true })}
-          error={
-            touched.idGroup && (
-              listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
-            )
-          }
-        />
+        </Dropzone>
+        <Indicator offset={20} withBorder inline color={tema.get().bgIcon} position="bottom-end" label={<FaCamera size={20} />} size={40} onClick={() => openRef.current?.()}>
+          <Avatar
+            size="150"
+            radius={"100"}
+            src={img}
+          />
+        </Indicator>
+        {
+          roleLogin.get() == "supadmin" &&
+          <Select
+            placeholder="Pilih Grup"
+            label="Grup"
+            w={"100%"}
+            size="md"
+            required
+            withAsterisk
+            radius={30}
+            styles={{
+              input: {
+                color: tema.get().utama,
+                borderRadius: tema.get().utama,
+                borderColor: tema.get().utama,
+              },
+            }}
+            data={
+              listGroup
+                ? listGroup.map((data) => ({
+                  value: data.id,
+                  label: data.name,
+                }))
+                : []
+            }
+            onChange={(val: any) => { changeGrup(val) }}
+            error={
+              touched.idGroup && (
+                listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+              )
+            }
+          />
+        }
         <Select
           placeholder="Pilih Jabatan"
           label="Jabatan"
@@ -184,9 +284,9 @@ export default function CreateMember() {
           radius={30}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           data={
@@ -197,16 +297,8 @@ export default function CreateMember() {
               }))
               : []
           }
-          onChange={(val: any) => {
-            setListData({
-              ...listData,
-              idPosition: val,
-            })
-            setTouched({ ...touched, idPosition: false })
-          }
-          }
+          onChange={(val: any) => { onValidation('idPosition', val) }}
           value={listData.idPosition == "" ? null : listData.idPosition}
-          onBlur={() => setTouched({ ...touched, idPosition: true })}
           error={
             touched.idPosition && (
               listData.idPosition == "" ? "Jabatan Tidak Boleh Kosong" : null
@@ -223,9 +315,9 @@ export default function CreateMember() {
           radius={30}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           data={
@@ -236,15 +328,7 @@ export default function CreateMember() {
               }))
               : []
           }
-          onChange={(val: any) => {
-            setListData({
-              ...listData,
-              idUserRole: val,
-            })
-            setTouched({ ...touched, idUserRole: false })
-          }
-          }
-          onBlur={() => setTouched({ ...touched, idUserRole: true })}
+          onChange={(val: any) => { onValidation('idUserRole', val) }}
           error={
             touched.idUserRole && (
               listData.idUserRole == "" ? "Role Tidak Boleh Kosong" : null
@@ -261,20 +345,16 @@ export default function CreateMember() {
           w={"100%"}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
-          onChange={(event: any) => {
-            setListData({ ...listData, nik: event.target.value });
-            setTouched({ ...touched, nik: false });
-          }}
-          onBlur={() => setTouched({ ...touched, nik: true })}
+          onChange={(e) => { onValidation('nik', e.target.value) }}
           error={
             touched.nik && (
-              listData.nik == "" ? "NIK Tidak Boleh Kosong" :
-                listData.nik.length < 16 ? "NIK Harus 16 Karakter" : null
+              listData.nik === "" ? "NIK Tidak Boleh Kosong" :
+                listData.nik.length !== 16 ? "NIK Harus 16 Karakter" : null
             )
           }
         />
@@ -288,20 +368,12 @@ export default function CreateMember() {
           w={"100%"}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
-          onChange={(event: any) => {
-            setListData({
-              ...listData,
-              name: event.target.value,
-            })
-            setTouched({ ...touched, name: false })
-          }
-          }
-          onBlur={() => setTouched({ ...touched, name: true })}
+          onChange={(e) => { onValidation('name', e.target.value) }}
           error={
             touched.name && (
               listData.name == "" ? "Nama Tidak Boleh Kosong" : null
@@ -318,20 +390,12 @@ export default function CreateMember() {
           w={"100%"}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
-          onChange={(event: any) => {
-            setListData({
-              ...listData,
-              email: event.target.value,
-            })
-            setTouched({ ...touched, email: false })
-          }
-          }
-          onBlur={() => setTouched({ ...touched, email: true })}
+          onChange={(e) => { onValidation('email', e.target.value) }}
           error={
             touched.email && (
               listData.email == "" ? "Email Tidak Boleh Kosong" :
@@ -343,27 +407,19 @@ export default function CreateMember() {
           size="md"
           type="number"
           radius={30}
-          placeholder="87701795778"
+          placeholder="8xx xxxx xxxx"
           leftSection={<Text>+62</Text>}
           withAsterisk
           label="Nomor Telepon"
           w={"100%"}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
-          onChange={(event: any) => {
-            setListData({
-              ...listData,
-              phone: "62" + event.target.value,
-            })
-            setTouched({ ...touched, phone: false })
-          }
-          }
-          onBlur={() => setTouched({ ...touched, phone: true })}
+          onChange={(e) => { onValidation('phone', e.target.value); }}
           error={
             touched.phone && (
               listData.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" :
@@ -381,54 +437,35 @@ export default function CreateMember() {
           radius={30}
           styles={{
             input: {
-              color: WARNA.biruTua,
-              borderRadius: WARNA.biruTua,
-              borderColor: WARNA.biruTua,
+              color: tema.get().utama,
+              borderRadius: tema.get().utama,
+              borderColor: tema.get().utama,
             },
           }}
           data={[
             { value: "M", label: "Laki-laki" },
             { value: "F", label: "Perempuan" },
           ]}
-          onChange={(val: any) => {
-            setListData({
-              ...listData,
-              gender: val,
-            })
-            setTouched({ ...touched, gender: false })
-          }
-          }
-          onBlur={() => setTouched({ ...touched, gender: true })}
+          onChange={(val: any) => { onValidation('gender', val) }}
           error={
             touched.gender && (
-              listData.gender == "" ? "Gender Tidak Boleh Kosong" : null
+              listData.gender == "" ? "Jenis Kelamin Tidak Boleh Kosong" : null
             )
           }
         />
       </Stack>
-      <Box mt={30} mx={20} pb={20}>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${tema.get().bgUtama}`,
+      }}>
         <Button
           c={"white"}
-          bg={WARNA.biruTua}
+          bg={tema.get().utama}
           size="md"
           radius={30}
           fullWidth
-          onClick={() => {
-            if (
-              listData.nik !== "" &&
-              listData.name !== "" &&
-              listData.email !== "" &&
-              listData.phone !== "" &&
-              listData.gender !== "" &&
-              listData.idGroup !== "" &&
-              listData.idPosition !== "" &&
-              listData.idUserRole !== ""
-            ) {
-              setModal(true);
-            } else {
-              toast.error("Mohon lengkapi semua form");
-            }
-          }}
+          onClick={() => { onCheck() }}
         >
           Simpan
         </Button>

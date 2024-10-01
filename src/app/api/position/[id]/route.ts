@@ -1,5 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -80,6 +81,8 @@ export async function DELETE(request: Request, context: { params: { id: string }
             },
         });
 
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate status data jabatan', table: 'position', data: id })
         return NextResponse.json(
             { success: true, message: "Berhasil mengubah status jabatan" },
             { status: 200 }
@@ -104,8 +107,12 @@ export async function PUT(request: Request, context: { params: { id: string } })
             where: {
                 name: data.name,
                 idGroup: data.idGroup,
+                NOT: {
+                    id: id
+                }
             },
         });
+
         if (cek == 0) {
             const positions = await prisma.position.update({
                 where: {
@@ -113,10 +120,13 @@ export async function PUT(request: Request, context: { params: { id: string } })
                 },
                 data: {
                     name: data.name,
-                    idGroup: data.idGroup,
+                    // idGroup: data.idGroup,
                 },
             });
-            return NextResponse.json({ success: true, message: "Berhasil mengedit jabatan", positions, }, { status: 200 });
+
+            // create log user
+            const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data jabatan', table: 'position', data: id })
+            return NextResponse.json({ success: true, message: "Berhasil mengedit jabatan", }, { status: 200 });
         } else {
             return NextResponse.json(
                 { success: false, message: "Jabatan sudah ada" },

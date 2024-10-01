@@ -1,8 +1,9 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import {
    Box,
    Button,
+   rem,
    Stack,
    Textarea,
 } from "@mantine/core";
@@ -11,16 +12,18 @@ import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { funCancelTask } from "../lib/api_task";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function CancelTask() {
    const router = useRouter()
    const [alasan, setAlasan] = useState("")
    const [openModal, setOpenModal] = useState(false)
+   const tema = useHookstate(TEMA)
    const param = useParams<{ id: string, detail: string }>()
    const [touched, setTouched] = useState({
       reason: false,
-    });
+   });
 
    function onVerification() {
       if (alasan == "")
@@ -39,7 +42,7 @@ export default function CancelTask() {
             toast.error(res.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal membatalkan tugas, coba lagi nanti")
       }
    }
@@ -47,7 +50,7 @@ export default function CancelTask() {
 
 
    return (
-      <Box pos={"relative"} h={"100vh"}>
+      <Box>
          <LayoutNavbarNew back="" title={"Pembatalan Tugas"} menu />
          <Box p={20}>
             <Stack pt={15}>
@@ -68,18 +71,22 @@ export default function CancelTask() {
                   onBlur={() => setTouched({ ...touched, reason: true })}
                />
             </Stack>
-            <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
-               <Button
-                  c={"white"}
-                  bg={WARNA.biruTua}
-                  size="lg"
-                  radius={30}
-                  fullWidth
-                  onClick={() => { onVerification() }}
-               >
-                  Simpan
-               </Button>
-            </Box>
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`,
+         }}>
+            <Button
+               c={"white"}
+               bg={tema.get().utama}
+               size="lg"
+               radius={30}
+               fullWidth
+               onClick={() => { onVerification() }}
+            >
+               Simpan
+            </Button>
          </Box>
 
 

@@ -78,3 +78,13 @@ export const funGetListDivisionByIdDivision = async (path: string) => {
    const response = await fetch(`/api/division/more${path}`);
    return await response.json().catch(() => null);
 }
+
+export const funGetReportDivision = async (path?: string) => {
+   const response = await fetch(`/api/division/report${(path) ? path : ''}`, { next: { tags: ['discussion'] } });
+   return await response.json().catch(() => null);
+}
+
+export const funGetSearchMemberDivision = async (path: string, id: string) => {
+   const response = await fetch(`/api/division/${id}/member/${(path) ? path : ''}`, { next: { tags: ['division'] } });
+   return await response.json().catch(() => null);
+}

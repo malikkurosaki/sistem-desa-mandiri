@@ -1,8 +1,8 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
 import { funGetGroupDivision } from '@/module/group/lib/api_group';
-import { Box, Button, Divider, Flex, Group, Stack, Text } from '@mantine/core';
-import { useShallowEffect } from '@mantine/hooks';
+import { Box, Button, Divider, Flex, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import React, { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import { GroupData, GroupDataEditAnnouncement } from '../lib/type_announcement';
@@ -22,6 +22,8 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
    const [selectAll, setSelectAll] = useState(false);
    const [isData, setIsData] = useState<GroupData[]>([])
    const memberGroup = useHookstate(globalMemberEditAnnouncement)
+   const [loading, setLoading] = useState(true)
+   const tema = useHookstate(TEMA)
 
    const handleCheck = (groupId: string, divisionId: string) => {
       const newChecked = { ...checked };
@@ -70,6 +72,7 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
    };
 
    async function getData() {
+      setLoading(true)
       const response = await funGetGroupDivision()
       setIsData(response.data)
 
@@ -81,6 +84,7 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
 
          setChecked(formatArray)
       }
+      setLoading(false)
    }
 
    const handleSubmit = () => {
@@ -99,6 +103,7 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
       memberGroup.set(selectedGroups);
       onClose(true);
    };
+   const isMobile = useMediaQuery('(max-width: 369px)');
 
    useShallowEffect(() => {
       getData()
@@ -107,7 +112,7 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
    return (
       <div>
          <LayoutNavbarNew back="" title="Tambah Divisi Penerima Pengumuman" menu={<></>} />
-         <Box p={20}>
+         <Box p={20} pb={100}>
             <Group justify='flex-end' mb={20}>
                <Text
                   onClick={handleSelectAll}
@@ -121,63 +126,84 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
                   Pilih Semua
                </Text>
             </Group>
-            {isData.map((item) => (
-               <Stack mb={30} key={item.id}>
-                  <Group onClick={() => handleGroupCheck(item.id)} justify='space-between' align='center'>
-                     <Text
-                        style={{
-                           cursor: 'pointer',
-                           display: 'flex',
-                           alignItems: 'center',
-                        }}
-                        fw={checked[item.id] && checked[item.id].length === item.Division.length ? 'bold' : 'normal'}
-                     >
-                        {item.name}
-                     </Text>
-                     <Text
-                     >
-                        {checked[item.id] && checked[item.id].length === item.Division.length ? <FaCheck style={{ marginRight: 10 }} />
-                           : (checked[item.id] && checked[item.id].length > 0 && checked[item.id].length < item.Division.length) ? <FaMinus style={{ marginRight: 10 }} /> : ""}
-                     </Text>
-                  </Group>
-                  <Divider />
-                  {item.Division.map((division) => (
-                     <Box key={division.id}>
-                        <Group onClick={() => handleCheck(item.id, division.id)} justify='space-between' align='center'>
-                           <Text
-                              style={{
-                                 cursor: 'pointer',
-                                 display: 'flex',
-                                 alignItems: 'center',
-                                 paddingLeft: 20,
-                              }}
-                           >
-                              {division.name}
-                           </Text>
-                           <Text
-                              style={{
-                                 cursor: 'pointer',
-                                 display: 'flex',
-                                 alignItems: 'center',
-                                 paddingLeft: 20,
-                              }}
-                           >
-                              {checked[item.id] && checked[item.id].includes(division.id) ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-                           </Text>
-                        </Group>
-                        <Box pt={15}>
-                           <Divider />
-                        </Box>
+            {loading ?
+               Array(6)
+                  .fill(null)
+                  .map((_, i) => (
+                     <Box key={i} mb={20}>
+                        <Skeleton height={20} radius={10} mt={20} width={"30%"} />
+                        <Skeleton height={20} ml={40} radius={10} mt={10} width={"80%"} />
+                        <Skeleton height={20} ml={40} radius={10} mt={20} width={"80%"} />
                      </Box>
+                  ))
+               :
+               isData.map((item) => (
+                  <Stack mb={30} key={item.id}>
+                     <Group onClick={() => handleGroupCheck(item.id)} justify='space-between' align='center'>
+                        <Text
+                           style={{
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                           }}
+                           fw={checked[item.id] && checked[item.id].length === item.Division.length ? 'bold' : 'normal'}
+                           lineClamp={1}
+                        >
+                           {item.name}
+                        </Text>
+                        <Text
+                           lineClamp={1}
+                        >
+                           {checked[item.id] && checked[item.id].length === item.Division.length ? <FaCheck style={{ marginRight: 10 }} />
+                              : (checked[item.id] && checked[item.id].length > 0 && checked[item.id].length < item.Division.length) ? <FaMinus style={{ marginRight: 10 }} /> : ""}
+                        </Text>
+                     </Group>
+                     <Divider />
+                     {item.Division.map((division) => (
+                        <Box key={division.id}>
+                           <Group onClick={() => handleCheck(item.id, division.id)} justify='space-between' align='center'>
+                              <Box w={{
+                                 base: isMobile ? 230 : 280,
+                                 xl: 430
+                              }}>
+                                 <Text truncate="end" pl={20}>
+                                    {division.name}
+                                 </Text>
+                              </Box>
+                              <Text
+                                 style={{
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    paddingLeft: 20,
+                                 }}
+                              >
+                                 {checked[item.id] && checked[item.id].includes(division.id) ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+                              </Text>
+                           </Group>
+                           <Box pt={15}>
+                              <Divider />
+                           </Box>
+                        </Box>
 
-                  ))}
-               </Stack>
-            ))}
+                     ))}
+                  </Stack>
+               ))
+            }
 
-            <Box mt="xl">
+
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`,
+         }}>
+            {loading ?
+               <Skeleton height={50} radius={30} />
+               :
                <Button
                   color="white"
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
 
                   size="lg"
                   radius={30}
@@ -188,8 +214,7 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
                >
                   Simpan
                </Button>
-            </Box>
-
+            }
          </Box>
       </div>
    );

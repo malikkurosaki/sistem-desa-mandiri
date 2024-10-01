@@ -1,5 +1,6 @@
-import { prisma } from "@/module/_global";
+import { DIR, funCopyFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
@@ -65,10 +66,13 @@ export async function POST(request: Request) {
          })
       }
 
+      // create log user
+      const log = await createLogUser({ act: 'UPDATE', desc: 'User memindahkan file atau folder', table: 'divisionDocumentFolderFile', data: '' })
+
 
       return NextResponse.json({ success: true, message: "Berhasil memindahkan item" }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal memindahkan item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
@@ -102,87 +106,57 @@ export async function PUT(request: Request) {
          let name = dataItem[i].name;
          const category = dataItem[i].category;
          const extension = dataItem[i].extension;
+         const idStorage = dataItem[i].idStorage;
 
-         let status = false
-         let numb = 1
-         do {
-            const cekName = await prisma.divisionDocumentFolderFile.count({
-               where: {
-                  path: path,
-                  isActive: true,
+         const copyOnStorage = await funCopyFile({ fileId: idStorage, dirId: DIR.document })
+         if (copyOnStorage.success) {
+            let status = false
+            let numb = 1
+            do {
+               const cekName = await prisma.divisionDocumentFolderFile.count({
+                  where: {
+                     path: path,
+                     isActive: true,
+                     extension,
+                     name
+                  }
+               })
+
+               if (cekName > 0) {
+                  name = dataItem[i].name + " (" + numb + ")"
+                  numb++
+                  status = false
+               } else {
+                  status = true
+               }
+            } while (status == false);
+
+
+            const create = await prisma.divisionDocumentFolderFile.create({
+               data: {
+                  name,
+                  path,
+                  idDivision,
+                  category,
                   extension,
-                  name
+                  idStorage: copyOnStorage.data.id,
+                  createdBy: user.id
+               },
+               select: {
+                  id: true
                }
             })
 
-            if (cekName > 0) {
-               name = dataItem[i].name + " (" + numb + ")"
-               numb++
-               status = false
-            } else {
-               status = true
-            }
-         } while (status == false);
-
-
-         const create = await prisma.divisionDocumentFolderFile.create({
-            data: {
-               name,
-               path,
-               idDivision,
-               category,
-               extension,
-               createdBy: user.id
-            },
-            select: {
-               id: true
-            }
-         })
-
-         // let newPath = create.id
-         // let idPath = dataItem[i].id;
-         // let statusCek = false
-         // do {
-         //    const cekFolder = await prisma.divisionDocumentFolderFile.findMany({
-         //       where: {
-         //          isActive: true,
-         //          path: idPath
-         //       }
-         //    })
-
-         //    if (cekFolder.length == 0) {
-         //       statusCek = true
-         //    } else {
-         //       for (let index = 0; index < cekFolder.length; index++) {
-         //          const addChildren = await prisma.divisionDocumentFolderFile.create({
-         //             data: {
-         //                name: cekFolder[index].name,
-         //                path: newPath,
-         //                idDivision,
-         //                category: cekFolder[index].category,
-         //                extension: cekFolder[index].extension,
-         //                createdBy: user.id
-         //             },
-         //             select: {
-         //                id: true
-         //             }
-         //          })
-
-         //          newPath = create.id
-         //       }
-
-
-         //    }
-
-
-         // } while (statusCek == false);
-
+            // create log user
+            const log = await createLogUser({ act: 'CREATE', desc: 'User menyalin file', table: 'divisionDocumentFolderFile', data: create.id })
+         }
       }
 
-
       return NextResponse.json({ success: true, message: "Berhasil salin item" }, { status: 200 });
+
+
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal salin item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
@@ -218,10 +192,11 @@ export async function DELETE(request: Request) {
 
       }
 
-
+      // create log user
+      const log = await createLogUser({ act: 'CREATE', desc: 'User membagikan item', table: 'divisionDocumentShare', data: '' })
       return NextResponse.json({ success: true, message: "Berhasil membagikan item" }, { status: 200 });
    } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json({ success: false, message: "Gagal membagikan item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };

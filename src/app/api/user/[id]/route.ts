@@ -1,8 +1,10 @@
-import { prisma } from "@/module/_global";
+import { DIR, funDeleteFile, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
-import _ from "lodash";
+import _, { update } from "lodash";
 import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs";
 
 // GET ONE MEMBER / USER 
 export async function GET(request: Request, context: { params: { id: string } }) {
@@ -24,6 +26,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                 phone: true,
                 email: true,
                 gender: true,
+                img: true,
                 idGroup: true,
                 isActive: true,
                 idPosition: true,
@@ -52,10 +55,13 @@ export async function GET(request: Request, context: { params: { id: string } })
         const group = users?.Group.name
         const position = users?.Position.name
         const idUserRole = users?.UserRole.id
+        const phone = users?.phone.substr(2)
 
-        const result = { ...userData, group, position, idUserRole };
+        const result = { ...userData, group, position, idUserRole, phone };
 
-        const omitData = _.omit(result, ["Group", "Position", "UserRole"])
+        const omitData = _.omit(result, ["Group", "Position", "UserRole"]);
+
+
 
         return NextResponse.json(
             {
@@ -107,10 +113,13 @@ export async function DELETE(request: Request, context: { params: { id: string }
             },
         });
 
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate status anggota', table: 'user', data: id })
+
         return NextResponse.json(
             {
                 success: true,
-                message: "Berhasil mendapatkan anggota",
+                message: "Berhasil mengupdate status anggota",
                 result,
             },
             { status: 200 }
@@ -118,7 +127,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan anggota, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate status anggota, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -131,44 +140,96 @@ export async function PUT(request: Request, context: { params: { id: string } })
             return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
         }
         const { id } = context.params;
-        const data = await request.json();
-        const cek = await prisma.user.count({
+
+        const body = await request.formData()
+        const file = body.get("file") as File
+        const data = body.get("data")
+        const {
+            name,
+            email,
+            phone,
+            nik,
+            gender,
+            idGroup,
+            idPosition,
+            idUserRole
+        } = JSON.parse(data as string)
+
+        const cekNIK = await prisma.user.count({
             where: {
-              nik: data.nik,
-              email: data.email,
-              phone: data.phone
+                nik: nik,
+                NOT: {
+                    id: id
+                }
             },
         });
 
-        if (cek == 0) {
+        const cekEmail = await prisma.user.count({
+            where: {
+                email: email,
+                NOT: {
+                    id: id
+                }
+            },
+        });
+
+        const cekPhone = await prisma.user.count({
+            where: {
+                phone: "62" + phone,
+                NOT: {
+                    id: id
+                }
+            },
+        });
+
+        if (cekNIK == 0 && cekEmail == 0 && cekPhone == 0) {
             const updates = await prisma.user.update({
-              where: {
-                id: id
-              },
-              data: {
-                nik: data.nik,
-                name: data.name,
-                phone: data.phone,
-                email: data.email,
-                gender: data.gender,
-                idGroup: data.idGroup,
-                idPosition: data.idPosition,
-                idUserRole: data.idUserRole,
-              },
+                where: {
+                    id: id
+                },
+                data: {
+                    nik: nik,
+                    name: name,
+                    phone: "62" + phone,
+                    email: email,
+                    gender: gender,
+                    idGroup: idGroup,
+                    idPosition: idPosition,
+                    idUserRole: idUserRole,
+                },
+                select: {
+                    img: true
+                }
             });
-        
+
+            if (String(file) != "undefined" && String(file) != "null") {
+                const fExt = file.name.split(".").pop()
+                const fileName = id + '.' + fExt;
+                const newFile = new File([file], fileName, { type: file.type });
+                await funDeleteFile({ fileId: String(updates.img) })
+                const upload = await funUploadFile({ file: newFile, dirId: DIR.user })
+                await prisma.user.update({
+                    where: {
+                        id: id
+                    },
+                    data: {
+                        img: upload.data.id
+                    }
+                })
+            }
+
             // create log user
-            const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data user', table: 'user', data: data.id })
-        
+            const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data anggota', table: 'user', data: user.id })
+
             return Response.json(
-              { success: true, message: "Sukses Update User", updates },
-              { status: 200 }
+                { success: true, message: "Sukses update anggota" },
+                { status: 200 }
             );
         } else {
-            return Response.json({ success: false, message: "User sudah ada" }, { status: 400 });
+            return Response.json({ success: false, message: "Anggota sudah ada" }, { status: 400 });
         }
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan anggota, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate data anggota, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
     }
 }

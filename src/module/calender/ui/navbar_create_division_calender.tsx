@@ -1,6 +1,6 @@
 "use client"
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Avatar, Box, Button, Flex, Group, Input, Select, SimpleGrid, Stack, Text, Textarea, TextInput } from '@mantine/core';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
+import { Avatar, Box, Button, Divider, Flex, Grid, Group, Input, NumberInput, rem, Select, SimpleGrid, Stack, Text, Textarea, TextInput } from '@mantine/core';
 import { DateInput, TimeInput } from '@mantine/dates';
 import React, { useState } from 'react';
 import { IoIosArrowDropright } from 'react-icons/io';
@@ -13,22 +13,27 @@ import { globalCalender, globalUlangiEvent } from '../lib/val_calender';
 import { IFormMemberCalender, IFormUlangiEvent } from '../lib/type_calender';
 import { funCreateCalender } from '../lib/api_calender';
 import CreateUserCalender from './create_user_calender';
+import { useMediaQuery } from '@mantine/hooks';
 
 export default function NavbarCreateDivisionCalender() {
   const [value, setValue] = useState<Date | null>(null);
   const router = useRouter()
   const [isModal, setModal] = useState(false)
-  const memberUser = useHookstate(globalCalender)
-  const memberValue = memberUser.get() as IFormMemberCalender[]
+  const member = useHookstate(globalCalender)
+  const memberValue = member.get() as IFormMemberCalender[]
   const [openMember, setOpenMember] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
+  const tema = useHookstate(TEMA)
+  const isMobile = useMediaQuery('(max-width: 369px)');
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
   const [touched, setTouched] = useState({
     title: false,
     dateStart: false,
     timeStart: false,
     timeEnd: false,
     repeatEventTyper: false,
-    desc: false
+    desc: false,
+    repeatValue: false
   })
   const [isData, setData] = useState({
     idDivision: "",
@@ -39,6 +44,7 @@ export default function NavbarCreateDivisionCalender() {
     linkMeet: "",
     repeatEventTyper: "",
     desc: "",
+    repeatValue: "1"
   })
 
   async function onSubmit(val: boolean) {
@@ -56,31 +62,22 @@ export default function NavbarCreateDivisionCalender() {
           linkMeet: isData.linkMeet,
           repeatEventTyper: isData.repeatEventTyper,
           desc: isData.desc,
+          repeatValue: isData.repeatValue,
           member: memberValue
         })
 
         if (response.success) {
           setModal(false)
           router.push(`/division/${param.id}/calender`)
-          setData({
-            ...isData,
-            title: "",
-            dateStart: "",
-            timeStart: "",
-            timeEnd: "",
-            linkMeet: "",
-            repeatEventTyper: "1",
-            desc: "",
-          })
           toast.success(response.message)
-          memberUser.set([])
+          member.set([])
         } else {
           toast.error(response.message)
           setModal(false)
         }
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       setModal(false)
       toast.error("Gagal menambahkan pengumuman, coba lagi nanti");
     } finally {
@@ -90,12 +87,11 @@ export default function NavbarCreateDivisionCalender() {
 
   if (openMember) return <CreateUserCalender onClose={() => setOpenMember(false)} />
 
-
   return (
     <Box>
-      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="tambah kalender" menu />
+      <LayoutNavbarNew back={`/division/${param.id}/calender/`} title="Tambah Acara" menu />
       <Box p={20}>
-        <Stack>
+        <Stack pb={100}>
           <TextInput
             required
             styles={{
@@ -136,7 +132,6 @@ export default function NavbarCreateDivisionCalender() {
             }}
             placeholder="Input Tanggal"
             label="Tanggal"
-            minDate={new Date()}
             onBlur={() => setTouched({ ...touched, dateStart: true })}
             error={
               touched.dateStart && (
@@ -209,14 +204,14 @@ export default function NavbarCreateDivisionCalender() {
               },
             }}
             size="md"
-            placeholder="Ulangi Event"
-            label="Ulangi Event"
+            placeholder="Ulangi Acara"
+            label="Ulangi Acara"
             data={[
-              { value: '1', label: 'Acara 1 Kali' },
-              { value: '2', label: 'Hari Kerja (Sen - Jum)' },
-              { value: '3', label: 'Mingguan' },
-              { value: '4', label: 'Bulanan' },
-              { value: '5', label: 'Tahunan' },
+              { value: 'once', label: 'Acara 1 Kali' },
+              { value: 'daily', label: 'Setiap Hari' },
+              { value: 'weekly', label: 'Mingguan' },
+              { value: 'monthly', label: 'Bulanan' },
+              { value: 'yearly', label: 'Tahunan' },
             ]}
             value={isData.repeatEventTyper}
             onChange={(val: any) => {
@@ -227,10 +222,65 @@ export default function NavbarCreateDivisionCalender() {
             onBlur={() => setTouched({ ...touched, repeatEventTyper: true })}
             error={
               touched.repeatEventTyper && (
-                isData.repeatEventTyper == "" ? "Ulangi Event Tidak Boleh Kosong" : null
+                isData.repeatEventTyper == "" ? "Ulangi Acara Tidak Boleh Kosong" : null
               )
             }
           />
+          {isData.repeatEventTyper == "once" ?
+            <TextInput styles={{
+              input: {
+                border: `1px solid ${"#D6D8F6"}`,
+                borderRadius: 10,
+              },
+            }}
+              type='number'
+              required
+              label="Jumlah pengulangan"
+              size="md"
+              disabled
+              placeholder='Jumlah pengulangan'
+              value={"1"}
+              onChange={(event) => {
+                setData({ ...isData, repeatValue: String(event.currentTarget.value) })
+                setTouched({ ...touched, repeatValue: false })
+              }}
+              onBlur={() => setTouched({ ...touched, repeatValue: true })}
+              // TODO :: NANTI DIPERBAIKI
+              error={
+                touched.repeatValue && (
+                  isData.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : ""
+                  // || Number(isData.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh 0" : ""
+                )
+              }
+            />
+            :
+            <TextInput styles={{
+              input: {
+                border: `1px solid ${"#D6D8F6"}`,
+                borderRadius: 10,
+              },
+            }}
+              type='number'
+              required
+              label="Jumlah pengulangan"
+              size="md"
+              placeholder='Jumlah pengulangan'
+              value={isData.repeatValue}
+              min={1}
+              onChange={(event) => {
+                setData({ ...isData, repeatValue: String(event.currentTarget.value) })
+                setTouched({ ...touched, repeatValue: false })
+              }}
+              onBlur={() => setTouched({ ...touched, repeatValue: true })}
+              // TODO :: NANTI DIPERBAIKI
+              error={
+                touched.repeatValue && (
+                  isData.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" :
+                    Number(isData.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh di bawah 1" : ""
+                )
+              }
+            />
+          }
           <Textarea styles={{
             input: {
               border: `1px solid ${"#D6D8F6"}`,
@@ -250,16 +300,16 @@ export default function NavbarCreateDivisionCalender() {
                 borderRadius: 10,
               }}
             >
-              <Text>Tambah Anggota *</Text>
+              <Text>Tambah Anggota</Text>
               <IoIosArrowDropright size={25} />
             </Group>
           </Box>
           {
-            memberUser.length > 0 &&
-            <Box pt={30}>
+            member.length > 0 &&
+            <Box pt={30} mb={60}>
               <Group justify="space-between">
-                <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-                <Text c={WARNA.biruTua}>Total {memberUser.length} Anggota</Text>
+                <Text c={tema.get().utama}>Anggota Terpilih</Text>
+                <Text c={tema.get().utama}>Total {member.length} Anggota</Text>
               </Group>
               <Box pt={10}>
                 <Box mb={20}>
@@ -271,58 +321,71 @@ export default function NavbarCreateDivisionCalender() {
                     px={20}
                     py={10}
                   >
-                    {memberUser.get().map((v: any, i: any) => {
-                      return (
-                        <Flex
-                          justify={"space-between"}
-                          align={"center"}
-                          mt={20}
-                          key={i}
-                        >
-                          <Group>
-                            <Avatar src={"v.image"} alt="it's me" size="lg" />
-                            <Box>
-                              <Text c={WARNA.biruTua} fw={"bold"}>
-                                {v.name}
-                              </Text>
+                    {member.length == 0 ?
+                      <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh' }}>
+                        <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Anggota</Text>
+                      </Box>
+                      :
+
+                      member.get().map((v: any, i: any) => {
+                        return (
+                          <Box key={i}>
+                            <Grid align='center' mt={10}
+                            >
+                              <Grid.Col span={1}>
+                                <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={'lg'} />
+                              </Grid.Col>
+                              <Grid.Col span={8}>
+                                <Text c={tema.get().utama} fw={"bold"} lineClamp={1} pl={isMobile2 ? 40 : 30} fz={isMobile ? 14 : 16} >
+                                  {v.name}
+                                </Text>
+                              </Grid.Col>
+                              <Grid.Col span={3}>
+                                <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                                  Anggota
+                                </Text>
+                              </Grid.Col>
+                            </Grid>
+                            <Box mt={10}>
+                              <Divider size={"xs"} />
                             </Box>
-                          </Group>
-                          <Text c={WARNA.biruTua} fw={"bold"}>
-                            Anggota
-                          </Text>
-                        </Flex>
-                      );
-                    })}
+                          </Box>
+                        );
+                      })}
                   </Box>
                 </Box>
               </Box>
             </Box>
           }
-          <Box mt={"xl"}>
-            <Button
-              c={"white"}
-              bg={WARNA.biruTua}
-              size="lg"
-              radius={30}
-              fullWidth
-              onClick={() => {
-                if (
-                  isData.title !== "" &&
-                  isData.dateStart !== " " &&
-                  isData.timeStart !== "" &&
-                  isData.timeEnd !== "" &&
-                  isData.repeatEventTyper !== ""
-                ) {
-                  setModal(true);
-                } else {
-                  toast.error("Mohon lengkapi semua form");
-                }
-              }}
-            >
-              Simpan
-            </Button>
-          </Box>
         </Stack>
+      </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${tema.get().bgUtama}`,
+      }}>
+        <Button
+          c={"white"}
+          bg={tema.get().utama}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => {
+            if (
+              isData.title !== "" &&
+              isData.dateStart !== " " &&
+              isData.timeStart !== "" &&
+              isData.timeEnd !== "" &&
+              isData.repeatEventTyper !== ""
+            ) {
+              setModal(true);
+            } else {
+              toast.error("Mohon lengkapi semua form");
+            }
+          }}
+        >
+          Simpan
+        </Button>
       </Box>
       <LayoutModal opened={isModal} onClose={() => setModal(false)}
         description="Apakah Anda yakin ingin menambahkan data?"

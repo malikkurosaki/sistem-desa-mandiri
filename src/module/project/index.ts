@@ -1,13 +1,5 @@
 import ViewDateEndTask from "./ui/create_date_end_task";
-import ViewProject from "./view/view_project";
 import CreateUsersProject from "./ui/create_users_project";
-import ViewFileSave from "./view/view_file_save";
-import ViewDetailProject from "./view/view_detail_project";
-import ViewUpdateProgres from "./view/view_update_progres";
-import DetailCreateUserProject from "./components/detail_project/detail_create_user_project";
-import DetailDateEndTask from "./components/detail_project/detail_date_end_task";
-import DetailFileSave from "./components/detail_project/detail_file_save";
-import FileUploadProgres from "./components/detail_project/file_upload_progres";
 import TabProject from "./ui/tab_project";
 import NavbarDetailProject from "./ui/navbar_detail_project";
 import ProgressDetailProject from "./ui/progress_detail_project";
@@ -21,17 +13,10 @@ import AddDetailTaskProject from "./ui/add_detail_task_project";
 import CancelProject from "./ui/cancel_project";
 import AddMemberDetailProject from "./ui/add_member_detail_project";
 import CreateProject from "./ui/create_project";
+import AddFileDetailProject from "./ui/add_file_detail_project";
 
-export { ViewProject }
 export { ViewDateEndTask }
 export { CreateUsersProject }
-export { ViewFileSave }
-export { ViewDetailProject }
-export { ViewUpdateProgres }
-export { DetailCreateUserProject }
-export { DetailDateEndTask }
-export { DetailFileSave }
-export { FileUploadProgres }
 export { TabProject }
 export { NavbarDetailProject }
 export { ProgressDetailProject }
@@ -44,3 +29,4 @@ export { AddDetailTaskProject }
 export { CancelProject }
 export { AddMemberDetailProject }
 export { CreateProject }
+export { AddFileDetailProject }

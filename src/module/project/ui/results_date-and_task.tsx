@@ -1,5 +1,4 @@
-import { WARNA } from '@/module/_global';
-import { Box, Group, SimpleGrid, Text } from '@mantine/core';
+import { Box, Center, Grid, Group, SimpleGrid, Spoiler, Text } from '@mantine/core';
 import React from 'react';
 import { AiOutlineFileSync } from "react-icons/ai";
 import { IFormDateProject } from '../lib/type_project';
@@ -18,10 +17,16 @@ export default function ResultsDateAndTask(data: IFormDateProject) {
           border: `1px solid ${"#D6D8F6"}`,
           padding: 10
         }}>
-          <Group>
-            <AiOutlineFileSync size={25} />
-            <Text>{data.title}</Text>
-          </Group>
+          <Grid gutter={"sm"} justify='flex-start' align='flex-start'>
+            <Grid.Col span={"auto"}>
+              <Center >
+                <AiOutlineFileSync size={30} />
+              </Center>
+            </Grid.Col>
+            <Grid.Col span={10}>
+              <Text>{data.title}</Text>
+            </Grid.Col>
+          </Grid>
         </Box>
         <Box>
           <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
@@ -37,7 +42,7 @@ export default function ResultsDateAndTask(data: IFormDateProject) {
               </Group>
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+              <Text >Tanggal Berakhir</Text>
               <Group
                 justify="center"
                 bg={"white"}

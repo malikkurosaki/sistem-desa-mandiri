@@ -2,6 +2,7 @@
 import { sealData } from "iron-session";
 import { cookies } from "next/headers";
 import { prisma, pwd_key_config } from "@/module/_global";
+import { createLogUser } from "@/module/user";
 
 export default async function funSetCookies({ user }: { user: string }) {
    try {
@@ -11,8 +12,8 @@ export default async function funSetCookies({ user }: { user: string }) {
       const dataUser = await prisma.user.findUnique({
          where: {
             id: user
-         }, 
-         select:{
+         },
+         select: {
             isFirstLogin: true
          }
       })
@@ -34,7 +35,7 @@ export default async function funSetCookies({ user }: { user: string }) {
          value: encryptedUserData,
       });
 
-      
+      const log = await createLogUser({ act: 'LOGIN', desc: 'User masuk ke program', table: 'user', data: '' })
 
       return { success: true, message: "Login berhasil!", pertamaLogin: dataUser?.isFirstLogin };
    } catch (error) {

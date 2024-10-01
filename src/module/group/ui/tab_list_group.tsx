@@ -4,17 +4,19 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import ListGroupActive from "./list_group_active";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useHookstate } from "@hookstate/core";
+import { TEMA } from "@/module/_global";
 
 export default function TabListGroup() {
   const iconStyle = { width: rem(20), height: rem(20) };
   const router = useRouter()
   const searchParams = useSearchParams()
   const status = searchParams.get('active')
-
+  const tema = useHookstate(TEMA)
 
   return (
     <Box p={20}>
-      <Tabs variant="pills" color="#FF9861" radius="xl" defaultValue={(status == "false") ? "false" : "true"}>
+      <Tabs variant="pills" color={tema.get().bgFiturHome} radius="xl" defaultValue={(status == "false") ? "false" : "true"}>
         <Tabs.List
           bg={"white"}
           style={{

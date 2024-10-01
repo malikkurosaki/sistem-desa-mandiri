@@ -5,6 +5,7 @@ export type TypeUser = {
    phone: string
    email: string
    gender: string
+   img:string
    isActive: boolean,
    group: string,
    position: string

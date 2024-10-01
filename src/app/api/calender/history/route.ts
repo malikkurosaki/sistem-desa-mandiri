@@ -5,7 +5,7 @@ import { funGetUserByCookies } from "@/module/auth";
 import { prisma } from "@/module/_global";
 import _ from "lodash";
 
-// GET HSITORY 
+// GET HISTORY 
 export async function GET(request: Request) {
     try {
         const user = await funGetUserByCookies()
@@ -16,6 +16,8 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const idDivision = searchParams.get("division");
         const name = searchParams.get('search');
+        const page = searchParams.get('page');
+        const dataSkip = Number(page) * 10 - 10;
 
         if (idDivision != "null" && idDivision != null && idDivision != undefined) {
             const cekDivision = await prisma.division.count({
@@ -29,21 +31,34 @@ export async function GET(request: Request) {
                 return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, data tidak ditemukan" }, { status: 404 });
             }
 
-            const data = await prisma.divisionCalendar.findMany({
+            const data = await prisma.divisionCalendarReminder.findMany({
+                skip: dataSkip,
+                take: 10,
                 where: {
                     isActive: true,
                     idDivision: idDivision,
-                    title: {
-                        contains: (name == undefined || name == "null") ? "" : name,
-                        mode: "insensitive"
+                    dateEnd: {
+                        lte: new Date()
+                    },
+                    DivisionCalendar: {
+                        title: {
+                            contains: (name == undefined || name == "null") ? "" : name,
+                            mode: "insensitive"
+                        },
+                        isActive: true
                     }
+
                 },
                 select: {
                     id: true,
-                    title: true,
                     timeStart: true,
                     dateStart: true,
                     timeEnd: true,
+                    DivisionCalendar: {
+                        select: {
+                            title: true,
+                        }
+                    }
                 },
                 orderBy: [
                     {
@@ -59,8 +74,8 @@ export async function GET(request: Request) {
             });
 
             const allOmit = data.map((v: any) => ({
-                ..._.omit(v, [""]),
-                dateStart: v.dateStart,
+                ..._.omit(v, ["DivisionCalendar"]),
+                title: v.DivisionCalendar.title
             }))
 
             // groupBy untuk dateStart
@@ -80,15 +95,15 @@ export async function GET(request: Request) {
                 }
             })
 
-            return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender", data: result }, { status: 200 });
+            return NextResponse.json({ success: true, message: "Berhasil mendapatkan riwayat acara kalender", data: result }, { status: 200 });
 
         } else {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, data tidak ditemukan" }, { status: 404 });
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan riwayat acara kalender, coba lagi nanti" }, { status: 404 });
 
         }
 
     } catch (error) {
-        console.log(error)
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, data tidak ditemukan" }, { status: 404 });
+        console.error(error)
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan riwayat acara kalender, coba lagi nanti" }, { status: 404 });
     }
 }

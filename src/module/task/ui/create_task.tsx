@@ -1,6 +1,6 @@
 "use client";
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Avatar, Box, Button, Center, Flex, Group, Input, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
+import { Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
@@ -18,6 +18,7 @@ import _ from "lodash";
 import { FaTrash } from "react-icons/fa6";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funCreateTask } from "../lib/api_task";
+import { useMediaQuery } from "@mantine/hooks";
 
 export default function CreateTask() {
   const router = useRouter()
@@ -32,11 +33,14 @@ export default function CreateTask() {
   const memberValue = member.get() as IFormMemberTask[]
   const [dataTask, setDataTask] = useState<IFormDateTask[]>([])
   const openRef = useRef<() => void>(null)
-  const [fileForm, setFileForm] = useState<FormData[]>([])
+  const [fileForm, setFileForm] = useState<any[]>([])
+  const [imgForm, setImgForm] = useState<any>()
   const [listFile, setListFile] = useState<IListFileTask[]>([])
   const [indexDelFile, setIndexDelFile] = useState<number>(0)
   const [indexDelTask, setIndexDelTask] = useState<number>(0)
+  const isMobile = useMediaQuery('(max-width: 369px)');
   const [title, setTitle] = useState("")
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     title: false,
     task: false,
@@ -57,14 +61,19 @@ export default function CreateTask() {
 
   async function onSubmit() {
     try {
-      const response = await funCreateTask(
-        {
-          idDivision: param.id,
-          title,
-          task: dataTask,
-          file: fileForm,
-          member: memberValue
-        })
+      const fd = new FormData();
+      for (let i = 0; i < fileForm.length; i++) {
+        fd.append(`file${i}`, fileForm[i]);
+      }
+
+      fd.append("data", JSON.stringify({
+        idDivision: param.id,
+        title,
+        task: dataTask,
+        member: memberValue
+      }))
+
+      const response = await funCreateTask(fd)
 
       if (response.success) {
         toast.success(response.message)
@@ -73,17 +82,18 @@ export default function CreateTask() {
         setFileForm([])
         setListFile([])
         setDataTask([])
+        router.push(`/division/${param.id}/task/`)
       } else {
         toast.error(response.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal menambahkan tugas divisi, coba lagi nanti");
     }
   }
 
 
-  if (openTugas) return <ViewDateEndTask onClose={(val) => {
+  if (openTugas) return <ViewDateEndTask onClose={(val) => { setOpenTugas(false) }} onSet={(val) => {
     setDataTask([...dataTask, val])
     setOpenTugas(false)
   }} />;
@@ -103,7 +113,7 @@ export default function CreateTask() {
                 borderRadius: 10,
               },
             }}
-            placeholder="Nama Tugas"
+            placeholder="Judul Tugas"
             size="md"
             label="Judul Tugas"
             value={title}
@@ -115,7 +125,7 @@ export default function CreateTask() {
             required
             error={
               touched.title && (
-                title == "" ? "Nama Tidak Boleh Kosong" : null
+                title == "" ? "Judul Tugas Tidak Boleh Kosong" : null
               )
             }
           />
@@ -139,7 +149,10 @@ export default function CreateTask() {
               border: `1px solid ${"#D6D8F6"}`,
               borderRadius: 10,
             }}
-            onClick={() => setOpenDrawer(true)}
+            onClick={() =>
+              // setOpenDrawer(true)
+              openRef.current?.()
+            }
           >
             <Text>Upload File</Text>
             <IoIosArrowDropright size={25} />
@@ -153,167 +166,179 @@ export default function CreateTask() {
                 borderRadius: 10,
               }}
             >
-              <Text c={WARNA.biruTua}>Tambah Anggota</Text>
+              <Text>Tambah Anggota</Text>
               <IoIosArrowDropright size={25} />
             </Group>
           </Box>
         </Stack>
-        {
-          dataTask.length > 0 &&
-          <Box pt={20}>
-            <Text fw={'bold'} c={WARNA.biruTua}>Tanggal & Tugas</Text>
-            {
-              dataTask.map((v, i) => {
-                return (
-                  <Box key={i} onClick={() => {
-                    setIndexDelTask(i)
-                    setOpenDrawerTask(true)
-                  }}>
-                    <ResultsDateAndTask dateStart={v.dateStart} dateEnd={v.dateEnd} title={v.title} />
-                  </Box>
-                )
-              })
-            }
-          </Box>
-        }
-
-        {
-          listFile.length > 0 &&
-          <Box pt={20}>
-            <Text fw={'bold'} c={WARNA.biruTua}>File</Text>
-            <Box bg={"white"} style={{
-              borderRadius: 10,
-              border: `1px solid ${"#D6D8F6"}`,
-              padding: 20
-            }}>
+        <Box pb={100}>
+          {
+            dataTask.length > 0 &&
+            <Box pt={20}>
+              <Text fw={'bold'} c={tema.get().utama}>Tanggal & Tugas</Text>
               {
-                listFile.map((v, i) => {
+                dataTask.map((v, i) => {
                   return (
                     <Box key={i} onClick={() => {
-                      setIndexDelFile(i)
-                      setOpenDrawerFile(true)
+                      setIndexDelTask(i)
+                      setOpenDrawerTask(true)
                     }}>
-                      <ResultsFile name={v.name} extension={v.extension} />
+                      <ResultsDateAndTask dateStart={v.dateStart} dateEnd={v.dateEnd} title={v.title} />
                     </Box>
                   )
                 })
               }
             </Box>
-          </Box>
-        }
+          }
 
-
-        {
-          member.length > 0 &&
-          <Box pt={30}>
-            <Group justify="space-between">
-              <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-              <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
-            </Group>
-            <Box pt={10}>
-              <Box mb={20}>
-                <Box
-                  style={{
-                    border: `1px solid ${"#C7D6E8"}`,
-                    borderRadius: 10,
-                  }}
-                  px={20}
-                  py={10}
-                >
-                  {member.get().map((v: any, i: any) => {
+          {
+            listFile.length > 0 &&
+            <Box pt={20}>
+              <Text fw={'bold'} c={tema.get().utama}>File</Text>
+              <Box bg={"white"} style={{
+                borderRadius: 10,
+                border: `1px solid ${"#D6D8F6"}`,
+                padding: 20
+              }}>
+                {
+                  listFile.map((v, i) => {
                     return (
-                      <Flex
-                        justify={"space-between"}
-                        align={"center"}
-                        mt={20}
-                        key={i}
-                      >
-                        <Group>
-                          <Avatar src={"v.image"} alt="it's me" size="lg" />
-                          <Box>
-                            <Text c={WARNA.biruTua} fw={"bold"}>
-                              {v.name}
-                            </Text>
+                      <Box key={i} onClick={() => {
+                        setIndexDelFile(i)
+                        setOpenDrawerFile(true)
+                      }}>
+                        <ResultsFile name={v.name} extension={v.extension} />
+                      </Box>
+                    )
+                  })
+                }
+              </Box>
+            </Box>
+          }
+
+
+          {
+            member.length > 0 &&
+            <Box pt={30}>
+              <Group justify="space-between">
+                <Text c={tema.get().utama}>Anggota Terpilih</Text>
+                <Text c={tema.get().utama}>Total {member.length} Anggota</Text>
+              </Group>
+              <Box pt={10}>
+                <Box mb={20}>
+                  <Box
+                    style={{
+                      border: `1px solid ${"#C7D6E8"}`,
+                      borderRadius: 10,
+                    }}
+                    px={20}
+                    py={10}
+                  >
+                    {member.get().map((v: any, i: any) => {
+                      return (
+                        <Box key={i}>
+                          <Grid align='center' mt={10}
+                          >
+                            <Grid.Col span={9}>
+                              <Group>
+                                <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
+                                <Box w={{
+                                  base: isMobile ? 130 : 140,
+                                  xl: 270
+                                }}>
+                                  <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
+                                    {v.name}
+                                  </Text>
+                                </Box>
+                              </Group>
+                            </Grid.Col>
+                            <Grid.Col span={3}>
+                              <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                                Anggota
+                              </Text>
+                            </Grid.Col>
+                          </Grid>
+                          <Box mt={10}>
+                            <Divider size={"xs"} />
                           </Box>
-                        </Group>
-                        <Text c={WARNA.biruTua} fw={"bold"}>
-                          Anggota
-                        </Text>
-                      </Flex>
-                    );
-                  })}
+                        </Box>
+                      );
+                    })}
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-        }
-
-
-        <Box mt="xl">
-          <Button
-            color="white"
-            bg={WARNA.biruTua}
-            size="lg" radius={30}
-            fullWidth
-            onClick={() => {
-              if (
-                title !== ""
-              ) {
-                setOpenModal(true)
-              } else  {
-                toast.error("Semua form harus diisi")
-              }
-            }}>
-            Simpan
-          </Button>
+          }
         </Box>
       </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${tema.get().bgUtama}`,
+      }}>
+        <Button
+          color="white"
+          bg={tema.get().utama}
+          size="lg" radius={30}
+          fullWidth
+          onClick={() => {
+            if (
+              title !== ""
+            ) {
+              setOpenModal(true)
+            } else {
+              toast.error("Semua form harus diisi")
+            }
+          }}>
+          Simpan
+        </Button>
+      </Box>
+
+      <Dropzone
+        openRef={openRef}
+        onDrop={async (files) => {
+          if (!files || _.isEmpty(files))
+            return toast.error('Tidak ada file yang dipilih')
+          setFileForm([...fileForm, files[0]])
+          setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
+        }}
+        activateOnClick={false}
+        maxSize={3 * 1024 ** 2}
+        accept={['image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+        onReject={(files) => {
+          return toast.error('File yang diizinkan: .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+        }}
+      ></Dropzone>
 
 
 
       {/* Drawer pilih file */}
-      <LayoutDrawer
+      {/* <LayoutDrawer
         opened={openDrawer}
         onClose={() => setOpenDrawer(false)}
         title={"Pilih File"}
       >
-        <Flex justify={"space-around"}>
-          <Dropzone
-            openRef={openRef}
-            onDrop={async (files) => {
-              if (!files || _.isEmpty(files))
-                return toast.error('Tidak ada file yang dipilih')
-              const fd = new FormData();
-              fd.append("file", files[0]);
-              setFileForm([...fileForm, fd])
-              setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
-            }}
-            activateOnClick={false}
-            maxSize={3 * 1024 ** 2}
-            accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
-            onReject={(files) => {
-              return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
-            }}
-          >
-            <Box onClick={() => openRef.current?.()}>
-              <Box
-                bg={"#DCEED8"}
-                style={{
-                  border: `1px solid ${"#D6D8F6"}`,
-                  padding: 20,
-                  borderRadius: 10,
-                }}
-              >
-                <Center>
-                  <BsFiletypeCsv size={40} />
-                </Center>
-              </Box>
-              <Text mt={10} ta={"center"}>
-                Pilih file
-              </Text>
-              <Text ta={"center"}>diperangkat</Text>
+        <Flex justify={"flex-start"} px={20}>
+
+          <Box onClick={() => openRef.current?.()}>
+            <Box
+              bg={"#DCEED8"}
+              style={{
+                border: `1px solid ${"#D6D8F6"}`,
+                padding: 20,
+                borderRadius: 10,
+              }}
+            >
+              <Center>
+                <BsFiletypeCsv size={40} />
+              </Center>
             </Box>
-          </Dropzone>
+            <Text mt={10} ta={"center"}>
+              Pilih file
+            </Text>
+            <Text ta={"center"}>diperangkat</Text>
+          </Box>
+
           <Box onClick={() => router.push("/task/create?page=file-save")}>
             <Box
               bg={"#DCEED8"}
@@ -333,7 +358,7 @@ export default function CreateTask() {
             <Text ta={"center"}>sudah ada</Text>
           </Box>
         </Flex>
-      </LayoutDrawer>
+      </LayoutDrawer> */}
 
 
 
@@ -347,10 +372,10 @@ export default function CreateTask() {
           <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
             <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteFile(indexDelFile)}>
               <Box>
-                <FaTrash size={30} color={WARNA.biruTua} />
+                <FaTrash size={30} color={tema.get().utama} />
               </Box>
               <Box>
-                <Text c={WARNA.biruTua} ta='center'>Hapus File</Text>
+                <Text c={tema.get().utama} ta='center'>Hapus File</Text>
               </Box>
             </Flex>
           </SimpleGrid>
@@ -368,10 +393,10 @@ export default function CreateTask() {
           <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
             <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteTask(indexDelTask)}>
               <Box>
-                <FaTrash size={30} color={WARNA.biruTua} />
+                <FaTrash size={30} color={tema.get().utama} />
               </Box>
               <Box>
-                <Text c={WARNA.biruTua} ta='center'>Hapus Tugas</Text>
+                <Text c={tema.get().utama} ta='center'>Hapus Tugas</Text>
               </Box>
             </Flex>
           </SimpleGrid>

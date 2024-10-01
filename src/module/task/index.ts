@@ -1,4 +1,5 @@
 import AddDetailTask from "./ui/add_detail_task";
+import AddFileDetailTask from "./ui/add_file_detail_task";
 import AddMemberDetailTask from "./ui/add_member_detail_task";
 import CancelTask from "./ui/cancel_task";
 import ViewDateEndTask from "./ui/create_date_end_task";
@@ -31,3 +32,4 @@ export { AddDetailTask }
 export { AddMemberDetailTask }
 export { CancelTask }
 export { EditTask }
+export { AddFileDetailTask }

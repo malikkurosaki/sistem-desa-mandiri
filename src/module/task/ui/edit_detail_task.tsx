@@ -1,5 +1,5 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import {
    Avatar,
    Box,
@@ -7,9 +7,12 @@ import {
    Flex,
    Group,
    Input,
+   rem,
    SimpleGrid,
+   Skeleton,
    Stack,
    Text,
+   TextInput,
 } from "@mantine/core";
 import React, { useState } from "react";
 import { DatePicker } from "@mantine/dates";
@@ -19,6 +22,7 @@ import moment from "moment";
 import { funEditDetailTask, funGetDetailTask } from "../lib/api_task";
 import { useShallowEffect } from "@mantine/hooks";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
 
 
 export default function EditDetailTask() {
@@ -27,6 +31,12 @@ export default function EditDetailTask() {
    const [title, setTitle] = useState("")
    const param = useParams<{ id: string, detail: string }>()
    const [openModal, setOpenModal] = useState(false)
+   const [loading, setLoading] = useState(true)
+   const [idTugas, setIdTugas] = useState("")
+   const tema = useHookstate(TEMA)
+   const [touched, setTouched] = useState({
+      title: false,
+   });
 
    async function onSubmit() {
       if (value[0] == null || value[1] == null)
@@ -44,6 +54,7 @@ export default function EditDetailTask() {
 
          if (res.success) {
             toast.success(res.message);
+            router.push(`/division/${param.id}/task/${idTugas}`)
          } else {
             toast.error(res.message);
          }
@@ -56,8 +67,10 @@ export default function EditDetailTask() {
 
    async function getOneData() {
       try {
+         setLoading(true)
          const res = await funGetDetailTask(param.detail);
          if (res.success) {
+            setIdTugas(res.data.idProject)
             setTitle(res.data.title)
             setValue([
                new Date(moment(res.data.dateStart).format('YYYY-MM-DD')),
@@ -66,10 +79,12 @@ export default function EditDetailTask() {
          } else {
             toast.error(res.message);
          }
-
+         setLoading(false)
       } catch (error) {
          console.error(error);
          toast.error("Gagal mendapatkan detail tugas divisi, coba lagi nanti");
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -77,10 +92,27 @@ export default function EditDetailTask() {
       getOneData();
    }, [param.detail])
 
+   function onCheck() {
+      if (Object.values(touched).some((v) => v == true))
+         return false
+      setOpenModal(true)
+   }
+
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'title') {
+         setTitle(val)
+         if (val === "") {
+            setTouched({ ...touched, title: true })
+         } else {
+            setTouched({ ...touched, title: false })
+         }
+      }
+   }
 
    return (
       <Box>
-         <LayoutNavbarNew back="" title={"Edit Detail Tugas"} menu />
+         <LayoutNavbarNew back="" title={"Edit Tanggal dan Tugas"} menu />
          <Box p={20}>
             <Group
                justify="center"
@@ -94,59 +126,92 @@ export default function EditDetailTask() {
                   value={value}
                   onChange={setValue}
                   size="md"
-                  c={WARNA.biruTua}
+                  c={tema.get().utama}
                />
             </Group>
             <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
                <Box>
-                  <Text>Tanggal Mulai</Text>
-                  <Group
-                     justify="center"
-                     bg={"white"}
-                     h={45}
-                     style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
-                  >
-                     <Text>{value[0] ? `${moment(value[0]).format('DD-MM-YYYY')}` : ""}</Text>
-                  </Group>
+                  {loading ?
+                     <Skeleton height={45} mt={20} radius={10} />
+                     :
+                     <>
+                        <Text>Tanggal Mulai</Text>
+                        <Group
+                           justify="center"
+                           bg={"white"}
+                           h={45}
+                           style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
+                        >
+                           <Text>{value[0] ? `${moment(value[0]).format('DD-MM-YYYY')}` : ""}</Text>
+                        </Group>
+                     </>
+                  }
                </Box>
                <Box>
-                  <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
-                  <Group
-                     justify="center"
-                     bg={"white"}
-                     h={45}
-                     style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
-                  >
-                     <Text>{value[1] ? `${moment(value[1]).format('DD-MM-YYYY')}` : ""}</Text>
-                  </Group>
+                  {loading ?
+                     <Skeleton height={45} mt={20} radius={10} />
+                     :
+                     <>
+                        <Text c={tema.get().utama}>Tanggal Berakhir</Text>
+                        <Group
+                           justify="center"
+                           bg={"white"}
+                           h={45}
+                           style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
+                        >
+                           <Text>{value[1] ? `${moment(value[1]).format('DD-MM-YYYY')}` : ""}</Text>
+                        </Group>
+                     </>
+                  }
                </Box>
             </SimpleGrid>
-            <Stack pt={15}>
-               <Input
-                  styles={{
-                     input: {
-                        border: `1px solid ${"#D6D8F6"}`,
-                        borderRadius: 10,
-                     },
-                  }}
-                  placeholder="Input Nama Tahapan"
-                  size="md"
-                  value={title}
-                  onChange={(e) => { setTitle(e.target.value) }}
-               />
+            <Stack pt={15} pb={100}>
+               {loading ?
+                  <Skeleton height={40} mt={20} radius={10} />
+                  :
+                  <TextInput
+                     styles={{
+                        input: {
+                           border: `1px solid ${"#D6D8F6"}`,
+                           borderRadius: 10,
+                        },
+                     }}
+                     label={"Judul Tahapan"}
+                     required
+                     placeholder="Input Judul Tahapan"
+                     size="md"
+                     value={title}
+                     error={
+                        touched.title &&
+                        (title == "" ? "Error! harus memasukkan Judul Tahapan" : ""
+                        )
+                      }
+                     onChange={(e) => {
+                        onValidation('title', e.target.value)
+                      }}
+                  />
+               }
             </Stack>
-            <Box mt={"xl"}>
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`,
+         }}>
+            {loading ?
+               <Skeleton height={50} radius={30} />
+               :
                <Button
                   c={"white"}
-                  bg={WARNA.biruTua}
+                  bg={tema.get().utama}
                   size="lg"
                   radius={30}
                   fullWidth
-                  onClick={() => { setOpenModal(true) }}
+                  onClick={() => { onCheck() }}
                >
                   Simpan
                </Button>
-            </Box>
+            }
          </Box>
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}

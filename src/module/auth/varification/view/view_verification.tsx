@@ -74,6 +74,7 @@ JANGAN BERIKAN KODE RAHASIA ini kepada siapa pun TERMASUK PIHAK DARMASABA. Masuk
                 <PinInput
                   style={{ justifyContent: "center" }}
                   placeholder=""
+                  type={"number"}
                   size="lg"
                   styles={{
                     input: {

@@ -1,18 +1,50 @@
 'use client'
-import { WARNA } from '@/module/_global';
-import { Box, Group, Skeleton, Text } from '@mantine/core';
+import { LayoutDrawer, LayoutModalViewFile, TEMA } from '@/module/_global';
+import { Box, Center, Flex, Grid, Group, SimpleGrid, Skeleton, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { funGetOneProjectById } from '../lib/api_project';
+import { funDeleteFileProject, funGetOneProjectById } from '../lib/api_project';
 import { useParams } from 'next/navigation';
-import { useShallowEffect } from '@mantine/hooks';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { IDataFileProject } from '../lib/type_project';
-import { BsFiletypeCsv, BsFiletypeHeic, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from 'react-icons/bs';
+import { BsFileTextFill, BsFiletypeCsv, BsFiletypeHeic, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from 'react-icons/bs';
+import LayoutModal from '@/module/_global/layout/layout_modal';
+import { FaTrash } from 'react-icons/fa6';
+import { useHookstate } from '@hookstate/core';
 
 export default function ListFileDetailProject() {
   const [isData, setData] = useState<IDataFileProject[]>([])
   const param = useParams<{ id: string }>()
   const [loading, setLoading] = useState(true)
+  const [idData, setIdData] = useState('')
+  const [idStorage, setIdStorage] = useState('')
+  const [nameData, setNameData] = useState('')
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const [isOpenModal, setOpenModal] = useState(false)
+  const [isOpenModalView, setOpenModalView] = useState(false)
+  const [isExtension, setExtension] = useState('')
+  const tema = useHookstate(TEMA)
+  const isMobile = useMediaQuery("(max-width: 350px)");
+  const [reason, setReason] = useState("")
+
+  async function getOneDataCancel() {
+    try {
+      const res = await funGetOneProjectById(param.id, 'data');
+      if (res.success) {
+        setReason(res.data.reason);
+      } else {
+        toast.error(res.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan data Kegiatan, coba lagi nanti");
+    }
+  }
+
+  useShallowEffect(() => {
+    getOneDataCancel();
+  }, [param.id])
 
   async function getOneData() {
     try {
@@ -26,7 +58,7 @@ export default function ListFileDetailProject() {
 
     } catch (error) {
       console.error(error);
-      toast.error("Gagal mendapatkan file Kegiatan, coba lagi nanti");
+      toast.error("Gagal mendapatkan file kegiatan, coba lagi nanti");
     } finally {
       setLoading(false)
     }
@@ -36,10 +68,30 @@ export default function ListFileDetailProject() {
     getOneData();
   }, [param.id])
 
+
+  async function onDelete() {
+    try {
+      const res = await funDeleteFileProject(idData);
+      if (res.success) {
+        toast.success(res.message)
+        getOneData()
+        setIdData("")
+        setIdStorage("")
+        setOpenDrawer(false)
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal menghapus file, coba lagi nanti");
+    }
+
+  }
+
   return (
     <>
       <Box pt={20}>
-        <Text fw={'bold'} c={WARNA.biruTua}>File</Text>
+        <Text fw={'bold'} c={tema.get().utama}>File</Text>
         <Box bg={"white"} style={{
           borderRadius: 10,
           border: `1px solid ${"#D6D8F6"}`,
@@ -70,20 +122,102 @@ export default function ListFileDetailProject() {
                         padding: 10
                       }}
                       mb={10}
+
+                      onClick={() => {
+                        setNameData(item.name + '.' + item.extension)
+                        setExtension(item.extension)
+                        setIdData(item.id)
+                        setIdStorage(item.idStorage)
+                        setOpenDrawer(true)
+                      }}
                     >
+                      <Grid justify='center' align='center'>
+                        <Grid.Col span={{
+                          base: 1.5,
+                          xs: 1,
+                          sm: 1,
+                          md: 1,
+                          lg: 1,
+                          xl: 1,
+                        }}>
+                          {item.extension == "pdf" && <BsFiletypePdf size={30} />}
+                          {item.extension == "csv" && <BsFiletypeCsv size={30} />}
+                          {item.extension == "png" && <BsFiletypePng size={30} />}
+                          {item.extension == "jpg" && <BsFiletypeJpg size={30} />}
+                          {item.extension == "jpeg" && <BsFiletypeJpg size={30} />}
+                          {item.extension == "PNG" && <BsFiletypePng size={30} />}
+                          {item.extension == "JPG" && <BsFiletypeJpg size={30} />}
+                          {item.extension == "JPEG" && <BsFiletypeJpg size={30} />}
+                          {item.extension == "heic" && <BsFiletypeHeic size={30} />}
+                        </Grid.Col>
+                        <Grid.Col
+                          span={{
+                            base: 10.5,
+                            xs: 11,
+                            sm: 11,
+                            md: 11,
+                            lg: 11,
+                            xl: 11,
+                          }}
+                        >
+                          <Text style={{
+                            overflowWrap: "break-word"
+                          }} pl={isMobile ? 10 : 0} truncate="end">{item.name + '.' + item.extension}</Text>
+                        </Grid.Col>
+                      </Grid>
                       <Group>
-                        {item.extension == "pdf" && <BsFiletypePdf size={25} />}
-                        {item.extension == "csv" && <BsFiletypeCsv size={25} />}
-                        {item.extension == "png" && <BsFiletypePng size={25} />}
-                        {item.extension == "jpg" || item.extension == "jpeg" && <BsFiletypeJpg size={25} />}
-                        {item.extension == "heic" && <BsFiletypeHeic size={25} />}
-                        <Text>{item.name}</Text>
                       </Group>
                     </Box>
                   )
                 })
           }
         </Box>
+
+
+
+        <LayoutDrawer opened={openDrawer} title={<Text truncate="end">{nameData}</Text>} onClose={() => setOpenDrawer(false)}>
+          <Box>
+            <Stack pt={10}>
+              <SimpleGrid
+                cols={{ base: 3, sm: 3, lg: 3 }}
+              >
+                <Flex onClick={() => { setOpenModalView(true) }} justify={'center'} align={'center'} direction={'column'} >
+                  <Box>
+                    <BsFileTextFill size={30} color={tema.get().utama} />
+                  </Box>
+                  <Box>
+                    <Text c={tema.get().utama}>Lihat file</Text>
+                  </Box>
+                </Flex>
+
+                <Flex onClick={() => {
+                  reason == null ?
+                    setOpenModal(true)
+                    : setOpenModal(false)
+                }} justify={'center'} align={'center'} direction={'column'} >
+                  <Box>
+                    <FaTrash size={30} color={reason == null ? tema.get().utama : "gray"} />
+                  </Box>
+                  <Box>
+                    <Text c={reason == null ? tema.get().utama : "gray"}>Hapus file</Text>
+                  </Box>
+                </Flex>
+              </SimpleGrid>
+            </Stack>
+          </Box>
+        </LayoutDrawer>
+
+
+        <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+          description="Apakah Anda yakin ingin menghapus file ini? File yang dihapus tidak dapat dikembalikan"
+          onYes={(val) => {
+            if (val) {
+              onDelete()
+            }
+            setOpenModal(false)
+          }} />
+
+        <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idStorage} extension={isExtension} fitur='project' />
       </Box>
     </>
   );

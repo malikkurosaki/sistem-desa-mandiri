@@ -1,19 +1,22 @@
 "use client";
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
 import {
     Avatar,
     Box,
     Button,
+    Divider,
     Flex,
+    Grid,
     Group,
+    rem,
     Select,
     Stack,
     Text,
     Textarea,
     TextInput,
 } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
@@ -31,6 +34,8 @@ export default function CreateDivision() {
     const [isChooseAnggota, setChooseAnggota] = useState(false)
     const [isChooseAdmin, setChooseAdmin] = useState(false)
     const member = useHookstate(globalMemberDivision)
+    const tema = useHookstate(TEMA)
+    const isMobile = useMediaQuery('(max-width: 369px)');
     const [body, setBody] = useState<any>({
         idGroup: "",
         name: "",
@@ -95,12 +100,12 @@ export default function CreateDivision() {
     if (isChooseAdmin) return <NavbarAdminDivision data={body} onSuccess={(val) => {
         if (val) {
             member.set([])
-            setBody({
-                ...body,
-                idGroup: "",
-                name: "",
-                desc: "",
-            })
+            // setBody({
+            //     ...body,
+            //     idGroup: "",
+            //     name: "",
+            //     desc: "",
+            // })
         }
 
         setChooseAdmin(false)
@@ -120,7 +125,7 @@ export default function CreateDivision() {
                                 label="Grup"
                                 size="md"
                                 required
-                                radius={40}
+                                radius={10}
                                 data={dataGroup?.map((pro: any) => ({
                                     value: String(pro.id),
                                     label: pro.name
@@ -143,7 +148,7 @@ export default function CreateDivision() {
                         label="Nama Divisi"
                         size="md"
                         required
-                        radius={40}
+                        radius={10}
                         value={body.name}
                         onChange={(val) => { setBody({ ...body, name: val.target.value }) }}
                         onBlur={() => setTouched({ ...touched, name: true })}
@@ -167,10 +172,10 @@ export default function CreateDivision() {
                             <IoIosArrowDropright size={25} />
                         </Group>
                     </Box>
-                    <Box pt={20}>
+                    <Box pt={20} pb={50}>
                         <Group justify="space-between">
-                            <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-                            <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
+                            <Text c={tema.get().utama}>Anggota Terpilih</Text>
+                            <Text c={tema.get().utama}>Total {member.length} Anggota</Text>
                         </Group>
                         <Box pt={10}>
                             <Box mb={20}>
@@ -186,45 +191,57 @@ export default function CreateDivision() {
                                         <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada anggota</Text>
                                     ) : member.get().map((v: any, i: any) => {
                                         return (
-                                            <Flex
-                                                justify={"space-between"}
-                                                align={"center"}
-                                                mt={20}
-                                                key={i}
-                                            >
-                                                <Group>
-                                                    <Avatar src={v.img} alt="it's me" size="lg" />
-                                                    <Box>
-                                                        <Text c={WARNA.biruTua} fw={"bold"}>
-                                                            {v.name}
+                                            <Box key={i}>
+                                                <Grid align='center' mt={10}
+                                                >
+                                                    <Grid.Col span={9}>
+                                                        <Group>
+                                                            <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
+                                                            <Box w={{
+                                                                base: isMobile ? 130 : 140,
+                                                                xl: 270
+                                                            }}>
+                                                                <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
+                                                                    {v.name}
+                                                                </Text>
+                                                            </Box>
+                                                        </Group>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={3}>
+                                                        <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                                                            Anggota
                                                         </Text>
-                                                    </Box>
-                                                </Group>
-                                                <Text c={WARNA.biruTua} fw={"bold"}>
-                                                    Anggota
-                                                </Text>
-                                            </Flex>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Box mt={10}>
+                                                    <Divider size={"xs"} />
+                                                </Box>
+                                            </Box>
                                         );
                                     })}
                                 </Box>
                             </Box>
                         </Box>
                     </Box>
-                    <Box mt="xl">
-                        <Button
-                            color="white"
-                            bg={WARNA.biruTua}
-                            size="lg"
-                            radius={30}
-                            fullWidth
-                            onClick={() => {
-                                onSubmit()
-                            }}
-                        >
-                            Simpan
-                        </Button>
-                    </Box>
                 </Stack>
+            </Box>
+            <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+                maxWidth: rem(550),
+                zIndex: 999,
+                backgroundColor: `${tema.get().bgUtama}`,
+            }}>
+                <Button
+                    color="white"
+                    bg={tema.get().utama}
+                    size="lg"
+                    radius={30}
+                    fullWidth
+                    onClick={() => {
+                        onSubmit()
+                    }}
+                >
+                    Simpan
+                </Button>
             </Box>
         </Box>
     );

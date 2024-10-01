@@ -1,11 +1,11 @@
 import { TypeUser } from './lib/type_user';
 import createLogUser from "./log/fun/createLogUser";
-import ViewEditProfile from "./profile/view/view_edit_profile";
-import ViewProfile from "./profile/view/view_profile";
 import { funGetAllmember } from './member/lib/api_member';
+import Profile from './profile/ui/profile';
+import EditProfile from './profile/ui/edit_profile';
 
-export { ViewProfile };
-export { ViewEditProfile };
 export { createLogUser };
 export type { TypeUser }
 export { funGetAllmember }
+export { Profile }
+export { EditProfile }

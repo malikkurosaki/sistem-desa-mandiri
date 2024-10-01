@@ -1,7 +1,7 @@
 'use client'
-import { LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
-import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
+import { globalRole, LayoutDrawer, SkeletonList, SkeletonSingle, TEMA } from "@/module/_global";
+import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack, Grid, Divider } from "@mantine/core";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -10,6 +10,8 @@ import { IDataMemberTaskDivision } from "../lib/type_task";
 import { FaUser } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
+import { globalIsAdminDivision } from "@/module/division_new";
 
 
 export default function ListAnggotaDetailTask() {
@@ -20,6 +22,31 @@ export default function ListAnggotaDetailTask() {
    const [isOpenModal, setOpenModal] = useState(false)
    const [dataChoose, setDataChoose] = useState({ id: '', name: '' })
    const router = useRouter()
+   const roleLogin = useHookstate(globalRole)
+   const adminLogin = useHookstate(globalIsAdminDivision)
+   const isMobile = useMediaQuery('(max-width: 369px)');
+   const isMobile2 = useMediaQuery("(max-width: 438px)");
+   const tema = useHookstate(TEMA)
+   const [reason, setReason] = useState("")
+
+   async function getOneDataCancel() {
+      try {
+         const res = await funGetTaskDivisionById(param.detail, 'data');
+         if (res.success) {
+            setReason(res.data.reason);
+         } else {
+            toast.error(res.message);
+         }
+
+      } catch (error) {
+         console.error(error);
+         toast.error("Gagal mendapatkan data tugas divisi, coba lagi nanti");
+      }
+   }
+
+   useShallowEffect(() => {
+      getOneDataCancel();
+   }, [param.detail])
 
    async function getOneData() {
       try {
@@ -65,8 +92,8 @@ export default function ListAnggotaDetailTask() {
    return (
       <Box pt={20}>
          <Group justify="space-between">
-            <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-            <Text c={WARNA.biruTua}>Total {isData.length} Anggota</Text>
+            <Text c={tema.get().utama}>Anggota Terpilih</Text>
+            <Text c={tema.get().utama}>Total {isData.length} Anggota</Text>
          </Group>
          <Box pt={10}>
             <Box mb={20}>
@@ -74,9 +101,8 @@ export default function ListAnggotaDetailTask() {
                   style={{
                      border: `1px solid ${"#C7D6E8"}`,
                      borderRadius: 10,
+                     padding: 20
                   }}
-                  px={20}
-                  py={10}
                >
                   {
                      loading ?
@@ -84,38 +110,42 @@ export default function ListAnggotaDetailTask() {
                            .fill(null)
                            .map((_, i) => (
                               <Box key={i}>
-                                 <SkeletonSingle />
+                                 <SkeletonList />
                               </Box>
                            ))
                         :
-                        isData.length === 0 ? <Text>Tidak ada anggota</Text> :
+                        isData.length === 0 ? <Text c={"dimmed"} ta={"center"} fs={"italic"}>Tidak ada anggota</Text> :
                            isData.map((v, i) => {
                               return (
-                                 <Flex
-                                    justify={"space-between"}
-                                    align={"center"}
-                                    mt={20}
-                                    key={i}
-                                    onClick={() => {
-                                       setDataChoose({ id: v.idUser, name: v.name })
-                                       setOpenDrawer(true)
-                                    }}
-                                 >
-                                    <Group>
-                                       <Avatar src={""} alt="it's me" size="lg" />
-                                       <Box>
-                                          <Text c={WARNA.biruTua} fw={"bold"}>
-                                             {v.name}
+                                 <Box key={i}>
+                                    <Grid align='center' mt={10}
+                                       onClick={() => {
+                                          setDataChoose({ id: v.idUser, name: v.name })
+                                          reason == null ?
+                                             setOpenDrawer(true)
+                                             : setOpenDrawer(false)
+                                       }}
+                                    >
+                                       <Grid.Col span={1}>
+                                          <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={'lg'} />
+                                       </Grid.Col>
+                                       <Grid.Col span={8}>
+                                          <Text lineClamp={1} pl={isMobile2 ? 40 : 30} fz={isMobile ? 15 : 16}>{v.name}</Text>
+                                          <Text c={"#5A687D"} truncate="end" fz={isMobile ? 12 : 14} pl={isMobile2 ? 40 : 30}
+                                             style={{
+                                                overflowWrap: "break-word"
+                                             }}>{v.email}</Text>
+                                       </Grid.Col>
+                                       <Grid.Col span={3}>
+                                          <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                                             Anggota
                                           </Text>
-                                          <Text c={"#5A687D"} fz={14}>
-                                             {v.email}
-                                          </Text>
-                                       </Box>
-                                    </Group>
-                                    <Text c={WARNA.biruTua} fw={"bold"}>
-                                       Anggota
-                                    </Text>
-                                 </Flex>
+                                       </Grid.Col>
+                                    </Grid>
+                                    <Box mt={10}>
+                                       <Divider my={10} />
+                                    </Box>
+                                 </Box>
                               );
                            })}
                </Box>
@@ -123,29 +153,32 @@ export default function ListAnggotaDetailTask() {
          </Box>
 
 
-         <LayoutDrawer opened={openDrawer} title={dataChoose.name} onClose={() => setOpenDrawer(false)}>
+         <LayoutDrawer opened={openDrawer} title={<Text lineClamp={1}>{dataChoose.name}</Text>} onClose={() => setOpenDrawer(false)}>
             <Box>
                <Stack pt={10}>
                   <SimpleGrid
-                     cols={{ base: 3, sm: 3, lg: 3 }}
+                     cols={{ base: 2, sm: 3, lg: 3 }}
                   >
                      <Flex onClick={() => { router.push('/member/' + dataChoose.id) }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>
-                           <FaUser size={30} color={WARNA.biruTua} />
+                           <FaUser size={30} color={tema.get().utama} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua}>Lihat profil</Text>
+                           <Text c={tema.get().utama}>Lihat profil</Text>
                         </Box>
                      </Flex>
-
-                     <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
-                        <Box>
-                           <IoIosCloseCircle size={30} color={WARNA.biruTua} />
-                        </Box>
-                        <Box>
-                           <Text c={WARNA.biruTua}>Keluarkan anggota</Text>
-                        </Box>
-                     </Flex>
+                     {
+                        (roleLogin.get() != "user" && roleLogin.get() != "coadmin") || adminLogin.get() ?
+                           <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
+                              <Box>
+                                 <IoIosCloseCircle size={30} color={tema.get().utama} />
+                              </Box>
+                              <Box>
+                                 <Text c={tema.get().utama}>Keluarkan anggota</Text>
+                              </Box>
+                           </Flex>
+                           : <></>
+                     }
                   </SimpleGrid>
                </Stack>
             </Box>

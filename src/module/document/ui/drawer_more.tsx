@@ -1,4 +1,4 @@
-import { LayoutDrawer, WARNA } from "@/module/_global";
+import { LayoutDrawer, TEMA } from "@/module/_global";
 import { Box, Flex, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import React, { useState } from "react";
 import { LuFolders, LuFolderSymlink } from "react-icons/lu";
@@ -9,12 +9,15 @@ import { funCopyDocument, funMoveDocument } from "../lib/api_document";
 import { useHookstate } from "@hookstate/core";
 import { globalRefreshDocument } from "../lib/val_document";
 import { useParams } from "next/navigation";
+import { useShallowEffect } from "@mantine/hooks";
 
 export default function DrawerMore({ data }: { data: IDataDocument[] }) {
   const [isCut, setIsCut] = useState(false)
   const [isCopy, setIsCopy] = useState(false)
   const refresh = useHookstate(globalRefreshDocument)
   const param = useParams<{ id: string }>()
+  const [forbidCopy, setForbidCopy] = useState(true)
+  const tema = useHookstate(TEMA)
 
 
   async function onMoveItem(path: string) {
@@ -27,7 +30,7 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
         toast.error(res.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal memindahkan item, coba lagi nanti")
     }
     setIsCut(false)
@@ -44,11 +47,21 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
         toast.error(res.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error("Gagal memindahkan item, coba lagi nanti")
     }
     setIsCopy(false)
   }
+
+
+  function cekFileSelected() {
+    const cek = data.some((i: any) => i.category == "FOLDER")
+    setForbidCopy(cek)
+  }
+
+  useShallowEffect(() => {
+    cekFileSelected()
+  }, [data])
 
 
 
@@ -60,20 +73,23 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
         >
           <Flex onClick={() => setIsCut(true)} justify={'center'} align={'center'} direction={'column'} >
             <Box>
-              <LuFolderSymlink size={30} color={WARNA.biruTua} />
+              <LuFolderSymlink size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Pindah</Text>
+              <Text c={tema.get().utama}>Pindah</Text>
             </Box>
           </Flex>
-          <Flex onClick={() => setIsCopy(true)} justify={'center'} align={'center'} direction={'column'} >
-            <Box>
-              <LuFolders size={30} color={WARNA.biruTua} />
-            </Box>
-            <Box>
-              <Text c={WARNA.biruTua}>Salin</Text>
-            </Box>
-          </Flex>
+          {
+            (!forbidCopy) &&
+            <Flex onClick={() => setIsCopy(true)} justify={'center'} align={'center'} direction={'column'} >
+              <Box>
+                <LuFolders size={30} color={tema.get().utama} />
+              </Box>
+              <Box>
+                <Text c={tema.get().utama}>Salin</Text>
+              </Box>
+            </Flex>
+          }
         </SimpleGrid>
       </Stack>
 

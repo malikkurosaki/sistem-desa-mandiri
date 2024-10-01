@@ -2,6 +2,7 @@ export interface IDataDiscussion {
    id: string
    title: string
    desc: string
+   img: string
    status: number
    createdAt: string
    user_name: string
@@ -16,7 +17,7 @@ export interface IFormDiscussion {
 export interface IStatusDiscussion {
    status: number
 }
- 
+
 
 export interface IDetailDiscussion {
    id: string
@@ -26,25 +27,28 @@ export interface IDetailDiscussion {
    createdAt: string
    DivisionDisscussionComment: IAllComents[]
    username: string
+   user_img: string
    totalComments: number
- }
- 
- export interface IAllComents {
+   createdBy: string
+}
+
+export interface IAllComents {
    id: string
    comment: string
    createdAt: string
    User: User
+   img: string
    username: string
- }
- 
- export interface User {
-   name: string
- }
- 
-export interface IDeleteDicussion {
-    id: string
 }
- 
+
+export interface User {
+   name: string
+}
+
+export interface IDeleteDicussion {
+   id: string
+}
+
 export interface IEditDiscussion {
    desc: string
 }

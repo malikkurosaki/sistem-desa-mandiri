@@ -1,7 +1,7 @@
 "use client"
-import { LayoutDrawer, LayoutNavbarNew, SkeletonSingle, WARNA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, Button, Divider, Flex, Group, Skeleton, Stack, Text } from '@mantine/core';
-import { useShallowEffect } from '@mantine/hooks';
+import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
+import { ActionIcon, Avatar, Box, Button, Divider, Flex, Grid, Group, Skeleton, Stack, Text } from '@mantine/core';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -12,6 +12,8 @@ import { LuClipboardEdit } from 'react-icons/lu';
 import { funDeleteMemberDivision, funEditStatusAdminDivision, funGetDivisionById } from '../lib/api_division';
 import { IDataMemberDivision } from '../lib/type_division';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
+import { funGetUserByCookies } from '@/module/auth';
 
 
 export default function InformationDivision() {
@@ -26,15 +28,23 @@ export default function InformationDivision() {
   const [valChooseMemberStatus, setChooseMemberStatus] = useState<boolean>(false)
   const [valChooseMemberName, setChooseMemberName] = useState("")
   const [isOpenModal, setOpenModal] = useState(false)
+  const roleLogin = useHookstate(globalRole)
+  const [isAdmin, setAdmin] = useState(false)
+  const isMobile = useMediaQuery('(max-width: 455px)');
+  const isMobile2 = useMediaQuery("(max-width: 438px)");
+  const tema = useHookstate(TEMA)
 
   async function getOneData() {
     try {
       setLoading(true);
       const res = await funGetDivisionById(param.id);
+      const login = await funGetUserByCookies()
       if (res.success) {
         setName(res.data.division.name);
         setDeskripsi(res.data.division.desc);
         setMember(res.data.member)
+        const cek = res.data.member.some((i: any) => i.idUser == login.id && i.isAdmin == true)
+        setAdmin(cek)
       } else {
         toast.error(res.message);
       }
@@ -99,18 +109,21 @@ export default function InformationDivision() {
     <Box>
       <LayoutNavbarNew back={"/division/" + param.id} title={name}
         menu={
-          <ActionIcon variant="light" onClick={() => {
-            router.push('/division/edit/' + param.id)
-          }} bg={WARNA.bgIcon} size="lg" radius="lg" aria-label="Settings">
-            <LuClipboardEdit size={20} color='white' />
-          </ActionIcon>}
+          ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
+            <ActionIcon variant="light" onClick={() => {
+              router.push('/division/edit/' + param.id)
+            }} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
+              <LuClipboardEdit size={20} color='white' />
+            </ActionIcon>
+            : <></>
+        }
       />
       <Box p={20}>
         <Box>
           <Text fw={"bold"}>Deskripsi Divisi</Text>
           <Box p={20} bg={"white"} style={{
             borderRadius: 10,
-            border: `1px solid ${WARNA.borderBiruMuda}`,
+            border: `1px solid ${tema.get().bgTotalKegiatan}`,
           }}>
             {
               loading ?
@@ -131,77 +144,70 @@ export default function InformationDivision() {
         <Box mt={20}>
           <Box p={20} bg={"white"} style={{
             borderRadius: 10,
-            border: `1px solid ${WARNA.borderBiruMuda}`,
+            border: `1px solid ${tema.get().bgTotalKegiatan}`,
           }}>
             <Box>
               <Text>{member.length} Anggota</Text>
             </Box>
             <Box mt={15}>
               {loading ?
-                <Group
-                  align="center"
-                  style={{
-                    border: `1px solid ${"#DCEED8"}`,
-                    padding: 10,
-                    borderRadius: 10,
-                    cursor: "pointer",
-                  }}
-                >
-                  <Box>
-                    <ActionIcon
-                      variant="light"
-                      bg={"#DCEED8"}
-                      size={50}
-                      radius={100}
-                      aria-label="icon"
-                    >
-                      <Skeleton height={25} width={25} />
-                    </ActionIcon>
-                  </Box>
-                  <Box>
-                    <Skeleton height={20} width={100} />
-                  </Box>
-                </Group>
+                <Box>
+                  <Grid p={10} align="center">
+                    <Grid.Col span={2}>
+                      <Skeleton w={50} h={50} radius={100} />
+                    </Grid.Col>
+                    <Grid.Col span={9}>
+                      <Skeleton w={"80%"} h={20} />
+                    </Grid.Col>
+                  </Grid>
+                </Box>
                 :
-                <Group align='center' onClick={() => router.push('/division/add-member/' + param.id)}>
-                  <Avatar size="lg">
-                    <AiOutlineUserAdd size={30} color={WARNA.biruTua} />
-                  </Avatar>
-                  <Text>Tambah Anggota</Text>
-                </Group>
+
+                ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
+                  <Group align='center' onClick={() => router.push('/division/add-member/' + param.id)}>
+                    <Avatar size={'lg'}>
+                      <AiOutlineUserAdd size={30} color={tema.get().utama} />
+                    </Avatar>
+                    <Text fz={isMobile ? 14 : 16}>Tambah Anggota</Text>
+                  </Group>
+                  : <></>
               }
             </Box>
             <Box pt={10}>
               <Box mb={10}>
                 {loading
-                  ? Array(3)
+                  ? Array(6)
                     .fill(null)
                     .map((_, i) => (
                       <Box key={i}>
-                        <SkeletonSingle />
+                        <SkeletonList />
                       </Box>
                     ))
                   : member.map((v, i) => {
                     return (
                       <Box key={i}>
-                        <Flex
-                          justify={"space-between"}
-                          align={"center"}
-                          mt={10}
-                          onClick={() => { onClickMember(v.id, (v.isAdmin) ? true : false), setChooseMemberName(v.name) }}
+                        <Grid align='center' mt={10}
+                          onClick={() => {
+                            if ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) {
+                              onClickMember(v.id, (v.isAdmin) ? true : false)
+                              setChooseMemberName(v.name)
+                            }
+                          }}
                         >
-                          <Group>
-                            <Avatar src={"v.img"} alt="it's me" size="lg" />
-                            <Box>
-                              <Text c={WARNA.biruTua} fw={"bold"}>
-                                {v.name}
-                              </Text>
-                            </Box>
-                          </Group>
-                          <Text c={WARNA.biruTua} fw={"bold"}>
-                            {(v.isAdmin) ? 'Admin' : 'Anggota'}
-                          </Text>
-                        </Flex>
+                          <Grid.Col span={1}>
+                              <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={'lg'} />
+                          </Grid.Col>
+                          <Grid.Col span={8}>
+                                <Text c={tema.get().utama} fw={"bold"} truncate="end" pl={isMobile2 ? 40 : 30} fz={isMobile ? 14 : 16}>
+                                  {v.name}
+                                </Text>
+                          </Grid.Col>
+                          <Grid.Col span={3}>
+                            <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                              {(v.isAdmin) ? 'Admin' : 'Anggota'}
+                            </Text>
+                          </Grid.Col>
+                        </Grid>
                         <Box mt={10}>
                           <Divider size={"xs"} />
                         </Box>
@@ -219,15 +225,15 @@ export default function InformationDivision() {
         <Box>
           <Group align='center' mb={20} onClick={() => editStatusAdmin()}>
             <ActionIcon variant="light" size={60} aria-label="admin" radius="xl">
-              <FaUserTie size={30} color={WARNA.biruTua} />
+              <FaUserTie size={30} color={tema.get().utama} />
             </ActionIcon>
-            <Text c={WARNA.biruTua}>{(valChooseMemberStatus == false) ? "Jadikan admin" : "Memberhentikan sebagai admin"}</Text>
+            <Text c={tema.get().utama}>{(valChooseMemberStatus == false) ? "Jadikan admin" : "Memberhentikan sebagai admin"}</Text>
           </Group>
           <Group align='center' onClick={() => setOpenModal(true)}>
             <ActionIcon variant="light" size={60} aria-label="admin" radius="xl">
-              <IoIosCloseCircle size={40} color={WARNA.biruTua} />
+              <IoIosCloseCircle size={40} color={tema.get().utama} />
             </ActionIcon>
-            <Text c={WARNA.biruTua}>Keluarkan dari divisi</Text>
+            <Text c={tema.get().utama}>Keluarkan dari divisi</Text>
           </Group>
         </Box>
       </LayoutDrawer>

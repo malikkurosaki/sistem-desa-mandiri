@@ -4,23 +4,25 @@ import EChartsReact from "echarts-for-react";
 import { useShallowEffect } from '@mantine/hooks';
 import * as echarts from 'echarts';
 import { Box } from '@mantine/core';
-import { WARNA } from '@/module/_global';
+import { TEMA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 
-export default function EchartPaiReport() {
+export default function EchartPaiReport({ data }: { data: any }) {
   const [options, setOptions] = useState<EChartsOption>({});
+  const tema = useHookstate(TEMA)
 
   useShallowEffect(() => {
-    loadData()
-  }, [])
+    loadData(data)
+  }, [data])
 
-  const loadData = () => {
+  const loadData = (value: any) => {
     const option: EChartsOption = {
       title: {
         text: "PROGRES TUGAS",
         top: '2%',
         left: 'center',
         textStyle: {
-          color: WARNA.biruTua
+          color: tema.get().utama
         }
       },
       legend: {
@@ -42,12 +44,7 @@ export default function EchartPaiReport() {
               return `${a.value + "%"}`;
             },
           },
-          data: [
-            { value: 25, name: 'Dikerjakan' },
-            { value: 35, name: 'Selesai dikerjakan' },
-            { value: 10, name: 'Segera dikerjakan' },
-            { value: 30, name: 'Batal dikerjakan' },
-          ],
+          data: value,
           emphasis: {
             itemStyle: {
               shadowBlur: 10,

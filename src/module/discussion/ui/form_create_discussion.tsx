@@ -1,23 +1,46 @@
 'use client'
-import { WARNA } from "@/module/_global";
+import { TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { Avatar, Box, Button, Center, Grid, Group, Text, Textarea } from "@mantine/core";
+import { Avatar, Box, Button, Center, Grid, Group, rem, Text, Textarea } from "@mantine/core";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { funCreateDiscussion } from "../lib/api_discussion";
+import { funCreateDiscussion, funGetDiscussionById } from "../lib/api_discussion";
 import { useParams, useRouter } from "next/navigation";
+import { useShallowEffect } from "@mantine/hooks";
+import { funGetProfileByCookies } from "@/module/user/profile/lib/api_profile";
+import { useHookstate } from "@hookstate/core";
 
 export default function FormCreateDiscussion({ id }: { id: string }) {
    const [isValModal, setValModal] = useState(false)
    const router = useRouter()
-   const param = useParams<{ id: string }>()
+   const [isImg, setImg] = useState("")
+   const param = useParams<{ id: string, detail: string }>()
+   const [loading, setLoading] = useState(true)
+   const [img, setIMG] = useState<any | null>()
+   const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       desc: false,
-    });
+   });
    const [isData, setData] = useState({
       desc: "",
       idDivision: id
    })
+   async function getData() {
+      try {
+        setLoading(true)
+        const res = await funGetProfileByCookies()
+        setIMG(`https://wibu-storage.wibudev.com/api/files/${res.data.img}`)
+        setLoading(false)
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false)
+      }
+    }
+  
+    useShallowEffect(() => {
+      getData()
+    }, [])
 
    async function createDiscussion(val: boolean) {
       try {
@@ -26,18 +49,17 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                desc: isData.desc,
                idDivision: id
             })
-   
+
             if (response.success) {
                toast.success(response.message)
                router.push(`/division/${param.id}/discussion/`)
                setValModal(false)
-               router.back()
             } else {
                toast.error(response.message)
             }
          }
       } catch (error) {
-         console.log(error);
+         console.error(error);
          toast.error("Gagal menambahkan diskusi, coba lagi nanti");
       } finally {
          setValModal(false)
@@ -45,13 +67,12 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
    }
 
 
-
    return (
-      <Box pos={"relative"} h={"89vh"}>
+      <Box >
          <Box p={20} >
-            <Grid gutter={0} pt={10}>
-               <Grid.Col span={"auto"}>
-                  <Avatar src={'https://i.pravatar.cc/1000?img=32'} alt="it's me" size="lg" />
+            <Grid  pt={10}>
+               <Grid.Col span={2}>
+                  <Avatar src={img} alt="it's me" size="lg" />
                </Grid.Col>
                <Grid.Col span={10}>
                   <Box>
@@ -61,7 +82,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                            input: {
                               border: 'none',
                               backgroundColor: 'transparent',
-                              height: "60vh"
+                              height: "50vh"
                            }
                         }}
                         value={isData.desc}
@@ -69,38 +90,41 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                         onBlur={() => setTouched({ ...touched, desc: true })}
                         error={
                            touched.desc && (
-                             isData.desc == "" ? "Form Tidak Boleh Kosong" : null
+                              isData.desc == "" ? "Form Tidak Boleh Kosong" : null
                            )
-                         }
+                        }
                      />
                   </Box>
                </Grid.Col>
             </Grid>
-         <Box pos={"absolute"} bottom={10} left={0} right={0} p={20}>
+         </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`,
+         }}>
             <Button
                color="white"
-               bg={WARNA.biruTua}
+               bg={tema.get().utama}
                size="lg"
                radius={30}
                fullWidth
-                  onClick={() => {
-                     if (
-                        isData.desc !== ""
-                     ) {
-                        setValModal(true)   
-                     } else {
-                        toast.error("Form Tidak Boleh Kosong");
+               onClick={() => {
+                  if (
+                     isData.desc !== ""
+                  ) {
+                     setValModal(true)
+                  } else {
+                     toast.error("Form Tidak Boleh Kosong");
                   }
                }}
             >
                Simpan
             </Button>
          </Box>
-         </Box>
 
          <LayoutModal opened={isValModal} onClose={() => setValModal(false)}
-            description="Apakah Anda yakin ingin
-        menambah data?"
+            description="Apakah Anda yakin ingin menambah data?"
             onYes={(val) => { createDiscussion(val) }} />
       </Box>
    )

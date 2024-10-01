@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, SkeletonDetailListTugasTask, WARNA } from '@/module/_global';
+import { LayoutDrawer, SkeletonDetailListTugasTask, TEMA } from '@/module/_global';
 import { Box, Center, Checkbox, Divider, Flex, Grid, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -24,6 +24,27 @@ export default function ListTugasDetailProject() {
   const [openDrawerStatus, setOpenDrawerStatus] = useState(false)
   const [isOpenModal, setOpenModal] = useState(false)
   const router = useRouter()
+  const tema = useHookstate(TEMA)
+  const [reason, setReason] = useState("")
+
+  async function getOneDataCancel() {
+    try {
+      const res = await funGetOneProjectById(param.id, 'data');
+      if (res.success) {
+        setReason(res.data.reason);
+      } else {
+        toast.error(res.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan data Kegiatan, coba lagi nanti");
+    }
+  }
+
+  useShallowEffect(() => {
+    getOneDataCancel();
+  }, [param.id])
 
   async function getOneData() {
     try {
@@ -87,7 +108,7 @@ export default function ListTugasDetailProject() {
   return (
     <>
       <Box pt={20}>
-        <Text fw={"bold"} c={WARNA.biruTua}>
+        <Text fw={"bold"} c={tema.get().utama}>
           Tanggal & Tugas
         </Text>
         <Box
@@ -95,80 +116,78 @@ export default function ListTugasDetailProject() {
           style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,
-            padding: 20,
+            // padding: 10,
           }}
+          pl={20}
+          pr={20}
         >
           {
             loading ? <>
+              <Box pl={5} pr={5} pt={20} pb={20}>
               <SkeletonDetailListTugasTask />
+              </Box>
             </> :
               isData.length === 0 ? <Text>Tidak ada tugas</Text> :
                 isData.map((item, index) => {
                   return (
                     <Box key={index}>
-                      <Grid
-                        onClick={() => {
-                          setIdData(item.id)
-                          setStatusData(item.status)
+                      <Box onClick={() =>  {
+                        setIdData(item.id)
+                        setStatusData(item.status)
+                        reason == null ?
                           setOpenDrawer(true)
-                        }}
-                      >
-                        <Grid.Col span={"auto"}>
-                          <Center>
-                            <Checkbox color="teal" size="md" checked={(item.status === 1) ? true : false} disabled />
-                          </Center>
-                        </Grid.Col>
-                        <Grid.Col span={10}>
-                          <Box
-                            style={{
-                              borderRadius: 10,
-                              border: `1px solid ${"#D6D8F6"}`,
-                              padding: 10,
-                            }}
-                          >
-                            <Group>
-                              <AiOutlineFileSync size={25} />
-                              <Text>{item.title}</Text>
-                            </Group>
+                          :  setOpenDrawer(false)
+                      }} my={18}>
+                        <Checkbox  color="teal" size="md" checked={(item.status === 1) ? true : false} disabled
+                          label={item.status === 1 ? 'Sudah Selesai' : 'Belum Selesai'}
+                        />
+                        <Box mt={20}>
+                          <Box style={{
+                            borderRadius: 10,
+                            border: `1px solid ${"#D6D8F6"}`,
+                            padding: 10
+                          }}>
+                            <Grid gutter={"sm"} justify='flex-start' align='flex-start'
+                            >
+                              <Grid.Col span={"auto"}>
+                                <Center >
+                                  <AiOutlineFileSync size={30} />
+                                </Center>
+                              </Grid.Col>
+                              <Grid.Col span={10}>
+                                <Text>{item.title}</Text>
+                              </Grid.Col>
+                            </Grid>
                           </Box>
                           <Box>
-                            <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
+                            <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} my={20}>
                               <Box>
                                 <Text>Tanggal Mulai</Text>
                                 <Group
                                   justify="center"
                                   bg={"white"}
                                   h={45}
-                                  style={{
-                                    borderRadius: 10,
-                                    border: `1px solid ${"#D6D8F6"}`,
-                                  }}
+                                  style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
                                 >
                                   <Text>{item.dateStart}</Text>
                                 </Group>
                               </Box>
                               <Box>
-                                <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+                                <Text >Tanggal Berakhir</Text>
                                 <Group
                                   justify="center"
                                   bg={"white"}
                                   h={45}
-                                  style={{
-                                    borderRadius: 10,
-                                    border: `1px solid ${"#D6D8F6"}`,
-                                  }}
+                                  style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
                                 >
                                   <Text>{item.dateEnd}</Text>
                                 </Group>
                               </Box>
                             </SimpleGrid>
                           </Box>
-                        </Grid.Col>
-                      </Grid>
-                      {isData.length >= 1
-                        ? "" :
-                        <Divider my={"lg"} />
-                      }
+                        </Box>
+                      </Box>
+                      <Divider my={20}/>
                     </Box>
                   )
                 })
@@ -178,32 +197,36 @@ export default function ListTugasDetailProject() {
           <Box>
             <Stack pt={10}>
               <SimpleGrid
-                cols={{ base: 3, sm: 3, lg: 3 }}
+                cols={{ base: 2, sm: 3, lg: 3 }}
+                style={{
+                  alignContent: 'flex-start',
+                  alignItems: 'flex-start',
+                }}
               >
-                <Flex onClick={() => { setOpenDrawerStatus(true) }} justify={'center'} align={'center'} direction={'column'} >
+                <Flex onClick={() => { setOpenDrawerStatus(true) }} justify={'center'} align={'center'} direction={'column'}  pb={20}>
                   <Box>
-                    <AiOutlineFileDone size={30} color={WARNA.biruTua} />
+                    <AiOutlineFileDone size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                    <Text c={WARNA.biruTua}>Update status</Text>
+                    <Text c={tema.get().utama}>Update status</Text>
                   </Box>
                 </Flex>
 
                 <Flex onClick={() => { router.push('update/' + idData) }} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
-                    <FaPencil size={30} color={WARNA.biruTua} />
+                    <FaPencil size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                    <Text c={WARNA.biruTua}>Edit tugas</Text>
+                    <Text c={tema.get().utama}>Edit tugas</Text>
                   </Box>
                 </Flex>
 
                 <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
                   <Box>
-                    <FaTrash size={30} color={WARNA.biruTua} />
+                    <FaTrash size={30} color={tema.get().utama} />
                   </Box>
                   <Box>
-                    <Text c={WARNA.biruTua}>Hapus tugas</Text>
+                    <Text c={tema.get().utama}>Hapus tugas</Text>
                   </Box>
                 </Flex>
               </SimpleGrid>
@@ -212,7 +235,7 @@ export default function ListTugasDetailProject() {
         </LayoutDrawer>
 
         <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
-          description="Apakah Anda yakin ingin menghapus Kegiatan ini?"
+          description="Apakah Anda yakin ingin menghapus Tahapan Tugas ini?"
           onYes={(val) => {
             if (val) {
               onDelete()
@@ -222,11 +245,10 @@ export default function ListTugasDetailProject() {
 
         <LayoutDrawer opened={openDrawerStatus} title={'Status'} onClose={() => setOpenDrawerStatus(false)}>
           <Box>
-            <Stack pt={10}>
               {
                 valStatusDetailProject.map((item, index) => {
                   return (
-                    <Box mb={5} key={index} onClick={() => { onUpdateStatus(item.value) }}>
+                    <Box key={index} onClick={() => { onUpdateStatus(item.value) }}>
                       <Flex justify={"space-between"} align={"center"}>
                         <Group>
                           <Text style={{
@@ -248,13 +270,11 @@ export default function ListTugasDetailProject() {
                           {statusData === item.value ? <FaCheck style={{ marginRight: 10 }} /> : ""}
                         </Text>
                       </Flex>
-                      <Divider my={"md"} />
+                      <Divider my={20} />
                     </Box>
                   )
                 })
               }
-
-            </Stack>
           </Box>
         </LayoutDrawer>
 

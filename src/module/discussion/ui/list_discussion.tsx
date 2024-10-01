@@ -1,8 +1,8 @@
 'use client'
-import { WARNA } from "@/module/_global";
-import { Avatar, Badge, Box, Divider, Flex, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
+import { currentScroll, TEMA } from "@/module/_global";
+import { Avatar, Badge, Box, Divider, Flex, Grid, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GrChatOption } from "react-icons/gr";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { funGetAllDiscussion } from "../lib/api_discussion";
@@ -10,45 +10,79 @@ import { useShallowEffect } from "@mantine/hooks";
 import { IDataDiscussion } from "../lib/type_discussion";
 import toast from "react-hot-toast";
 import _ from "lodash";
+import { useHookstate } from "@hookstate/core";
 
 export default function ListDiscussion({ id }: { id: string }) {
    const [isData, setData] = useState<IDataDiscussion[]>([])
    const [searchQuery, setSearchQuery] = useState('')
    const param = useParams<{ id: string }>()
    const [loading, setLoading] = useState(true)
+   const tema = useHookstate(TEMA)
+   const router = useRouter()
+   const { value: containerRef } = useHookstate(currentScroll);
+   const [isPage, setPage] = useState(1)
 
-   const getData = async () => {
+   const getData = async (loading: boolean) => {
       try {
-         setLoading(true)
-         const response = await funGetAllDiscussion('?division=' + id + '&search=' + searchQuery)
-         if (
-            response.success
-         ) {
-            setData(response.data)
+         if (loading)
+            setLoading(true)
+         const response = await funGetAllDiscussion('?division=' + id + '&search=' + searchQuery + '&page=' + isPage)
+         if (response.success) {
+            if (isPage == 1) {
+               setData(response.data)
+            } else {
+               setData([...isData, ...response.data])
+            }
          } else {
             toast.error(response.message)
          }
          setLoading(false)
       } catch (error) {
-         console.log(error)
+         console.error(error)
       } finally {
          setLoading(false)
       }
    }
 
    useShallowEffect(() => {
-      getData()
+      setPage(1)
+      getData(true)
    }, [searchQuery])
 
-   const router = useRouter()
+   useShallowEffect(() => {
+      getData(false)
+   }, [isPage])
+
+   useEffect(() => {
+      const handleScroll = async () => {
+         if (containerRef && containerRef.current) {
+            const scrollTop = containerRef.current.scrollTop;
+            const containerHeight = containerRef.current.clientHeight;
+            const scrollHeight = containerRef.current.scrollHeight;
+
+            if (scrollTop + containerHeight >= scrollHeight) {
+               setPage(isPage + 1)
+            }
+         }
+      };
+
+      const container = containerRef?.current;
+      container?.addEventListener("scroll", handleScroll);
+
+      return () => {
+         container?.removeEventListener("scroll", handleScroll);
+      };
+   }, [containerRef, isPage]);
+
+
    return (
       <Box p={20}>
          <TextInput
             styles={{
                input: {
-                  color: WARNA.biruTua,
-                  borderRadius: WARNA.biruTua,
-                  borderColor: WARNA.biruTua,
+                  color: tema.get().utama,
+                  borderRadius: tema.get().utama,
+                  borderColor: tema.get().utama,
                },
             }}
             size="md"
@@ -63,7 +97,7 @@ export default function ListDiscussion({ id }: { id: string }) {
                .fill(null)
                .map((_, i) => (
                   <Box key={i}>
-                     <Box pl={10} pr={10}>
+                     <Box pl={5} pr={5}>
                         <Flex
                            justify={"space-between"}
                            align={"center"}
@@ -100,26 +134,46 @@ export default function ListDiscussion({ id }: { id: string }) {
                :
                isData.map((v, i) => {
                   return (
-                     <Box key={i} pl={10} pr={10}>
-                        <Flex
-                           justify={"space-between"}
-                           align={"center"}
-                           mt={20}
-                           onClick={() => {
-                              router.push(`/division/${param.id}/discussion/${v.id}`)
-                           }}
-                        >
-                           <Group>
-                              <Avatar alt="it's me" size="lg" />
-                              <Box>
-                                 <Text c={WARNA.biruTua} fw={"bold"}>
+                     <Box key={i} pl={5} pr={5}>
+                        <Grid align="center" mt={20} onClick={() => {
+                           router.push(`/division/${param.id}/discussion/${v.id}`)
+                        }}>
+                           <Grid.Col span={{
+                              sm: 2,
+                              lg: 2,
+                              xl: 2,
+                              md: 2,
+                              xs: 1,
+                              base: 2
+                           }}>
+                              <Avatar alt="it's me" src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} size="lg" />
+                           </Grid.Col>
+                           <Grid.Col span={{
+                              sm: 6,
+                              lg: 6,
+                              xl: 6,
+                              md: 6,
+                              xs: 7,
+                              base: 6
+                           }}>
+                              <Box pl={{
+                                 sm: 0,
+                                 lg: 0,
+                                 xl: 0,
+                                 md: 0,
+                                 xs: 40,
+                                 base: 10
+                              }}>
+                                 <Text c={tema.get().utama} fw={"bold"} lineClamp={1}>
                                     {v.user_name}
                                  </Text>
                                  <Badge color={v.status === 1 ? "green" : "red"} size="sm">{v.status === 1 ? "BUKA" : "TUTUP"}</Badge>
                               </Box>
-                           </Group>
-                           <Text c={"grey"} fz={13}>{v.createdAt}</Text>
-                        </Flex>
+                           </Grid.Col>
+                           <Grid.Col span={4}>
+                              <Text c={"grey"} ta={"end"} fz={13}>{v.createdAt}</Text>
+                           </Grid.Col>
+                        </Grid>
                         <Box mt={10}>
                            <Spoiler maxHeight={50} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
                               <Text

@@ -1,4 +1,4 @@
-import { ListAnggotaDetailProject, ListFileDetailProject, ListTugasDetailProject, NavbarDetailProject, ProgressDetailProject, ViewDetailProject } from '@/module/project';
+import { ListAnggotaDetailProject, ListFileDetailProject, ListTugasDetailProject, NavbarDetailProject, ProgressDetailProject } from '@/module/project';
 import { Box } from '@mantine/core';
 import React from 'react';
 

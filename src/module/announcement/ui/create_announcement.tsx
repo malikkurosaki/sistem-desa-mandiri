@@ -1,8 +1,8 @@
 'use client'
-import { LayoutNavbarNew, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA, WARNA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
-import { Avatar, Box, Button, Flex, Group, Stack, Text, Textarea, TextInput } from "@mantine/core";
+import { Avatar, Box, Button, Flex, Group, rem, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -11,6 +11,7 @@ import CreateUsersAnnouncement from "./create_users_announcement";
 import { globalMemberAnnouncement } from "../lib/val_announcement";
 import { funCreateAnnouncement } from "../lib/api_announcement";
 import { GroupData, ICreateData, IGroupData } from "../lib/type_announcement";
+import { useRouter } from "next/navigation";
 
 
 
@@ -19,6 +20,8 @@ export default function CreateAnnouncement() {
    const memberGroup = useHookstate(globalMemberAnnouncement)
    const memberValue = memberGroup.get() as GroupData[]
    const [selectedFiles, setSelectedFiles] = useState<any>([])
+   const router = useRouter()
+   const tema = useHookstate(TEMA)
 
 
    const [isChooseMember, setIsChooseMember] = useState(false)
@@ -42,17 +45,18 @@ export default function CreateAnnouncement() {
 
          if (response.success) {
             toast.success(response.message)
-            setisData({
-               ...isData,
-               title: "",
-               desc: "",
-            })
+            // setisData({
+            //    ...isData,
+            //    title: "",
+            //    desc: "",
+            // })
             memberGroup.set([])
+            router.push('/announcement')
          } else {
             toast.error(response.message)
          }
       } catch (error) {
-         console.log(error)
+         console.error(error)
          toast.error("Gagal menambahkan pengumuman, coba lagi nanti");
       }
 
@@ -73,9 +77,34 @@ export default function CreateAnnouncement() {
 
    if (isChooseMember) return <CreateUsersAnnouncement onClose={() => { setIsChooseMember(false) }} />
 
+   function onCheck() {
+      if (Object.values(touched).some((v) => v == true))
+        return false
+      setOpen(true)
+   }
+   
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'title') {
+         setisData({ ...isData, title: val })
+         if (val === "") {
+           setTouched({ ...touched, title: true })
+         } else {
+           setTouched({ ...touched, title: false })
+         }
+      } else if (kategori == 'desc') {
+        setisData({ ...isData, desc: val })
+        if (val === "") {
+          setTouched({ ...touched, desc: true })
+        } else {
+          setTouched({ ...touched, desc: false })
+        }
+      } 
+    }
+
    return (
       <Box>
-         <LayoutNavbarNew back="" title="Tambah Pengumuman" menu={<></>} />
+         <LayoutNavbarNew back="/announcement/" title="Tambah Pengumuman" menu={<></>} />
          <Stack
             p={20}
          >
@@ -83,17 +112,13 @@ export default function CreateAnnouncement() {
                size="md" type="text" radius={10} placeholder="Judul Pengumuman" withAsterisk label="Judul" w={"100%"}
                styles={{
                   input: {
-                     color: WARNA.biruTua,
-                     borderRadius: WARNA.biruTua,
-                     borderColor: WARNA.biruTua,
+                     color: tema.get().utama,
+                     borderRadius: tema.get().utama,
+                     borderColor: tema.get().utama,
                   },
                }}
                value={isData.title}
-               onChange={(e) => {
-                  setisData({ ...isData, title: e.target.value })
-                  setTouched({ ...touched, title: false })
-               }}
-               onBlur={() => setTouched({ ...touched, title: true })}
+               onChange={(e) => { onValidation('title', e.target.value) }}
                error={
                   touched.title && (
                      isData.title == "" ? "Judul Tidak Boleh Kosong" : null
@@ -109,17 +134,13 @@ export default function CreateAnnouncement() {
                placeholder="Deskripsi Pengumuman"
                styles={{
                   input: {
-                     color: WARNA.biruTua,
-                     borderRadius: WARNA.biruTua,
-                     borderColor: WARNA.biruTua,
+                     color: tema.get().utama,
+                     borderRadius: tema.get().utama,
+                     borderColor: tema.get().utama,
                   },
                }}
                value={isData.desc}
-               onChange={(e) => {
-                  setisData({ ...isData, desc: e.target.value })
-                  setTouched({ ...touched, desc: false })
-               }}
-               onBlur={() => setTouched({ ...touched, desc: true })}
+               onChange={(e) => { onValidation('desc', e.target.value) }}
                error={
                   touched.desc && (
                      isData.desc == "" ? "Pengumuman Tidak Boleh Kosong" : null
@@ -128,7 +149,7 @@ export default function CreateAnnouncement() {
             />
             <Box pt={10}>
                <Group justify="space-between" style={{
-                  border: `1px solid ${WARNA.biruTua}`,
+                  border: `1px solid ${tema.get().utama}`,
                   padding: 10,
                   borderRadius: 10
                }}
@@ -140,8 +161,8 @@ export default function CreateAnnouncement() {
                   <IoIosArrowForward />
                </Group>
             </Box>
-            <Box pt={20}>
-               <Text c={WARNA.biruTua} mb={10}>Divisi Terpilih</Text>
+            <Box pt={20} mb={100}>
+               <Text c={tema.get().utama} mb={10}>Divisi Terpilih</Text>
                {(memberGroup.length === 0) ? (
                   <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada anggota</Text>
                ) : memberGroup.get().map((v: any, i: any) => {
@@ -160,23 +181,18 @@ export default function CreateAnnouncement() {
                })}
             </Box>
          </Stack>
-         <Box mt={30} mx={20}>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`,
+         }}>
             <Button
                c={"white"}
-               bg={WARNA.biruTua}
-               size="md"
+               bg={tema.get().utama}
+               size="lg"
                radius={30}
                fullWidth
-               onClick={() => { 
-                  if (
-                     isData.title !== "" &&
-                     isData.desc !== "" 
-                  ) {
-                     setOpen(true)
-                  } else {
-                     toast.error("Isi data dengan lengkap")
-                  }
-                }}
+               onClick={() => { onCheck() }}
             >
                Simpan
             </Button>

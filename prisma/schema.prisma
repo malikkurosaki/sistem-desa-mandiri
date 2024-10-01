@@ -47,6 +47,7 @@ model UserRole {
 
 model Village {
   id           String         @id @default(cuid())
+  idTheme      String?
   name         String
   desc         String         @db.Text
   isActive     Boolean        @default(true)
@@ -57,6 +58,7 @@ model Village {
   Announcement Announcement[]
   Project      Project[]
   Division     Division[]
+  ColorTheme   ColorTheme[]
 }
 
 model Group {
@@ -100,6 +102,7 @@ model User {
   phone                      String                       @unique
   email                      String?                      @unique
   gender                     String                       @default("M") //M= Male, F= Female
+  img                        String?
   isFirstLogin               Boolean                      @default(true)
   isActive                   Boolean                      @default(true)
   createdAt                  DateTime                     @default(now())
@@ -118,6 +121,8 @@ model User {
   DivisionDocumentFolderFile DivisionDocumentFolderFile[]
   DivisionCalendar           DivisionCalendar[]
   DivisionCalendarMember     DivisionCalendarMember[]
+  Notifications              Notifications[]              @relation("UserToUser")
+  Notifications2             Notifications[]              @relation("UserFromUser")
 }
 
 model UserLog {
@@ -199,6 +204,7 @@ model ProjectFile {
   idProject String
   name      String
   extension String
+  idStorage String?
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -254,6 +260,7 @@ model Division {
   DivisionDocumentShare      DivisionDocumentShare[]
   DivisionCalendar           DivisionCalendar[]
   DivisionCalendarReminder   DivisionCalendarReminder[]
+  ContainerFileDivision      ContainerFileDivision[]
 }
 
 model DivisionMember {
@@ -361,6 +368,7 @@ model DivisionDocumentFolderFile {
   id                    String                  @id @default(cuid())
   Division              Division                @relation(fields: [idDivision], references: [id])
   idDivision            String
+  idStorage             String?
   category              String                  @default("FOLDER") // FOLDER OR FILE
   name                  String
   extension             String
@@ -395,7 +403,8 @@ model DivisionCalendar {
   dateEnd                  DateTime?                  @db.Date
   timeStart                DateTime                   @db.Time()
   timeEnd                  DateTime                   @db.Time()
-  repeatEventTyper         String // 1 = Acara 1 Kali, 2 = hari Kerja (senin - jumat), 3 = Minggu, 4 = Bulanan, 5 = Tahunan
+  repeatEventTyper         String // once = Acara 1 Kali, weekdays = hari Kerja (senin - jumat), daily=setiap hari , weekly = setiap minggu, monthly = setiap bulan, yearly = setiap tahun
+  repeatValue              Int                        @default(1)
   reminderInterval         String?
   status                   Int                        @default(0)
   isActive                 Boolean                    @default(true)
@@ -413,7 +422,7 @@ model DivisionCalendarReminder {
   DivisionCalendar DivisionCalendar @relation(fields: [idCalendar], references: [id])
   idCalendar       String
   dateStart        DateTime         @db.Date
-  dateEnd          DateTime         @db.Date
+  dateEnd          DateTime?        @db.Date
   timeStart        DateTime         @db.Time()
   timeEnd          DateTime         @db.Time()
   status           Int              @default(0)
@@ -445,10 +454,50 @@ model ContainerImage {
 
 model ContainerFileDivision {
   id                  String                @id @default(cuid())
+  Division            Division              @relation(fields: [idDivision], references: [id])
+  idDivision          String
+  idStorage           String?
   name                String
   extension           String
   isActive            Boolean               @default(true)
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
   DivisionProjectFile DivisionProjectFile[]
+}
+
+model ColorTheme {
+  id              String   @id @default(cuid())
+  Village         Village? @relation(fields: [idVillage], references: [id])
+  idVillage       String?
+  name            String
+  utama           String
+  bgUtama         String
+  bgIcon          String
+  bgFiturHome     String
+  bgFiturDivision String
+  bgTotalKegiatan String
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Subscription {
+  id   String @id @default(cuid())
+  data Json
+}
+
+model Notifications {
+  id         String   @id @default(cuid())
+  User1      User     @relation("UserToUser", fields: [idUserTo], references: [id], map: "UserToUserMap")
+  idUserTo   String
+  User2      User     @relation("UserFromUser", fields: [idUserFrom], references: [id], map: "UserFromUserMap")
+  idUserFrom String
+  category   String
+  idContent  String
+  title      String
+  desc       String
+  isRead     Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

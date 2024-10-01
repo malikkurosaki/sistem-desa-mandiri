@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, SkeletonDetailListTugasTask, WARNA } from "@/module/_global"
+import { LayoutDrawer, SkeletonDetailListTugasTask, TEMA } from "@/module/_global"
 import { Box, Grid, Center, Checkbox, Group, SimpleGrid, Text, Stack, Flex, Divider } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
 import { useParams, useRouter } from "next/navigation"
@@ -12,6 +12,7 @@ import { FaCheck, FaPencil, FaTrash } from "react-icons/fa6"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { globalRefreshTask, valStatusDetailTask } from "../lib/val_task"
 import { useHookstate } from "@hookstate/core"
+import "moment/locale/id"
 
 export default function ListTugasDetailTask() {
    const [openDrawer, setOpenDrawer] = useState(false)
@@ -24,6 +25,28 @@ export default function ListTugasDetailTask() {
    const [statusData, setStatusData] = useState(0)
    const router = useRouter()
    const refresh = useHookstate(globalRefreshTask)
+   const tema = useHookstate(TEMA)
+   const [reason, setReason] = useState("")
+
+   async function getOneDataCancel() {
+      try {
+         const res = await funGetTaskDivisionById(param.detail, 'data');
+         if (res.success) {
+            setReason(res.data.reason);
+         } else {
+            toast.error(res.message);
+         }
+
+      } catch (error) {
+         console.error(error);
+         toast.error("Gagal mendapatkan data tugas divisi, coba lagi nanti");
+      }
+   }
+
+   useShallowEffect(() => {
+      getOneDataCancel();
+   }, [param.detail])
+
    async function getOneData() {
       try {
          setLoading(true)
@@ -87,7 +110,7 @@ export default function ListTugasDetailTask() {
 
    return (
       <Box pt={20}>
-         <Text fw={"bold"} c={WARNA.biruTua}>
+         <Text fw={"bold"} c={tema.get().utama}>
             Tanggal & Tugas
          </Text>
          <Box
@@ -95,82 +118,78 @@ export default function ListTugasDetailTask() {
             style={{
                borderRadius: 10,
                border: `1px solid ${"#D6D8F6"}`,
-               padding: 20,
+               padding:20
             }}
          >
             {
                loading ?
                   <>
-                     <SkeletonDetailListTugasTask />
+                     <Box pl={5} pr={5} pt={20} pb={20}>
+                        <SkeletonDetailListTugasTask />
+                     </Box>
                   </>
                   :
-                  isData.length === 0 ? <Text>Tidak ada tugas</Text> :
+                  isData.length === 0 ? <Text c={"dimmed"} ta={"center"} fs={"italic"}>Tidak ada tugas</Text> :
                      isData.map((item, index) => {
                         return (
                            <Box key={index}>
-                              <Grid
-                                 onClick={() => {
-                                    setIdData(item.id)
-                                    setStatusData(item.status)
+                              <Box onClick={() => {
+                                 setIdData(item.id)
+                                 setStatusData(item.status)
+                                 reason == null ?
                                     setOpenDrawer(true)
-                                 }}
-                              >
-                                 <Grid.Col span={"auto"}>
-                                    <Center>
-                                       <Checkbox color="teal" size="md" checked={(item.status === 1) ? true : false} disabled />
-                                    </Center>
-                                 </Grid.Col>
-                                 <Grid.Col span={10}>
-                                    <Box
-                                       style={{
-                                          borderRadius: 10,
-                                          border: `1px solid ${"#D6D8F6"}`,
-                                          padding: 10,
-                                       }}
-                                    >
-                                       <Group>
-                                          <AiOutlineFileSync size={25} />
-                                          <Text>{item.title}</Text>
-                                       </Group>
+                                    : setOpenDrawer(false)
+                              }} my={18}>
+                                 <Checkbox color="teal" size="md" checked={(item.status === 1) ? true : false} disabled
+                                    label={item.status === 1 ? 'Sudah Selesai' : 'Belum Selesai'}
+                                 />
+                                 <Box mt={20}>
+                                    <Box style={{
+                                       borderRadius: 10,
+                                       border: `1px solid ${"#D6D8F6"}`,
+                                       padding: 10
+                                    }}>
+                                       <Grid gutter={"sm"} justify='flex-start' align='flex-start'
+                                       >
+                                          <Grid.Col span={"auto"}>
+                                             <Center >
+                                                <AiOutlineFileSync size={30} />
+                                             </Center>
+                                          </Grid.Col>
+                                          <Grid.Col span={10}>
+                                             <Text>{item.title}</Text>
+                                          </Grid.Col>
+                                       </Grid>
                                     </Box>
                                     <Box>
-                                       <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
+                                       <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} my={20}>
                                           <Box>
                                              <Text>Tanggal Mulai</Text>
                                              <Group
                                                 justify="center"
                                                 bg={"white"}
                                                 h={45}
-                                                style={{
-                                                   borderRadius: 10,
-                                                   border: `1px solid ${"#D6D8F6"}`,
-                                                }}
+                                                style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
                                              >
                                                 <Text>{item.dateStart}</Text>
                                              </Group>
                                           </Box>
                                           <Box>
-                                             <Text c={WARNA.biruTua}>Tanggal Berakhir</Text>
+                                             <Text >Tanggal Berakhir</Text>
                                              <Group
                                                 justify="center"
                                                 bg={"white"}
                                                 h={45}
-                                                style={{
-                                                   borderRadius: 10,
-                                                   border: `1px solid ${"#D6D8F6"}`,
-                                                }}
+                                                style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}
                                              >
                                                 <Text>{item.dateEnd}</Text>
                                              </Group>
                                           </Box>
                                        </SimpleGrid>
                                     </Box>
-                                 </Grid.Col>
-                              </Grid>
-                              {isData.length >= 1
-                                 ? "" :
-                                 <Divider my={"lg"} />
-                              }
+                                 </Box>
+                              </Box>
+                              <Divider my={20} />
                            </Box>
                         )
                      })
@@ -181,32 +200,38 @@ export default function ListTugasDetailTask() {
             <Box>
                <Stack pt={10}>
                   <SimpleGrid
-                     cols={{ base: 3, sm: 3, lg: 3 }}
+                     cols={{ base: 2, sm: 3, lg: 3 }}
+                     style={{
+                        alignContent: 'flex-start',
+                        alignItems: 'flex-start',
+                     }}
                   >
-                     <Flex onClick={() => { setOpenDrawerStatus(true) }} justify={'center'} align={'center'} direction={'column'} >
+                     <Flex onClick={() => { setOpenDrawerStatus(true) }} justify={'center'} align={'center'} direction={'column'}
+                        pb={20}
+                     >
                         <Box>
-                           <AiOutlineFileDone size={30} color={WARNA.biruTua} />
+                           <AiOutlineFileDone size={30} color={tema.get().utama} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua}>Update status</Text>
+                           <Text c={tema.get().utama}>Update status</Text>
                         </Box>
                      </Flex>
 
                      <Flex onClick={() => { router.push('edit/' + idData) }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>
-                           <FaPencil size={30} color={WARNA.biruTua} />
+                           <FaPencil size={30} color={tema.get().utama} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua}>Edit tugas</Text>
+                           <Text c={tema.get().utama}>Edit tugas</Text>
                         </Box>
                      </Flex>
 
                      <Flex onClick={() => { setOpenModal(true) }} justify={'center'} align={'center'} direction={'column'} >
                         <Box>
-                           <FaTrash size={30} color={WARNA.biruTua} />
+                           <FaTrash size={30} color={tema.get().utama} />
                         </Box>
                         <Box>
-                           <Text c={WARNA.biruTua}>Hapus tugas</Text>
+                           <Text c={tema.get().utama}>Hapus tugas</Text>
                         </Box>
                      </Flex>
                   </SimpleGrid>

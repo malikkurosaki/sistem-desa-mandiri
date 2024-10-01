@@ -1,17 +1,16 @@
 "use client";
-import { LayoutDrawer, LayoutNavbarNew, WARNA } from "@/module/_global";
-import { Avatar, Box, Button, Center, Flex, Group, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
-import { useRouter, useSearchParams } from "next/navigation";
+import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
+import { Avatar, Box, Button, Divider, Flex, Grid, Group, rem, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
-import { BsFiletypeCsv } from "react-icons/bs";
 import ResultsDateAndTask from "./results_date-and_task";
 import ResultsFile from "./results_file";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import toast from "react-hot-toast";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { funGetUserByCookies } from "@/module/auth";
-import { useShallowEffect } from "@mantine/hooks";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useHookstate } from "@hookstate/core";
 import { globalMemberProject } from "../lib/val_project";
 import ViewDateEndTask from "./create_date_end_task";
@@ -29,17 +28,20 @@ export default function CreateProject() {
   const [openDrawerTask, setOpenDrawerTask] = useState(false)
   const [isModal, setModal] = useState(false)
   const [dataGroup, setDataGroup] = useState<IDataGroup[]>([]);
-  const [roleUser, setRoleUser] = useState<any>("")
   const [isChooseAnggota, setChooseAnggota] = useState(false)
   const member = useHookstate(globalMemberProject)
   const memberValue = member.get() as IFormMemberProject[]
   const [openTugas, setOpenTugas] = useState(false)
   const [dataTask, setDataTask] = useState<IFormDateProject[]>([])
   const openRef = useRef<() => void>(null)
-  const [fileForm, setFileForm] = useState<FormData[]>([])
+  const [fileForm, setFileForm] = useState<any[]>([])
   const [listFile, setListFile] = useState<IListFileTaskProject[]>([])
   const [indexDelFile, setIndexDelFile] = useState<number>(0)
   const [indexDelTask, setIndexDelTask] = useState<number>(0)
+  const roleLogin = useHookstate(globalRole)
+  const isMobile = useMediaQuery('(max-width: 369px)');
+  const tema = useHookstate(TEMA)
+
   const [body, setBody] = useState<any>({
     idGroup: "",
     title: "",
@@ -69,12 +71,15 @@ export default function CreateProject() {
       toast.error(loadGroup.message);
     }
 
-    const loadUser = await funGetUserByCookies();
-    setRoleUser(loadUser.idUserRole)
+    if (roleLogin.get() != "supadmin") {
+      const loadUser = await funGetUserByCookies();
+      setBody({ ...body, idGroup: loadUser.idGroup })
+    }
+
   }
 
   function onToChooseAnggota() {
-    if (roleUser == "supadmin" && body.idGroup == "")
+    if (roleLogin.get() == "supadmin" && body.idGroup == "")
       return toast.error("Error! grup harus diisi")
     setChooseAnggota(true)
   }
@@ -91,34 +96,39 @@ export default function CreateProject() {
 
   async function onSubmit() {
     try {
-      const response = await funCreateProject({ title: body.title, idGroup: body.idGroup, task: dataTask, file: fileForm, member: memberValue })
+      const fd = new FormData();
+      for (let i = 0; i < fileForm.length; i++) {
+        fd.append(`file${i}`, fileForm[i]);
+      }
+
+      fd.append("data", JSON.stringify({
+        title: body.title,
+        idGroup: body.idGroup,
+        task: dataTask,
+        member: memberValue
+      }))
+
+      const response = await funCreateProject(fd)
 
       if (response.success) {
         toast.success(response.message)
-        setBody({
-          idGroup: "",
-          title: "",
-          desc: "",
-        })
         member.set([])
         setFileForm([])
         setListFile([])
         setDataTask([])
+        router.push('/project')
       } else {
         toast.error(response.message)
       }
     } catch (error) {
-      console.log(error)
-      toast.error("Gagal menambahkan tugas divisi, coba lagi nanti");
+      console.error(error)
+      toast.error("Gagal menambahkan kegiatan, coba lagi nanti");
     }
   }
 
 
 
-  if (openTugas) return <ViewDateEndTask onClose={(val) => {
-    setDataTask([...dataTask, val])
-    setOpenTugas(false)
-  }} />;
+  if (openTugas) return <ViewDateEndTask onClose={(val) => { setOpenTugas(false) }} onSet={(val) => { setDataTask([...dataTask, val]); setOpenTugas(false) }} />;
 
   if (isChooseAnggota) return <CreateUsersProject grup={body.idGroup} onClose={() => { setChooseAnggota(false) }} />
 
@@ -127,15 +137,20 @@ export default function CreateProject() {
     <Box>
       <LayoutNavbarNew back="/project" title="tambah Kegiatan" menu />
       <Box p={20}>
-        <Stack>
+        <Box>
           {
-            (roleUser == "supadmin") && (
+            (roleLogin.get() == "supadmin") && (
               <Select
                 placeholder="Grup"
                 label="Grup"
                 size="md"
+                styles={{
+                  input: {
+                    border: `1px solid ${"#D6D8F6"}`,
+                    borderRadius: 10,
+                  },
+                }}
                 required
-                radius={40}
                 data={dataGroup?.map((pro: any) => ({
                   value: String(pro.id),
                   label: pro.name
@@ -148,10 +163,10 @@ export default function CreateProject() {
                 value={(body.idGroup == "") ? null : body.idGroup}
                 onBlur={() => setTouched({ ...touched, idGroup: true })}
                 error={
-                   touched.idGroup && (
+                  touched.idGroup && (
                     body.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
-                   )
-                 }
+                  )
+                }
               />
             )
           }
@@ -163,6 +178,7 @@ export default function CreateProject() {
                 borderRadius: 10,
               },
             }}
+            mt={10}
             required withAsterisk
             placeholder="Nama Kegiatan"
             size="md"
@@ -178,7 +194,7 @@ export default function CreateProject() {
               )
             }
           />
-          <Box onClick={() => { setOpenTugas(true) }}>
+          <Box onClick={() => { setOpenTugas(true) }} mt={15}>
             <Group
               justify="space-between"
               p={10}
@@ -198,12 +214,16 @@ export default function CreateProject() {
               border: `1px solid ${"#D6D8F6"}`,
               borderRadius: 10,
             }}
-            onClick={() => setOpenDrawer(true)}
+            onClick={() =>
+              // setOpenDrawer(true)
+              openRef.current?.()
+            }
+            mt={15}
           >
             <Text>Upload File</Text>
             <IoIosArrowDropright size={25} />
           </Group>
-          <Box onClick={() => { onToChooseAnggota() }}>
+          <Box onClick={() => { onToChooseAnggota() }} mt={15}>
             <Group
               justify="space-between"
               p={10}
@@ -216,142 +236,171 @@ export default function CreateProject() {
               <IoIosArrowDropright size={25} />
             </Group>
           </Box>
-        </Stack>
-        {
-          dataTask.length > 0 &&
-          <Box pt={20}>
-            <Text fw={'bold'} c={WARNA.biruTua}>Tanggal & Tugas</Text>
-            {
-              dataTask.map((v, i) => {
-                return (
-                  <Box key={i} onClick={() => {
-                    setIndexDelTask(i)
-                    setOpenDrawerTask(true)
-                  }}>
-                    <ResultsDateAndTask dateStart={v.dateStart} dateEnd={v.dateEnd} title={v.title} />
-                  </Box>
-                )
-              })
-            }
-          </Box>
-        }
+        </Box>
+        <Box pb={100}>
 
-        {
-          listFile.length > 0 &&
-          <Box pt={20}>
-            <Text fw={'bold'} c={WARNA.biruTua}>File</Text>
-            <Box bg={"white"} style={{
-              borderRadius: 10,
-              border: `1px solid ${"#D6D8F6"}`,
-              padding: 20
-            }}>
+          {
+            dataTask.length > 0 &&
+            <Box pt={20}>
+              <Text fw={'bold'} c={tema.get().utama}>Tanggal & Tugas</Text>
               {
-                listFile.map((v, i) => {
+                dataTask.map((v, i) => {
                   return (
                     <Box key={i} onClick={() => {
-                      setIndexDelFile(i)
-                      setOpenDrawerFile(true)
+                      setIndexDelTask(i)
+                      setOpenDrawerTask(true)
                     }}>
-                      <ResultsFile name={v.name} extension={v.extension} />
+                      <ResultsDateAndTask dateStart={v.dateStart} dateEnd={v.dateEnd} title={v.title} />
                     </Box>
                   )
                 })
               }
             </Box>
-          </Box>
-        }
+          }
 
-        {
-          member.length > 0 &&
-          <Box pt={30}>
-            <Group justify="space-between">
-              <Text c={WARNA.biruTua}>Anggota Terpilih</Text>
-              <Text c={WARNA.biruTua}>Total {member.length} Anggota</Text>
-            </Group>
-            <Box pt={10}>
-              <Box mb={20}>
-                <Box
-                  style={{
-                    border: `1px solid ${"#C7D6E8"}`,
-                    borderRadius: 10,
-                  }}
-                  px={20}
-                  py={10}
-                >
-                  {member.get().map((v: any, i: any) => {
+          {
+            listFile.length > 0 &&
+            <Box pt={20}>
+              <Text fw={'bold'} c={tema.get().utama}>File</Text>
+              <Box bg={"white"} style={{
+                borderRadius: 10,
+                border: `1px solid ${"#D6D8F6"}`,
+                padding: 20
+              }}>
+                {
+                  listFile.map((v, i) => {
                     return (
-                      <Flex
-                        justify={"space-between"}
-                        align={"center"}
-                        mt={20}
-                        key={i}
-                      >
-                        <Group>
-                          <Avatar src={"v.image"} alt="it's me" size="lg" />
-                          <Box>
-                            <Text c={WARNA.biruTua} fw={"bold"}>
-                              {v.name}
-                            </Text>
+                      <Box key={i} onClick={() => {
+                        setIndexDelFile(i)
+                        setOpenDrawerFile(true)
+                      }}>
+                        <ResultsFile name={v.name} extension={v.extension} />
+                      </Box>
+                    )
+                  })
+                }
+              </Box>
+            </Box>
+          }
+
+          {
+            member.length > 0 &&
+            <Box pt={30}>
+              <Group justify="space-between">
+                <Text c={tema.get().utama}>Anggota Terpilih</Text>
+                <Text c={tema.get().utama}>Total {member.length} Anggota</Text>
+              </Group>
+              <Box pt={10}>
+                <Box mb={20}>
+                  <Box
+                    style={{
+                      border: `1px solid ${"#C7D6E8"}`,
+                      borderRadius: 10,
+                    }}
+                    px={20}
+                    py={10}
+                  >
+                    {member.get().map((v: any, i: any) => {
+                      return (
+                        <Box key={i}>
+                          <Grid align='center' mt={10}
+                          >
+                            <Grid.Col span={9}>
+                              <Group>
+                                <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={isMobile ? 'md' : 'lg'} />
+                                <Box w={{
+                                  base: isMobile ? 130 : 140,
+                                  xl: 270
+                                }}>
+                                  <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={isMobile ? 14 : 16}>
+                                    {v.name}
+                                  </Text>
+                                </Box>
+                              </Group>
+                            </Grid.Col>
+                            <Grid.Col span={3}>
+                              <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>
+                                Anggota
+                              </Text>
+                            </Grid.Col>
+                          </Grid>
+                          <Box mt={10}>
+                            <Divider size={"xs"} />
                           </Box>
-                        </Group>
-                        <Text c={WARNA.biruTua} fw={"bold"}>
-                          Anggota
-                        </Text>
-                      </Flex>
-                    );
-                  })}
+                        </Box>
+                      );
+                    })}
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-        }
-
-        <Box mt="xl">
-          <Button
-            color="white"
-            bg={WARNA.biruTua}
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => {
-              if (
-                body.title !== "" &&
-                body.idGroup !== ""
-              ) {
-                setModal(true)
-              } else {
-                toast.error("Mohon lengkapi data terlebih dahulu");
-              }
-            }}>
-            Simpan
-          </Button>
+          }
         </Box>
+
       </Box>
+      <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+        maxWidth: rem(550),
+        zIndex: 999,
+        backgroundColor: `${tema.get().bgUtama}`,
+      }}>
+        <Button
+          color="white"
+          bg={tema.get().utama}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => {
+            if (
+              body.title !== "" &&
+              body.idGroup !== ""
+            ) {
+              setModal(true)
+            } else {
+              toast.error("Mohon lengkapi data terlebih dahulu");
+            }
+          }}>
+          Simpan
+        </Button>
+      </Box>
+
+      <Dropzone
+        openRef={openRef}
+        onDrop={async (files) => {
+          if (!files || _.isEmpty(files))
+            return toast.error('Tidak ada file yang dipilih')
+          setFileForm([...fileForm, files[0]])
+          setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
+        }}
+        activateOnClick={false}
+        maxSize={3 * 1024 ** 2}
+        accept={['image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+        onReject={(files) => {
+          return toast.error('File yang diizinkan: .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+        }}
+      ></Dropzone>
 
 
 
       {/* Drawer pilih file */}
-      <LayoutDrawer
+      {/* <LayoutDrawer
         opened={openDrawer}
         onClose={() => setOpenDrawer(false)}
         title={"Pilih File"}
       >
-        <Flex justify={"space-around"}>
+        <Flex justify={"flex-start"} px={20}>
           <Dropzone
             openRef={openRef}
             onDrop={async (files) => {
               if (!files || _.isEmpty(files))
                 return toast.error('Tidak ada file yang dipilih')
-              const fd = new FormData();
-              fd.append("file", files[0]);
-              setFileForm([...fileForm, fd])
+              setFileForm([...fileForm, files[0]])
               setListFile([...listFile, { name: files[0].name, extension: files[0].type.split("/")[1] }])
             }}
             activateOnClick={false}
             maxSize={3 * 1024 ** 2}
-            accept={['text/csv', 'image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
+            accept={['image/png', 'image/jpeg', 'image/heic', 'application/pdf']}
             onReject={(files) => {
-              return toast.error('File yang diizinkan: .csv, .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
+              return toast.error('File yang diizinkan: .png, .jpg, .heic, .pdf dengan ukuran maksimal 3 MB')
             }}
           >
             <Box onClick={() => openRef.current?.()}>
@@ -392,7 +441,7 @@ export default function CreateProject() {
             <Text ta={"center"}>sudah ada</Text>
           </Box>
         </Flex>
-      </LayoutDrawer>
+      </LayoutDrawer> */}
 
 
 
@@ -406,10 +455,10 @@ export default function CreateProject() {
           <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
             <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteFile(indexDelFile)}>
               <Box>
-                <FaTrash size={30} color={WARNA.biruTua} />
+                <FaTrash size={30} color={tema.get().utama} />
               </Box>
               <Box>
-                <Text c={WARNA.biruTua} ta='center'>Hapus File</Text>
+                <Text c={tema.get().utama} ta='center'>Hapus File</Text>
               </Box>
             </Flex>
           </SimpleGrid>
@@ -427,10 +476,10 @@ export default function CreateProject() {
           <SimpleGrid cols={{ base: 3, sm: 3, lg: 3 }} >
             <Flex style={{ cursor: 'pointer' }} justify={'center'} align={'center'} direction={'column'} onClick={() => deleteTask(indexDelTask)}>
               <Box>
-                <FaTrash size={30} color={WARNA.biruTua} />
+                <FaTrash size={30} color={tema.get().utama} />
               </Box>
               <Box>
-                <Text c={WARNA.biruTua} ta='center'>Hapus Tugas</Text>
+                <Text c={tema.get().utama} ta='center'>Hapus Tugas</Text>
               </Box>
             </Flex>
           </SimpleGrid>

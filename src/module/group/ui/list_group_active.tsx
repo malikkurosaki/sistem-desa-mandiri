@@ -1,7 +1,9 @@
-import { LayoutDrawer, SkeletonSingle, WARNA } from "@/module/_global";
+import { LayoutDrawer, SkeletonSingle, TEMA, WARNA } from "@/module/_global";
 import {
   ActionIcon,
   Box,
+  Flex,
+  Grid,
   Group,
   Skeleton,
   Text,
@@ -17,6 +19,8 @@ import { funGetAllGroup } from "../lib/api_group";
 import { IDataGroup } from "../lib/type_group";
 import { useSearchParams } from "next/navigation";
 import _ from "lodash";
+import { useHookstate } from "@hookstate/core";
+import { globalRefreshGroup } from "../lib/val_group";
 
 
 export default function ListGroupActive() {
@@ -28,7 +32,9 @@ export default function ListGroupActive() {
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams()
+  const refresh = useHookstate(globalRefreshGroup)
   const status = searchParams.get('active')
+  const tema = useHookstate(TEMA)
 
 
   const fetchData = async () => {
@@ -55,16 +61,16 @@ export default function ListGroupActive() {
 
   useShallowEffect(() => {
     fetchData();
-  }, [status, searchQuery]);
+  }, [status, searchQuery, refresh.get()]);
 
   return (
     <Box pt={20}>
       <TextInput
         styles={{
           input: {
-            color: WARNA.biruTua,
-            borderRadius: WARNA.biruTua,
-            borderColor: WARNA.biruTua,
+            color: tema.get().utama,
+            borderRadius: tema.get().utama,
+            borderColor: tema.get().utama,
           },
         }}
         size="md"
@@ -85,7 +91,7 @@ export default function ListGroupActive() {
         _.isEmpty(isData)
           ?
           <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-             <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada grup</Text>
+            <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada grup</Text>
           </Box>
           :
           isData.map((v, i) => {
@@ -94,7 +100,7 @@ export default function ListGroupActive() {
                 <Group
                   align="center"
                   style={{
-                    border: `1px solid ${"#DCEED8"}`,
+                    border: `1px solid ${tema.get().bgTotalKegiatan}`,
                     padding: 10,
                     borderRadius: 10,
                     cursor: "pointer",
@@ -106,25 +112,42 @@ export default function ListGroupActive() {
                     setActive(v.isActive);
                   }}
                 >
-                  <Box>
-                    <ActionIcon
-                      variant="light"
-                      bg={"#DCEED8"}
-                      size={50}
-                      radius={100}
-                      aria-label="icon"
-                    >
-                      <HiOutlineOfficeBuilding
-                        color={WARNA.biruTua}
-                        size={25}
-                      />
-                    </ActionIcon>
-                  </Box>
-                  <Box>
-                    <Text fw={"bold"} c={WARNA.biruTua}>
+                  <Grid justify='center' align='center' >
+                    <Grid.Col span={{
+                      base: 3,
+                      xl: 2
+                    }}>
+                      <Flex justify={{base: "center", xl: "flex-start"}}>
+                        <ActionIcon
+                          variant="light"
+                          bg={tema.get().bgTotalKegiatan}
+                          size={50}
+                          radius={100}
+                          aria-label="icon"
+                        >
+                          <HiOutlineOfficeBuilding
+                            color={tema.get().utama}
+                            size={25}
+                          />
+                        </ActionIcon>
+                      </Flex>
+                    </Grid.Col>
+                    <Grid.Col span={{
+                      base: 9,
+                      xl: 10
+                    }}>
+                      <Box
+                        w={{
+                          base: 220,
+                          xl: 400
+                        }}
+                      >
+                        <Text fw={"bold"} c={tema.get().utama} lineClamp={1}>
                       {v.name}
                     </Text>
-                  </Box>
+                      </Box>
+                    </Grid.Col>
+                  </Grid>
                 </Group>
               </Box>
             );
@@ -133,7 +156,7 @@ export default function ListGroupActive() {
       <LayoutDrawer
         opened={openDrawer}
         onClose={() => setOpenDrawer(false)}
-        title={valChoose}
+        title={<Text lineClamp={1}>{valChoose}</Text>}
       >
         <EditDrawerGroup
           id={selectId}

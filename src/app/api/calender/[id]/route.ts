@@ -1,11 +1,12 @@
-
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
-import _, { result } from "lodash";
+import { createLogUser } from "@/module/user";
+import _, { remove } from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
+import { Frequency, RRule } from 'rrule';
 
-// GET ONE CALENDER
+// GET ONE CALENDER BY ID KALENDER REMINDER
 export async function GET(request: Request, context: { params: { id: string } }) {
     try {
         const user = await funGetUserByCookies()
@@ -15,7 +16,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 
         const { id } = context.params
 
-        const cek = await prisma.divisionCalendar.count({
+        const cek = await prisma.divisionCalendarReminder.count({
             where: {
                 id: id
             }
@@ -25,39 +26,51 @@ export async function GET(request: Request, context: { params: { id: string } })
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Gagal mendapatkan calender, data tidak ditemukan",
+                    message: "Gagal mendapatkan acara, data tidak ditemukan",
                 },
                 { status: 404 }
             );
         }
 
-        const data = await prisma.divisionCalendar.findUnique({
+        const data: any = await prisma.divisionCalendarReminder.findUnique({
             where: {
                 id: id
             },
             select: {
                 id: true,
-                title: true,
-                desc: true,
                 timeStart: true,
                 dateStart: true,
                 timeEnd: true,
                 createdAt: true,
-                linkMeet: true,
-                repeatEventTyper: true,
+                DivisionCalendar: {
+                    select: {
+                        id: true,
+                        title: true,
+                        desc: true,
+                        linkMeet: true,
+                        repeatEventTyper: true,
+                        repeatValue: true,
+                    }
+                }
             }
         });
-
-        const { ...dataCalender } = data
+        const { DivisionCalendar, ...dataCalender } = data
         const timeStart = moment.utc(dataCalender?.timeStart).format("HH:mm")
         const timeEnd = moment.utc(dataCalender?.timeEnd).format("HH:mm")
+        const idCalendar = data?.DivisionCalendar.id
+        const title = data?.DivisionCalendar?.title
+        const desc = data?.DivisionCalendar?.desc
+        const linkMeet = data?.DivisionCalendar?.linkMeet
+        const repeatEventTyper = data?.DivisionCalendar?.repeatEventTyper
+        const repeatValue = data?.DivisionCalendar?.repeatValue
 
-        const result = { ...dataCalender, timeStart, timeEnd  }
+
+        const result = { ...dataCalender, timeStart, timeEnd, idCalendar, title, desc, linkMeet, repeatEventTyper, repeatValue }
 
 
         const member = await prisma.divisionCalendarMember.findMany({
             where: {
-                idCalendar: id
+                idCalendar: data?.DivisionCalendar.id
             },
             select: {
                 id: true,
@@ -66,17 +79,17 @@ export async function GET(request: Request, context: { params: { id: string } })
                     select: {
                         id: true,
                         name: true,
-                        email: true
+                        email: true,
+                        img: true
                     }
                 }
             }
         })
         const fixMember = member.map((v: any) => ({
             ..._.omit(v, ["User"]),
-
             name: v.User.name,
             email: v.User.email,
-
+            img: v.User.img
         }))
 
 
@@ -120,7 +133,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Gagal menghapus calender, data tidak ditemukan",
+                    message: "Gagal menghapus acara kalender, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -135,7 +148,10 @@ export async function DELETE(request: Request, context: { params: { id: string }
             }
         });
 
-        return NextResponse.json({ success: true, message: "Berhasil menghapus calender", data }, { status: 200 });
+        // create log user
+        const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus data acara kalender', table: 'divisionCalendar', data: id })
+
+        return NextResponse.json({ success: true, message: "Berhasil menghapus acara kalender", data }, { status: 200 });
 
     } catch (error) {
         return NextResponse.json(
@@ -148,7 +164,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
     }
 }
 
-// EDIT CALENDER BY ID
+// EDIT CALENDER BY IDKALENDER
 export async function PUT(request: Request, context: { params: { id: string } }) {
     try {
 
@@ -159,7 +175,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
         const { id } = context.params
         const userId = user.id
-        const { title, desc, timeStart, dateStart, timeEnd, linkMeet, repeatEventTyper, member } = await request.json()
+        const { title, desc, timeStart, dateStart, timeEnd, linkMeet, repeatEventTyper, repeatValue } = await request.json()
 
         const cek = await prisma.divisionCalendar.count({
             where: {
@@ -171,7 +187,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Gagal mengedit calender, data tidak ditemukan",
+                    message: "Gagal mengedit acara, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -195,35 +211,59 @@ export async function PUT(request: Request, context: { params: { id: string } })
                 timeEnd: timeEndFix,
                 linkMeet: linkMeet,
                 repeatEventTyper: repeatEventTyper,
-                status: statusCalender
+                status: statusCalender,
+                repeatValue: Number(repeatValue)
+            },
+            select: {
+                idDivision: true
             }
         });
 
-       const del =  await prisma.divisionCalendarMember.deleteMany({
+        const freq: Frequency = repeatEventTyper === "yearly" ? RRule.YEARLY :
+            repeatEventTyper === "monthly" ? RRule.MONTHLY :
+                repeatEventTyper === "weekly" ? RRule.WEEKLY :
+                    repeatEventTyper === "daily" ? RRule.DAILY :
+                        repeatEventTyper === "hourly" ? RRule.HOURLY :
+                            repeatEventTyper === "minutely" ? RRule.MINUTELY :
+                                RRule.SECONDLY;
+
+        const rule = new RRule({
+            freq,
+            interval: 1,
+            dtstart: new Date(dateStart),
+            count: repeatValue
+        });
+
+        const hasil = rule.all().map(recurrenceDate => ({
+            idDivision: data.idDivision,
+            idCalendar: id,
+            dateStart: recurrenceDate,
+            timeStart: timeStartFix,
+            timeEnd: timeEndFix,
+            dateEnd: recurrenceDate
+        }));
+
+        const deleteReminder = await prisma.divisionCalendarReminder.deleteMany({
             where: {
                 idCalendar: id
             }
         })
-        
-        const omitMember = member.map((v: any) => ({
-            ..._.omit(v, ["name", "idUser"]),
-            idCalendar: data.id,
-            idUser: v.idUser
-        }))
 
-        const insertMember = await prisma.divisionCalendarMember.createMany({
-            data: omitMember
-        });
+        const insertReminder = await prisma.divisionCalendarReminder.createMany({
+            data: hasil
+        })
 
 
+        // create log user
+        const log = await createLogUser({ act: 'UPDATE', desc: 'User mengupdate data acara kalender', table: 'divisionCalendar', data: id })
 
-        return NextResponse.json({ success: true, message: "Berhasil mengedit calender" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mengedit acara" }, { status: 200 });
 
     } catch (error) {
         return NextResponse.json(
             {
                 success: false,
-                message: "Gagal mengedit calender, coba lagi nanti",
+                message: "Gagal mengedit acara, coba lagi nanti",
             },
             { status: 500 }
         );

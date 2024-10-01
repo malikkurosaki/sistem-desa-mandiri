@@ -1,29 +1,30 @@
 "use client";
-import { LayoutDrawer, WARNA } from "@/module/_global";
+import { LayoutDrawer, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
 import {
   Box,
   Button,
-  Center,
   Flex,
-  Group,
   SimpleGrid,
   Stack,
   Text,
-  TextInput,
+  TextInput
 } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
-import { IoAddCircle, IoCloseCircleOutline } from "react-icons/io5";
 import { funEditGroup, funEditStatusGroup, funGetGroupById } from "../lib/api_group";
+import { globalRefreshGroup } from "../lib/val_group";
 
 export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdated: (val: boolean) => void; id: string; isActive: boolean; }) {
   const [openDrawerGroup, setOpenDrawerGroup] = useState(false);
   const [isModal, setModal] = useState(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const refresh = useHookstate(globalRefreshGroup)
+  const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     name: false,
   });
@@ -55,6 +56,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
       const res = await funEditGroup(id, { name });
       if (res.success) {
         toast.success(res.message);
+        refresh.set(!refresh.get())
         setOpenDrawerGroup(false);
         onUpdated(true);
       } else {
@@ -65,6 +67,23 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
       toast.error("Edit grup gagal, coba lagi nanti");
     } finally {
       setLoading(false);
+    }
+  }
+
+  function onCheck() {
+    if (Object.values(touched).some((v) => v == true))
+      return false
+    isUpdate()
+  }
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'name') {
+      setName(val)
+      if (val == "" || val.length < 3) {
+        setTouched({ ...touched, name: true })
+      } else {
+        setTouched({ ...touched, name: false })
+      }
     }
   }
 
@@ -100,10 +119,10 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
             style={{ cursor: "pointer" }}
           >
             <Box>
-              <FaToggleOff size={30} color={WARNA.biruTua} />
+              <FaToggleOff size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>{isActive == false ? "Aktifkan" : "Non Aktifkan"}</Text>
+              <Text c={tema.get().utama}>{isActive == false ? "Aktifkan" : "Non Aktifkan"}</Text>
             </Box>
           </Flex>
           <Flex
@@ -114,10 +133,10 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
             style={{ cursor: "pointer" }}
           >
             <Box>
-              <FaPencil size={30} color={WARNA.biruTua} />
+              <FaPencil size={30} color={tema.get().utama} />
             </Box>
             <Box>
-              <Text c={WARNA.biruTua}>Edit</Text>
+              <Text c={tema.get().utama}>Edit</Text>
             </Box>
           </Flex>
         </SimpleGrid>
@@ -131,34 +150,35 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
           <TextInput
             styles={{
               input: {
-                color: WARNA.biruTua,
-                borderRadius: WARNA.biruTua,
-                borderColor: WARNA.biruTua,
+                color: tema.get().utama,
+                borderRadius: tema.get().utama,
+                borderColor: tema.get().utama,
               },
             }}
             size="lg"
             value={name}
             onChange={(e) => {
-              setName(e.target.value)
-              setTouched({ ...touched, name: false })
+              onValidation('name', e.target.value)
             }}
-            onBlur={() => setTouched({ ...touched, name: true })}
-            error={touched.name ? "Error! harus memasukkan grup" : ""}
+            error={
+              touched.name &&
+              (name == "" ? "Error! harus memasukkan grup" :
+                name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
+              )
+            }
             radius={10}
             placeholder="Grup"
             label="Grup"
             required
-
-
           />
           <Box mt={"xl"}>
             <Button
               c={"white"}
-              bg={WARNA.biruTua}
+              bg={tema.get().utama}
               size="lg"
               radius={30}
               fullWidth
-              onClick={isUpdate}
+              onClick={() => { onCheck() }}
               loading={loading}
             >
               Simpan
