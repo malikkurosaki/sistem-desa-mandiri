@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
+import { keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import { Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
@@ -19,6 +19,7 @@ import { FaTrash } from "react-icons/fa6";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funCreateTask } from "../lib/api_task";
 import { useMediaQuery } from "@mantine/hooks";
+import { useWibuRealtime } from "wibu-realtime";
 
 export default function CreateTask() {
   const router = useRouter()
@@ -46,6 +47,10 @@ export default function CreateTask() {
     task: false,
     member: false
   });
+  const [data, setData] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
   function deleteFile(index: number) {
     setListFile([...listFile.filter((val, i) => i !== index)])
@@ -76,6 +81,7 @@ export default function CreateTask() {
       const response = await funCreateTask(fd)
 
       if (response.success) {
+        setData(response.notif)
         toast.success(response.message)
         setTitle("")
         member.set([])

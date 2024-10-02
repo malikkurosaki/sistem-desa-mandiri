@@ -90,7 +90,7 @@ export async function GET(request: Request) {
                     }
                 }
             },
-            orderBy:{
+            orderBy: {
                 createdAt: 'desc'
             }
         })
@@ -247,7 +247,7 @@ export async function POST(request: Request) {
                         ]
                     }
                 },
-                select:{
+                select: {
                     id: true
                 }
             })
@@ -273,7 +273,7 @@ export async function POST(request: Request) {
 
         // create log user
         const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data kegiatan', table: 'project', data: data.id })
-        return NextResponse.json({ success: true, message: "Berhasil membuat kegiatan" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil membuat kegiatan", notif: dataNotif }, { status: 200 });
 
     } catch (error) {
         console.error(error);

@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, TEMA } from '@/module/_global';
+import { keyWibu, LayoutNavbarNew, TEMA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Avatar, Box, Button, Checkbox, Divider, Flex, Grid, Group, rem, Stack, Text, TextInput } from '@mantine/core';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import { globalMemberDivision } from '../lib/val_division';
 import { funCreateDivision } from '../lib/api_division';
 import { IFormMemberDivision } from '../lib/type_division';
+import { useWibuRealtime } from 'wibu-realtime';
 
 export default function NavbarAdminDivision({ data, onSuccess }: { data: any, onSuccess: (val: any) => void }) {
   const router = useRouter()
@@ -16,6 +17,10 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
   const memberValue = member.get() as IFormMemberDivision[]
   const [value, setValue] = useState<string[]>([]);
   const tema = useHookstate(TEMA)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
   async function onSubmit() {
     if (value.length === 0) {
@@ -24,8 +29,8 @@ export default function NavbarAdminDivision({ data, onSuccess }: { data: any, on
 
     try {
       const response = await funCreateDivision({ data: data, member: memberValue, admin: value })
-
       if (response.success) {
+        setDataRealtime(response.notif)
         toast.success(response.message);
         router.push("/division")
         onSuccess(true)

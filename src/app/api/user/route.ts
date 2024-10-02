@@ -20,7 +20,8 @@ export async function GET(request: Request) {
     if (user.id == undefined) {
       return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
     }
-    if (idGroup == "null" || idGroup == undefined) {
+
+    if (idGroup == "null" || idGroup == undefined || idGroup == "") {
       fixGroup = user.idGroup
     } else {
       fixGroup = idGroup
