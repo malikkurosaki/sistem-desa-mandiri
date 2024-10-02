@@ -25,6 +25,7 @@ export default function WrapLayout({ children, role, theme, user }: { children: 
    }, [role, theme])
 
    useShallowEffect(() => {
+      console.log(data)
       if (data && data.some((i: any) => i.idUserTo == user)) {
          setTampilNotif(true)
          setTimeout(() => {
