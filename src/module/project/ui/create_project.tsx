@@ -1,25 +1,26 @@
 "use client";
-import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
-import { Avatar, Box, Button, Divider, Flex, Grid, Group, rem, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
-import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
-import { IoIosArrowDropright } from "react-icons/io";
-import ResultsDateAndTask from "./results_date-and_task";
-import ResultsFile from "./results_file";
+import { globalRole, keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import toast from "react-hot-toast";
-import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { funGetUserByCookies } from "@/module/auth";
-import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
+import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { useHookstate } from "@hookstate/core";
+import { Avatar, Box, Button, Divider, Flex, Grid, Group, rem, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { Dropzone } from "@mantine/dropzone";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { FaTrash } from "react-icons/fa6";
+import { IoIosArrowDropright } from "react-icons/io";
+import { useWibuRealtime } from "wibu-realtime";
+import { funCreateProject } from "../lib/api_project";
+import { IFormDateProject, IFormMemberProject, IListFileTaskProject } from "../lib/type_project";
 import { globalMemberProject } from "../lib/val_project";
 import ViewDateEndTask from "./create_date_end_task";
-import { IFormDateProject, IFormMemberProject, IListFileTaskProject } from "../lib/type_project";
 import CreateUsersProject from "./create_users_project";
-import { FaTrash } from "react-icons/fa6";
-import { Dropzone } from "@mantine/dropzone";
-import _ from "lodash";
-import { funCreateProject } from "../lib/api_project";
+import ResultsDateAndTask from "./results_date-and_task";
+import ResultsFile from "./results_file";
 
 export default function CreateProject() {
   const router = useRouter();
@@ -51,6 +52,11 @@ export default function CreateProject() {
     idGroup: false,
     desc: false
   });
+
+  const [data, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+ })
 
   function deleteFile(index: number) {
     setListFile([...listFile.filter((val, i) => i !== index)])
@@ -111,6 +117,7 @@ export default function CreateProject() {
       const response = await funCreateProject(fd)
 
       if (response.success) {
+        setDataRealtime(response.notif)
         toast.success(response.message)
         member.set([])
         setFileForm([])
