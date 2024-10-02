@@ -100,6 +100,9 @@ export async function POST(request: Request) {
          return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
       }
 
+      const userRoleLogin = user.idUserRole
+      const userId = user.id
+
       const { idDivision, desc } = (await request.json());
 
       const cekDivision = await prisma.division.count({
@@ -148,6 +151,25 @@ export async function POST(request: Request) {
          desc: 'Terdapat diskusi baru. Silahkan periksa detailnya.'
       }))
 
+      if (userRoleLogin != "supadmin") {
+         const perbekel = await prisma.user.findFirst({
+            where: {
+               isActive: true,
+               idUserRole: "supadmin",
+               idVillage: user.idVillage
+            }
+         })
+
+         dataNotif.push({
+            idUserTo: perbekel?.id,
+            idUserFrom: userId,
+            category: 'division/' + idDivision + '/discussion',
+            idContent: data.id,
+            title: 'Diskusi Baru',
+            desc: 'Terdapat diskusi baru. Silahkan periksa detailnya.'
+         })
+      }
+
       const insertNotif = await prisma.notifications.createMany({
          data: dataNotif
       })
@@ -155,7 +177,7 @@ export async function POST(request: Request) {
       // create log user
       const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data diskusi', table: 'divisionDisscussion', data: data.id })
 
-      return NextResponse.json({ success: true, message: "Berhasil menambahkan diskusi", data, }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Berhasil menambahkan diskusi", notif: dataNotif }, { status: 200 });
    } catch (error) {
       console.error(error);
       return NextResponse.json({ success: false, message: "Gagal menambahkan diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
