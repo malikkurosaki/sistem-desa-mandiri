@@ -1,3 +1,13 @@
+
+import { ListBanner, NavbarBanner } from "@/module/banner";
+import { Box } from "@mantine/core";
+
 export default function Page() {
-   return <div>List Banner</div>;
+   return (
+      <Box>
+         <NavbarBanner />
+         <ListBanner />
+    
+      </Box>
+   );
 }

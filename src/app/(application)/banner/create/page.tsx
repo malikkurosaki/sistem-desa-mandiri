@@ -1,3 +1,7 @@
+import { CreateBanner } from "@/module/banner";
+
 export default function Page() {
-   return <div>Tambah Banner</div>;
+   return (
+      <CreateBanner/>
+   );
 }
