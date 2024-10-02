@@ -9,6 +9,7 @@ import { FaUserTag, FaUserTie } from 'react-icons/fa6';
 import { useHookstate } from '@hookstate/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IoColorPalette, IoColorPaletteOutline } from 'react-icons/io5';
+import { RiLayoutTop2Fill } from "react-icons/ri";
 
 export default function ViewDetailFeature() {
   const router = useRouter()
@@ -136,6 +137,22 @@ export default function ViewDetailFeature() {
                   </Center>
                   <Center>
                     <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Tema</Text>
+                  </Center>
+                </Box>
+                <Box onClick={() => router.push('/banner')}>
+                  <Center>
+                    <ActionIcon variant="gradient"
+                      size={isMobile ? 50 : 68}
+                      aria-label="Gradient action icon"
+                      radius={100}
+                      // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                      bg={tema.get().bgFiturHome}
+                    >
+                      <RiLayoutTop2Fill size={isMobile ? 25 : 35} color={tema.get().utama} />
+                    </ActionIcon>
+                  </Center>
+                  <Center>
+                    <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Banner</Text>
                   </Center>
                 </Box>
               </>

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { HiMiniUserGroup, HiMiniPresentationChartBar, HiMegaphone, HiSquares2X2 } from "react-icons/hi2";
 
+
 export default function Features() {
   const router = useRouter()
   const isMobile = useMediaQuery('(max-width: 369px)');
