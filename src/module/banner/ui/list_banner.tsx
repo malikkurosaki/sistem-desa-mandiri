@@ -1,35 +1,70 @@
 'use client'
-import { LayoutDrawer, SkeletonSingle, TEMA, WARNA } from '@/module/_global';
+import { LayoutDrawer, LayoutModalViewFile, TEMA, WARNA } from '@/module/_global';
+import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
-import { Anchor, Box, Flex, Group, Image, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
-import _ from 'lodash';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { ActionIcon, Anchor, Box, Flex, Group, Image, Paper, SimpleGrid, Stack, Text } from '@mantine/core';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { FaFile, FaPencil, FaTrash } from 'react-icons/fa6';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { IoAddCircle } from 'react-icons/io5';
 
-function ListBanner() {
+function ListBanner() { 
   const tema = useHookstate(TEMA)
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
   const [isData, setData] = useState([]);
   const [valChoose, setValChoose] = useState("");
   const router = useRouter();
-
-
+  const param = useParams<{ id: string }>()
+  const [isOpenModalView, setOpenModalView] = useState(false)
+  const [isOpen, setOpen] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [idDataStorage, setIdDataStorage] = useState('')
+  const [isExtension, setExtension] = useState('')
+  
 
+
+  // async function onTrue(val: boolean) {
+  //   if (val) {
+  //     const response = await funDeleteBanner(param.id)
+  //     if (response.success) {
+  //       toast.success(response.message)
+  //       onDeleted(true)
+  //     } else {
+  //       toast.error(response.message)
+  //       onDeleted(false)
+  //     }
+  //   } else {
+  //     onDeleted(false)
+  //   }
+
+  //   setOpen(false)
+  // }
   return (
-    <Box pt={20}>
-      <Box>
+    <Box pt={2}>
+      <Box p={20}>
         <Anchor underline='never'>
           <Stack align='center' justify='center'>
             {[...Array(5)].map((_, index) => (
-              <div key={index} onClick={() => { setOpenDrawer(true) }}>
-                <Text c={"dark"} ta={"center"}>Banner {index + 1}</Text>
-                <Image radius={"lg"} src={`/assets/img/banner/Banner-${index + 1}.png`} alt='' w={380} h={194.5} />
-              </div>
+              <Paper radius={'md'} withBorder key={index} onClick={() => { setOpenDrawer(true) }
+              }
+                style={{
+                  width: '100%',
+                  maxWidth: 550,
+                  height: 85,
+                  backgroundColor: 'transparent',
+                  border: `1px solid ${tema.get().bgTotalKegiatan}`
+                
+                }}>
+                <Group mt={"15"}>
+                <ActionIcon variant='transparent' w={"100"}>
+                <Image radius={"xs"} src={"/assets/img/banner/Banner-1.png"} alt='' w={76} h={38.9} />
+                  </ActionIcon>
+                  <Flex direction={"column"}>
+                  <Text c={"dark"} >Banner {index + 1}</Text>
+                  <Text fz={"h6"} fw={"inherit"} c={"dark"}>Banner</Text>
+                  </Flex>
+                </Group>
+              </Paper>
             ))}
 
           </Stack>
@@ -42,34 +77,41 @@ function ListBanner() {
         title={<Text lineClamp={1}>{"Menu"}</Text>}
       >
         <SimpleGrid
+          m={20}
           cols={{ base: 3, sm: 3, lg: 3 }}
         >
           <Box>
-            <Anchor underline='never'>
-            <Flex direction={"column"}>
-              <FaPencil size={30} color={WARNA.biruTua} />
-              <Text c={"dark"} mt={10}>Edit</Text>
-            </Flex>
+            <Anchor underline='never' onClick={() => router.push("/banner/edit/[id]")}>
+              <Flex direction="column" align="center" justify="center">
+                <FaPencil size={30} color={WARNA.biruTua} />
+                <Text c={"dark"} mt={10} ta="center">Edit</Text>
+              </Flex>
             </Anchor>
           </Box>
           <Box>
-            <Anchor underline='never'>
-            <Flex direction={"column"}>
-              <FaFile size={30} color={WARNA.biruTua} />
-              <Text c={"dark"} mt={10}>View File</Text>
-            </Flex>
+            <Anchor underline='never' onClick={() => {setOpenModalView(true)}}>
+              <Flex direction="column" align="center" justify="center">
+                <FaFile size={30} color={WARNA.biruTua} />
+                <Text c={"dark"} mt={10} ta="center">Lihat File</Text>
+              </Flex>
             </Anchor>
           </Box>
-          <Box >
-            <Anchor underline='never'>
-            <Flex direction={"column"}>
-              <FaTrash size={30} color={WARNA.biruTua} />
-              <Text ta="center" c={"dark"} mt={10}>Hapus</Text>
-            </Flex>
+          <Box>
+            <Anchor underline='never' onClick={() => {setOpen(true)}}>
+              <Flex direction="column" align="center" justify="center">
+                <FaTrash size={30} color={WARNA.biruTua} />
+                <Text c={"dark"} mt={10} ta="center">Hapus</Text>
+              </Flex>
             </Anchor>
           </Box>
         </SimpleGrid>
       </LayoutDrawer>
+
+      <LayoutModal opened={isOpen} onClose={() => setOpen(false)}
+        description='Apakah Anda yakin ingin menghapus banner?'
+        onYes={(val) => { setOpen(false) }} />
+      
+      <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idDataStorage} extension={isExtension} fitur='task' />
     </Box>
   );
 }
