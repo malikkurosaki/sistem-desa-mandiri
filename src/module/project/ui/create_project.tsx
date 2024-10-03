@@ -42,6 +42,7 @@ export default function CreateProject() {
   const roleLogin = useHookstate(globalRole)
   const isMobile = useMediaQuery('(max-width: 369px)');
   const tema = useHookstate(TEMA)
+  const [loadingModal, setLoadingModal] = useState(false)
 
   const [body, setBody] = useState<any>({
     idGroup: "",
@@ -102,6 +103,7 @@ export default function CreateProject() {
 
   async function onSubmit() {
     try {
+      setLoadingModal(true)
       const fd = new FormData();
       for (let i = 0; i < fileForm.length; i++) {
         fd.append(`file${i}`, fileForm[i]);
@@ -130,6 +132,9 @@ export default function CreateProject() {
     } catch (error) {
       console.error(error)
       toast.error("Gagal menambahkan kegiatan, coba lagi nanti");
+    } finally {
+      setLoadingModal(false)
+      setModal(false)
     }
   }
 
@@ -494,13 +499,15 @@ export default function CreateProject() {
       </LayoutDrawer>
 
 
-      <LayoutModal opened={isModal} onClose={() => setModal(false)}
+      <LayoutModal loading={loadingModal} opened={isModal} onClose={() => setModal(false)}
         description="Apakah Anda yakin ingin menambahkan data?"
         onYes={(val) => {
           if (val) {
             onSubmit()
+          }else{
+            setModal(false)
           }
-          setModal(false)
+          
         }} />
     </Box >
   );

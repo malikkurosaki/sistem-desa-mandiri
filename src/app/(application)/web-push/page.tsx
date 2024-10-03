@@ -2,10 +2,10 @@ import { NotificationManager } from "@/module/_global/components/notification_ma
 
 const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!;
 
-console.log(
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
-);
+// console.log(
+//   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+//   process.env.VAPID_PRIVATE_KEY
+// );
 
 export default function Page() {
   return (
