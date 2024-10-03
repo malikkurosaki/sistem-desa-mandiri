@@ -24,7 +24,7 @@ import { useWibuRealtime } from "wibu-realtime";
 export default function CreateTask() {
   const router = useRouter()
   const param = useParams<{ id: string }>()
-  const [openDrawer, setOpenDrawer] = useState(false)
+  const [loadingModal, setLoadingModal] = useState(false)
   const [openDrawerFile, setOpenDrawerFile] = useState(false)
   const [openDrawerTask, setOpenDrawerTask] = useState(false)
   const [openMember, setOpenMember] = useState(false)
@@ -66,6 +66,7 @@ export default function CreateTask() {
 
   async function onSubmit() {
     try {
+      setLoadingModal(true)
       const fd = new FormData();
       for (let i = 0; i < fileForm.length; i++) {
         fd.append(`file${i}`, fileForm[i]);
@@ -95,6 +96,9 @@ export default function CreateTask() {
     } catch (error) {
       console.error(error)
       toast.error("Gagal menambahkan tugas divisi, coba lagi nanti");
+    } finally {
+      setLoadingModal(false)
+      setOpenModal(false)
     }
   }
 
@@ -412,13 +416,14 @@ export default function CreateTask() {
 
 
 
-      <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+      <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
         description="Apakah Anda yakin ingin menambahkan data?"
         onYes={(val) => {
           if (val) {
             onSubmit()
+          } else {
+            setOpenModal(false)
           }
-          setOpenModal(false)
         }} />
     </Box >
   );
