@@ -40,17 +40,17 @@ function ListBanner() {
   //   setOpen(false)
   // }
   return (
-    <Box pt={20}>
+    <Box pt={2}>
       <Box p={20}>
         <Anchor underline='never'>
           <Stack align='center' justify='center'>
             {[...Array(5)].map((_, index) => (
-              <Paper radius={'lg'} withBorder key={index} onClick={() => { setOpenDrawer(true) }
+              <Paper radius={'md'} withBorder key={index} onClick={() => { setOpenDrawer(true) }
               }
                 style={{
                   width: '100%',
-                  maxWidth: 500,
-                  height: 80,
+                  maxWidth: 550,
+                  height: 85,
                   backgroundColor: 'transparent',
                   border: `1px solid ${tema.get().bgTotalKegiatan}`
                 
