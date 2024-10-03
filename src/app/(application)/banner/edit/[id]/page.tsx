@@ -1,3 +1,10 @@
-export default function Page({ params }: { params: { id: string } }) {
-   return <div>Edit Banner</div>;
+import { EditBanner } from "@/module/banner";
+import { Box } from "@mantine/core";
+
+export default function Page() {
+   return (
+      <Box>
+         <EditBanner />
+      </Box>
+   );
 }
