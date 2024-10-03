@@ -7,7 +7,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaFile, FaPencil, FaTrash } from 'react-icons/fa6';
 
-function ListBanner({ onDeleted }: { onDeleted: (val: boolean) => void }) {
+function ListBanner() { 
   const tema = useHookstate(TEMA)
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true);
@@ -20,6 +20,7 @@ function ListBanner({ onDeleted }: { onDeleted: (val: boolean) => void }) {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [idDataStorage, setIdDataStorage] = useState('')
   const [isExtension, setExtension] = useState('')
+  
 
 
   // async function onTrue(val: boolean) {
