@@ -1,25 +1,25 @@
 'use client'
-import { globalRole, TEMA, WARNA } from "@/module/_global";
+import { globalRole, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { funGetAllPosition } from "@/module/position/lib/api_position";
+import { useHookstate } from "@hookstate/core";
 import { Avatar, Box, Button, Indicator, rem, Select, Skeleton, Stack, Text, TextInput } from "@mantine/core";
+import { Dropzone } from "@mantine/dropzone";
 import { useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { HiUser } from "react-icons/hi2";
-import { IDataPositionMember, IDataROleMember, IEditDataMember, IFormMember } from "../lib/type_member";
-import { funEditMember, funGetOneMember, funGetRoleUser } from "../lib/api_member";
-import _ from "lodash";
-import { Dropzone } from "@mantine/dropzone";
 import { FaCamera } from "react-icons/fa6";
-import { useHookstate } from "@hookstate/core";
 import { valueRoleUser } from "../../lib/val_user";
+import { funEditMember, funGetOneMember } from "../lib/api_member";
+import { IDataPositionMember, IDataROleMember, IEditDataMember } from "../lib/type_member";
 
 
 export default function EditMember({ id }: { id: string }) {
    const [isModal, setModal] = useState(false)
+   const [loadingKonfirmasi, setLoadingKonfirmasi] = useState(false)
    const router = useRouter()
    const [listGroup, setListGorup] = useState<IDataGroup[]>([])
    const [listPosition, setListPosition] = useState<IDataPositionMember[]>([])
@@ -111,26 +111,24 @@ export default function EditMember({ id }: { id: string }) {
 
    async function onSubmit(val: boolean) {
       try {
-         if (_.isEmpty(data)) {
-            return
+         setLoadingKonfirmasi(true)
+         const fd = new FormData()
+         fd.append("file", imgForm)
+         fd.append("data", JSON.stringify(data))
+
+         const res = await funEditMember(id, fd)
+
+         if (res.success) {
+            toast.success(res.message)
+            router.push(`/member?active=true`)
+         } else {
+            toast.error(res.message)
          }
-         if (val) {
-            const fd = new FormData()
-            fd.append("file", imgForm)
-            fd.append("data", JSON.stringify(data))
-
-            const res = await funEditMember(id, fd)
-
-            if (res.success) {
-               toast.success(res.message)
-               router.push(`/member?active=true`)
-            } else {
-               toast.error(res.message)
-            }
-         }
-
       } catch (error) {
          toast.error('Error');
+      } finally {
+         setLoadingKonfirmasi(false)
+         setModal(false)
       }
    }
 
@@ -171,21 +169,21 @@ export default function EditMember({ id }: { id: string }) {
          }
       } else if (kategori == 'gender') {
          setData({ ...data, gender: val })
-         if (val == "" || val == "null") {
+         if (val == "" || String(val) == "null") {
             setTouched({ ...touched, gender: true })
          } else {
             setTouched({ ...touched, gender: false })
          }
       } else if (kategori == 'idPosition') {
          setData({ ...data, idPosition: val })
-         if (val === "") {
+         if (val === "" || String(val) == "null") {
             setTouched({ ...touched, idPosition: true })
          } else {
             setTouched({ ...touched, idPosition: false })
          }
       } else if (kategori == 'idUserRole') {
          setData({ ...data, idUserRole: val })
-         if (val === "") {
+         if (val === "" || String(val) == "null") {
             setTouched({ ...touched, idUserRole: true })
          } else {
             setTouched({ ...touched, idUserRole: false })
@@ -267,7 +265,7 @@ export default function EditMember({ id }: { id: string }) {
                      value={(data?.idPosition == "") ? null : data.idPosition}
                      error={
                         touched.idPosition && (
-                           data.idPosition == "" ? "Jabatan Tidak Boleh Kosong" : null
+                           data.idPosition == "" || String(data.idPosition) == "null" ? "Jabatan Tidak Boleh Kosong" : null
                         )
                      }
                   />
@@ -292,7 +290,7 @@ export default function EditMember({ id }: { id: string }) {
                      value={data?.idUserRole}
                      error={
                         touched.idUserRole && (
-                           data.idUserRole == "" ? "Role Tidak Boleh Kosong" : null
+                           data.idUserRole == "" || String(data.idUserRole) == "null" ? "Role Tidak Boleh Kosong" : null
                         )
                      }
                   />
@@ -325,7 +323,6 @@ export default function EditMember({ id }: { id: string }) {
                      }}
                      onChange={(e) => { onValidation('name', e.target.value) }}
                      value={data.name}
-                     onBlur={() => setTouched({ ...touched, name: true })}
                      error={
                         touched.name && (
                            data.name == "" ? "Nama Tidak Boleh Kosong" : null
@@ -366,7 +363,7 @@ export default function EditMember({ id }: { id: string }) {
                      error={
                         touched.phone && (
                            data.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" :
-                              data.phone.length < 10 ? "Nomor Telepon harus 10 digit" : null
+                              data.phone.length < 10 ? "Nomor Telepon Tidak Valid" : null
                         )
                      }
                   />
@@ -395,7 +392,7 @@ export default function EditMember({ id }: { id: string }) {
                      value={data.gender}
                      error={
                         touched.gender && (
-                           data.gender == "" ? "Gender Tidak Boleh Kosong" : null
+                           data.gender == "" || String(data.gender) == "null" ? "Gender Tidak Boleh Kosong" : null
                         )
                      }
                   />
@@ -422,12 +419,14 @@ export default function EditMember({ id }: { id: string }) {
                </Button>
             }
          </Box>
-         <LayoutModal opened={isModal} onClose={() => setModal(false)}
+         <LayoutModal loading={loadingKonfirmasi} opened={isModal} onClose={() => setModal(false)}
             description="Apakah Anda yakin ingin mengubah data?"
             onYes={(val) => {
-               if (val)
+               if (val) {
                   onSubmit(val)
-               setModal(false)
+               } else {
+                  setModal(false)
+               }
             }
             } />
       </Box>
