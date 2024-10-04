@@ -1,11 +1,27 @@
 'use client'
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Box, Button, FileInput, Group, Paper, rem, Text, TextInput } from '@mantine/core';
-import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
+import { LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
+import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
+import { Box, Button, Group, Paper, rem, Text, TextInput } from '@mantine/core';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import React from 'react';
+import { IconPhoto, IconUpload, IconX } from '@tabler/icons-react';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-function EditBanner(props: Partial<DropzoneProps>) {
+
+function EditBanner(props: Partial<DropzoneProps> ) {
+  const router = useRouter()
+  const tema = useHookstate(TEMA)
+  const param = useParams<{ id: string, detail: string }>()
+  const [title, setTitle] = useState("")
+  const [openModal, setOpenModal] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [imgForm, setImgForm] = useState<any>()
+  const [touched, setTouched] = useState({
+    title: false,
+  });
+
+
   return (
     <Box>
       <LayoutNavbarNew back='/banner' title='Edit Banner' menu={<></>} />
@@ -41,10 +57,10 @@ function EditBanner(props: Partial<DropzoneProps>) {
 
                 <Box>
                   <Text size="xl" inline>
-                    Upload File 
+                    Upload File
                   </Text>
                   <Text size="sm" c="dimmed" inline mt={7}>
-                 File Tidak Boleh Melebihi 500mb
+                    File Tidak Boleh Melebihi 500mb
                   </Text>
                 </Box>
               </Group>
@@ -53,17 +69,47 @@ function EditBanner(props: Partial<DropzoneProps>) {
           <Box>
             <TextInput
               mt={10}
-              label={ <Text>Judul Banner</Text>}
-              placeholder='Judul Banner'
+              label="Judul Banner"
+              placeholder='Banner'
               styles={{
                 input: {
                   border: `1px solid ${"#D6D8F6"}`,
                   borderRadius: 10,
                 },
               }}
+              required
+              size='md'
+              value={title}
+              onChange={(e) => {
+                setTitle(e.currentTarget.value)
+                setTouched({...touched, title: false})
+              }}
+              
             />
           </Box>
-          <Button size='lg' bg={WARNA.biruTua} radius={30} fullWidth mt={20}>Simpan</Button>
+          <Box pos={"fixed"} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(510),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`
+          }}>
+            <Button
+              size='lg'
+              color='white'
+              bg={WARNA.biruTua}
+              radius={30}
+              fullWidth
+             >
+              Simpan
+            </Button>
+
+            <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+              description="Apakah Anda yakin ingin mengedit banner ini?"
+              onYes={(val) => {
+    
+                setOpenModal(false)
+              }}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>
