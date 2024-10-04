@@ -1,11 +1,13 @@
 'use client'
-import { LayoutNavbarNew, WARNA } from '@/module/_global';
-import { Box, Button, FileInput, Group, Paper, rem, Text, TextInput } from '@mantine/core';
-import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
+import { Box, Button, Group, Paper, rem, Text, TextInput } from '@mantine/core';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import React from 'react';
+import { IconPhoto, IconUpload, IconX } from '@tabler/icons-react';
 
 function CreateBanner(props: Partial<DropzoneProps>) {
+  const tema = useHookstate(TEMA)
+  
   return (
     <Box>
       <LayoutNavbarNew back='/banner' title='Tambah Banner' menu={<></>} />
@@ -41,10 +43,10 @@ function CreateBanner(props: Partial<DropzoneProps>) {
 
                 <Box>
                   <Text size="xl" inline>
-                    Upload File 
+                    Upload File
                   </Text>
                   <Text size="sm" c="dimmed" inline mt={7}>
-                 File Tidak Boleh Melebihi 500mb
+                    File Tidak Boleh Melebihi 500mb
                   </Text>
                 </Box>
               </Group>
@@ -53,7 +55,7 @@ function CreateBanner(props: Partial<DropzoneProps>) {
           <Box>
             <TextInput
               mt={10}
-              label={ <Text>Judul Banner</Text>}
+              label={<Text>Judul Banner</Text>}
               placeholder='Judul Banner'
               styles={{
                 input: {
@@ -63,7 +65,16 @@ function CreateBanner(props: Partial<DropzoneProps>) {
               }}
             />
           </Box>
-          <Button size='lg' bg={WARNA.biruTua} radius={30} fullWidth mt={20}>Simpan</Button>
+          <Box pos={"fixed"} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(510),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`
+            }}>
+            <Button
+              size='lg'
+              color='white'
+              bg={tema.get().utama} radius={30} fullWidth >Simpan</Button>
+          </Box>
         </Box>
       </Box>
     </Box>
