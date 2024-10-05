@@ -135,9 +135,9 @@ export default function InformationDivision() {
                     </Stack>
                   ))
                 :
-                (deskripsi != null && deskripsi != undefined) ?
+                (deskripsi != null && deskripsi != undefined && deskripsi != "") ?
                   <Text ta={"justify"}>{deskripsi}</Text>
-                  : <></>
+                  : <Text ta={"center"} c={"dimmed"} fs={"italic"}>Tidak ada deskripsi</Text>
             }
           </Box>
         </Box>
@@ -195,12 +195,12 @@ export default function InformationDivision() {
                           }}
                         >
                           <Grid.Col span={1}>
-                              <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={'lg'} />
+                            <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size={'lg'} />
                           </Grid.Col>
                           <Grid.Col span={8}>
-                                <Text c={tema.get().utama} fw={"bold"} truncate="end" pl={isMobile2 ? 40 : 30} fz={isMobile ? 14 : 16}>
-                                  {v.name}
-                                </Text>
+                            <Text c={tema.get().utama} fw={"bold"} truncate="end" pl={isMobile2 ? 40 : 30} fz={isMobile ? 14 : 16}>
+                              {v.name}
+                            </Text>
                           </Grid.Col>
                           <Grid.Col span={3}>
                             <Text c={tema.get().utama} fw={"bold"} ta={'end'} fz={isMobile ? 13 : 16}>

@@ -1,13 +1,13 @@
 "use client"
-import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import toast from 'react-hot-toast';
-import { funEditProject, funGetOneProjectById } from '../lib/api_project';
-import { useShallowEffect } from '@mantine/hooks';
-import { Box, Button, Input, rem, Skeleton, Stack, TextInput } from '@mantine/core';
-import { LayoutNavbarNew, TEMA} from '@/module/_global';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
+import { Box, Button, rem, Skeleton, Stack, TextInput } from '@mantine/core';
+import { useShallowEffect } from '@mantine/hooks';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { funEditProject, funGetOneProjectById } from '../lib/api_project';
 
 export default function EditTaskProject() {
   const router = useRouter()
@@ -19,13 +19,6 @@ export default function EditTaskProject() {
   const [touched, setTouched] = useState({
     name: false,
   });
-
-  function onVerification() {
-    if (name == "")
-      return toast.error("Error! harus memasukkan judul Kegiatan")
-
-    setOpenModal(true)
-  }
 
   async function onSubmit() {
     try {
@@ -39,6 +32,27 @@ export default function EditTaskProject() {
     } catch (error) {
       console.error(error)
       toast.error("Gagal mengedit Kegiatan, coba lagi nanti")
+    }
+  }
+
+  function onCheck() {
+    if (name == "") {
+      setTouched({ ...touched, name: true })
+      return false
+    }
+    setOpenModal(true)
+  }
+
+
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'title') {
+      setName(val)
+      if (val === "") {
+        setTouched({ ...touched, name: true })
+      } else {
+        setTouched({ ...touched, name: false })
+      }
     }
   }
 
@@ -69,32 +83,28 @@ export default function EditTaskProject() {
       <LayoutNavbarNew back="" title={"Edit Judul Kegiatan"} menu />
       <Box p={20}>
         <Stack pt={15}>
-          {loading ? 
-             <Skeleton height={40} mt={20} radius={10} />
+          {loading ?
+            <Skeleton height={40} mt={20} radius={10} />
             :
-          <TextInput
-            styles={{
-              input: {
-                border: `1px solid ${"#D6D8F6"}`,
-                borderRadius: 10,
-              },
-            }}
-            placeholder="Input Kegiatan"
-            label="Judul Kegiatan"
-            required
-            size="md"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value)
-              setTouched({ ...touched, name: false })
-            }}
-            error={
-              touched.name && (
-                name == "" ? "Judul Kegiatan Tidak Boleh Kosong" : null
-              )
-            }
-            onBlur={() => setTouched({ ...touched, name: true })}
-          />
+            <TextInput
+              styles={{
+                input: {
+                  border: `1px solid ${"#D6D8F6"}`,
+                  borderRadius: 10,
+                },
+              }}
+              placeholder="Nama Kegiatan"
+              label="Kegiatan"
+              required
+              size="md"
+              value={name}
+              onChange={(e) => { onValidation('title', e.target.value) }}
+              error={
+                touched.name && (
+                  name == "" ? "Kegiatan Tidak Boleh Kosong" : null
+                )
+              }
+            />
           }
         </Stack>
       </Box>
@@ -104,19 +114,19 @@ export default function EditTaskProject() {
         backgroundColor: `${tema.get().bgUtama}`,
       }}>
         {loading ?
-           <Skeleton height={50} radius={30} />
-      :  
-        <Button
-          c={"white"}
-          bg={tema.get().utama}
-          size="lg"
-          radius={30}
-          fullWidth
-          onClick={() => { onVerification() }}
-        >
-          Simpan
-        </Button>
-      }
+          <Skeleton height={50} radius={30} />
+          :
+          <Button
+            c={"white"}
+            bg={tema.get().utama}
+            size="lg"
+            radius={30}
+            fullWidth
+            onClick={() => { onCheck() }}
+          >
+            Simpan
+          </Button>
+        }
       </Box>
 
 
