@@ -24,7 +24,6 @@ import ResultsFile from "./results_file";
 
 export default function CreateProject() {
   const router = useRouter();
-  const [openDrawer, setOpenDrawer] = useState(false)
   const [openDrawerFile, setOpenDrawerFile] = useState(false)
   const [openDrawerTask, setOpenDrawerTask] = useState(false)
   const [isModal, setModal] = useState(false)
@@ -51,13 +50,12 @@ export default function CreateProject() {
   const [touched, setTouched] = useState({
     title: false,
     idGroup: false,
-    desc: false
   });
 
   const [data, setDataRealtime] = useWibuRealtime({
     WIBU_REALTIME_TOKEN: keyWibu,
     project: "sdm"
- })
+  })
 
   function deleteFile(index: number) {
     setListFile([...listFile.filter((val, i) => i !== index)])
@@ -93,7 +91,7 @@ export default function CreateProject() {
 
   function onChooseGroup(val: any) {
     member.set([])
-    setBody({ ...body, idGroup: val })
+    onValidation('idGroup', val)
   }
 
   useShallowEffect(() => {
@@ -138,6 +136,51 @@ export default function CreateProject() {
     }
   }
 
+  function onCheck() {
+    const cek = checkAll()
+    if (!cek)
+      return false
+
+    if (dataTask.length == 0)
+      return toast.error("Error! silahkan tambahkan tugas")
+
+    if (memberValue.length == 0)
+      return toast.error("Error! silahkan pilih anggota")
+
+    setModal(true)
+  }
+
+  function checkAll() {
+    let nilai = true
+    if (body.idGroup === "" || String(body.idGroup) == "null") {
+      setTouched(touched => ({ ...touched, idGroup: true }))
+      nilai = false
+    }
+    if (body.title === "") {
+      setTouched(touched => ({ ...touched, title: true }))
+      nilai = false
+    }
+    return nilai
+  }
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'idGroup') {
+      setBody({ ...body, idGroup: val })
+      if (val === "" || String(val) == "null") {
+        setTouched({ ...touched, idGroup: true })
+      } else {
+        setTouched({ ...touched, idGroup: false })
+      }
+    } else if (kategori == 'title') {
+      setBody({ ...body, title: val })
+      if (val === "") {
+        setTouched({ ...touched, title: true })
+      } else {
+        setTouched({ ...touched, title: false })
+      }
+    }
+  }
+
 
 
   if (openTugas) return <ViewDateEndTask onClose={(val) => { setOpenTugas(false) }} onSet={(val) => { setDataTask([...dataTask, val]); setOpenTugas(false) }} />;
@@ -169,14 +212,12 @@ export default function CreateProject() {
                 }))}
                 onChange={(val) => {
                   onChooseGroup(val)
-                  setTouched({ ...touched, idGroup: false })
                 }}
 
                 value={(body.idGroup == "") ? null : body.idGroup}
-                onBlur={() => setTouched({ ...touched, idGroup: true })}
                 error={
                   touched.idGroup && (
-                    body.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                    body.idGroup == "" || String(body.idGroup) == "null" ? "Grup Tidak Boleh Kosong" : null
                   )
                 }
               />
@@ -195,11 +236,7 @@ export default function CreateProject() {
             placeholder="Nama Kegiatan"
             size="md"
             value={body.title}
-            onChange={(e) => {
-              setBody({ ...body, title: e.target.value })
-              setTouched({ ...touched, title: false })
-            }}
-            onBlur={() => setTouched({ ...touched, title: true })}
+            onChange={(e) => { onValidation('title', e.target.value) }}
             error={
               touched.title && (
                 body.title == "" ? "Kegiatan Tidak Boleh Kosong" : null
@@ -361,16 +398,7 @@ export default function CreateProject() {
           size="lg"
           radius={30}
           fullWidth
-          onClick={() => {
-            if (
-              body.title !== "" &&
-              body.idGroup !== ""
-            ) {
-              setModal(true)
-            } else {
-              toast.error("Mohon lengkapi data terlebih dahulu");
-            }
-          }}>
+          onClick={() => { onCheck() }}>
           Simpan
         </Button>
       </Box>
@@ -504,10 +532,10 @@ export default function CreateProject() {
         onYes={(val) => {
           if (val) {
             onSubmit()
-          }else{
+          } else {
             setModal(false)
           }
-          
+
         }} />
     </Box >
   );
