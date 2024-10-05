@@ -21,7 +21,7 @@ export const funCreateBanner = async (data: FormData) => {
     return await response.json().catch(() => null);
 }
 
-export const funGetOneBanner = async (path: string, p0: string) => {
+export const funGetOneBanner = async (path: string) => {
     const response = await fetch(`/api/banner/${path}`)
     return await response.json().catch(() => null);
 }
@@ -33,4 +33,3 @@ export const funEditBanner = async (path: string, data: FormData) => {
     });
     return await response.json().catch(() => null);
 }
-

@@ -10,13 +10,9 @@ import { useState } from 'react';
 
 
 function EditBanner(props: Partial<DropzoneProps> ) {
-  const router = useRouter()
   const tema = useHookstate(TEMA)
-  const param = useParams<{ id: string, detail: string }>()
   const [title, setTitle] = useState("")
   const [openModal, setOpenModal] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [imgForm, setImgForm] = useState<any>()
   const [touched, setTouched] = useState({
     title: false,
   });
