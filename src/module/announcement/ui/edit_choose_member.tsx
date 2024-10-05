@@ -1,17 +1,16 @@
 "use client";
-import { LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
+import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import { funGetGroupDivision } from '@/module/group/lib/api_group';
-import { Box, Button, Divider, Flex, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
-import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
-import React, { useState } from 'react';
-import { FaCheck } from 'react-icons/fa';
-import { GroupData, GroupDataEditAnnouncement } from '../lib/type_announcement';
 import { useHookstate } from '@hookstate/core';
-import { globalMemberEditAnnouncement } from '../lib/val_announcement';
-import { FaMinus } from 'react-icons/fa6';
+import { ActionIcon, Box, Button, Divider, Group, rem, Skeleton, Stack, Text } from '@mantine/core';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-
-
+import { FaCheck } from 'react-icons/fa';
+import { FaMinus } from 'react-icons/fa6';
+import { HiChevronLeft } from 'react-icons/hi2';
+import { GroupData } from '../lib/type_announcement';
+import { globalMemberEditAnnouncement } from '../lib/val_announcement';
 
 interface CheckedState {
    [key: string]: string[];
@@ -111,7 +110,13 @@ export default function EditChooseMember({ onClose }: { onClose: (val: any) => v
 
    return (
       <div>
-         <LayoutNavbarNew back="" title="Tambah Divisi Penerima Pengumuman" menu={<></>} />
+         <LayoutNavbarNew state={
+            <Box>
+               <ActionIcon variant="light" onClick={() => { onClose(true) }} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
+                  <HiChevronLeft size={20} color='white' />
+               </ActionIcon>
+            </Box>
+         } title="Tambah Divisi Penerima Pengumuman" menu={<></>} />
          <Box p={20} pb={100}>
             <Group justify='flex-end' mb={20}>
                <Text
