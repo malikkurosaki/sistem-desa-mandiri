@@ -2,21 +2,100 @@
 import { LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
-import { Box, Button, Group, Paper, rem, Text, TextInput } from '@mantine/core';
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import { IconPhoto, IconUpload, IconX } from '@tabler/icons-react';
+import { Box, Button, Image, Paper, rem, TextInput } from '@mantine/core';
+import { Dropzone } from '@mantine/dropzone';
+import { useShallowEffect } from '@mantine/hooks';
+import _ from 'lodash';
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { funEditBanner, funGetOneBanner } from '../lib/api_banner';
+import { IEditDataBanner } from '../lib/type_banner';
 
 
-function EditBanner(props: Partial<DropzoneProps> ) {
+export default function EditBanner() {
+  const router = useRouter()
+  const param = useParams<{ id: string }>()
   const tema = useHookstate(TEMA)
-  const [title, setTitle] = useState("")
-  const [openModal, setOpenModal] = useState(false)
+  const [isModal, setModal] = useState(false)
+  const [data, setData] = useState<IEditDataBanner>({
+    id: "",
+    title: "",
+    extension: "",
+    image: "",
+  });
+  const openRef = useRef<() => void>(null)
+  const [img, setIMG] = useState<any | null>()
+  const [imgForm, setImgForm] = useState<any>()
+  const [loading, setLoading] = useState(false)
   const [touched, setTouched] = useState({
     title: false,
-  });
+    image: false
+  })
 
+
+  function onValidation(kategori: string, val: any) {
+    if (kategori == 'title') {
+      setData({ ...data, title: val })
+      if (val === "") {
+        setTouched({ ...touched, title: true })
+      } else {
+        setTouched({ ...touched, title: false })
+      }
+    } else if (kategori == 'image') {
+      if (imgForm) {
+        setTouched({ ...touched, image: false })
+      } else {
+        setTouched({ ...touched, image: true })
+      }
+    }
+  }
+
+
+  async function getOneData() {
+    try {
+      const res = await funGetOneBanner(param.id)
+      console.log(res)
+      setData(res.data)
+      setIMG(`https://wibu-storage.wibudev.com/api/files/${res.data.image}`)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async function onSubmit(val: boolean) {
+    try {
+      setLoading(true)
+      const fd = new FormData()
+      fd.append("file", imgForm)
+      fd.append("data", JSON.stringify(
+        {
+          id: data.id,
+          title: data.title,
+          image: data.image,
+          extension: data.extension
+        }
+      ))
+
+      const res = await funEditBanner(param.id, fd)
+
+      if (res.success) {
+        toast.success(res.message)
+        router.push('/banner')
+      } else {
+        toast.error(res.message)
+      }
+    } catch (error) {
+      toast.error("Error");
+    } finally {
+      setLoading(false)
+      setModal(false)
+    }
+  }
+
+  useShallowEffect(() => {
+    getOneData()
+  }, [])
 
   return (
     <Box>
@@ -25,41 +104,24 @@ function EditBanner(props: Partial<DropzoneProps> ) {
         <Box>
           <Paper withBorder radius={20}>
             <Dropzone
-              onDrop={(files) => console.log('accepted files', files)}
-              onReject={(files) => console.log('rejected files', files)}
-              maxSize={5 * 1024 ** 2}
-              accept={IMAGE_MIME_TYPE}
-              {...props}
+              openRef={openRef}
+              onDrop={async (files) => {
+                if (!files || _.isEmpty(files))
+                  return toast.error("Tidak Ada Gambar Yang Dipilih")
+                setImgForm(files[0])
+                const buffer = URL.createObjectURL(new Blob([new Uint8Array(await files[0].arrayBuffer())]))
+                setIMG(buffer)
+                onValidation('image', files[0])
+              }}
+              activateOnClick={false}
+              maxSize={1 * 1024 ** 2}
+              accept={['image/png', 'image/jpeg', 'image/heic']}
+              onReject={(files) => {
+                return toast.error('File yang diizinkan: .png, .jpg, dan .heic  dengan ukuran maksimal 1 MB')
+              }}
+              onClick={() => openRef.current?.()}
             >
-              <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
-                <Dropzone.Accept>
-                  <IconUpload
-                    style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
-                    stroke={1.5}
-                  />
-                </Dropzone.Accept>
-                <Dropzone.Reject>
-                  <IconX
-                    style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
-                    stroke={1.5}
-                  />
-                </Dropzone.Reject>
-                <Dropzone.Idle>
-                  <IconPhoto
-                    style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
-                    stroke={1.5}
-                  />
-                </Dropzone.Idle>
-
-                <Box>
-                  <Text size="xl" inline>
-                    Upload File
-                  </Text>
-                  <Text size="sm" c="dimmed" inline mt={7}>
-                    File Tidak Boleh Melebihi 500mb
-                  </Text>
-                </Box>
-              </Group>
+              <Image radius={"md"} src={img} alt="" />
             </Dropzone>
           </Paper>
           <Box>
@@ -67,20 +129,19 @@ function EditBanner(props: Partial<DropzoneProps> ) {
               mt={10}
               label="Judul Banner"
               placeholder='Banner'
+              value={data.title}
+              onChange={(e) => {
+                setData({ ...data, title: e.target.value })
+                onValidation('title', e.target.value)
+              }}
               styles={{
                 input: {
-                  border: `1px solid ${"#D6D8F6"}`,
+                  border: `1px solid ${touched.title ? 'red' : "#D6D8F6"}`,
                   borderRadius: 10,
                 },
               }}
               required
               size='md'
-              value={title}
-              onChange={(e) => {
-                setTitle(e.currentTarget.value)
-                setTouched({...touched, title: false})
-              }}
-              
             />
           </Box>
           <Box pos={"fixed"} bottom={0} p={rem(20)} w={"100%"} style={{
@@ -91,18 +152,31 @@ function EditBanner(props: Partial<DropzoneProps> ) {
             <Button
               size='lg'
               color='white'
-              bg={WARNA.biruTua}
+              bg={tema.get().utama}
               radius={30}
               fullWidth
-             >
+              onClick={() => {
+                if (touched.title || touched.image) {
+                  toast.error('Mohon Isi Semua Data')
+                } else {
+                  setModal(true)
+                }
+              }}
+            >
               Simpan
             </Button>
 
-            <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+            <LayoutModal
+              loading={loading}
+              opened={isModal}
+              onClose={() => setModal(false)}
               description="Apakah Anda yakin ingin mengedit banner ini?"
               onYes={(val) => {
-    
-                setOpenModal(false)
+                if (val) {
+                  onSubmit(val)
+                } else {
+                  setModal(false)
+                }
               }}
             />
           </Box>
@@ -112,4 +186,3 @@ function EditBanner(props: Partial<DropzoneProps> ) {
   );
 }
 
-export default EditBanner;
