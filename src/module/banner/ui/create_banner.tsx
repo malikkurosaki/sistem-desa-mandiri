@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { funCreateBanner } from '../lib/api_banner';
+import { title } from 'process';
 
 function CreateBanner() {
   const router = useRouter();
@@ -17,36 +18,49 @@ function CreateBanner() {
   const tema = useHookstate(TEMA)
   const [loadingKonfirmasi, setLoadingKonfirmasi] = useState(false)
   const [listData, setListData] = useState({
-   title: "",
-   
+    title: "",
+    image: ""
+
   });
   const [imgForm, setImgForm] = useState<any>()
   const openRef = useRef<() => void>(null)
   const [img, setIMG] = useState<any | null>()
-  // const [body, setBody] = useState<any>({
-  //   id: "",
-  //   title: "",
-  // });
+  const [touched, setTouched] = useState({
+    title: false,
+    image: false
+  })
 
-
-  // function onCheck() {
-  //     const cek = checkAll()
-  //     if (!cek)
-  //       return false
-  //     setModal(true)
-  //   }
-
-
-
+  
+  function onValidation(kategori: string, val: any) {
+    if (kategori == 'title') {
+      setListData({ ...listData, title: val })
+      if (val === "") {
+        setTouched({ ...touched, title: true })
+      } else {
+        setTouched({ ...touched, title: false })
+      }
+    } else if (kategori == 'image') {
+      if (imgForm) {
+        setTouched({ ...touched, image: false })
+      } else {
+        setTouched({ ...touched, image: true })
+      }
+    } 
+  }
+  
+  
   async function onSubmit(val: boolean) {
+    if (!imgForm || !listData.title) {
+      toast.error("Mohon lengkapi semua data");
+    }
     try {
-      console.log(listData)
       setLoadingKonfirmasi(true)
       const fd = new FormData()
       fd.append("file", imgForm)
       fd.append("data", JSON.stringify(
         {
-          title: listData.title
+          title: listData.title,
+          image: listData.image
         }
       ))
       const res = await funCreateBanner(fd);
@@ -80,10 +94,11 @@ function CreateBanner() {
               onDrop={async (files) => {
                 if (!files || _.isEmpty(files))
                   return toast.error('Tidak ada gambar yang dipilih')
-                setImgForm(files[0])
-                // const buffer = URL.createObjectURL(files[0]);
+                const file = files[0]
+                setImgForm(file)
                 const buffer = URL.createObjectURL(new Blob([new Uint8Array(await files[0].arrayBuffer())]))
                 setIMG(buffer)
+                onValidation('image', files[0])
               }}
               activateOnClick={false}
               maxSize={1 * 1024 ** 2}
@@ -96,7 +111,7 @@ function CreateBanner() {
 
               {
                 img ?
-                  <Image radius="md" src={img} />
+                  <Image radius="md" src={img} alt='' />
                   :
                   <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
                     <Dropzone.Accept>
@@ -123,7 +138,7 @@ function CreateBanner() {
                         Klik Untuk Upload Image
                       </Text>
                       <Text size="sm" c="dimmed" inline mt={7}>
-                        Ukuran Foto Tidak Boleh Lebih Dari 500MB
+                        Ukuran Foto Tidak Boleh Lebih Dari 1MB
                       </Text>
                     </div>
                   </Group>
@@ -134,15 +149,21 @@ function CreateBanner() {
           <Box>
             <TextInput
               mt={10}
-              label={<Text>Judul Banner</Text>}
+              label={<Text >Judul Banner</Text>}
+              value={listData.title}
               placeholder='Judul Banner'
+              onChange={(e) => {
+                setListData({ ...listData, title: e.target.value })
+                onValidation('title', e.target.value)
+              }}
               styles={{
                 input: {
-                  border: `1px solid ${"#D6D8F6"}`,
+                  border: `1px solid ${touched.title ? 'red' : "#D6D8F6"}`,
                   borderRadius: 10,
                 },
               }}
-              onChange={(val) => { setListData({ title: val.target.value })}}
+              
+              
             />
           </Box>
           <Box pos={"fixed"} bottom={0} p={rem(20)} w={"100%"} style={{
@@ -154,7 +175,13 @@ function CreateBanner() {
               size='lg'
               color='white'
               bg={tema.get().utama} radius={30} fullWidth
-              onClick={ () => { setModal(true)}}
+              onClick={() => {  
+                if (touched.title || touched.image) {
+                  toast.error("Mohon Isi Semua Data")
+                } else {
+                  setModal(true)
+                }
+              }}
 
             >Simpan</Button>
           </Box>
@@ -172,7 +199,7 @@ function CreateBanner() {
             setModal(false);
           }
         }}
-        
+
       />
     </Box>
   );
