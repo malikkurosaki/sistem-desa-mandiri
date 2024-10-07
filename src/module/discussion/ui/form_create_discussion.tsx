@@ -13,6 +13,7 @@ import { funCreateDiscussion } from "../lib/api_discussion";
 
 export default function FormCreateDiscussion({ id }: { id: string }) {
    const [isValModal, setValModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const router = useRouter()
    const [isImg, setImg] = useState("")
    const param = useParams<{ id: string, detail: string }>()
@@ -50,26 +51,25 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
 
    async function createDiscussion(val: boolean) {
       try {
-         if (val) {
-            const response = await funCreateDiscussion({
-               desc: isData.desc,
-               idDivision: id
-            })
+         setLoadingModal(true)
+         const response = await funCreateDiscussion({
+            desc: isData.desc,
+            idDivision: id
+         })
 
-            if (response.success) {
-               setDataRealtime(response.notif)
-               toast.success(response.message)
-               router.push(`/division/${param.id}/discussion/`)
-               setValModal(false)
-            } else {
-               toast.error(response.message)
-            }
+         if (response.success) {
+            setDataRealtime(response.notif)
+            toast.success(response.message)
+            router.push(`/division/${param.id}/discussion/`)
+         } else {
+            toast.error(response.message)
          }
       } catch (error) {
          console.error(error);
          toast.error("Gagal menambahkan diskusi, coba lagi nanti");
       } finally {
          setValModal(false)
+         setLoadingModal(false)
       }
    }
 
@@ -94,12 +94,12 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                         }}
                         value={isData.desc}
                         onChange={(e) => setData({ ...isData, desc: e.target.value })}
-                        onBlur={() => setTouched({ ...touched, desc: true })}
-                        error={
-                           touched.desc && (
-                              isData.desc == "" ? "Form Tidak Boleh Kosong" : null
-                           )
-                        }
+                     // onBlur={() => setTouched({ ...touched, desc: true })}
+                     // error={
+                     //    touched.desc && (
+                     //       isData.desc == "" ? "Form Tidak Boleh Kosong" : null
+                     //    )
+                     // }
                      />
                   </Box>
                </Grid.Col>
@@ -130,9 +130,11 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
             </Button>
          </Box>
 
-         <LayoutModal opened={isValModal} onClose={() => setValModal(false)}
+         <LayoutModal loading={loadingModal} opened={isValModal} onClose={() => setValModal(false)}
             description="Apakah Anda yakin ingin menambah data?"
-            onYes={(val) => { createDiscussion(val) }} />
+            onYes={(val) => {
+               createDiscussion(val)
+            }} />
       </Box>
    )
 }  
