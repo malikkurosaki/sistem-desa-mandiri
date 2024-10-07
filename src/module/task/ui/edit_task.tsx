@@ -1,22 +1,13 @@
 "use client";
 import { LayoutNavbarNew, TEMA } from "@/module/_global";
-import {
-   Box,
-   Button,
-   Input,
-   rem,
-   Skeleton,
-   Stack,
-   Textarea,
-   TextInput,
-} from "@mantine/core";
-import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { funEditTask, funGetTaskDivisionById } from "../lib/api_task";
-import { useShallowEffect } from "@mantine/hooks";
 import { useHookstate } from "@hookstate/core";
+import { Box, Button, rem, Skeleton, Stack, TextInput } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { funEditTask, funGetTaskDivisionById } from "../lib/api_task";
 
 
 export default function EditTask() {
@@ -31,10 +22,20 @@ export default function EditTask() {
    });
 
    function onVerification() {
-      if (title == "")
-         return toast.error("Error! harus memasukkan judul tugas")
-
+      if (Object.values(touched).some((v) => v == true))
+         return false
       setOpenModal(true)
+   }
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'title') {
+         setTitle(val)
+         if (val === "") {
+            setTouched({ ...touched, title: true })
+         } else {
+            setTouched({ ...touched, title: false })
+         }
+      }
    }
 
    async function onSubmit() {
@@ -96,16 +97,12 @@ export default function EditTask() {
                      label="Judul Tugas"
                      size="md"
                      value={title}
-                     onChange={(e) => {
-                        setTitle(e.target.value)
-                        setTouched({ ...touched, title: false })
-                     }}
+                     onChange={(e) => { onValidation('title', e.target.value)}}
                      error={
                         touched.title && (
                            title == "" ? "Error! harus memasukkan judul tugas" : null
                         )
                      }
-                     onBlur={() => setTouched({ ...touched, title: true })}
                   />
                }
             </Stack>

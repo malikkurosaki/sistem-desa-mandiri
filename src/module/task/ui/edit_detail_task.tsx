@@ -1,28 +1,15 @@
 "use client";
 import { LayoutNavbarNew, TEMA } from "@/module/_global";
-import {
-   Avatar,
-   Box,
-   Button,
-   Flex,
-   Group,
-   Input,
-   rem,
-   SimpleGrid,
-   Skeleton,
-   Stack,
-   Text,
-   TextInput,
-} from "@mantine/core";
-import React, { useState } from "react";
-import { DatePicker } from "@mantine/dates";
-import { useParams, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import moment from "moment";
-import { funEditDetailTask, funGetDetailTask } from "../lib/api_task";
-import { useShallowEffect } from "@mantine/hooks";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
+import { Box, Button, Group, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
+import { useShallowEffect } from "@mantine/hooks";
+import moment from "moment";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { funEditDetailTask, funGetDetailTask } from "../lib/api_task";
 
 
 export default function EditDetailTask() {
@@ -185,10 +172,10 @@ export default function EditDetailTask() {
                         touched.title &&
                         (title == "" ? "Error! harus memasukkan Judul Tahapan" : ""
                         )
-                      }
+                     }
                      onChange={(e) => {
                         onValidation('title', e.target.value)
-                      }}
+                     }}
                   />
                }
             </Stack>
