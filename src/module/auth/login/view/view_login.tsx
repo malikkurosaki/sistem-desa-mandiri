@@ -49,23 +49,30 @@ function ViewLogin() {
     if (cekLogin.success) {
       const code = Math.floor(Math.random() * 1000) + 1000
       setLoading(true)
-
-      const res = await fetch(`https://wa.wibudev.com/code?nom=${cekLogin.phone}&text=*DARMASABA*%0A%0A
-JANGAN BERIKAN KODE RAHASIA ini kepada siapa pun TERMASUK PIHAK DARMASABA. Masukkan otentikasi:  *${encodeURIComponent(code)}*`).then(
-        async (res) => {
-          if (res.status == 200) {
-            setValPhone(cekLogin.phone)
-            setOTP(code)
-            setUser(cekLogin.id)
-            setVerif(true)
-            setLoading(false)
-            toast.success('Kode verifikasi telah dikirim')
-          } else {
-            toast.error('Internal Server Error')
-            setLoading(false)
+      try {
+        const res = await fetch(`https://wa.wibudev.com/code?nom=${cekLogin.phone}&text=*DARMASABA*%0A%0A
+          JANGAN BERIKAN KODE RAHASIA ini kepada siapa pun TERMASUK PIHAK DARMASABA. Masukkan otentikasi:  *${encodeURIComponent(code)}*`).then(
+          async (res) => {
+            if (res.status == 200) {
+              setValPhone(cekLogin.phone)
+              setOTP(code)
+              setUser(cekLogin.id)
+              setVerif(true)
+              setLoading(false)
+              toast.success('Kode verifikasi telah dikirim')
+            } else {
+              console.error(res.status)
+              toast.error('Internal Server Error')
+              setLoading(false)
+            }
           }
-        }
-      )
+        )
+      } catch (error) {
+        console.error(error)
+        toast.error('Internal Server Error')
+      }finally{
+        setLoading(false)
+      }
     } else {
       return toast.error(cekLogin.message)
     }
