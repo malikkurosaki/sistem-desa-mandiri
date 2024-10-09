@@ -158,12 +158,18 @@ function CreateBanner() {
                       />
                     </Dropzone.Idle>
 
-                    <div>
-                      <Text size="xl" inline>
+                    <div >
+                      <Text  size="xl" inline>
                         Klik Untuk Upload Image
                       </Text>
-                      <Text size="sm" c="dimmed" inline mt={7}>
-                        Ukuran Foto Tidak Boleh Lebih Dari 1 MB
+                      <Text mb={2} size="sm" c="dimmed" inline mt={7}>
+                      Mohon unggah gambar dalam resolusi 
+                      </Text>
+                      <Text mb={2} size='sm' c={"dimmed"} inline>
+                      1535 x 450 piksel untuk memastikan 
+                      </Text>
+                      <Text size='sm' c={"dimmed"} inline>
+                      tampilan sesuai dengan kebutuhan desain.
                       </Text>
                     </div>
                   </Group>
