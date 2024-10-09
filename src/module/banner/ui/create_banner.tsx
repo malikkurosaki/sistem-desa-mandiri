@@ -30,25 +30,6 @@ function CreateBanner() {
     image: false
   })
 
-  
-  function onValidation(kategori: string, val: any) {
-    if (kategori == 'title') {
-      setListData({ ...listData, title: val })
-      if (val === "") {
-        setTouched({ ...touched, title: true })
-      } else {
-        setTouched({ ...touched, title: false })
-      }
-    } else if (kategori == 'image') {
-      if (imgForm) {
-        setTouched({ ...touched, image: false })
-      } else {
-        setTouched({ ...touched, image: true })
-      }
-    } 
-  }
-  
-  
   async function onSubmit(val: boolean) {
     if (!imgForm || !listData.title) {
       toast.error("Mohon lengkapi semua data");
@@ -69,8 +50,8 @@ function CreateBanner() {
         router.push('/banner')
       } else {
         toast.error(res.message);
+        setModal(false);
       }
-      setModal(false);
     } catch (error) {
       toast.error("Error");
     } finally {
@@ -79,9 +60,46 @@ function CreateBanner() {
     }
   }
 
-  // async function loadData() {
-  //   const
-  // }
+
+
+  function onCheck() {
+    const cek = checkAll()
+    if (!cek)
+      return false
+    setModal(true)
+  }
+  function checkAll() {
+    let nilai = true
+
+    if (listData.title == "") {
+      setTouched(touched => ({ ...touched, title: true }))
+      nilai = false
+    }
+
+    if (!imgForm) {
+      setTouched(touched => ({ ...touched, image: true }))
+      nilai = false
+    }
+
+
+    return nilai
+  }
+  function onValidation(kategori: string, val: any) {
+    if (kategori == 'title') {
+      setListData({ ...listData, title: val })
+      if (val === "") {
+        setTouched({ ...touched, title: true })
+      } else {
+        setTouched({ ...touched, title: false })
+      }
+    } else if (kategori == 'image') {
+      if (imgForm) {
+        setTouched({ ...touched, image: true })
+      } else {
+        setTouched({ ...touched, image: false })
+      }
+    }
+  }
 
   return (
     <Box>
@@ -102,7 +120,7 @@ function CreateBanner() {
               }}
               activateOnClick={false}
               maxSize={1 * 1024 ** 2}
-              accept={['image/png', 'imagfe/jpeg', 'image/heic']}
+              accept={['image/png', 'image/jpeg', 'image/heic']}
               onReject={(files) => {
                 return toast.error('File yang diizinkan: .png, .jpg, dan .heic  dengan ukuran maksimal 1 MB')
               }}
@@ -111,13 +129,20 @@ function CreateBanner() {
 
               {
                 img ?
-                  <Image radius="md" src={img} alt='' />
+
+                  <Image
+                    radius="md"
+                    src={img}
+                    alt=''
+
+                  />
                   :
                   <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
                     <Dropzone.Accept>
                       <IconUpload
                         style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
                         stroke={1.5}
+
                       />
                     </Dropzone.Accept>
                     <Dropzone.Reject>
@@ -138,7 +163,7 @@ function CreateBanner() {
                         Klik Untuk Upload Image
                       </Text>
                       <Text size="sm" c="dimmed" inline mt={7}>
-                        Ukuran Foto Tidak Boleh Lebih Dari 1MB
+                        Ukuran Foto Tidak Boleh Lebih Dari 1 MB
                       </Text>
                     </div>
                   </Group>
@@ -146,12 +171,19 @@ function CreateBanner() {
 
             </Dropzone>
           </Paper>
+            <Box mt={10}>
+              {touched.image && !imgForm && (
+                <Text size='sm' c={'red'}>
+                  Silahkan Pilih Gambar
+                </Text>
+              )}
+            </Box>
           <Box>
-            <TextInput
+          <TextInput
               mt={10}
-              label={<Text >Judul Banner</Text>}
-              value={listData.title}
+              label="Judul Banner"
               placeholder='Judul Banner'
+              value={listData.title}
               onChange={(e) => {
                 setListData({ ...listData, title: e.target.value })
                 onValidation('title', e.target.value)
@@ -162,8 +194,13 @@ function CreateBanner() {
                   borderRadius: 10,
                 },
               }}
-              
-              
+              required
+              size='md'
+              error={
+                touched.title && (
+                  listData.title == "" ? "Judul Banner Tidak Boleh Kosong" : null
+                )
+              }
             />
           </Box>
           <Box pos={"fixed"} bottom={0} p={rem(20)} w={"100%"} style={{
@@ -174,14 +211,10 @@ function CreateBanner() {
             <Button
               size='lg'
               color='white'
-              bg={tema.get().utama} radius={30} fullWidth
-              onClick={() => {  
-                if (touched.title || touched.image) {
-                  toast.error("Mohon Isi Semua Data")
-                } else {
-                  setModal(true)
-                }
-              }}
+              bg={tema.get().utama}
+              radius={30}
+              fullWidth
+              onClick={() => { onCheck() }}
 
             >Simpan</Button>
           </Box>

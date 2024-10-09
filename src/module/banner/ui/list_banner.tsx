@@ -27,17 +27,12 @@ function ListBanner() {
   const [idData, setIdData] = useState('')
   const [isPage, setPage] = useState(1)
   const [searchQuerry, setSearchQuerry] = useState('')
-  // const { value: containerRef } = useHookstate(currentScroll);
-
-  const handleList = () => {
-    setIsList(!isList)
-  }
 
   const fetchData = async (loading: boolean) => {
     try {
       if (loading)
         setLoading(true)
-      const response = await funGetAllBanner('?search=' + searchQuerry)
+      const response = await funGetAllBanner('?page=' + isPage)
       if (response.success) {
         setData(response.data.map((banner: { image: any; }) => ({ ...banner, image: banner.image })));
       } else {
@@ -60,7 +55,7 @@ function ListBanner() {
 
   useShallowEffect(() => {
     fetchData(true)
-  }, [searchQuerry])
+  }, [isPage])
 
   useShallowEffect(() => {
     fetchData(false)
@@ -92,29 +87,14 @@ function ListBanner() {
   return (
     <Box pt={2}>
       <Box p={20}>
-        <TextInput
-          styles={{
-            input: {
-              color: tema.get().utama,
-              borderRadius: '#A3A3A3',
-              borderColor: '#A3A3A3',
-            },
-          }}
-          size='md'
-          radius={30}
-          leftSection={<HiMagnifyingGlass size={20} />}
-          placeholder='pencarian'
-          value={searchQuerry}
-          onChange={(val) => { searchBanner(val.target.value) }}
-        />
-
-      </Box>
-
-      <Box p={20}>
-        <Anchor underline='never'>
-          <Stack align='center' justify='center'>
-            {isData.map((v, index) => (
-              <Paper radius={'md'} withBorder key={index} onClick={() => {
+        {isData.length == 0 ?
+        <Box style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "75vh"}}>
+            <Text c={"dimmed"} ta={"center"} fs={"italic"}>Tidak ada Banner</Text>
+          </Box> 
+          : 
+          isData.map((v, i) => {
+            return (
+              <Paper radius={'md'} withBorder key={i} onClick={() => {
                 setIdData(v.id);
                 setIdDataStorage(v.image);
                 setExtension(v.extension);
@@ -129,7 +109,7 @@ function ListBanner() {
                   border: `1px solid ${tema.get().bgTotalKegiatan}`
 
                 }}>
-                <Group mt={"15"}>
+                <Group mt={"25"}>
                   <ActionIcon variant='transparent' w={"100"}>
                     <Image
                       radius={"xs"}
@@ -138,19 +118,14 @@ function ListBanner() {
                       w={76}
                       h={38.9}
                     />
-                  </ActionIcon>
-                  <Flex direction={"column"}>
+                  </ActionIcon>              
                     <Text c={"dark"} fz={"h4"}>{v.title}</Text>
-                  </Flex>
                 </Group>
               </Paper>
-            ))}
-
-          </Stack>
-        </Anchor>
-      </Box>
-
-        
+          )})
+          
+      }
+      </Box> 
       <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
         <Box>
           <Stack pt={10}>

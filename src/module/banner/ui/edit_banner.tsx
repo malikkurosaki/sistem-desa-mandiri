@@ -2,7 +2,7 @@
 import { LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
-import { Box, Button, Image, Paper, rem, TextInput } from '@mantine/core';
+import { Box, Button, Image, Paper, rem, Text, TextInput } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import { useShallowEffect } from '@mantine/hooks';
 import _ from 'lodash';
@@ -44,14 +44,20 @@ export default function EditBanner() {
       }
     } else if (kategori == 'image') {
       if (imgForm) {
-        setTouched({ ...touched, image: false })
-      } else {
         setTouched({ ...touched, image: true })
+      } else {
+        setTouched({ ...touched, image: false })
       }
     }
   }
 
-
+  function onCheck() {
+    if (Object.values(touched).some((v) => v == true))
+      return false
+    setModal(true)
+  }
+  
+    
   async function getOneData() {
     try {
       const res = await funGetOneBanner(param.id)
@@ -128,7 +134,7 @@ export default function EditBanner() {
             <TextInput
               mt={10}
               label="Judul Banner"
-              placeholder='Banner'
+              placeholder='Judul Banner'
               value={data.title}
               onChange={(e) => {
                 setData({ ...data, title: e.target.value })
@@ -142,6 +148,11 @@ export default function EditBanner() {
               }}
               required
               size='md'
+              error={
+                touched.title && (
+                  data.title == "" ? "Judul Banner Tidak Boleh Kosong" : null
+                )
+              }
             />
           </Box>
           <Box pos={"fixed"} bottom={0} p={rem(20)} w={"100%"} style={{
@@ -151,17 +162,11 @@ export default function EditBanner() {
           }}>
             <Button
               size='lg'
-              color='white'
+              c='white'
               bg={tema.get().utama}
               radius={30}
               fullWidth
-              onClick={() => {
-                if (touched.title || touched.image) {
-                  toast.error('Mohon Isi Semua Data')
-                } else {
-                  setModal(true)
-                }
-              }}
+              onClick={() => { onCheck() }}
             >
               Simpan
             </Button>
