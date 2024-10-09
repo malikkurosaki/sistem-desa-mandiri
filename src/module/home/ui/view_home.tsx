@@ -18,14 +18,6 @@ export default function ViewHome() {
   return (
     <>
       <HeaderHome />
-      {/* <ReloadButtonTop
-        onReload={
-          () => {
-            ''
-          }
-        }
-        title='UPDATE'
-      /> */}
       <Box p={20}>
         <Stack >
           <Carosole />
