@@ -45,8 +45,10 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
   }
 
   function onCheck() {
-    if (Object.values(touched).some((v) => v == true))
+    const cek = checkAll()
+    if (!cek) {
       return false
+    }
     createData()
   }
 
@@ -58,7 +60,15 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
       } else {
         setTouched({ ...touched, name: false })
       }
-    } 
+    }
+  }
+
+  function checkAll() {
+    if (namaGroup == "" || namaGroup.length < 3) {
+      setTouched({ ...touched, name: true })
+      return false
+    }
+    return true
   }
 
   return (
@@ -102,7 +112,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
             }}
             error={
               touched.name &&
-              (namaGroup == "" ? "Error! harus memasukkan grup" :
+              (namaGroup == "" ? "Grup Tidak Boleh Kosong" :
                 namaGroup.length < 3 ? "Masukkan Minimal 3 karakter" : ""
               )
             }

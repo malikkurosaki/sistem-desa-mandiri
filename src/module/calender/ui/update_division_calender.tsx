@@ -1,21 +1,22 @@
 "use client"
 import { LayoutNavbarNew, TEMA } from '@/module/_global';
-import { Box, Button, Group, rem, Select, SimpleGrid, Skeleton, Stack, Text, Textarea, TextInput } from '@mantine/core';
-import { DateInput, TimeInput } from '@mantine/dates';
-import React, { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
 import LayoutModal from '@/module/_global/layout/layout_modal';
-import toast from 'react-hot-toast';
-import { funEditCalenderById, funGetOneCalender, funGetOneCalenderByIdCalendar, } from '../lib/api_calender';
+import { useHookstate } from '@hookstate/core';
+import { Box, Button, Group, rem, Select, SimpleGrid, Skeleton, Stack, Textarea, TextInput } from '@mantine/core';
+import { DateInput, TimeInput } from '@mantine/dates';
 import { useShallowEffect } from '@mantine/hooks';
-import { IDetailByIdCalender } from '../lib/type_calender';
 import moment from 'moment';
 import "moment/locale/id";
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { funEditCalenderById, funGetOneCalenderByIdCalendar } from '../lib/api_calender';
+import { IDetailByIdCalender } from '../lib/type_calender';
 import UpdateListUsers from './update_list_users';
-import { useHookstate } from '@hookstate/core';
 
 export default function UpdateDivisionCalender() {
   const [isModal, setModal] = useState(false)
+  const [loadingModal, setLoadingModal] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
   const [isDataCalender, setDataCalender] = useState<IDetailByIdCalender>()
   const [openMember, setOpenMember] = useState(false)
@@ -54,35 +55,89 @@ export default function UpdateDivisionCalender() {
 
   const [value, setValue] = useState<Date | null>(null);
   const router = useRouter()
-  async function onSubmit(val: boolean) {
-    try {
-      if (val) {
-        const response = await funEditCalenderById(param.detail, {
-          title: isDataCalender?.title,
-          dateStart: isDataCalender?.dateStart,
-          timeStart: isDataCalender?.timeStart,
-          timeEnd: isDataCalender?.timeEnd,
-          linkMeet: isDataCalender?.linkMeet,
-          repeatEventTyper: isDataCalender?.repeatEventTyper,
-          desc: isDataCalender?.desc,
-          repeatValue: isDataCalender?.repeatValue
-        })
 
-        if (response.success) {
-          setModal(false)
-          router.push(`/division/${param.id}/calender`)
-          toast.success(response.message)
-        } else {
-          toast.error(response.message)
-        }
+  function onCheck() {
+    if (Object.values(touched).some((v) => v == true))
+      return false
+    setModal(true)
+  }
+
+  async function onSubmit() {
+    try {
+      setLoadingModal(true)
+      const response = await funEditCalenderById(param.detail, {
+        title: isDataCalender?.title,
+        dateStart: isDataCalender?.dateStart,
+        timeStart: isDataCalender?.timeStart,
+        timeEnd: isDataCalender?.timeEnd,
+        linkMeet: isDataCalender?.linkMeet,
+        repeatEventTyper: isDataCalender?.repeatEventTyper,
+        desc: isDataCalender?.desc,
+        repeatValue: isDataCalender?.repeatValue
+      })
+
+      if (response.success) {
+        router.push(`/division/${param.id}/calender`)
+        toast.success(response.message)
+      } else {
+        toast.error(response.message)
       }
-      setModal(false)
     } catch (error) {
       console.error(error)
       toast.error("Terjadi kesalahan! Silahkan coba kembali");
-      setModal(false)
     } finally {
       setModal(false)
+      setLoadingModal(false)
+    }
+  }
+
+  function onValidation(kategori: string, val: any) {
+    if (kategori == 'title') {
+      setDataCalender({ ...isDataCalender, title: val })
+      if (val === "") {
+        setTouched({ ...touched, title: true })
+      } else {
+        setTouched({ ...touched, title: false })
+      }
+    } else if (kategori == 'dateStart') {
+      setValue(val)
+      setDataCalender({ ...isDataCalender, dateStart: moment(val).format("YYYY-MM-DD") })
+      if (val === "") {
+        setTouched({ ...touched, dateStart: true })
+      } else {
+        setTouched({ ...touched, dateStart: false })
+      }
+    } else if (kategori == 'timeStart') {
+      setDataCalender({ ...isDataCalender, timeStart: val })
+      if (val == "") {
+        setTouched({ ...touched, timeStart: true })
+      } else {
+        setTouched({ ...touched, timeStart: false })
+      }
+    } else if (kategori == 'timeEnd') {
+      setDataCalender({ ...isDataCalender, timeEnd: val })
+      if (val == "" || String(isDataCalender?.timeStart) > String(val)) {
+        setTouched({ ...touched, timeEnd: true })
+      } else {
+        setTouched({ ...touched, timeEnd: false })
+      }
+    } else if (kategori == 'repeatEventTyper') {
+      setDataCalender(isDataCalender => ({ ...isDataCalender, repeatEventTyper: val }))
+      if (val == "once") {
+        setDataCalender(isDataCalender => ({ ...isDataCalender, repeatValue: "1" }))
+      }
+      if (val == "" || String(val) == "null") {
+        setTouched({ ...touched, repeatEventTyper: true })
+      } else {
+        setTouched({ ...touched, repeatEventTyper: false })
+      }
+    } else if (kategori == 'repeatValue') {
+      setDataCalender(isDataCalender => ({ ...isDataCalender, repeatValue: val, }))
+      if (val === "" || Number(val) <= 0) {
+        setTouched(touched => ({ ...touched, repeatValue: true }))
+      } else {
+        setTouched({ ...touched, repeatValue: false })
+      }
     }
   }
 
@@ -117,16 +172,7 @@ export default function UpdateDivisionCalender() {
                 placeholder="Acara"
                 label="Acara"
                 defaultValue={isDataCalender?.title}
-                onChange={
-                  (event) => {
-                    setDataCalender({
-                      ...isDataCalender,
-                      title: event.target.value
-                    })
-                    setTouched({ ...touched, title: false })
-                  }
-                }
-                onBlur={() => setTouched({ ...touched, title: true })}
+                onChange={(event) => { onValidation('title', event.target.value) }}
                 required
                 error={
                   touched.title && (
@@ -145,20 +191,10 @@ export default function UpdateDivisionCalender() {
                 value={
                   (isDataCalender?.dateStart == '' || isDataCalender?.dateStart == null) ? null : new Date(isDataCalender.dateStart)
                 }
-                onChange={
-                  (val) => {
-                    setValue(val);
-                    setDataCalender({
-                      ...isDataCalender,
-                      dateStart: moment(val).format("YYYY-MM-DD")
-                    })
-                    setTouched({ ...touched, dateStart: false })
-                  }
-                }
+                onChange={(val) => { onValidation('dateStart', val) }}
                 placeholder="Input Tanggal"
                 label="Tanggal"
                 minDate={new Date()}
-                onBlur={() => setTouched({ ...touched, dateStart: true })}
                 error={
                   touched.dateStart && (
                     isDataCalender?.dateStart == "" ? "Tanggal Tidak Boleh Kosong" : null
@@ -178,17 +214,8 @@ export default function UpdateDivisionCalender() {
                   }}
                   size="md"
                   label="Waktu Awal"
-                  // value={isDataCalender?.timeStart}
                   defaultValue={isDataCalender?.timeStart}
-                  onChange={
-                    (event) => {
-                      setDataCalender({
-                        ...isDataCalender,
-                        timeStart: event.target.value
-                      })
-                    }
-                  }
-                  onBlur={() => setTouched({ ...touched, timeStart: true })}
+                  onChange={(event) => { onValidation('timeStart', event.target.value) }}
                   error={touched.timeStart && !isDataCalender?.timeStart ? "Waktu Awal Tidak Boleh Kosong" : null}
                   required
                 />
@@ -201,17 +228,8 @@ export default function UpdateDivisionCalender() {
                   }}
                   size="md"
                   label="Waktu Akhir"
-                  // value={isDataCalender?.timeEnd}
                   defaultValue={isDataCalender?.timeEnd}
-                  onChange={
-                    (event) => {
-                      setDataCalender({
-                        ...isDataCalender,
-                        timeEnd: event.target.value
-                      })
-                    }
-                  }
-                  onBlur={() => setTouched({ ...touched, timeEnd: true })}
+                  onChange={(event) => { onValidation('timeEnd', event.target.value) }}
                   required
                   error={
                     touched.timeEnd && (
@@ -232,14 +250,7 @@ export default function UpdateDivisionCalender() {
                 placeholder="Link Meet"
                 label="Link Meet"
                 defaultValue={isDataCalender?.linkMeet}
-                onChange={
-                  (event) => {
-                    setDataCalender({
-                      ...isDataCalender,
-                      linkMeet: event.target.value
-                    })
-                  }
-                }
+                onChange={(event) => { setDataCalender({ ...isDataCalender, linkMeet: event.target.value }) }}
               />
               <Select
                 styles={{
@@ -260,76 +271,36 @@ export default function UpdateDivisionCalender() {
                 ]}
                 value={isDataCalender?.repeatEventTyper}
                 defaultValue={isDataCalender?.repeatEventTyper}
-                onChange={
-                  (val: any) => {
-                    setDataCalender({
-                      ...isDataCalender,
-                      repeatEventTyper: val
-                    })
-                    setTouched({ ...touched, repeatEventTyper: false })
-                  }
-                }
-                onBlur={() => setTouched({ ...touched, repeatEventTyper: true })}
+                onChange={(val: any) => { onValidation('repeatEventTyper', val) }}
                 error={
                   touched.repeatEventTyper && (
-                    isDataCalender?.repeatEventTyper == "" ? "Ulangi Acara Tidak Boleh Kosong" : null
+                    isDataCalender?.repeatEventTyper == "" || String(isDataCalender?.repeatEventTyper) == "null" ? "Ulangi Acara Tidak Boleh Kosong" : null
                   )
                 }
                 required
               />
-              {isDataCalender?.repeatEventTyper == "once" ?
-                <TextInput styles={{
-                  input: {
-                    border: `1px solid ${"#D6D8F6"}`,
-                    borderRadius: 10,
-                  },
-                }}
-                  type='number'
-                  required
-                  label="Jumlah pengulangan"
-                  size="md"
-                  disabled
-                  placeholder='Jumlah pengulangan'
-                  defaultValue={"1"}
-                  onChange={(event) => {
-                    setDataCalender({ ...isDataCalender, repeatValue: String(event.currentTarget.value) })
-                    setTouched({ ...touched, repeatValue: false })
-                  }}
-                  onBlur={() => setTouched({ ...touched, repeatValue: true })}
-                  error={
-                    touched.repeatValue && (
-                      isDataCalender?.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" : null
-                      // || Number(isDataCalender?.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh dibawah 1" : null
-                    )
-                  }
-                />
-                :
-                <TextInput styles={{
-                  input: {
-                    border: `1px solid ${"#D6D8F6"}`,
-                    borderRadius: 10,
-                  },
-                }}
-                  type='number'
-                  required
-                  label="Jumlah pengulangan"
-                  size="md"
-                  min={1}
-                  placeholder='Jumlah pengulangan'
-                  defaultValue={isDataCalender?.repeatValue}
-                  onChange={(event) => {
-                    setDataCalender({ ...isDataCalender, repeatValue: String(event.currentTarget.value) })
-                    setTouched({ ...touched, repeatValue: false })
-                  }}
-                  onBlur={() => setTouched({ ...touched, repeatValue: true })}
-                  error={
-                    touched.repeatValue && (
-                      isDataCalender?.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" :
-                        Number(isDataCalender?.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh di bawah 1" : ""
-                    )
-                  }
-                />
-              }
+              <TextInput styles={{
+                input: {
+                  border: `1px solid ${"#D6D8F6"}`,
+                  borderRadius: 10,
+                },
+              }}
+                type='number'
+                required
+                label="Jumlah pengulangan"
+                size="md"
+                min={1}
+                disabled={(isDataCalender?.repeatEventTyper == "once") ? true : false}
+                placeholder='Jumlah pengulangan'
+                defaultValue={isDataCalender?.repeatValue}
+                onChange={(event) => { onValidation('repeatValue', event.currentTarget.value) }}
+                error={
+                  touched.repeatValue && (
+                    isDataCalender?.repeatValue == "" ? "Jumlah pengulangan tidak boleh kosong" :
+                      Number(isDataCalender?.repeatValue) <= 0 ? "Jumlah pengulangan tidak boleh di bawah 1" : ""
+                  )
+                }
+              />
               <Textarea styles={{
                 input: {
                   border: `1px solid ${"#D6D8F6"}`,
@@ -365,15 +336,21 @@ export default function UpdateDivisionCalender() {
             size="lg"
             radius={30}
             fullWidth
-            onClick={() => setModal(true)}
+            onClick={() => onCheck()}
           >
             Simpan
           </Button>
         }
       </Box>
-      <LayoutModal opened={isModal} onClose={() => setModal(false)}
+      <LayoutModal loading={loadingModal} opened={isModal} onClose={() => setModal(false)}
         description="Apakah Anda yakin ingin mengubah data acara ini? Data ini akan mempengaruhi semua data yang terkait"
-        onYes={(val) => { onSubmit(val) }} />
+        onYes={(val) => {
+          if (val) {
+            onSubmit()
+          } else {
+            setModal(false)
+          }
+        }} />
     </Box>
   );
 }

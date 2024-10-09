@@ -1,30 +1,29 @@
 "use client";
 import { keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
-import { Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
+import { Avatar, Box, Button, Divider, Flex, Grid, Group, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { Dropzone } from '@mantine/dropzone';
+import { useMediaQuery } from "@mantine/hooks";
+import _ from "lodash";
 import { useParams, useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { FaTrash } from "react-icons/fa6";
 import { IoIosArrowDropright } from "react-icons/io";
-import { BsFiletypeCsv } from "react-icons/bs";
+import { useWibuRealtime } from "wibu-realtime";
+import { funCreateTask } from "../lib/api_task";
+import { IFormDateTask, IFormMemberTask, IListFileTask } from "../lib/type_task";
+import { globalMemberTask } from "../lib/val_task";
+import ViewDateEndTask from "./create_date_end_task";
 import CreateUsersProject from "./create_users_project";
 import ResultsDateAndTask from "./results_date-and_task";
 import ResultsFile from "./results_file";
-import { useHookstate } from "@hookstate/core";
-import { globalMemberTask } from "../lib/val_task";
-import ViewDateEndTask from "./create_date_end_task";
-import { IFormDateTask, IFormMemberTask, IListFileTask } from "../lib/type_task";
-import { Dropzone } from '@mantine/dropzone';
-import toast from "react-hot-toast";
-import _ from "lodash";
-import { FaTrash } from "react-icons/fa6";
-import LayoutModal from "@/module/_global/layout/layout_modal";
-import { funCreateTask } from "../lib/api_task";
-import { useMediaQuery } from "@mantine/hooks";
-import { useWibuRealtime } from "wibu-realtime";
 
 export default function CreateTask() {
   const router = useRouter()
   const param = useParams<{ id: string }>()
-  const [openDrawer, setOpenDrawer] = useState(false)
+  const [loadingModal, setLoadingModal] = useState(false)
   const [openDrawerFile, setOpenDrawerFile] = useState(false)
   const [openDrawerTask, setOpenDrawerTask] = useState(false)
   const [openMember, setOpenMember] = useState(false)
@@ -44,8 +43,6 @@ export default function CreateTask() {
   const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     title: false,
-    task: false,
-    member: false
   });
   const [data, setData] = useWibuRealtime({
     WIBU_REALTIME_TOKEN: keyWibu,
@@ -66,6 +63,7 @@ export default function CreateTask() {
 
   async function onSubmit() {
     try {
+      setLoadingModal(true)
       const fd = new FormData();
       for (let i = 0; i < fileForm.length; i++) {
         fd.append(`file${i}`, fileForm[i]);
@@ -95,8 +93,49 @@ export default function CreateTask() {
     } catch (error) {
       console.error(error)
       toast.error("Gagal menambahkan tugas divisi, coba lagi nanti");
+    } finally {
+      setLoadingModal(false)
+      setOpenModal(false)
     }
   }
+
+
+  function onCheck() {
+    const cek = checkAll()
+    if (!cek)
+      return false
+
+    if (dataTask.length == 0)
+      return toast.error("Error! silahkan tambahkan tugas")
+
+    if (memberValue.length == 0)
+      return toast.error("Error! silahkan pilih anggota")
+
+    setOpenModal(true)
+  }
+
+
+  function checkAll() {
+    let nilai = true
+    if (title === "") {
+      setTouched(touched => ({ ...touched, title: true }))
+      nilai = false
+    }
+    return nilai
+  }
+
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'title') {
+      setTitle(val)
+      if (val === "") {
+        setTouched({ ...touched, title: true })
+      } else {
+        setTouched({ ...touched, title: false })
+      }
+    }
+  }
+
 
 
   if (openTugas) return <ViewDateEndTask onClose={(val) => { setOpenTugas(false) }} onSet={(val) => {
@@ -123,11 +162,7 @@ export default function CreateTask() {
             size="md"
             label="Judul Tugas"
             value={title}
-            onChange={(e) => {
-              setTitle(e.target.value)
-              setTouched({ ...touched, title: false })
-            }}
-            onBlur={() => setTouched({ ...touched, title: true })}
+            onChange={(e) => { onValidation('title', e.target.value) }}
             required
             error={
               touched.title && (
@@ -287,15 +322,7 @@ export default function CreateTask() {
           bg={tema.get().utama}
           size="lg" radius={30}
           fullWidth
-          onClick={() => {
-            if (
-              title !== ""
-            ) {
-              setOpenModal(true)
-            } else {
-              toast.error("Semua form harus diisi")
-            }
-          }}>
+          onClick={() => { onCheck() }}>
           Simpan
         </Button>
       </Box>
@@ -412,13 +439,14 @@ export default function CreateTask() {
 
 
 
-      <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+      <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
         description="Apakah Anda yakin ingin menambahkan data?"
         onYes={(val) => {
           if (val) {
             onSubmit()
+          } else {
+            setOpenModal(false)
           }
-          setOpenModal(false)
         }} />
     </Box >
   );

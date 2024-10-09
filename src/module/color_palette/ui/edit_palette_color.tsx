@@ -1,14 +1,14 @@
 "use client"
 import { LayoutNavbarNew, TEMA } from '@/module/_global';
+import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from '@hookstate/core';
-import { Badge, Box, Button, Center, ColorInput, Flex, Pill, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
-import React, { useState } from 'react';
-import { IEditTheme } from '../lib/type_theme';
+import { Box, Button, Center, ColorInput, Flex, Pill, rem, SimpleGrid, Skeleton, Stack, TextInput } from '@mantine/core';
+import { useShallowEffect } from '@mantine/hooks';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funEditTheme, funGetThemeById } from '../lib/api_theme';
-import { useParams, useRouter } from 'next/navigation';
-import { useShallowEffect } from '@mantine/hooks';
-import LayoutModal from "@/module/_global/layout/layout_modal";
+import { IEditTheme } from '../lib/type_theme';
 
 export default function EditPaletteColor() {
   const tema = useHookstate(TEMA)
@@ -16,6 +16,7 @@ export default function EditPaletteColor() {
   const [isModal, setModal] = useState(false)
   const param = useParams<{ id: string }>()
   const [loading, setLoading] = useState(true)
+  const [loadingKonfirmasi, setLoadingKonfirmasi] = useState(false);
   const [touched, setTouched] = useState({
     name: false,
     utama: false,
@@ -62,6 +63,7 @@ export default function EditPaletteColor() {
 
   async function onSubmit() {
     try {
+      setLoadingKonfirmasi(true)
       const res = await funEditTheme(param.id, isWarna)
       if (res.success) {
         toast.success(res.message);
@@ -72,6 +74,9 @@ export default function EditPaletteColor() {
     } catch (error) {
       console.error(error)
       toast.error("Gagal mengedit tema, coba lagi nanti");
+    } finally {
+      setLoadingKonfirmasi(false)
+      setModal(false)
     }
   }
 
@@ -381,11 +386,13 @@ export default function EditPaletteColor() {
       </Box>
 
 
-      <LayoutModal opened={isModal} onClose={() => setModal(false)} description="Apakah Anda yakin ingin mengubah data?"
+      <LayoutModal loading={loadingKonfirmasi} opened={isModal} onClose={() => setModal(false)} description="Apakah Anda yakin ingin mengubah data?"
         onYes={(val) => {
-          if (val)
+          if (val) {
             onSubmit()
-          setModal(false)
+          } else {
+            setModal(false)
+          }
         }
         } />
     </Box>

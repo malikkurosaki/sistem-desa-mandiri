@@ -14,26 +14,30 @@ export default function ViewVerification({ phone, otp, user }: IVerification) {
   const [isLoading, setLoading] = useState(false)
 
   async function onResend() {
-    const code = Math.floor(Math.random() * 1000) + 1000
-
-    const res = await fetch(`https://wa.wibudev.com/code?nom=${phone}&text=*DARMASABA*%0A%0A
-JANGAN BERIKAN KODE RAHASIA ini kepada siapa pun TERMASUK PIHAK DARMASABA. Masukkan otentikasi:  *${encodeURIComponent(code)}*`)
-      .then(
-        async (res) => {
-          if (res.status == 200) {
-            toast.success('Kode verifikasi telah dikirim')
-            setOTP(code)
-          } else {
-            toast.error('Internal Server Error')
+    try {
+      const code = Math.floor(Math.random() * 1000) + 1000
+      const res = await fetch(`https://wa.wibudev.com/code?nom=${phone}&text=*DARMASABA*%0A%0A
+        JANGAN BERIKAN KODE RAHASIA ini kepada siapa pun TERMASUK PIHAK DARMASABA. Masukkan otentikasi:  *${encodeURIComponent(code)}*`)
+        .then(
+          async (res) => {
+            if (res.status == 200) {
+              toast.success('Kode verifikasi telah dikirim')
+              setOTP(code)
+            } else {
+              toast.error('Internal Server Error')
+            }
           }
-        }
-      );
+        );
+    } catch (error) {
+      console.error(error)
+      toast.error('Internal Server Error')
+    }
   }
 
   async function getVerification() {
     setLoading(true)
     if (isOTP == inputOTP) {
-      const setCookies = await funSetCookies({ user: user })
+      const setCookies: any = await funSetCookies({ user: user })
 
       if (setCookies.success) {
         toast.success(setCookies.message)

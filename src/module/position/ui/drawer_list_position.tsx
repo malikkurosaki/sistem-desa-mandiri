@@ -15,6 +15,7 @@ import { globalRefreshPosition } from "../lib/val_posisition";
 export default function DrawerListPosition({ onCreated }: { onCreated: (val: boolean) => void }) {
    const roleLogin = useHookstate(globalRole)
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
+   const [loadingSave, setLoadingSave] = useState(false)
    const router = useRouter()
    const [listGroup, setListGorup] = useState<IDataGroup[]>([])
    const refresh = useHookstate(globalRefreshPosition)
@@ -52,6 +53,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
 
    async function onSubmit() {
       try {
+         setLoadingSave(true)
          const res = await funCreatePosition({
             name: listData.name,
             idGroup: listData.idGroup
@@ -70,23 +72,41 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
 
       } catch (error) {
          toast.error('Error')
+      } finally {
+         setLoadingSave(false)
       }
    }
 
    function onCheck() {
-      if (Object.values(touched).some((v) => v == true))
-        return false
+      const check = checkAll()
+      if (!check)
+         return false
       onSubmit()
    }
-   
+
+   function checkAll() {
+      let nilai = true
+      if (listData.name == "" || listData.name.length < 3) {
+         setTouched(touched => ({ ...touched, name: true }))
+         nilai = false
+      }
+
+      if (roleLogin.get() == "supadmin" && listData.idGroup == "") {
+         setTouched(touched => ({ ...touched, idGroup: true }))
+         nilai = false
+      }
+
+      return nilai
+   }
+
    function onValidation(kategori: string, val: string) {
       if (kategori == 'name') {
-         setListData({...listData, name: val})
-        if (val == "" || val.length < 3) {
-          setTouched({ ...touched, name: true })
-        } else {
-          setTouched({ ...touched, name: false })
-        }
+         setListData({ ...listData, name: val })
+         if (val == "" || val.length < 3) {
+            setTouched({ ...touched, name: true })
+         } else {
+            setTouched({ ...touched, name: false })
+         }
       } else if (kategori == 'idGroup') {
          setListData({ ...listData, idGroup: val })
          if (val == "") {
@@ -95,7 +115,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
             setTouched({ ...touched, idGroup: false })
          }
       }
-    }
+   }
 
    return (
       <Box>
@@ -130,7 +150,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                sm: "67vh",
                lg: "67vh",
                xl: "70vh"
-               
+
             }}>
                {
                   roleLogin.get() == "supadmin" &&
@@ -149,8 +169,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      radius={10}
                      mb={5}
                      withAsterisk
-                     onChange={(e: any) => 
-                        { onValidation('idGroup', e) }
+                     onChange={(e: any) => { onValidation('idGroup', e) }
                      }
                      styles={{
                         input: {
@@ -185,7 +204,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      (listData.name == "" ? "Error! harus memasukkan Nama Jabatan" :
                         listData.name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
                      )
-                   }
+                  }
                   required
                />
                <Box pos={"absolute"} bottom={10} left={0} right={0}>
@@ -196,6 +215,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      radius={30}
                      fullWidth
                      onClick={() => { onCheck() }}
+                     loading={loadingSave}
                   >
                      SIMPAN
                   </Button>

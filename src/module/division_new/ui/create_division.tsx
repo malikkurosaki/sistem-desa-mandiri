@@ -1,29 +1,15 @@
 "use client";
 import { LayoutNavbarNew, TEMA } from "@/module/_global";
-import { useHookstate } from "@hookstate/core";
-import {
-    Avatar,
-    Box,
-    Button,
-    Divider,
-    Flex,
-    Grid,
-    Group,
-    rem,
-    Select,
-    Stack,
-    Text,
-    Textarea,
-    TextInput,
-} from "@mantine/core";
-import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { IoIosArrowDropright } from "react-icons/io";
-import { globalMemberDivision } from "../lib/val_division";
-import toast from "react-hot-toast";
 import { funGetUserByCookies } from "@/module/auth";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
+import { useHookstate } from "@hookstate/core";
+import { Avatar, Box, Button, Divider, Grid, Group, rem, Select, Stack, Text, Textarea, TextInput } from "@mantine/core";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { IoIosArrowDropright } from "react-icons/io";
+import { globalMemberDivision } from "../lib/val_division";
 import NavbarAdminDivision from "./navbar_admin_division";
 import NavbarCreateUsers from "./navbar_create_users";
 
@@ -58,23 +44,14 @@ export default function CreateDivision() {
         setRoleUser(loadUser.idUserRole)
     }
 
-    function onSubmit() {
-        if (roleUser == "supadmin" && (body.idGroup == "" || body.idGroup == null)) {
-            return toast.error("Error! grup harus diisi")
-        }
-
-        if (body.name == "") {
-            return toast.error("Error! nama divisi harus diisi")
-        }
-
-        if (member.length == 0) {
+    function onCheck() {
+        const cek = checkAll()
+        if (!cek)
+            return false
+        if (member.length == 0)
             return toast.error("Error! belum ada anggota yang terdaftar")
-        }
-
-
 
         setChooseAdmin(true)
-
     }
 
     function onToChooseAnggota() {
@@ -86,7 +63,7 @@ export default function CreateDivision() {
 
     function onChooseGroup(val: any) {
         member.set([])
-        setBody({ ...body, idGroup: val })
+        onValidation('idGroup', val)
     }
 
 
@@ -94,6 +71,39 @@ export default function CreateDivision() {
     useShallowEffect(() => {
         loadData();
     }, []);
+
+    function onValidation(kategori: string, val: any) {
+        if (kategori == 'name') {
+            setBody({ ...body, name: val })
+            if (val === "") {
+                setTouched({ ...touched, name: true })
+            } else {
+                setTouched({ ...touched, name: false })
+            }
+        } else if (kategori == 'idGroup') {
+            setBody({ ...body, idGroup: val, })
+            if (val === "" || String(val) == "null") {
+                setTouched(touched => ({ ...touched, idGroup: true }))
+            } else {
+                setTouched({ ...touched, idGroup: false })
+            }
+        } else if (kategori == 'desc') {
+            setBody({ ...body, desc: val })
+        }
+    }
+
+    function checkAll() {
+        let nilai = true
+        if (roleUser == "supadmin" && (body.idGroup === "" || String(body.idGroup) == "null")) {
+            setTouched(touched => ({ ...touched, idGroup: true }))
+            nilai = false
+        }
+        if (body.name === "") {
+            setTouched(touched => ({ ...touched, name: true }))
+            nilai = false
+        }
+        return nilai
+    }
 
 
 
@@ -133,10 +143,9 @@ export default function CreateDivision() {
                                 onChange={(val) => {
                                     onChooseGroup(val)
                                 }}
-                                onBlur={() => setTouched({ ...touched, idGroup: true })}
                                 error={
                                     touched.idGroup && (
-                                        body.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                                        body.idGroup == "" || String(body.idGroup) == "null" ? "Grup Tidak Boleh Kosong" : null
                                     )
                                 }
                                 value={body.idGroup}
@@ -150,11 +159,10 @@ export default function CreateDivision() {
                         required
                         radius={10}
                         value={body.name}
-                        onChange={(val) => { setBody({ ...body, name: val.target.value }) }}
-                        onBlur={() => setTouched({ ...touched, name: true })}
+                        onChange={(val) => { onValidation('name', val.target.value) }}
                         error={
                             touched.name && (
-                                body.name == "" ? "Nama Tidak Boleh Kosong" : null
+                                body.name == "" ? "Nama Divisi Tidak Boleh Kosong" : null
                             )
                         }
                     />
@@ -230,16 +238,7 @@ export default function CreateDivision() {
                 zIndex: 999,
                 backgroundColor: `${tema.get().bgUtama}`,
             }}>
-                <Button
-                    color="white"
-                    bg={tema.get().utama}
-                    size="lg"
-                    radius={30}
-                    fullWidth
-                    onClick={() => {
-                        onSubmit()
-                    }}
-                >
+                <Button color="white" bg={tema.get().utama} size="lg" radius={30} fullWidth onClick={() => { onCheck() }} >
                     Simpan
                 </Button>
             </Box>

@@ -1,21 +1,21 @@
 'use client'
-import { LayoutNavbarNew, TEMA, WARNA } from "@/module/_global";
+import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
 import { Box, Button, Flex, Group, List, rem, Skeleton, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { HiOutlineChevronRight } from "react-icons/hi2";
-import { funEditAnnouncement, funGetAnnouncementById } from "../lib/api_announcement";
-import { useParams, useRouter } from "next/navigation";
-import { useHookstate } from "@hookstate/core";
-import { globalMemberEditAnnouncement } from "../lib/val_announcement";
-import { GroupData, GroupDataEditAnnouncement } from "../lib/type_announcement";
-import EditChooseMember from "./edit_choose_member";
 import { IoIosArrowForward } from "react-icons/io";
+import { funEditAnnouncement, funGetAnnouncementById } from "../lib/api_announcement";
+import { GroupData } from "../lib/type_announcement";
+import { globalMemberEditAnnouncement } from "../lib/val_announcement";
+import EditChooseMember from "./edit_choose_member";
 
 export default function EditAnnouncement() {
    const [isOpen, setOpen] = useState(false)
+   const [loadingKonfirmasi, setLoadingKonfirmasi] = useState(false)
    const [isChooseDivisi, setChooseDivisi] = useState(false)
    const param = useParams<{ id: string }>()
    const [loading, setLoading] = useState(true)
@@ -75,6 +75,7 @@ export default function EditAnnouncement() {
          toast.error("Gagal mendapatkan pengumuman, coba lagi nanti")
       } finally {
          setLoading(false)
+         setOpen(false)
       }
    }
 
@@ -94,30 +95,24 @@ export default function EditAnnouncement() {
 
          if (response.success) {
             toast.success(response.message)
-            setLoadingSubmit(false)
             router.push(`/announcement/${param.id}`)
          } else {
             toast.error(response.message)
          }
-         setLoadingSubmit(false)
       } catch (error) {
          console.error(error)
          toast.error("Gagal mengedit pengumuman, coba lagi nanti");
       } finally {
          setLoadingSubmit(false)
+         setOpen(false)
       }
-      setOpen(false)
    }
-
-
-
-
-   if (isChooseDivisi) return <EditChooseMember onClose={() => { setChooseDivisi(false) }} />
-
 
    function onCheck() {
       if (Object.values(touched).some((v) => v == true))
          return false
+      if (memberGroup.get().length == 0)
+         return toast.error("Error! silahkan pilih divisi")
       setOpen(true)
    }
 
@@ -140,6 +135,8 @@ export default function EditAnnouncement() {
       }
    }
 
+   if (isChooseDivisi) return <EditChooseMember onClose={() => { setChooseDivisi(false) }} />
+
    return (
       <>
          <LayoutNavbarNew back="" title="Edit Pengumuman" menu={<></>} />
@@ -160,7 +157,7 @@ export default function EditAnnouncement() {
                :
                <>
                   <TextInput
-                     size="md" type="text" radius={30} placeholder="Judul Pengumuman" withAsterisk label="Judul" w={"100%"}
+                     size="md" type="text" radius={10} placeholder="Judul Pengumuman" withAsterisk label="Judul" w={"100%"}
                      styles={{
                         input: {
                            color: tema.get().utama,
@@ -231,28 +228,34 @@ export default function EditAnnouncement() {
                   ))
 
                :
-               memberGroup.get().map((v: any, i: any) => {
-                  return (
-                     <Box key={i} mt={10}>
-                        <Text fw={"bold"}>{v.name}</Text>
-                        <Box pl={20} pr={10}>
-                           <Flex direction={"column"} gap={"md"}>
-                              <List>
-                                 {
-                                    v.Division.map((division: any) => {
-                                       return <List.Item key={division.id}>
-                                          <Text lineClamp={1}>{division.name}</Text>
-                                       </List.Item>
-                                    })
-                                 }
-                              </List>
-                           </Flex>
-                        </Box>
-                     </Box>
-                  );
+               <>
+                  <Text c={tema.get().utama} mb={10}>Divisi Terpilih</Text>
+                  {
+                     memberGroup.get().length == 0 ? <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada divisi yang dipilih</Text> :
+                        memberGroup.get().map((v: any, i: any) => {
+                           return (
+                              <Box key={i} mt={10}>
+                                 <Text fw={"bold"}>{v.name}</Text>
+                                 <Box pl={20} pr={10}>
+                                    <Flex direction={"column"} gap={"md"}>
+                                       <List>
+                                          {
+                                             v.Division.map((division: any) => {
+                                                return <List.Item key={division.id}>
+                                                   <Text lineClamp={1}>{division.name}</Text>
+                                                </List.Item>
+                                             })
+                                          }
+                                       </List>
+                                    </Flex>
+                                 </Box>
+                              </Box>
+                           );
 
-               }
-               )
+                        })
+                  }
+               </>
+
             }
 
          </Box>
@@ -282,8 +285,9 @@ export default function EditAnnouncement() {
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpen(false)
                }
-               setOpen(false)
             }} />
       </>
    )

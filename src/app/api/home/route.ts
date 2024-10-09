@@ -1,6 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
-import _, { ceil } from "lodash";
+import _, { ceil, some } from "lodash";
 import moment from "moment";
 import "moment/locale/id";
 import { NextResponse } from "next/server";
@@ -35,10 +35,20 @@ export async function GET(request: Request) {
                   isActive: true,
                }
             }
-         } else {
+         } else if (roleUser == "admin" || roleUser == "cosupadmin") {
             kondisi = {
                isActive: true,
                idGroup: idGroup
+            }
+         } else {
+            kondisi = {
+               isActive: true,
+               idGroup: idGroup,
+               ProjectMember: {
+                  some: {
+                     idUser: user.id
+                  }
+               }
             }
          }
 
@@ -133,17 +143,31 @@ export async function GET(request: Request) {
             kondisi = {
                isActive: true,
                Division: {
+                  isActive: true,
                   idVillage: idVillage,
                   Group: {
                      isActive: true,
                   }
                }
             }
+         } else if (roleUser == "admin" || roleUser == "cosupadmin") {
+            kondisi = {
+               isActive: true,
+               Division: {
+                  isActive: true,
+                  idGroup: idGroup
+               }
+            }
          } else {
             kondisi = {
                isActive: true,
                Division: {
-                  idGroup: idGroup
+                  isActive: true,
+                  DivisionMember: {
+                     some: {
+                        idUser: user.id
+                     }
+                  }
                }
             }
          }
@@ -185,10 +209,20 @@ export async function GET(request: Request) {
                isActive: true,
                category: 'FILE',
                Division: {
+                  isActive: true,
                   idVillage: idVillage,
                   Group: {
                      isActive: true,
                   }
+               }
+            }
+         } else if (roleUser == "admin" || roleUser == "cosupadmin") {
+            kondisi = {
+               isActive: true,
+               category: 'FILE',
+               Division: {
+                  isActive: true,
+                  idGroup: idGroup
                }
             }
          } else {
@@ -196,7 +230,12 @@ export async function GET(request: Request) {
                isActive: true,
                category: 'FILE',
                Division: {
-                  idGroup: idGroup
+                  isActive: true,
+                  DivisionMember: {
+                     some: {
+                        idUser: user.id
+                     }
+                  }
                }
             }
          }
@@ -284,7 +323,7 @@ export async function GET(request: Request) {
                dateEnd: true,
                createdAt: true,
                status: true,
-               idDivision:true,
+               idDivision: true,
                DivisionCalendar: {
                   select: {
                      title: true,
@@ -327,10 +366,20 @@ export async function GET(request: Request) {
                isActive: true,
                status: 1,
                Division: {
+                  isActive: true,
                   idVillage: idVillage,
                   Group: {
                      isActive: true,
                   }
+               }
+            }
+         } else if (roleUser == "admin" || roleUser == "cosupadmin") {
+            kondisi = {
+               isActive: true,
+               status: 1,
+               Division: {
+                  idGroup: idGroup,
+                  isActive: true
                }
             }
          } else {
@@ -338,7 +387,12 @@ export async function GET(request: Request) {
                isActive: true,
                status: 1,
                Division: {
-                  idGroup: idGroup
+                  isActive: true,
+                  DivisionMember: {
+                     some: {
+                        idUser: user.id
+                     }
+                  }
                }
             }
          }

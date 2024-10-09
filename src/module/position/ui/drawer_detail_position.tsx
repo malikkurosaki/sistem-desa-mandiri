@@ -18,6 +18,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    const [isModal, setModal] = useState(false)
    const refresh = useHookstate(globalRefreshPosition)
    const [loading, setLoading] = useState(true)
+   const [loadingEdit, setLoadingEdit] = useState(false)
    const tema = useHookstate(TEMA)
    const [data, setData] = useState<any>({
       id: id,
@@ -27,7 +28,6 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    const [listGroup, setListGorup] = useState<IDataPosition[]>([])
    const [touched, setTouched] = useState({
       name: false,
-      idGroup: false
    });
 
    function onCLose() {
@@ -70,6 +70,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
    async function onSubmit() {
       try {
+         setLoadingEdit(true)
          const res = await funEditPosition(id, {
             name: data.name,
             idGroup: data.idGroup
@@ -88,6 +89,8 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
       } catch (error) {
          toast.error('Error');
          toast.error("Edit jabatan gagal, coba lagi nanti");
+      } finally {
+         setLoadingEdit(false)
       }
    }
 
@@ -98,20 +101,20 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
    function onCheck() {
       if (Object.values(touched).some((v) => v == true))
-        return false
+         return false
       onSubmit()
    }
 
    function onValidation(kategori: string, val: string) {
       if (kategori == 'name') {
-         setData({...data, name: val})
-        if (val == "" || val.length < 3) {
-          setTouched({ ...touched, name: true })
-        } else {
-          setTouched({ ...touched, name: false })
-        }
+         setData({ ...data, name: val })
+         if (val == "" || val.length < 3) {
+            setTouched({ ...touched, name: true })
+         } else {
+            setTouched({ ...touched, name: false })
+         }
       }
-    }
+   }
 
    async function nonActive(val: boolean) {
       try {
@@ -189,13 +192,12 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                         size="md"
                         value={String(data.name)}
                         onChange={(e) => { onValidation('name', e.target.value) }}
-                        onBlur={() => setTouched({ ...touched, name: true })}
                         error={
                            touched.name &&
                            (data.name == "" ? "Error! harus memasukkan Nama Jabatan" :
                               data.name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
                            )
-                         }
+                        }
                         radius={10}
                         placeholder="Nama Jabatan"
                      />
@@ -208,7 +210,8 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                      size="lg"
                      radius={30}
                      fullWidth
-                     onClick={onSubmit}
+                     onClick={() => { onCheck() }}
+                     loading={loadingEdit}
                   >
                      EDIT
                   </Button>
