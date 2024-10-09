@@ -7,6 +7,7 @@ import { useWibuRealtime } from "wibu-realtime";
 import NotificationCustome from "./notification_custome";
 import { useRouter } from "next/navigation";
 import { globalParamJumlahNotif } from "@/module/home";
+import ReloadButtonTop from "./reload_button_top";
 
 export default function WrapLayout({ children, role, theme, user }: { children: React.ReactNode, role: any, theme: any, user: any }) {
    const router = useRouter()
@@ -52,6 +53,15 @@ export default function WrapLayout({ children, role, theme, user }: { children: 
                onClose={() => { '' }}
             />
          }
+
+         {/* <ReloadButtonTop
+            onReload={
+               () => {
+                  ''
+               }
+            }
+            title='UPDATE'
+         /> */}
          {children}
       </>
    );
