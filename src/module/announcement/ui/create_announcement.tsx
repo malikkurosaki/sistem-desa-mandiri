@@ -19,14 +19,13 @@ export default function CreateAnnouncement() {
    const memberGroup = useHookstate(globalMemberAnnouncement)
    const memberValue = memberGroup.get() as GroupData[]
    const [selectedFiles, setSelectedFiles] = useState<any>([])
+   const [loadingKonfirmasi, setLoadingKonfirmasi] = useState(false)
    const router = useRouter()
    const tema = useHookstate(TEMA)
    const [data, setData] = useWibuRealtime({
       WIBU_REALTIME_TOKEN: keyWibu,
       project: "sdm"
    })
-
-
    const [isChooseMember, setIsChooseMember] = useState(false)
    const [isData, setisData] = useState({
       title: "",
@@ -37,8 +36,10 @@ export default function CreateAnnouncement() {
       desc: false
    });
 
+
    async function onSubmit() {
       try {
+         setLoadingKonfirmasi(true)
          const response = await funCreateAnnouncement({
             title: isData.title,
             desc: isData.desc,
@@ -56,9 +57,11 @@ export default function CreateAnnouncement() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal menambahkan pengumuman, coba lagi nanti");
+      } finally {
+         setLoadingKonfirmasi(false)
+         setOpen(false)
       }
 
-      setOpen(false)
    }
 
    async function loadData() {
@@ -69,16 +72,29 @@ export default function CreateAnnouncement() {
       loadData()
    }, [])
 
-   function onToChooseMember() {
-      setIsChooseMember(true)
-   }
-
-   if (isChooseMember) return <CreateUsersAnnouncement onClose={() => { setIsChooseMember(false) }} />
 
    function onCheck() {
-      if (Object.values(touched).some((v) => v == true))
+      const cek = checkAll()
+      if (!cek)
          return false
+
+      if (memberValue.length == 0)
+         return toast.error("Error! silahkan pilih divisi")
+
       setOpen(true)
+   }
+
+   function checkAll() {
+      let nilai = true
+      if (isData.title === "") {
+         setTouched(touched => ({ ...touched, title: true }))
+         nilai = false
+      }
+      if (isData.desc === "") {
+         setTouched(touched => ({ ...touched, desc: true }))
+         nilai = false
+      }
+      return nilai
    }
 
 
@@ -99,6 +115,8 @@ export default function CreateAnnouncement() {
          }
       }
    }
+
+   if (isChooseMember) return <CreateUsersAnnouncement onClose={() => { setIsChooseMember(false) }} />
 
    return (
       <Box>
@@ -151,7 +169,7 @@ export default function CreateAnnouncement() {
                   padding: 10,
                   borderRadius: 10
                }}
-                  onClick={() => { onToChooseMember() }}
+                  onClick={() => { setIsChooseMember(true) }}
                >
                   <Text size="sm">
                      Tambah divisi penerima pengumuman
@@ -162,7 +180,7 @@ export default function CreateAnnouncement() {
             <Box pt={20} mb={100}>
                <Text c={tema.get().utama} mb={10}>Divisi Terpilih</Text>
                {(memberGroup.length === 0) ? (
-                  <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada anggota</Text>
+                  <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada divisi yang dipilih</Text>
                ) : memberGroup.get().map((v: any, i: any) => {
                   return (
                      <Box key={i} mt={10}>
@@ -195,13 +213,14 @@ export default function CreateAnnouncement() {
                Simpan
             </Button>
          </Box>
-         <LayoutModal opened={isOpen} onClose={() => setOpen(false)}
+         <LayoutModal loading={loadingKonfirmasi} opened={isOpen} onClose={() => setOpen(false)}
             description="Apakah Anda yakin ingin menambahkan data?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpen(false)
                }
-               setOpen(false)
             }} />
       </Box>
 

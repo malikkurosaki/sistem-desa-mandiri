@@ -36,9 +36,9 @@ export async function POST() {
         const subscriptionData = sub.data as any;
 
         await webpush.sendNotification(subscriptionData, notificationPayload);
-        console.log(
-          `Notification sent successfully to ${subscriptionData.endpoint}`
-        );
+        // console.log(
+        //   `Notification sent successfully to ${subscriptionData.endpoint}`
+        // );
         successCount++;
       } catch (error: any) {
         console.error(

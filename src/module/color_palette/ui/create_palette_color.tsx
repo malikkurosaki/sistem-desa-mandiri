@@ -1,13 +1,12 @@
 "use client"
 import { LayoutNavbarNew, TEMA } from '@/module/_global';
-import { useHookstate } from '@hookstate/core';
-import { Badge, Box, Button, Center, ColorInput, Flex, Pill, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
-import React, { useState } from 'react';
-import { funCreateTheme } from '../lib/api_theme';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 import LayoutModal from '@/module/_global/layout/layout_modal';
-import _ from 'lodash';
+import { useHookstate } from '@hookstate/core';
+import { Box, Button, Center, ColorInput, Flex, Pill, rem, SimpleGrid, Stack, TextInput } from '@mantine/core';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { funCreateTheme } from '../lib/api_theme';
 
 export default function CreatePaletteColor() {
   const [isValModal, setValModal] = useState(false);
@@ -56,9 +55,44 @@ export default function CreatePaletteColor() {
   }
 
   function onCheck() {
-    if (Object.values(touched).some((v) => v == true))
+    const cek = checkAll()
+    if (!cek)
       return false
     setValModal(true)
+  }
+
+  function checkAll() {
+    let nilai = true
+    if (isWarna.name === "") {
+      setTouched(touched => ({ ...touched, name: true }))
+      nilai = false
+    }
+    if (isWarna.utama === "" || isWarna.utama.substring(0, 1) !== '#') {
+      setTouched(touched => ({ ...touched, utama: true }))
+      nilai = false
+    }
+    if (isWarna.bgUtama === "" || isWarna.bgUtama.substring(0, 1) !== '#') {
+      setTouched(touched => ({ ...touched, bgUtama: true }))
+      nilai = false
+    }
+    if (isWarna.bgIcon === "" || isWarna.bgIcon.substring(0, 1) !== '#') {
+      setTouched(touched => ({ ...touched, bgIcon: true }))
+      nilai = false
+    }
+    if (isWarna.bgFiturHome === "" || isWarna.bgFiturHome.substring(0, 1) !== '#') {
+      setTouched(touched => ({ ...touched, bgFiturHome: true }))
+      nilai = false
+    }
+    if (isWarna.bgFiturDivision === "" || isWarna.bgFiturDivision.substring(0, 1) !== '#') {
+      setTouched(touched => ({ ...touched, bgFiturDivision: true }))
+      nilai = false
+    }
+    if (isWarna.bgTotalKegiatan === "" || isWarna.bgTotalKegiatan.substring(0, 1) !== '#') {
+      setTouched(touched => ({ ...touched, bgTotalKegiatan: true }))
+      nilai = false
+    }
+
+    return nilai
   }
 
   function onValidation(kategori: string, val: string) {
@@ -239,8 +273,8 @@ export default function CreatePaletteColor() {
             }
             error={
               touched.bgTotalKegiatan && (
-                isWarna.bgTotalKegiatan == "" ? "Background Total Kegiatan Tidak Boleh Kosong" : 
-                  isWarna.bgTotalKegiatan.substring(0, 1) != "#" ? "Kode Warna Tidak Valid" : null  
+                isWarna.bgTotalKegiatan == "" ? "Background Total Kegiatan Tidak Boleh Kosong" :
+                  isWarna.bgTotalKegiatan.substring(0, 1) != "#" ? "Kode Warna Tidak Valid" : null
               )
             }
           />

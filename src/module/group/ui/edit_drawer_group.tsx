@@ -162,7 +162,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
             }}
             error={
               touched.name &&
-              (name == "" ? "Error! harus memasukkan grup" :
+              (name == "" ? "Grup Tidak Boleh Kosong" :
                 name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
               )
             }

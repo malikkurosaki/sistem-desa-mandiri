@@ -167,7 +167,7 @@ export async function POST(request: Request) {
 
     const cekPhone = await prisma.user.count({
       where: {
-        phone: data.phone
+        phone: "62" + data.phone
       },
     });
 
@@ -177,7 +177,7 @@ export async function POST(request: Request) {
         data: {
           nik: data.nik,
           name: data.name,
-          phone: data.phone,
+          phone: "62" + data.phone,
           email: data.email,
           gender: data.gender,
           idGroup: groupFix,
