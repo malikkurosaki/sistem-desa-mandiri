@@ -55,7 +55,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    }, [refresh.get()])
 
    useShallowEffect(() => {
-      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'discussion-comment' && i.id == id)) {
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'discussion-detail' && i.id == id)) {
          getData(false)
       }
    }, [dataRealTime])
@@ -79,7 +79,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
          if (response.success) {
             setIsComent("")
             setDataRealtime([{
-               category: "discussion-comment",
+               category: "discussion-detail",
                id: id,
             }])
             reloadData()
