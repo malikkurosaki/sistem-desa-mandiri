@@ -1,4 +1,4 @@
-import { LayoutDrawer, TEMA, WARNA } from "@/module/_global"
+import { keyWibu, LayoutDrawer, TEMA, WARNA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { funGetAllGroup, IDataGroup } from "@/module/group"
 import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button, Skeleton } from "@mantine/core"
@@ -10,6 +10,7 @@ import { funEditPosition, funEditStatusPosition, funGetOnePosition } from "../li
 import { IDataPosition } from "../lib/type_position"
 import { useHookstate } from "@hookstate/core"
 import { globalRefreshPosition } from "../lib/val_posisition"
+import { useWibuRealtime } from "wibu-realtime"
 
 export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    onUpdated: (val: boolean) => void, id: string, isActive: boolean;
@@ -29,6 +30,10 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    const [touched, setTouched] = useState({
       name: false,
    });
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    function onCLose() {
       onUpdated(true)
@@ -78,6 +83,10 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
          if (res.success) {
             toast.success(res.message);
+            setDataRealtime([{
+               category: "data-position",
+               group: data.idGroup,
+            }])
             refresh.set(!refresh.get())
             onUpdated(true);
             onCLose();
@@ -122,6 +131,10 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
             const res = await funEditStatusPosition(id, { isActive: isActive })
             if (res.success) {
                toast.success(res.message);
+               setDataRealtime([{
+                  category: "data-position",
+                  group: data.idGroup,
+               }])
                refresh.set(!refresh.get())
                onUpdated(true);
             } else {

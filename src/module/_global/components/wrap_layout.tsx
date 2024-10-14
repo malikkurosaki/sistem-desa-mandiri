@@ -53,15 +53,6 @@ export default function WrapLayout({ children, role, theme, user }: { children: 
                onClose={() => { '' }}
             />
          }
-
-         {/* <ReloadButtonTop
-            onReload={
-               () => {
-                  ''
-               }
-            }
-            title='UPDATE'
-         /> */}
          {children}
       </>
    );

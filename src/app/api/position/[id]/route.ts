@@ -120,7 +120,6 @@ export async function PUT(request: Request, context: { params: { id: string } })
                 },
                 data: {
                     name: data.name,
-                    // idGroup: data.idGroup,
                 },
             });
 
