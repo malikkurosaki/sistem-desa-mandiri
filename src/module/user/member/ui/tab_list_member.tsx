@@ -1,14 +1,15 @@
-import { currentScroll, globalRole, SkeletonSingle, SkeletonUser, TEMA } from "@/module/_global"
-import { Box, Text, TextInput, Divider, Avatar, Grid, Group, ActionIcon, Skeleton } from "@mantine/core"
+import { currentScroll, globalRole, keyWibu, ReloadButtonTop, SkeletonUser, TEMA } from "@/module/_global"
+import { useHookstate } from "@hookstate/core"
+import { Avatar, Box, Divider, Grid, Text, TextInput } from "@mantine/core"
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks"
+import _ from "lodash"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { HiMagnifyingGlass } from "react-icons/hi2"
-import { IListMember } from "../lib/type_member"
-import { funGetAllmember } from "../lib/api_member"
 import toast from "react-hot-toast"
-import _ from "lodash"
-import { useHookstate } from "@hookstate/core"
+import { HiMagnifyingGlass } from "react-icons/hi2"
+import { useWibuRealtime } from "wibu-realtime"
+import { funGetAllmember } from "../lib/api_member"
+import { IListMember } from "../lib/type_member"
 
 
 export default function TabListMember() {
@@ -21,10 +22,16 @@ export default function TabListMember() {
    const status = searchParams.get('active')
    const roleLogin = useHookstate(globalRole)
    const [nameGroup, setNameGroup] = useState('')
+   const [idGroup, setIdGroup] = useState('')
    const tema = useHookstate(TEMA)
    const { value: containerRef } = useHookstate(currentScroll);
    const [isPage, setPage] = useState(1)
    const isMobile2 = useMediaQuery("(max-width: 438px)");
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
+   const [isRefresh, setRefresh] = useState(false)
 
 
    async function getAllUser(loading: boolean) {
@@ -34,10 +41,11 @@ export default function TabListMember() {
          const res = await funGetAllmember('?active=' + status + '&group=' + group + '&search=' + searchQuery + '&page=' + isPage)
          if (res.success) {
             setNameGroup(res.filter.name)
+            setIdGroup(res.filter.id)
             if (isPage == 1) {
                setDataMember(res.data)
             } else {
-               setDataMember([...dataMember, ...res.data])
+               setDataMember((dataMember) => [...dataMember, ...res.data])
             }
 
          } else {
@@ -81,9 +89,30 @@ export default function TabListMember() {
       };
    }, [containerRef, isPage]);
 
+
+   useShallowEffect(() => {
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'data-member' && i.group == idGroup)) {
+         setRefresh(true)
+      }
+   }, [dataRealTime])
+
+   function onRefresh() {
+      setRefresh(false)
+      setPage(1)
+      getAllUser(true)
+   }
+
    return (
       <>
          <Box>
+            {
+               isRefresh &&
+               <ReloadButtonTop
+                  onReload={() => { onRefresh() }}
+                  title='UPDATE'
+               />
+
+            }
             <TextInput
                styles={{
                   input: {

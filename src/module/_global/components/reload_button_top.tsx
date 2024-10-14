@@ -13,7 +13,7 @@ export default function ReloadButtonTop({ onReload, title }: { onReload: () => v
   useShallowEffect(() => {
     const timer = setTimeout(() => {
       setOpened(true);
-    }, 2000);
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
 

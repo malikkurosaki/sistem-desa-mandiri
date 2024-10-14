@@ -1,17 +1,17 @@
-import { globalRole, LayoutDrawer, SkeletonSingle, TEMA, WARNA } from "@/module/_global";
+import { globalRole, keyWibu, LayoutDrawer, TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import { ActionIcon, Box, Flex, Grid, Group, Skeleton, Text, TextInput } from "@mantine/core";
-import React, { useState } from "react";
-import { FaUserTie } from "react-icons/fa6";
-import { HiMagnifyingGlass } from "react-icons/hi2";
-import DrawerDetailPosition from "./drawer_detail_position";
-import toast from "react-hot-toast";
-import _ from "lodash";
 import { useShallowEffect } from "@mantine/hooks";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { FaUserTie } from "react-icons/fa6";
+import { HiMagnifyingGlass } from "react-icons/hi2";
+import { useWibuRealtime } from "wibu-realtime";
 import { funGetAllPosition } from "../lib/api_position";
 import { IDataPosition } from "../lib/type_position";
-import { useHookstate } from "@hookstate/core";
 import { globalRefreshPosition } from "../lib/val_posisition";
+import DrawerDetailPosition from "./drawer_detail_position";
 
 
 export default function ListPositionActive() {
@@ -29,10 +29,14 @@ export default function ListPositionActive() {
   const roleLogin = useHookstate(globalRole)
   const [nameGroup, setNameGroup] = useState('')
   const tema = useHookstate(TEMA)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
-  async function getAllPosition() {
+  async function getAllPosition(loading: boolean) {
     try {
-      setLoading(true)
+      setLoading(loading)
       const res = await funGetAllPosition('?active=' + status + '&group=' + group + '&search=' + searchQuery)
       setDataPosition(res.data);
       setNameGroup(res.filter.name)
@@ -46,8 +50,14 @@ export default function ListPositionActive() {
   }
 
   useShallowEffect(() => {
-    getAllPosition();
+    getAllPosition(true);
   }, [status, group, searchQuery, refresh.get()])
+
+  useShallowEffect(() => {
+    if (dataRealTime && dataRealTime.some((i: any) => i.category == 'data-position' && i.group == group)) {
+      getAllPosition(false)
+    }
+  }, [dataRealTime])
 
 
   return (
