@@ -1,28 +1,23 @@
 "use client";
-import { TEMA, WARNA } from "@/module/_global";
+import { keyWibu, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
 import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
-import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaPencil, FaToggleOff } from "react-icons/fa6";
-import { ImUserCheck } from "react-icons/im";
+import { useWibuRealtime } from "wibu-realtime";
 import { funEditStatusMember } from "../lib/api_member";
-import { useHookstate } from "@hookstate/core";
 
-export default function DrawerDetailMember({
-  onDeleted,
-  id,
-  status,
-}: {
-  onDeleted: (val: boolean) => void;
-  id: string;
-  status: boolean;
-}) {
+export default function DrawerDetailMember({ onDeleted, id, status, }: { onDeleted: (val: boolean) => void; id: string; status: boolean; }) {
   const router = useRouter();
   const [isModal, setModal] = useState(false);
   const tema = useHookstate(TEMA)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
   async function nonActive(val: boolean) {
     try {
@@ -31,6 +26,10 @@ export default function DrawerDetailMember({
           isActive: status ? true : false,
         });
         if (res.success) {
+          setDataRealtime([{
+            category: "data-member",
+            group: res.data.idGroup,
+          }])
           toast.success(res.message);
           router.push("/member?active=true");
           onDeleted(true);
