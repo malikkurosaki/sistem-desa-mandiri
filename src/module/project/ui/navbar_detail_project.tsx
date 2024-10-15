@@ -1,16 +1,17 @@
 'use client'
-import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from '@/module/_global';
+import { globalRole, keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Box, Flex, SimpleGrid, Stack, Text } from '@mantine/core';
+import { useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaFileCirclePlus, FaPencil, FaUsers } from 'react-icons/fa6';
 import { HiMenu } from 'react-icons/hi';
 import { IoAddCircle } from 'react-icons/io5';
 import { MdCancel } from 'react-icons/md';
 import { funGetOneProjectById } from '../lib/api_project';
-import { useShallowEffect } from '@mantine/hooks';
-import { useHookstate } from '@hookstate/core';
+import { useWibuRealtime } from 'wibu-realtime';
 
 export default function NavbarDetailProject() {
   const router = useRouter()
@@ -20,6 +21,10 @@ export default function NavbarDetailProject() {
   const roleLogin = useHookstate(globalRole)
   const tema = useHookstate(TEMA)
   const [reason, setReason] = useState("")
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
   async function getOneData() {
     try {
@@ -40,6 +45,12 @@ export default function NavbarDetailProject() {
   useShallowEffect(() => {
     getOneData();
   }, [param.id])
+
+  useShallowEffect(() => {
+    if (dataRealTime && dataRealTime.some((i: any) => (i.category == 'project-detail' || i.category == 'project-detail-status') && i.id == param.id)) {
+      getOneData()
+    }
+  }, [dataRealTime])
 
   return (
     <>

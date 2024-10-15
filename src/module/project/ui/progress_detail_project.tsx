@@ -1,15 +1,16 @@
 'use client'
+import { keyWibu, TEMA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Box, Grid, Group, Progress, Skeleton, Text } from '@mantine/core';
-import { useParams } from 'next/navigation';
-import React, { useState } from 'react';
-import { HiMiniPresentationChartBar } from 'react-icons/hi2';
-import { globalRefreshProject } from '../lib/val_project';
-import toast from 'react-hot-toast';
-import { funGetOneProjectById } from '../lib/api_project';
 import { useShallowEffect } from '@mantine/hooks';
-import { TEMA } from '@/module/_global';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { HiMiniPresentationChartBar } from 'react-icons/hi2';
 import { IoIosWarning } from 'react-icons/io';
+import { useWibuRealtime } from 'wibu-realtime';
+import { funGetOneProjectById } from '../lib/api_project';
+import { globalRefreshProject } from '../lib/val_project';
 
 export default function ProgressDetailProject() {
   const [valProgress, setValProgress] = useState(0)
@@ -19,10 +20,14 @@ export default function ProgressDetailProject() {
   const [loading, setLoading] = useState(true)
   const tema = useHookstate(TEMA)
   const [reason, setReason] = useState("")
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
-  async function getOneData() {
+  async function getOneData(loading: boolean) {
     try {
-      setLoading(true)
+      setLoading(loading)
       const res = await funGetOneProjectById(param.id, 'progress');
       if (res.success) {
         setValProgress(res.data.progress);
@@ -60,7 +65,7 @@ export default function ProgressDetailProject() {
 
   function onRefresh() {
     if (refresh.get()) {
-      getOneData()
+      getOneData(false)
       refresh.set(false)
     }
   }
@@ -70,8 +75,15 @@ export default function ProgressDetailProject() {
   }, [refresh.get()])
 
   useShallowEffect(() => {
-    getOneData();
+    getOneData(true);
   }, [param.id])
+
+  useShallowEffect(() => {
+    if (dataRealTime && dataRealTime.some((i: any) => i.category == 'project-detail-status' && i.id == param.id)) {
+      getOneDataCancel()
+      getOneData(false)
+    }
+  }, [dataRealTime])
 
   return (
     <>
