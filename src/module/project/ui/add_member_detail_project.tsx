@@ -1,18 +1,19 @@
 "use client"
-import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { IDataMemberProject, IDataMemberProjectDetail } from '../lib/type_project';
-import toast from 'react-hot-toast';
-import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
-import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Skeleton, Stack, Text, TextInput } from '@mantine/core';
-import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA, WARNA } from '@/module/_global';
-import { FaCheck } from 'react-icons/fa6';
+import { keyWibu, LayoutNavbarNew, SkeletonList, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
+import { Carousel } from '@mantine/carousel';
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Skeleton, Stack, Text, TextInput } from '@mantine/core';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { FaCheck } from 'react-icons/fa6';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
-import { Carousel } from '@mantine/carousel';
-import { useHookstate } from '@hookstate/core';
+import { useWibuRealtime } from 'wibu-realtime';
+import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
+import { IDataMemberProject, IDataMemberProjectDetail } from '../lib/type_project';
 
 export default function AddMemberDetailProject() {
   const router = useRouter()
@@ -27,6 +28,10 @@ export default function AddMemberDetailProject() {
   const [searchQuery, setSearchQuery] = useState('')
   const tema = useHookstate(TEMA)
   const isMobile2 = useMediaQuery("(max-width: 438px)");
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
 
   async function getData() {
@@ -99,6 +104,10 @@ export default function AddMemberDetailProject() {
     try {
       const res = await funAddMemberProject(param.id, { member: selectedFiles });
       if (res.success) {
+        setDataRealtime([{
+          category: "project-detail-anggota",
+          id: param.id,
+        }])
         toast.success(res.message)
         router.back()
       } else {
