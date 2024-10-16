@@ -1,28 +1,15 @@
 "use client";
-import { LayoutNavbarNew, TEMA } from "@/module/_global";
-import {
-   Avatar,
-   Box,
-   Button,
-   Flex,
-   Group,
-   Input,
-   rem,
-   SimpleGrid,
-   Stack,
-   Text,
-   TextInput,
-} from "@mantine/core";
-import React, { useState } from "react";
-import { DatePicker } from "@mantine/dates";
-import { useParams, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { IFormDateTask } from "../lib/type_task";
-import moment from "moment";
-import { funCreateDetailTask } from "../lib/api_task";
+import { keyWibu, LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
-
+import { Box, Button, Group, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
+import moment from "moment";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { funCreateDetailTask } from "../lib/api_task";
+import { useWibuRealtime } from "wibu-realtime";
 
 export default function AddDetailTask() {
    const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
@@ -34,6 +21,11 @@ export default function AddDetailTask() {
    const [touched, setTouched] = useState({
       title: false,
    });
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
+
 
    function onVerification() {
       if (value[0] == null || value[1] == null)
@@ -55,6 +47,10 @@ export default function AddDetailTask() {
          })
 
          if (res.success) {
+            setDataRealtime([{
+               category: "tugas-detail-task",
+               id: param.detail,
+            }])
             toast.success(res.message)
             setOpenModal(false)
             router.push(`/division/${param.id}/task/${param.detail}`)
@@ -139,22 +135,22 @@ export default function AddDetailTask() {
                />
             </Stack>
          </Box>
-            <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
-               maxWidth: rem(550),
-               zIndex: 999,
-               backgroundColor: `${tema.get().bgUtama}`,
-            }}>
-               <Button
-                  c={"white"}
-                  bg={tema.get().utama}
-                  size="lg"
-                  radius={30}
-                  fullWidth
-                  onClick={() => { onVerification() }}
-               >
-                  Simpan
-               </Button>
-            </Box>
+         <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
+            maxWidth: rem(550),
+            zIndex: 999,
+            backgroundColor: `${tema.get().bgUtama}`,
+         }}>
+            <Button
+               c={"white"}
+               bg={tema.get().utama}
+               size="lg"
+               radius={30}
+               fullWidth
+               onClick={() => { onVerification() }}
+            >
+               Simpan
+            </Button>
+         </Box>
 
          <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menambahkan tugas?"

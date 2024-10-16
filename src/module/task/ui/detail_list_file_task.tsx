@@ -1,16 +1,17 @@
 'use client'
-import { LayoutDrawer, LayoutModalViewFile, SkeletonDetailListTugasTask, TEMA } from "@/module/_global";
+import { keyWibu, LayoutDrawer, LayoutModalViewFile, TEMA } from "@/module/_global";
+import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
 import { Box, Center, Flex, Grid, Group, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { BsFileTextFill, BsFiletypeCsv, BsFiletypeHeic, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from "react-icons/bs";
+import { FaTrash } from "react-icons/fa6";
 import { funDeleteFileTask, funGetTaskDivisionById } from "../lib/api_task";
 import { IDataFileTaskDivision } from "../lib/type_task";
-import { FaTrash } from "react-icons/fa6";
-import LayoutModal from "@/module/_global/layout/layout_modal";
-import { useHookstate } from "@hookstate/core";
+import { useWibuRealtime } from "wibu-realtime";
 
 export default function ListFileDetailTask() {
    const [isData, setData] = useState<IDataFileTaskDivision[]>([])
@@ -26,6 +27,10 @@ export default function ListFileDetailTask() {
    const [isExtension, setExtension] = useState('')
    const tema = useHookstate(TEMA)
    const [reason, setReason] = useState("")
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    async function getOneDataCancel() {
       try {
@@ -46,9 +51,9 @@ export default function ListFileDetailTask() {
       getOneDataCancel();
    }, [param.detail])
 
-   async function getOneData() {
+   async function getOneData(loading: boolean) {
       try {
-         setLoading(true)
+         setLoading(loading)
          const res = await funGetTaskDivisionById(param.detail, 'file');
          if (res.success) {
             setData(res.data)
@@ -64,7 +69,7 @@ export default function ListFileDetailTask() {
    }
 
    useShallowEffect(() => {
-      getOneData();
+      getOneData(true);
    }, [param.detail])
 
 
@@ -72,8 +77,12 @@ export default function ListFileDetailTask() {
       try {
          const res = await funDeleteFileTask(idData);
          if (res.success) {
+            setDataRealtime([{
+               category: "tugas-detail-file",
+               id: param.detail,
+            }])
             toast.success(res.message)
-            getOneData()
+            getOneData(false)
             setIdData("")
             setIdDataStorage("")
             setOpenDrawer(false)
@@ -84,8 +93,15 @@ export default function ListFileDetailTask() {
          console.error(error);
          toast.error("Gagal menghapus file, coba lagi nanti");
       }
-
    }
+
+   useShallowEffect(() => {
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'tugas-detail-file' && i.id == param.detail)) {
+         getOneData(false)
+      } else if (dataRealTime && dataRealTime.some((i: any) => i.category == 'tugas-detail-status' && i.id == param.detail)) {
+         getOneDataCancel()
+      }
+   }, [dataRealTime])
 
    return (
       <Box pt={20}>
