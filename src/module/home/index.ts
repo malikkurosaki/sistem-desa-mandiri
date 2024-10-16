@@ -1,3 +1,5 @@
+import { funGetHome } from "./lib/api_home";
+import { globalParamJumlahNotif } from "./lib/val_home";
 import ViewDetailFeature from "./ui/view_detail_feature";
 import ViewHome from "./ui/view_home";
 import ViewNotification from "./ui/view_notification";
@@ -7,3 +9,5 @@ export { ViewHome }
 export { ViewDetailFeature }
 export { ViewSearch }
 export { ViewNotification }
+export { funGetHome }
+export { globalParamJumlahNotif }

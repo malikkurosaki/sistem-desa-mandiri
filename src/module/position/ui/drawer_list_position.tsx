@@ -1,4 +1,4 @@
-import { WARNA, LayoutDrawer, globalRole, TEMA } from "@/module/_global";
+import { WARNA, LayoutDrawer, globalRole, TEMA, keyWibu } from "@/module/_global";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { Box, Stack, SimpleGrid, Flex, TextInput, Button, Text, Select } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -10,6 +10,7 @@ import { RiFilter2Line } from "react-icons/ri";
 import { funCreatePosition } from "../lib/api_position";
 import { useHookstate } from "@hookstate/core";
 import { globalRefreshPosition } from "../lib/val_posisition";
+import { useWibuRealtime } from "wibu-realtime";
 
 
 export default function DrawerListPosition({ onCreated }: { onCreated: (val: boolean) => void }) {
@@ -26,10 +27,13 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
       name: false,
       idGroup: false
    });
-
    const [listData, setListData] = useState({
       name: "",
       idGroup: "",
+   })
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
    })
 
    async function getAllGroup() {
@@ -60,10 +64,14 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
          })
 
          if (res.success) {
-            setOpenDrawerGroup(false)
             toast.success(res.message)
+            setDataRealtime([{
+               category: "data-position",
+               group: res.positions.idGroup,
+            }])
             refresh.set(!refresh.get())
             onCreated(true)
+            setOpenDrawerGroup(false)
          } else {
             toast.error(res.message)
             setOpenDrawerGroup(false)

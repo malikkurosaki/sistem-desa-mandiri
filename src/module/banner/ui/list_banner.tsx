@@ -1,22 +1,21 @@
 'use client'
-import { currentScroll, LayoutDrawer, LayoutModalViewFile, TEMA, WARNA } from '@/module/_global';
+import { LayoutDrawer, LayoutModalViewFile, TEMA, WARNA } from '@/module/_global';
+import SkeletonBanner from '@/module/_global/components/skeleton_banner';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
-import { ActionIcon, Anchor, Box, Flex, Group, Image, Paper, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { FaFile, FaPencil, FaTrash } from 'react-icons/fa6';
-import { IDataBanner } from '../lib/type_banner';
-import toast from 'react-hot-toast';
+import { ActionIcon, Box, Flex, Group, Image, Paper, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
-import { funDeleteBanner, funGetAllBanner, funGetOneBanner } from '../lib/api_banner';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { FaFile, FaPencil, FaTrash } from 'react-icons/fa6';
+import { funDeleteBanner, funGetAllBanner } from '../lib/api_banner';
+import { IDataBanner } from '../lib/type_banner';
 
 function ListBanner() {
-  const [isList, setIsList] = useState(false)
+
   const tema = useHookstate(TEMA)
   const router = useRouter();
-  const param = useParams<{ id: string }>()
   const [isOpenModalView, setOpenModalView] = useState(false)
   const [isOpenModal, setOpenModal] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -26,18 +25,12 @@ function ListBanner() {
   const [isData, setData] = useState<IDataBanner[]>([])
   const [idData, setIdData] = useState('')
   const [isPage, setPage] = useState(1)
-  const [searchQuerry, setSearchQuerry] = useState('')
-  // const { value: containerRef } = useHookstate(currentScroll);
-
-  const handleList = () => {
-    setIsList(!isList)
-  }
 
   const fetchData = async (loading: boolean) => {
     try {
       if (loading)
         setLoading(true)
-      const response = await funGetAllBanner('?search=' + searchQuerry)
+      const response = await funGetAllBanner('?page=' + isPage)
       if (response.success) {
         setData(response.data.map((banner: { image: any; }) => ({ ...banner, image: banner.image })));
       } else {
@@ -52,15 +45,10 @@ function ListBanner() {
     }
   }
 
-  function searchBanner(search: string) {
-    setSearchQuerry(search)
-    setPage(1)
-  }
-
-
   useShallowEffect(() => {
     fetchData(true)
-  }, [searchQuerry])
+    setPage(1)
+  }, [isPage])
 
   useShallowEffect(() => {
     fetchData(false)
@@ -92,65 +80,61 @@ function ListBanner() {
   return (
     <Box pt={2}>
       <Box p={20}>
-        <TextInput
-          styles={{
-            input: {
-              color: tema.get().utama,
-              borderRadius: '#A3A3A3',
-              borderColor: '#A3A3A3',
-            },
-          }}
-          size='md'
-          radius={30}
-          leftSection={<HiMagnifyingGlass size={20} />}
-          placeholder='pencarian'
-          value={searchQuerry}
-          onChange={(val) => { searchBanner(val.target.value) }}
-        />
+        {loading
+          ?
+          Array(7)
+            .fill(null)
+            .map((_, i) => (
+              <Box key={i} mb={20}>
+                <SkeletonBanner />
+              </Box>
+            ))
+          :
+          <Box >
 
+            {isData.length == 0 ?
+              <Box style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "75vh" }}>
+                <Text c={"dimmed"} ta={"center"} fs={"italic"}>Tidak ada Banner</Text>
+              </Box>
+              :
+              isData.map((v, i) => {
+                return (
+                  <Box key={i} mb={20}>
+                  <Paper radius={'md'} withBorder onClick={() => {
+                    setIdData(v.id);
+                    setIdDataStorage(v.image);
+                    setExtension(v.extension);
+                    setOpenDrawer(true)
+                  }
+                  }
+                    style={{
+                      width: '100%',
+                      maxWidth: 550,
+                      height: 85,
+                      backgroundColor: 'transparent',
+                      border: `1px solid ${tema.get().bgTotalKegiatan}`
+
+                    }}>
+                    <Group mt={"25"}>
+                      <ActionIcon variant='transparent' w={"100"}>
+                        <Image
+                          radius={"xs"}
+                          src={`https://wibu-storage.wibudev.com/api/files/${v.image}`}
+                          alt=''
+                          w={76}
+                          h={38.9}
+                        />
+                      </ActionIcon>
+                      <Text c={"dark"} fz={"h4"}>{v.title}</Text>
+                    </Group>
+                  </Paper>
+                  </Box>
+                )
+              })
+            }
+          </Box>
+        }
       </Box>
-
-      <Box p={20}>
-        <Anchor underline='never'>
-          <Stack align='center' justify='center'>
-            {isData.map((v, index) => (
-              <Paper radius={'md'} withBorder key={index} onClick={() => {
-                setIdData(v.id);
-                setIdDataStorage(v.image);
-                setExtension(v.extension);
-                setOpenDrawer(true)
-              }
-              }
-                style={{
-                  width: '100%',
-                  maxWidth: 550,
-                  height: 85,
-                  backgroundColor: 'transparent',
-                  border: `1px solid ${tema.get().bgTotalKegiatan}`
-
-                }}>
-                <Group mt={"15"}>
-                  <ActionIcon variant='transparent' w={"100"}>
-                    <Image
-                      radius={"xs"}
-                      src={`https://wibu-storage.wibudev.com/api/files/${v.image}`}
-                      alt=''
-                      w={76}
-                      h={38.9}
-                    />
-                  </ActionIcon>
-                  <Flex direction={"column"}>
-                    <Text c={"dark"} fz={"h4"}>{v.title}</Text>
-                  </Flex>
-                </Group>
-              </Paper>
-            ))}
-
-          </Stack>
-        </Anchor>
-      </Box>
-
-        
       <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
         <Box>
           <Stack pt={10}>
@@ -161,22 +145,22 @@ function ListBanner() {
                 alignItems: "flex-start"
               }}
             >
-                <Flex onClick={() => router.push(`/banner/edit/${idData}`)} direction="column" align="center" justify="center" pb={20}>
-                  <Box>
-                    <FaPencil size={30} color={WARNA.biruTua} />
-                  </Box>
-                  <Box>
-                    <Text c={tema.get().utama} fz={{ base: 'sm', md: 'md' }}>Edit</Text>
-                  </Box>
-                </Flex>
-             
+              <Flex onClick={() => router.push(`/banner/edit/${idData}`)} direction="column" align="center" justify="center" pb={20}>
+                <Box>
+                  <FaPencil size={30} color={WARNA.biruTua} />
+                </Box>
+                <Box>
+                  <Text c={tema.get().utama} fz={{ base: 'sm', md: 'md' }}>Edit</Text>
+                </Box>
+              </Flex>
+
 
               <Flex onClick={() => { setOpenModalView(true) }} direction={"column"} align={"center"} justify={"center"}>
                 <Box>
                   <FaFile size={30} color={tema.get().utama} />
                 </Box>
                 <Box>
-                  <Text c={tema.get().utama} fz={{ base: 'sm', md: 'md'}}>Lihat File</Text>
+                  <Text c={tema.get().utama} fz={{ base: 'sm', md: 'md' }}>Lihat File</Text>
                 </Box>
               </Flex>
 
@@ -185,7 +169,7 @@ function ListBanner() {
                   <FaTrash size={30} color={tema.get().utama} />
                 </Box>
                 <Box>
-                  <Text c={tema.get().utama} fz={{ base: 'sm', md: 'md'}}>Hapus</Text>
+                  <Text c={tema.get().utama} fz={{ base: 'sm', md: 'md' }}>Hapus</Text>
                 </Box>
               </Flex>
             </SimpleGrid>
@@ -209,29 +193,4 @@ function ListBanner() {
   );
 }
 export default ListBanner;
-
-
-
-
-
-// useEffect(() => {
-//   const handleScroll = async () => {
-//     if (containerRef && containerRef.current) {
-//       const scrollTop = containerRef.current.scrollTop;
-//       const containerHeight = containerRef.current.clientHeight;
-//       const scrollHeight = containerRef.current.scrollHeight;
-
-//       if (scrollTop + containerHeight + 1 >= scrollHeight) {
-//         setPage(isPage + 1)
-//       }
-//     }
-//   };
-
-//   const container = containerRef?.current;
-//   container?.addEventListener("scroll", handleScroll);
-
-//   return () => {
-//     container?.removeEventListener("scroll", handleScroll);
-//   };
-// }, [containerRef, isPage]);
 

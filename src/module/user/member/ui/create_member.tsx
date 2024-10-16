@@ -1,5 +1,5 @@
 "use client";
-import { globalRole, TEMA } from "@/module/_global";
+import { globalRole, keyWibu, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetUserByCookies } from "@/module/auth";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
@@ -16,6 +16,7 @@ import { FaCamera } from "react-icons/fa6";
 import { valueRoleUser } from "../../lib/val_user";
 import { funCreateMember } from "../lib/api_member";
 import { IDataPositionMember, IDataROleMember } from "../lib/type_member";
+import { useWibuRealtime } from "wibu-realtime";
 
 export default function CreateMember() {
   const router = useRouter();
@@ -29,6 +30,10 @@ export default function CreateMember() {
   const [imgForm, setImgForm] = useState<any>()
   const openRef = useRef<() => void>(null)
   const tema = useHookstate(TEMA)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
   const [touched, setTouched] = useState({
     nik: false,
     name: false,
@@ -118,6 +123,10 @@ export default function CreateMember() {
       ))
       const res = await funCreateMember(fd);
       if (res.success) {
+        setDataRealtime([{
+          category: "data-member",
+          group: res.data.idGroup,
+        }])
         toast.success(res.message);
         router.push("/member?active=true");
       } else {

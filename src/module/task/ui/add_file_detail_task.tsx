@@ -1,27 +1,19 @@
 "use client";
-import { LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
-import {
-   Box,
-   Button,
-   Flex,
-   Group,
-   rem,
-   SimpleGrid,
-   Stack,
-   Text,
-} from "@mantine/core";
-import React, { useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { IoIosArrowDropright } from "react-icons/io";
-import { Dropzone } from "@mantine/dropzone";
-import _ from "lodash";
-import { IListFileTask } from "../lib/type_task";
-import ResultsFile from "./results_file";
-import { FaTrash } from "react-icons/fa6";
-import { funAddFileTask, funCekNamFileUploadTask } from "../lib/api_task";
+import { keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
+import { Box, Button, Flex, Group, rem, SimpleGrid, Stack, Text, } from "@mantine/core";
+import { Dropzone } from "@mantine/dropzone";
+import _ from "lodash";
+import { useParams, useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { FaTrash } from "react-icons/fa6";
+import { IoIosArrowDropright } from "react-icons/io";
+import { funAddFileTask, funCekNamFileUploadTask } from "../lib/api_task";
+import { IListFileTask } from "../lib/type_task";
+import ResultsFile from "./results_file";
+import { useWibuRealtime } from "wibu-realtime";
 
 
 export default function AddFileDetailTask() {
@@ -34,6 +26,10 @@ export default function AddFileDetailTask() {
    const [openDrawerFile, setOpenDrawerFile] = useState(false)
    const tema = useHookstate(TEMA)
    const openRef = useRef<() => void>(null)
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    function deleteFile(index: number) {
       setListFile([...listFile.filter((val, i) => i !== index)])
@@ -68,6 +64,10 @@ export default function AddFileDetailTask() {
 
          const response = await funAddFileTask(param.detail, fd)
          if (response.success) {
+            setDataRealtime([{
+               category: "tugas-detail-file",
+               id: param.detail,
+            }])
             toast.success(response.message)
             setFileForm([])
             setListFile([])

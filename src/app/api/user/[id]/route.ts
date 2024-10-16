@@ -111,6 +111,10 @@ export async function DELETE(request: Request, context: { params: { id: string }
             data: {
                 isActive: !isActive,
             },
+            select: {
+                id: true,
+                idGroup: true,
+            },
         });
 
         // create log user
@@ -120,7 +124,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
             {
                 success: true,
                 message: "Berhasil mengupdate status anggota",
-                result,
+                data: result,
             },
             { status: 200 }
         );

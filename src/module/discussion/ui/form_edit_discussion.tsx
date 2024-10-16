@@ -1,5 +1,5 @@
 'use client'
-import { TEMA } from "@/module/_global"
+import { keyWibu, TEMA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
 import { Box, Group, Avatar, Textarea, Button, Grid, rem, Skeleton } from "@mantine/core"
 import { useParams, useRouter } from "next/navigation"
@@ -9,6 +9,7 @@ import { funEditDiscussion, funGetDiscussionById } from "../lib/api_discussion"
 import { useShallowEffect } from "@mantine/hooks"
 import { funGetProfileByCookies } from "@/module/user/profile/lib/api_profile"
 import { useHookstate } from "@hookstate/core"
+import { useWibuRealtime } from "wibu-realtime"
 
 export default function FormEditDiscussion() {
    const [isValModal, setValModal] = useState(false)
@@ -22,6 +23,10 @@ export default function FormEditDiscussion() {
    const [touched, setTouched] = useState({
       desc: false,
    });
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    async function fetchGetOneDiscussion() {
       try {
@@ -45,6 +50,10 @@ export default function FormEditDiscussion() {
          if (response.success) {
             toast.success(response.message)
             setValModal(false)
+            setDataRealtime([{
+               category: "discussion-detail",
+               id: param.detail,
+            }])
             router.push(`/division/${param.id}/discussion/${param.detail}`)
          } else {
             toast.error(response.message)

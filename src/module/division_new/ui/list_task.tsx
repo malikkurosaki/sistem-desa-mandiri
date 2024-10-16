@@ -55,7 +55,7 @@ export default function ListTaskOnDetailDivision() {
                      .map((_, i) => (
                         <Stack align="stretch" justify="center" key={i}>
                            <Skeleton height={80} radius="md" m={0} w={isMobile ? "80%" : "90%"} />
-                           <Skeleton height={10} radius="md" m={0} w={isMobile ? "80%" : "90%"}/>
+                           <Skeleton height={10} radius="md" m={0} w={isMobile ? "80%" : "90%"} />
                         </Stack>
                      ))
                   :
@@ -72,8 +72,8 @@ export default function ListTaskOnDetailDivision() {
                   <Box p={20} w={{
                      base: isMobile ? 230 : 300,
                      md: 400
-                  }} onClick={() => router.push(`/task/${v.id}`)} bg={"white"}  style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
-                     <Text fw={'bold'} c={tema.get().utama} lineClamp={1}>{v.title+' - '+ v.projectTitle}</Text>
+                  }} onClick={() => router.push(`/division/${param.id}/task/${v.idProject}`)} bg={"white"} style={{ borderRadius: 10, border: `1px solid ${"#D6D8F6"}` }}>
+                     <Text fw={'bold'} c={tema.get().utama} lineClamp={1}>{v.title + ' - ' + v.projectTitle}</Text>
                      <Group justify="space-between" mt={20}>
                         <Group gap={5} align="center">
                            <CiClock2 size={18} />

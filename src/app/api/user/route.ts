@@ -186,7 +186,8 @@ export async function POST(request: Request) {
           idUserRole: data.idUserRole,
         },
         select: {
-          id: true
+          id: true,
+          idGroup: true,
         },
       });
 
@@ -211,7 +212,7 @@ export async function POST(request: Request) {
       // create log user
       const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data user baru', table: 'user', data: users.id })
 
-      return Response.json({ success: true, message: 'Sukses membuat user' }, { status: 200 });
+      return Response.json({ success: true, message: 'Sukses membuat user', data: users}, { status: 200 });
     } else {
       return Response.json({ success: false, message: "User sudah ada" }, { status: 400 });
     }

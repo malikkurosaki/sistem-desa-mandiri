@@ -1,4 +1,4 @@
-import { currentScroll, SkeletonList, TEMA } from "@/module/_global";
+import { currentScroll, globalNotifPage, ReloadButtonTop, SkeletonList, TEMA } from "@/module/_global";
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Progress, Skeleton, Text, TextInput, Title } from "@mantine/core";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -25,6 +25,8 @@ export default function ListDivisionTask() {
    const { value: containerRef } = useHookstate(currentScroll)
    const [isPage, setPage] = useState(1)
    const [totalData, setTotalData] = useState(0)
+   const [isRefresh, setRefresh] = useState(false)
+   const notifLoadPage = useHookstate(globalNotifPage)
 
    const handleList = () => {
       setIsList(!isList)
@@ -32,15 +34,14 @@ export default function ListDivisionTask() {
 
    const fetchData = async (loading: boolean) => {
       try {
-         if (loading)
-            setLoading(true)
+         setLoading(loading)
          const response = await funGetAllTask('?division=' + param.id + '&status=' + status + '&search=' + searchQuery + '&page=' + isPage)
          if (response.success) {
             setTotalData(response.total)
             if (isPage == 1) {
                setData(response?.data)
             } else {
-               setData([...isData, ...response.data])
+               setData((isData) => [...isData, ...response.data])
             }
          } else {
             toast.error(response.message);
@@ -87,8 +88,36 @@ export default function ListDivisionTask() {
       };
    }, [containerRef, isPage]);
 
+
+   useShallowEffect(() => {
+      if (notifLoadPage.get().category == 'division/' + param.id + '/task' && notifLoadPage.get().load == true) {
+         setRefresh(true)
+      }
+   }, [notifLoadPage.get().load])
+
+   function onRefresh() {
+      notifLoadPage.set({
+         category: '',
+         load: false
+      })
+      setRefresh(false)
+      setPage(1)
+      setTimeout(() => {
+         fetchData(false)
+      }, 500)
+   }
+
+
    return (
       <Box py={20}>
+         {
+            isRefresh &&
+            <ReloadButtonTop
+               onReload={() => { onRefresh() }}
+               title='UPDATE'
+            />
+
+         }
          <Grid justify='center' align='center'>
             <Grid.Col span={10}>
                <TextInput

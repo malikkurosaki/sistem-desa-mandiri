@@ -1,14 +1,16 @@
+import { keyWibu } from '@/module/_global';
 import { Box, Divider, Flex, Grid, Group, Indicator, Skeleton, Text } from '@mantine/core';
 import { DatePicker, DatePickerProps } from '@mantine/dates';
-import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { funGetAllCalender, funGetIndicatorCalender } from '../lib/api_calender';
 import { useMediaQuery, useSetState, useShallowEffect } from '@mantine/hooks';
-import { IDataCalender } from '../lib/type_calender';
-import moment from 'moment';
+import 'dayjs/locale/id';
 import _ from 'lodash';
+import moment from 'moment';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import 'dayjs/locale/id'
+import { useWibuRealtime } from 'wibu-realtime';
+import { funGetAllCalender, funGetIndicatorCalender } from '../lib/api_calender';
+import { IDataCalender } from '../lib/type_calender';
 
 
 export default function DateEventDivision() {
@@ -20,11 +22,15 @@ export default function DateEventDivision() {
   const [isMonth, setMonth] = useState<any>(moment().month() + 1)
   const [loading, setLoading] = useState(true)
   const isMobile = useMediaQuery('(max-width: 369px)');
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
 
-  const getData = async (tgl: any) => {
+  const getData = async (tgl: any, loading: boolean) => {
     try {
-      setLoading(true)
+      setLoading(loading)
       const response = await funGetAllCalender('?division=' + param.id + '&date=' + tgl)
       if (response.success) {
         setData(response.data)
@@ -66,12 +72,12 @@ export default function DateEventDivision() {
   function change(val: Date) {
     const a: any = moment(new Date(val)).format('YYYY-MM-DD')
     setDate(a)
-    getData(a)
+    getData(a, true)
   }
 
 
   useShallowEffect(() => {
-    getData(isDate)
+    getData(isDate, true)
     getIndicator(isDate)
   }, [])
 
@@ -87,6 +93,15 @@ export default function DateEventDivision() {
       </Indicator>
     );
   };
+
+  useShallowEffect(() => {
+    if (dataRealTime && dataRealTime.some((i: any) => i.category == 'calendar-event' && i.division == param.id && i.date == isDate)) {
+      getIndicator(isDate)
+      getData(isDate, false)
+    } else if (dataRealTime && dataRealTime.some((i: any) => i.category == 'calendar-event' && i.division == param.id && i.date != isDate)) {
+      getIndicator(isDate)
+    }
+  }, [dataRealTime])
 
 
 

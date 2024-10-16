@@ -1,5 +1,5 @@
 "use client"
-import { LayoutNavbarNew, TEMA } from '@/module/_global';
+import { keyWibu, LayoutNavbarNew, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
 import { Box, Button, rem, Skeleton, Stack, TextInput } from '@mantine/core';
@@ -8,6 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funEditProject, funGetOneProjectById } from '../lib/api_project';
+import { useWibuRealtime } from 'wibu-realtime';
 
 export default function EditTaskProject() {
   const router = useRouter()
@@ -19,11 +20,19 @@ export default function EditTaskProject() {
   const [touched, setTouched] = useState({
     name: false,
   });
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
   async function onSubmit() {
     try {
       const res = await funEditProject(param.id, { name })
       if (res.success) {
+        setDataRealtime([{
+          category: "project-detail",
+          id: param.id,
+        }])
         toast.success(res.message)
         router.push("./")
       } else {
