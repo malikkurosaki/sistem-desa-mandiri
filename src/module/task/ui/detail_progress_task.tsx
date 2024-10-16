@@ -1,15 +1,16 @@
 'use client'
-import { TEMA } from "@/module/_global";
-import { Box, Grid, ActionIcon, Progress, Text, Skeleton, Group } from "@mantine/core";
+import { keyWibu, TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
+import { ActionIcon, Box, Grid, Group, Progress, Skeleton, Text } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
-import { funGetTaskDivisionById } from "../lib/api_task";
-import { useState } from "react";
-import { globalRefreshTask } from "../lib/val_task";
-import { useHookstate } from "@hookstate/core";
 import { IoIosWarning } from "react-icons/io";
+import { useWibuRealtime } from "wibu-realtime";
+import { funGetTaskDivisionById } from "../lib/api_task";
+import { globalRefreshTask } from "../lib/val_task";
 
 export default function ProgressDetailTask() {
    const [valProgress, setValProgress] = useState(0)
@@ -20,6 +21,10 @@ export default function ProgressDetailTask() {
    const isMobile = useMediaQuery('(max-width: 369px)');
    const tema = useHookstate(TEMA)
    const [reason, setReason] = useState("")
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    async function getOneDataCancel() {
       try {
@@ -41,9 +46,9 @@ export default function ProgressDetailTask() {
    }, [param.detail])
 
 
-   async function getOneData() {
+   async function getOneData(loading: boolean) {
       try {
-         setLoading(true)
+         setLoading(loading)
          const res = await funGetTaskDivisionById(param.detail, 'progress');
          if (res.success) {
             setValProgress(res.data.progress);
@@ -51,7 +56,6 @@ export default function ProgressDetailTask() {
          } else {
             toast.error(res.message);
          }
-         setLoading(false)
       } catch (error) {
          console.error(error);
          toast.error("Gagal mendapatkan progress tugas divisi, coba lagi nanti");
@@ -62,7 +66,7 @@ export default function ProgressDetailTask() {
 
    function onRefresh() {
       if (refresh.get()) {
-         getOneData()
+         getOneData(false)
          refresh.set(false)
       }
    }
@@ -73,8 +77,15 @@ export default function ProgressDetailTask() {
    }, [refresh.get()])
 
    useShallowEffect(() => {
-      getOneData();
+      getOneData(true);
    }, [param.detail])
+
+   useShallowEffect(() => {
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'tugas-detail-status' && i.id == param.detail)) {
+         getOneDataCancel()
+         getOneData(false)
+      }
+   }, [dataRealTime])
 
    return (
       <Box mt={10}>
