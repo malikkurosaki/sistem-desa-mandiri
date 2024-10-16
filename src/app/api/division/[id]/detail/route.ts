@@ -100,6 +100,7 @@ export async function GET(request: Request, context: { params: { id: string } })
             },
             select: {
                id: true,
+               idProject: true,
                title: true,
                dateStart: true,
                dateEnd: true,
