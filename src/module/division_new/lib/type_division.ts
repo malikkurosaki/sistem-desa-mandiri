@@ -31,6 +31,7 @@ export interface IDataJumlahDetailDivision {
 
 export interface IDataTaskOnDetailDivision {
    id: string,
+   idProject: string,
    title: string,
    dateStart: string,
    dateEnd: string,

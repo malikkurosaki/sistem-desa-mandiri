@@ -1,14 +1,15 @@
-import { TEMA } from "@/module/_global";
+import { keyWibu, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { Box, Stack, SimpleGrid, Flex, Text } from "@mantine/core";
+import { useHookstate } from "@hookstate/core";
+import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { BsTrash3 } from "react-icons/bs";
 import { FaCheck, FaPencil } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
+import { useWibuRealtime } from "wibu-realtime";
 import { funDeleteDiscussion, funEditStatusDiscussion } from "../lib/api_discussion";
-import { useParams, useRouter } from "next/navigation";
-import { useHookstate } from "@hookstate/core";
 import { globalRefreshDiscussion } from "../lib/val_discussion";
 
 export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivision }: { onSuccess: (val: boolean) => void, id: string, status: number, idDivision: string }) {
@@ -18,6 +19,10 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
    const param = useParams<{ id: string, detail: string }>()
    const refresh = useHookstate(globalRefreshDiscussion)
    const tema = useHookstate(TEMA)
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
 
    async function fetchStatusDiscussion(val: boolean) {
@@ -28,6 +33,10 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
             if (response.success) {
                toast.success(response.message)
                refresh.set(!refresh.get())
+               setDataRealtime([{
+                  category: "discussion-detail",
+                  id: id,
+               }])
                onSuccess(false)
                setValModalStatus(false)
             } else {

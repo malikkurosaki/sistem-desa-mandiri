@@ -5,7 +5,9 @@ import { useShallowEffect } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { useWibuRealtime } from "wibu-realtime";
 import NotificationCustome from "./notification_custome";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { globalParamJumlahNotif } from "@/module/home";
+import ReloadButtonTop from "./reload_button_top";
 
 export default function WrapLayout({ children, role, theme, user }: { children: React.ReactNode, role: any, theme: any, user: any }) {
    const router = useRouter()
@@ -13,10 +15,13 @@ export default function WrapLayout({ children, role, theme, user }: { children: 
    const tema = useHookstate(TEMA)
    const notifLoadPage = useHookstate(globalNotifPage)
    const [tampilNotif, setTampilNotif] = useState(false)
+   const paramNotif = useHookstate(globalParamJumlahNotif)
    const [data, setData] = useWibuRealtime({
       WIBU_REALTIME_TOKEN: keyWibu,
       project: "sdm"
    })
+   const path = usePathname()
+
 
    useEffect(() => {
       roleLogin.set(role)
@@ -26,10 +31,18 @@ export default function WrapLayout({ children, role, theme, user }: { children: 
 
    useShallowEffect(() => {
       if (data && data.some((i: any) => i.idUserTo == user)) {
-         setTampilNotif(true)
-         setTimeout(() => {
-            setTampilNotif(false);
-         }, 4000);
+         if (data.some((i: any) => i.category == path.substring(1))) {
+            notifLoadPage.set({
+               category: path.substring(1),
+               load: true
+            })
+         } else {
+            setTampilNotif(true)
+            paramNotif.set(!paramNotif.get())
+            setTimeout(() => {
+               setTampilNotif(false);
+            }, 4000);
+         }
       }
    }, [data])
 
@@ -40,7 +53,6 @@ export default function WrapLayout({ children, role, theme, user }: { children: 
 
    return (
       <>
-         {/* {JSON.stringify(data)} */}
          {
             tampilNotif &&
             <NotificationCustome
@@ -50,7 +62,6 @@ export default function WrapLayout({ children, role, theme, user }: { children: 
                onClose={() => { '' }}
             />
          }
-
          {children}
       </>
    );

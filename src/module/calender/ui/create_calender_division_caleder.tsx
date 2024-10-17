@@ -1,5 +1,5 @@
 'use client'
-import { LayoutNavbarNew, TEMA } from '@/module/_global';
+import { keyWibu, LayoutNavbarNew, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
 import { Avatar, Box, Button, Divider, Grid, Group, rem, Select, SimpleGrid, Stack, Text, Textarea, TextInput } from '@mantine/core';
@@ -10,6 +10,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { IoIosArrowDropright } from 'react-icons/io';
+import { useWibuRealtime } from 'wibu-realtime';
 import { funCreateCalender } from '../lib/api_calender';
 import { IFormMemberCalender } from '../lib/type_calender';
 import { globalCalender } from '../lib/val_calender';
@@ -47,6 +48,11 @@ export default function CreateCalenderDivisionCaleder() {
         desc: "",
         repeatValue: "1"
     })
+    const [dataRealTime, setDataRealtime] = useWibuRealtime({
+        WIBU_REALTIME_TOKEN: keyWibu,
+        project: "sdm"
+    })
+
 
     async function onSubmit(val: boolean) {
         try {
@@ -65,6 +71,11 @@ export default function CreateCalenderDivisionCaleder() {
             })
 
             if (response.success) {
+                setDataRealtime([{
+                    category: "calendar-event",
+                    division: param.id,
+                    date: isData.dateStart
+                }])
                 setModal(false)
                 router.push(`/division/${param.id}/calender`)
                 toast.success(response.message)

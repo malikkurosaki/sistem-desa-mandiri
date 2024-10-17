@@ -1,12 +1,13 @@
 "use client"
-import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import toast from 'react-hot-toast';
-import { funCancelProject } from '../lib/api_project';
-import { Box, Button, rem, Stack, Textarea } from '@mantine/core';
-import { LayoutNavbarNew, TEMA} from '@/module/_global';
+import { keyWibu, LayoutNavbarNew, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
+import { Box, Button, rem, Stack, Textarea } from '@mantine/core';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useWibuRealtime } from 'wibu-realtime';
+import { funCancelProject } from '../lib/api_project';
 
 export default function CancelProject() {
   const router = useRouter()
@@ -17,6 +18,10 @@ export default function CancelProject() {
   const [touched, setTouched] = useState({
     reason: false,
   });
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
   function onVerification() {
     if (alasan == "")
@@ -29,6 +34,10 @@ export default function CancelProject() {
     try {
       const res = await funCancelProject(param.id, { reason: alasan })
       if (res.success) {
+        setDataRealtime([{
+          category: "project-detail-status",
+          id: param.id,
+        }])
         toast.success(res.message)
         router.push("/project")
       } else {

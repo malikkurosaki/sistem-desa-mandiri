@@ -1,28 +1,19 @@
 "use client";
-import { LayoutDrawer, LayoutNavbarNew } from "@/module/_global";
-import {
-   Box,
-   Button,
-   Flex,
-   Group,
-   rem,
-   SimpleGrid,
-   Stack,
-   Text,
-} from "@mantine/core";
-import React, { useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { IoIosArrowDropright } from "react-icons/io";
+import { keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
+import LayoutModal from "@/module/_global/layout/layout_modal";
+import { useHookstate } from "@hookstate/core";
+import { Box, Button, Flex, Group, rem, SimpleGrid, Stack, Text, } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import _ from "lodash";
-import ResultsFile from "./results_file";
+import { useParams, useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { FaTrash } from "react-icons/fa6";
-import LayoutModal from "@/module/_global/layout/layout_modal";
-import { IListFileTaskProject } from "../lib/type_project";
+import { IoIosArrowDropright } from "react-icons/io";
 import { funAddFileProject, funCekNamFileUploadProject } from "../lib/api_project";
-import { TEMA } from "@/module/_global";
-import { useHookstate } from "@hookstate/core";
+import { IListFileTaskProject } from "../lib/type_project";
+import ResultsFile from "./results_file";
+import { useWibuRealtime } from "wibu-realtime";
 
 
 export default function AddFileDetailProject() {
@@ -35,6 +26,10 @@ export default function AddFileDetailProject() {
    const [openDrawerFile, setOpenDrawerFile] = useState(false)
    const tema = useHookstate(TEMA)
    const openRef = useRef<() => void>(null)
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    function deleteFile(index: number) {
       setListFile([...listFile.filter((val, i) => i !== index)])
@@ -70,6 +65,10 @@ export default function AddFileDetailProject() {
          const response = await funAddFileProject(param.id, fd)
          console.group(response)
          if (response.success) {
+            setDataRealtime([{
+               category: "project-detail-file",
+               id: param.id,
+            }])
             toast.success(response.message)
             setFileForm([])
             setListFile([])

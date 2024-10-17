@@ -1,5 +1,5 @@
 "use client";
-import { LayoutNavbarNew, TEMA } from "@/module/_global";
+import { keyWibu, LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
 import { Box, Button, rem, Skeleton, Stack, TextInput } from "@mantine/core";
@@ -8,6 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { funEditTask, funGetTaskDivisionById } from "../lib/api_task";
+import { useWibuRealtime } from "wibu-realtime";
 
 
 export default function EditTask() {
@@ -20,6 +21,10 @@ export default function EditTask() {
    const [touched, setTouched] = useState({
       title: false,
    });
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    function onVerification() {
       if (Object.values(touched).some((v) => v == true))
@@ -42,6 +47,10 @@ export default function EditTask() {
       try {
          const res = await funEditTask(param.detail, { title })
          if (res.success) {
+            setDataRealtime([{
+               category: "tugas-detail",
+               id: param.detail,
+            }])
             toast.success(res.message)
             router.push("./")
          } else {
@@ -97,7 +106,7 @@ export default function EditTask() {
                      label="Judul Tugas"
                      size="md"
                      value={title}
-                     onChange={(e) => { onValidation('title', e.target.value)}}
+                     onChange={(e) => { onValidation('title', e.target.value) }}
                      error={
                         touched.title && (
                            title == "" ? "Error! harus memasukkan judul tugas" : null

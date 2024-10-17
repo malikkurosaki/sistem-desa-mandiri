@@ -1,18 +1,13 @@
 "use client";
-import { LayoutNavbarNew, TEMA } from "@/module/_global";
-import {
-   Box,
-   Button,
-   rem,
-   Stack,
-   Textarea,
-} from "@mantine/core";
-import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { funCancelTask } from "../lib/api_task";
+import { keyWibu, LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
+import { Box, Button, rem, Stack, Textarea, } from "@mantine/core";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { funCancelTask } from "../lib/api_task";
+import { useWibuRealtime } from "wibu-realtime";
 
 
 export default function CancelTask() {
@@ -24,6 +19,10 @@ export default function CancelTask() {
    const [touched, setTouched] = useState({
       reason: false,
    });
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    function onVerification() {
       if (alasan == "")
@@ -36,6 +35,10 @@ export default function CancelTask() {
       try {
          const res = await funCancelTask(param.detail, { reason: alasan })
          if (res.success) {
+            setDataRealtime([{
+               category: "tugas-detail-status",
+               id: param.detail,
+             }])
             toast.success(res.message)
             router.push("./")
          } else {

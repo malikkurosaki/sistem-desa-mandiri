@@ -1,14 +1,15 @@
 "use client"
-import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import toast from 'react-hot-toast';
-import { funCreateDetailProject } from '../lib/api_project';
-import { Box, Button, Group, Input, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
-import { LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
-import { DatePicker } from '@mantine/dates';
-import moment from 'moment';
+import { keyWibu, LayoutNavbarNew, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
+import { Box, Button, Group, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import moment from 'moment';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useWibuRealtime } from 'wibu-realtime';
+import { funCreateDetailProject } from '../lib/api_project';
 
 export default function AddDetailTaskProject() {
    const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
@@ -20,6 +21,10 @@ export default function AddDetailTaskProject() {
    const [touched, setTouched] = useState({
       name: false,
    });
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    function onVerification() {
       if (value[0] == null || value[1] == null)
@@ -40,6 +45,10 @@ export default function AddDetailTaskProject() {
          })
 
          if (res.success) {
+            setDataRealtime([{
+               category: "project-detail-task",
+               id: param.id,
+            }])
             toast.success(res.message)
             setOpenModal(false)
             router.push(`/project/${param.id}`)
