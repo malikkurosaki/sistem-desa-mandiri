@@ -1,8 +1,11 @@
-import { ViewInformationDivision } from "@/module/division_new";
+import { InformationDivision } from "@/module/division_new";
+import { Box } from "@mantine/core";
 
-function Page() {
+function Page({ params }: { params: { id: string } }) {
    return (
-      <ViewInformationDivision/>
+      <Box>
+         <InformationDivision />
+      </Box>
    )
 }
 

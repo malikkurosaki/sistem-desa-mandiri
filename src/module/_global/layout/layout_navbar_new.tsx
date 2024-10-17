@@ -4,10 +4,13 @@ import React from 'react';
 import { WARNA } from '../fun/WARNA';
 import LayoutIconBack from './layout_icon_back';
 import _ from 'lodash';
+import { useHookstate } from '@hookstate/core';
+import { TEMA } from '../bin/val_global';
 
-export const LayoutNavbarNew = ({ back, title, menu }: { back: string, title: string, menu: React.ReactNode }) => {
+export const LayoutNavbarNew = ({ back, state, title, menu }: { back?: string, title: string, menu: React.ReactNode, state?: React.ReactNode }) => {
+   const tema = useHookstate(TEMA)
    return (
-      <Box pt={25} pl={20} pr={20} m={0} pos={'sticky'} top={0} pb={25} bg={WARNA.biruTua}
+      <Box pt={25} pl={20} pr={20} m={0} pos={'sticky'} top={0} pb={25} bg={tema.get().utama}
          style={{
             borderBottomLeftRadius: 20,
             borderBottomRightRadius: 20,
@@ -16,11 +19,20 @@ export const LayoutNavbarNew = ({ back, title, menu }: { back: string, title: st
          }}
       >
          <Grid justify='center' align='center'>
-            <Grid.Col span="auto">
-               <LayoutIconBack back={back} />
-            </Grid.Col>
+            {
+               state != undefined &&
+               <Grid.Col span="auto">
+                  {state}
+               </Grid.Col>
+            }
+            {
+               back != undefined &&
+               <Grid.Col span="auto">
+                  <LayoutIconBack back={back} />
+               </Grid.Col>
+            }
             <Grid.Col span={8}>
-               <Title c={WARNA.bgWhite} ta={'center'} order={5}>{_.startCase(title)}</Title>
+               <Title c={tema.get().bgUtama} ta={'center'} order={5} lineClamp={1}>{_.startCase(title)}</Title>
             </Grid.Col>
             <Grid.Col span="auto">
                <Group justify='flex-end'>

@@ -1,8 +1,9 @@
-import { ViewCreateAnnouncement } from "@/module/announcement";
+import { CreateAnnouncement } from "@/module/announcement";
+
 
 function Page() {
    return (
-      <ViewCreateAnnouncement />
+      <CreateAnnouncement />
    )
 }
 

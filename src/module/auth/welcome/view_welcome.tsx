@@ -17,7 +17,7 @@ import { WARNA } from "@/module/_global";
 const listTextWellcome = [
   {
     id: "1",
-    text: "Selamat Datang di Aplikasi Desa Darmasaba Optimalkan Proyek Desa dengan Fitur Kolaboratif Manajemen Proyek yang Efisien untuk Masa Depan Yang Lebih Baik",
+    text: "Selamat Datang di Aplikasi Desa Darmasaba Optimalkan Kegiatan Desa dengan Fitur Kolaboratif Manajemen Kegiatan yang Efisien untuk Masa Depan Yang Lebih Baik",
     img: "/assets/img/welcome/wellcome-1.png",
   },
   {

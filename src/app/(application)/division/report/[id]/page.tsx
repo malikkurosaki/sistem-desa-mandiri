@@ -1,8 +1,8 @@
-import { ViewReportDivision } from "@/module/division_new"
+import { ReportDivisionId } from "@/module/division_new"
 
 function Page() {
    return (
-      <ViewReportDivision/>
+      <ReportDivisionId />
    )
 }
 

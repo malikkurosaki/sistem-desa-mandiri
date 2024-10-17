@@ -1,8 +1,8 @@
-import { ViewEditProfile } from "@/module/user"
+import { EditProfile } from "@/module/user"
 
 function Page() {
    return (
-      <ViewEditProfile />
+      <EditProfile />
    )
 }
 

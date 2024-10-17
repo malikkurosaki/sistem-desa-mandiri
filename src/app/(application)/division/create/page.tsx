@@ -1,13 +1,9 @@
-import { CreateAdminDivision, CreateUsers, ViewCreateDivision } from '@/module/division_new';
+import { CreateDivision } from '@/module/division_new';
 import React from 'react';
 
-function Page({ searchParams }: { searchParams: { page: string } }) {
-  if (searchParams.page == "anggota")
-    return <CreateUsers />
-  if (searchParams.page == "pilih-admin")
-    return <CreateAdminDivision />
+function Page() {
   return (
-    <ViewCreateDivision/>
+    <CreateDivision/>
   );
 }
 

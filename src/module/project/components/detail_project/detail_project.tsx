@@ -16,8 +16,8 @@ import {
 import React from "react";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
 import { IoIosArrowDropright } from "react-icons/io";
-import ResultsDateAndTask from "../results_date-and_task";
-import ResultsFile from "../results_file";
+import ResultsDateAndTask from "../../ui/results_date-and_task";
+import ResultsFile from "../../ui/results_file";
 import { AiOutlineFileSync } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { LuClipboardEdit } from "react-icons/lu";
@@ -61,7 +61,7 @@ export default function DetailProject() {
     <Box>
       <LayoutNavbarNew
         back=""
-        title="Proyek Desa Maju"
+        title="Kegiatan Desa Maju"
         menu={
           <ActionIcon
             variant="light"
@@ -98,7 +98,7 @@ export default function DetailProject() {
               </Grid.Col>
               <Grid.Col span={9}>
                 <Box>
-                  <Text>Kemajuan Proyek 60%</Text>
+                  <Text>Kemajuan Kegiatan 60%</Text>
                   <Progress
                     style={{
                       border: `1px solid ${"#BDBDBD"}`,
@@ -109,7 +109,6 @@ export default function DetailProject() {
                     size="xl"
                     value={60}
                   />
-                  <Text>18 Juni 2024</Text>
                 </Box>
               </Grid.Col>
             </Grid>
@@ -182,7 +181,7 @@ export default function DetailProject() {
             </Grid>
           </Box>
         </Box>
-        <ResultsFile />
+        {/* <ResultsFile /> */}
         <Box pt={20}>
           <Group justify="space-between">
             <Text c={WARNA.biruTua}>Anggota Terpilih</Text>

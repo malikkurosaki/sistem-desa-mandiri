@@ -1,12 +1,12 @@
 import { ViewFilter } from '@/module/_global';
-import { ViewProject } from '@/module/project';
+import { TabProject, ViewProject } from '@/module/project';
 import React from 'react';
 
-function Page({ searchParams }: { searchParams: { cat: string } }) {
-  if (searchParams.cat == 'filter')
-    return <ViewFilter />
+function Page({ searchParams }: { searchParams: { page: string } }) {
+  if (searchParams.page == 'filter')
+    return <ViewFilter linkFilter='project' />
   return (
-    <ViewProject />
+    <TabProject />
   );
 }
 

@@ -200,7 +200,7 @@ export default function UpdateProgres({ searchParams }: { searchParams: any }) {
             >
               <Group>
                 <BsFiletypeCsv size={25} />
-                <Text>Proyek Laporan Permasyarakatan</Text>
+                <Text>Kegiatan Laporan Permasyarakatan</Text>
               </Group>
             </Box>
             <Box
@@ -212,7 +212,7 @@ export default function UpdateProgres({ searchParams }: { searchParams: any }) {
             >
               <Group>
                 <BsFiletypeCsv size={25} />
-                <Text>Proyek Laporan Permasyarakatan</Text>
+                <Text>Kegiatan Laporan Permasyarakatan</Text>
               </Group>
             </Box>
           </Box>

@@ -1,9 +1,14 @@
-import ViewCreateAnnouncement from "./view/view_create_announcement";
-import ViewDetailAnnouncement from "./view/view_detail_anouncement";
-import ViewEditAnnouncement from "./view/view_edit_announcement";
-import ViewListAnnouncement from "./view/view_list_announcement";
+import CreateAnnouncement from "./ui/create_announcement";
+import DetailAnnouncement from "./ui/detail_announcement";
+import EditAnnouncement from "./ui/edit_announcement";
+import ListAnnouncement from "./ui/list_announcement";
+import NavbarAnnouncement from "./ui/navbar_announcement";
+import NavbarDetailAnnouncement from "./ui/navbar_detail_announcement";
 
-export { ViewListAnnouncement }
-export { ViewCreateAnnouncement }
-export { ViewDetailAnnouncement }
-export { ViewEditAnnouncement }
+
+export { ListAnnouncement }
+export { NavbarAnnouncement }
+export { CreateAnnouncement }
+export { NavbarDetailAnnouncement }
+export { DetailAnnouncement }
+export { EditAnnouncement }

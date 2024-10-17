@@ -1,13 +1,17 @@
 import { ViewFilter } from '@/module/_global';
-import { ViewListPosition } from '@/module/position';
+import { NavbarListPosition, TabListPosition } from '@/module/position';
+import { Box } from '@mantine/core';
 import React from 'react';
 
 function Page({ searchParams }: { searchParams: { page: string } }) {
   if (searchParams.page == "filter")
-    return <ViewFilter />
+    return <ViewFilter linkFilter='position' />
 
   return (
-    <ViewListPosition />
+    <Box>
+      <NavbarListPosition />
+      <TabListPosition />
+    </Box>
   );
 }
 

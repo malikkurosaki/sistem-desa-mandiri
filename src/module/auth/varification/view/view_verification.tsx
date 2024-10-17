@@ -1,16 +1,60 @@
 "use client";
 import { LayoutLogin, WARNA } from "@/module/_global";
-import { Box, Button, PinInput, Stack, Text, Title } from "@mantine/core";
+import { IVerification } from "@/types";
+import { Anchor, Box, Button, Group, PinInput, Stack, Text, Title } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import funSetCookies from "../../api/funSetCookies";
 
-export default function ViewVerification() {
-  const router = useRouter();
+export default function ViewVerification({ phone, otp, user }: IVerification) {
+  const router = useRouter()
+  const [isOTP, setOTP] = useState(otp)
+  const [inputOTP, setInputOTP] = useState<any>()
+  const [isLoading, setLoading] = useState(false)
 
-  function onNext() {
-    // router.push("/welcome");
-    window.location.href = "/welcome"
+  async function onResend() {
+    const code = Math.floor(Math.random() * 1000) + 1000
+
+    const res = await fetch(`https://wa.wibudev.com/code?nom=${phone}&text=*DARMASABA*%0A%0A
+JANGAN BERIKAN KODE RAHASIA ini kepada siapa pun TERMASUK PIHAK DARMASABA. Masukkan otentikasi:  *${encodeURIComponent(code)}*`)
+      .then(
+        async (res) => {
+          if (res.status == 200) {
+            toast.success('Kode verifikasi telah dikirim')
+            setOTP(code)
+          } else {
+            toast.error('Internal Server Error')
+          }
+        }
+      );
   }
+
+  async function getVerification() {
+    setLoading(true)
+    if (isOTP == inputOTP) {
+      const setCookies = await funSetCookies({ user: user })
+
+      if (setCookies.success) {
+        toast.success(setCookies.message)
+        if (setCookies.pertamaLogin == true)
+          return router.replace('/welcome')
+        return window.location.href = '/home';
+      } else {
+        toast.error(setCookies.message)
+      }
+
+
+
+      setLoading(false)
+
+    } else {
+      toast.error("Kode verifikasi salah")
+      setLoading(false)
+    }
+  }
+
+
   return (
     <>
       <Box p={10}>
@@ -24,12 +68,13 @@ export default function ViewVerification() {
                 Masukkan kode yang kami kirimkan melalui WhatsApp
               </Text>
               <Text fz={12} c={WARNA.biruTua} fw={"bold"}>
-                +6287701790942
+                {'+' + phone}
               </Text>
               <Box pt={30}>
                 <PinInput
                   style={{ justifyContent: "center" }}
                   placeholder=""
+                  type={"number"}
                   size="lg"
                   styles={{
                     input: {
@@ -38,6 +83,9 @@ export default function ViewVerification() {
                       borderRadius: 15,
                       borderColor: WARNA.biruTua,
                     },
+                  }}
+                  onChange={(val) => {
+                    setInputOTP(val)
                   }}
                 />
               </Box>
@@ -48,11 +96,23 @@ export default function ViewVerification() {
                   size="md"
                   radius={30}
                   fullWidth
-                  onClick={onNext}
+                  loading={isLoading}
+                  onClick={() => { getVerification() }}
                 >
                   Lanjut
                 </Button>
               </Box>
+              <Group justify="center" mt={5}>
+                <Text fz={12} c={WARNA.biruTua}>
+                  Tidak menerima kode verifikasi? {""}
+                  <Anchor c={WARNA.biruTua}
+                    fz={12}
+                    onClick={() => { onResend() }}
+                  >
+                    Kirim Ulang
+                  </Anchor>
+                </Text>
+              </Group>
             </Box>
           </Stack>
         </LayoutLogin>
