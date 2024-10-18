@@ -152,14 +152,8 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                }
             </SimpleGrid>
          </Stack>
-         <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Tambah Jabatan'} size="lg">
-            <Box pt={10} pos={"relative"} h={{
-               base: "65vh",
-               sm: "67vh",
-               lg: "67vh",
-               xl: "70vh"
-
-            }}>
+         <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Tambah Jabatan'}>
+            <Box pt={10} pos={"relative"} h={"28.5vh"}>
                {
                   roleLogin.get() == "supadmin" &&
                   <Select
