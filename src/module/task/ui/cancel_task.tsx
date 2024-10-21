@@ -25,10 +25,30 @@ export default function CancelTask() {
    })
 
    function onVerification() {
-      if (alasan == "")
-         return toast.error("Error! harus memasukkan alasan pembatalan tugas")
-
+      const cek = checkAll()
+      if (!cek) {
+         return false
+      }
       setOpenModal(true)
+   }
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'alasan') {
+         setAlasan(val)
+         if (val == "") {
+            setTouched({ ...touched, reason: true })
+         } else {
+            setTouched({ ...touched, reason: false })
+         }
+      }
+   }
+
+   function checkAll() {
+      if (alasan == "") {
+         setTouched({ ...touched, reason: true })
+         return false
+      }
+      return true
    }
 
    async function onSubmit() {
@@ -38,7 +58,7 @@ export default function CancelTask() {
             setDataRealtime([{
                category: "tugas-detail-status",
                id: param.detail,
-             }])
+            }])
             toast.success(res.message)
             router.push("./")
          } else {
@@ -66,12 +86,8 @@ export default function CancelTask() {
                   value={alasan}
                   size="md" placeholder='Contoh : Tugas tidak sesuai' label="Alasan Pembatalan"
                   required
-                  onChange={(event) => {
-                     setAlasan(event.target.value)
-                     setTouched({ ...touched, reason: false })
-                  }}
+                  onChange={(event) => { onValidation('alasan', event.target.value) }}
                   error={touched.reason ? "Error! harus memasukkan alasan pembatalan tugas" : ""}
-                  onBlur={() => setTouched({ ...touched, reason: true })}
                />
             </Stack>
          </Box>

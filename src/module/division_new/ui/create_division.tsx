@@ -48,8 +48,8 @@ export default function CreateDivision() {
         const cek = checkAll()
         if (!cek)
             return false
-        if (member.length == 0)
-            return toast.error("Error! belum ada anggota yang terdaftar")
+        if (member.length <= 1)
+            return toast.error("Error! Silahkan pilih anggota lebih dari 1")
 
         setChooseAdmin(true)
     }
