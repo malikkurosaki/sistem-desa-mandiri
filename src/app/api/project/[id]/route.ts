@@ -27,7 +27,7 @@ export async function GET(request: Request, context: { params: { id: string } })
         });
 
         if (!data) {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan project, data tidak ditemukan", }, { status: 404 });
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan", }, { status: 404 });
         }
 
 
@@ -133,11 +133,11 @@ export async function GET(request: Request, context: { params: { id: string } })
             allData = fix
         }
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan project", data: allData, }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kegiatan", data: allData, }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan project, coba lagi nantiiiiii", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -186,7 +186,7 @@ export async function POST(request: Request, context: { params: { id: string } }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal tambah tahapan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal tambah tahapan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -210,7 +210,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
         if (data == 0) {
             return NextResponse.json(
                 {
-                    success: false, message: "Gagal mendapatkan project, data tidak ditemukan",
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -232,7 +232,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal membatalkan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membatalkan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -278,6 +278,6 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengupdate kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

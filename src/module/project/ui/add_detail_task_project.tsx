@@ -16,6 +16,7 @@ export default function AddDetailTaskProject() {
    const router = useRouter()
    const [name, setName] = useState("")
    const [openModal, setOpenModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const param = useParams<{ id: string }>()
    const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
@@ -38,6 +39,7 @@ export default function AddDetailTaskProject() {
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const res = await funCreateDetailProject(param.id, {
             name,
             dateStart: (value[0] != null) ? value[0] : new Date,
@@ -50,7 +52,6 @@ export default function AddDetailTaskProject() {
                id: param.id,
             }])
             toast.success(res.message)
-            setOpenModal(false)
             router.push(`/project/${param.id}`)
          } else {
             toast.error(res.message)
@@ -58,6 +59,9 @@ export default function AddDetailTaskProject() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal menambahkan tugas, coba lagi nanti")
+      } finally {
+         setOpenModal(false)
+         setLoadingModal(false)
       }
    }
 
@@ -148,13 +152,14 @@ export default function AddDetailTaskProject() {
          </Box>
 
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menambahkan tugas?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
       </Box>
    );

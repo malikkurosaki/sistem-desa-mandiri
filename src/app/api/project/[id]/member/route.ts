@@ -49,7 +49,7 @@ export async function POST(request: Request, context: { params: { id: string } }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal menambah anggota kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal menambah anggota kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -95,7 +95,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -141,13 +141,16 @@ export async function GET(request: Request, context: { params: { id: string } })
                     contains: (name == undefined || name == "null") ? "" : name,
                     mode: 'insensitive'
                 }
-                
+
             },
             select: {
                 id: true,
                 name: true,
                 email: true,
                 img: true
+            },
+            orderBy: {
+                name: 'asc'
             }
         })
 
@@ -167,6 +170,6 @@ export async function GET(request: Request, context: { params: { id: string } })
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan project, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
