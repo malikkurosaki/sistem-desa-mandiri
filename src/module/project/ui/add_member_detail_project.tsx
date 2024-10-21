@@ -27,7 +27,8 @@ export default function AddMemberDetailProject() {
   const [onClickSearch, setOnClickSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const tema = useHookstate(TEMA)
-  const isMobile2 = useMediaQuery("(max-width: 438px)");
+  const isMobile2 = useMediaQuery("(max-width: 438px)")
+  const [loadingModal, setLoadingModal] = useState(false)
   const [dataRealTime, setDataRealtime] = useWibuRealtime({
     WIBU_REALTIME_TOKEN: keyWibu,
     project: "sdm"
@@ -102,6 +103,7 @@ export default function AddMemberDetailProject() {
 
   async function onSubmit() {
     try {
+      setLoadingModal(true)
       const res = await funAddMemberProject(param.id, { member: selectedFiles });
       if (res.success) {
         setDataRealtime([{
@@ -116,6 +118,9 @@ export default function AddMemberDetailProject() {
     } catch (error) {
       console.error(error)
       toast.error("Gagal menambahkan anggota, coba lagi nanti");
+    } finally {
+      setOpenModal(false)
+      setLoadingModal(true)
     }
   }
 
@@ -307,13 +312,14 @@ export default function AddMemberDetailProject() {
         }
       </Box>
 
-      <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+      <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
         description="Apakah Anda yakin ingin menambahkan anggota?"
         onYes={(val) => {
           if (val) {
             onSubmit()
+          } else {
+            setOpenModal(false)
           }
-          setOpenModal(false)
         }} />
     </Box>
   );

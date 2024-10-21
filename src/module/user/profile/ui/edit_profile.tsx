@@ -125,7 +125,7 @@ export default function EditProfile() {
       }
     } else if (kategori == 'gender') {
       setData({ ...data, gender: val })
-      if (val == "" || val == "null") {
+      if (val == "" || String(val) == "null") {
         setTouched({ ...touched, gender: true })
       } else {
         setTouched({ ...touched, gender: false })
