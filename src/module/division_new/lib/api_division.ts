@@ -88,3 +88,14 @@ export const funGetSearchMemberDivision = async (path: string, id: string) => {
    const response = await fetch(`/api/division/${id}/member/${(path) ? path : ''}`, { next: { tags: ['division'] } });
    return await response.json().catch(() => null);
 }
+
+export const funUpdateStatusDivision = async (path: string, data: { isActive: boolean }) => {
+   const response = await fetch(`/api/division/${path}/status`, {
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+   });
+   return await response.json().catch(() => null);
+}
