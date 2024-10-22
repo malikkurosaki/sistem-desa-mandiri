@@ -18,6 +18,7 @@ export default function ListAnggotaDetailProject() {
   const [isData, setData] = useState<IDataMemberProject[]>([])
   const param = useParams<{ id: string }>()
   const [loading, setLoading] = useState(true)
+  const [loadingDelete, setLoadingDelete] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false)
   const [isOpenModal, setOpenModal] = useState(false)
   const [dataChoose, setDataChoose] = useState({ id: '', name: '' })
@@ -76,6 +77,7 @@ export default function ListAnggotaDetailProject() {
 
   async function onSubmit() {
     try {
+      setLoadingDelete(true)
       const res = await funDeleteMemberProject(param.id, { idUser: dataChoose.id });
       if (res.success) {
         setDataRealtime([{
@@ -92,6 +94,9 @@ export default function ListAnggotaDetailProject() {
     } catch (error) {
       console.error(error);
       toast.error("Gagal menghapus anggota Kegiatan, coba lagi nanti");
+    } finally {
+      setOpenModal(false)
+      setLoadingDelete(false)
     }
   }
 
@@ -129,7 +134,7 @@ export default function ListAnggotaDetailProject() {
                     </Box>
                   ))
                 :
-                isData.length === 0 ? <Text>Tidak ada anggota</Text> :
+                isData.length === 0 ? <Text c={"dimmed"} ta={"center"}>Tidak ada anggota</Text> :
                   isData.map((v, i) => {
                     return (
                       <Box key={i}>
@@ -198,13 +203,14 @@ export default function ListAnggotaDetailProject() {
         </Box>
       </LayoutDrawer>
 
-      <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+      <LayoutModal loading={loadingDelete} opened={isOpenModal} onClose={() => setOpenModal(false)}
         description="Apakah Anda yakin ingin mengeluarkan anggota?"
         onYes={(val) => {
           if (val) {
             onSubmit()
+          } else {
+            setOpenModal(false)
           }
-          setOpenModal(false)
         }} />
 
     </Box>

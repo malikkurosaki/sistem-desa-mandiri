@@ -144,8 +144,8 @@ export default function CreateProject() {
     if (dataTask.length == 0)
       return toast.error("Error! silahkan tambahkan tugas")
 
-    if (memberValue.length == 0)
-      return toast.error("Error! silahkan pilih anggota")
+    if (memberValue.length <= 1)
+      return toast.error("Error! Silahkan pilih anggota lebih dari 1")
 
     setModal(true)
   }

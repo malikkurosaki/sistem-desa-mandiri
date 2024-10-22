@@ -287,6 +287,7 @@ export async function GET(request: Request) {
                isActive: true,
                dateStart: new Date(),
                Division: {
+                  isActive: true,
                   idVillage: idVillage,
                   Group: {
                      isActive: true,
@@ -301,6 +302,7 @@ export async function GET(request: Request) {
                isActive: true,
                dateStart: new Date(),
                Division: {
+                  isActive: true,
                   idGroup: idGroup
                },
                DivisionCalendar: {

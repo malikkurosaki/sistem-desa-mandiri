@@ -108,8 +108,8 @@ export default function CreateTask() {
     if (dataTask.length == 0)
       return toast.error("Error! silahkan tambahkan tugas")
 
-    if (memberValue.length == 0)
-      return toast.error("Error! silahkan pilih anggota")
+    if (memberValue.length <= 1)
+      return toast.error("Error! silahkan pilih anggota lebih dari 1")
 
     setOpenModal(true)
   }

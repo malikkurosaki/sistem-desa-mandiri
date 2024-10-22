@@ -18,6 +18,7 @@ import { useWibuRealtime } from "wibu-realtime";
 
 export default function AddFileDetailProject() {
    const router = useRouter()
+   const [loadingModal, setLoadingModal] = useState(false)
    const [openModal, setOpenModal] = useState(false)
    const [fileForm, setFileForm] = useState<any[]>([])
    const [listFile, setListFile] = useState<IListFileTaskProject[]>([])
@@ -57,6 +58,7 @@ export default function AddFileDetailProject() {
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const fd = new FormData();
          for (let i = 0; i < fileForm.length; i++) {
             fd.append(`file${i}`, fileForm[i]);
@@ -79,6 +81,9 @@ export default function AddFileDetailProject() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal menambahkan file, coba lagi nanti");
+      } finally {
+         setOpenModal(false)
+         setLoadingModal(false)
       }
    }
 
@@ -183,13 +188,14 @@ export default function AddFileDetailProject() {
             </Stack>
          </LayoutDrawer>
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menambahkan file?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
 
       </Box>

@@ -5,7 +5,6 @@ import _ from "lodash";
 import { NextResponse } from "next/server";
 
 
-
 // GET ONE PENGUMUMAN, UNTUK TAMPIL DETAIL PENGUMUMAN
 export async function GET(request: Request, context: { params: { id: string } }) {
     try {
@@ -72,7 +71,9 @@ export async function GET(request: Request, context: { params: { id: string } })
             division: v.Division.name
         }))
 
-        const fixMember = Object.groupBy(formatMember, ({ group }) => group);
+        // const fixMember = Object.groupBy(formatMember, ({ group }) => group);
+        const fixMember = _.groupBy(formatMember, ({ group }) => group);
+
 
         return NextResponse.json(
             {
@@ -88,7 +89,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan pengumuman, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan pengumuman, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -140,7 +141,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
         );
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan pengumuman, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan pengumuman, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -217,7 +218,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengeupdate pengumuman, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengeupdate pengumuman, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 

@@ -392,7 +392,7 @@ export default function EditMember({ id }: { id: string }) {
                      value={data.gender}
                      error={
                         touched.gender && (
-                           data.gender == "" || String(data.gender) == "null" ? "Gender Tidak Boleh Kosong" : null
+                           data.gender == "" || String(data.gender) == "null" ? "Jenis Kelamin Tidak Boleh Kosong" : null
                         )
                      }
                   />

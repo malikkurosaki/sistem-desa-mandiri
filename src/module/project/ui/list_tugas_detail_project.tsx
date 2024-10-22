@@ -24,6 +24,7 @@ export default function ListTugasDetailProject() {
   const [statusData, setStatusData] = useState(0)
   const [openDrawerStatus, setOpenDrawerStatus] = useState(false)
   const [isOpenModal, setOpenModal] = useState(false)
+  const [loadingDelete, setLoadingDelete] = useState(false)
   const router = useRouter()
   const tema = useHookstate(TEMA)
   const [reason, setReason] = useState("")
@@ -75,6 +76,7 @@ export default function ListTugasDetailProject() {
 
   async function onDelete() {
     try {
+      setLoadingDelete(true)
       const res = await funDeleteDetailProject(idData, { idProject: param.id });
       if (res.success) {
         setDataRealtime([{
@@ -92,6 +94,9 @@ export default function ListTugasDetailProject() {
     } catch (error) {
       console.error(error);
       toast.error("Gagal hapus tugas Kegiatan, coba lagi nanti");
+    } finally {
+      setOpenModal(false)
+      setLoadingDelete(false)
     }
   }
 
@@ -138,7 +143,6 @@ export default function ListTugasDetailProject() {
           style={{
             borderRadius: 10,
             border: `1px solid ${"#D6D8F6"}`,
-            // padding: 10,
           }}
           pl={20}
           pr={20}
@@ -149,7 +153,7 @@ export default function ListTugasDetailProject() {
                 <SkeletonDetailListTugasTask />
               </Box>
             </> :
-              isData.length === 0 ? <Text>Tidak ada tugas</Text> :
+              isData.length === 0 ? <Text py={20} c={"dimmed"} ta={"center"}>Tidak ada tugas</Text> :
                 isData.map((item, index) => {
                   return (
                     <Box key={index}>
@@ -256,13 +260,14 @@ export default function ListTugasDetailProject() {
           </Box>
         </LayoutDrawer>
 
-        <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
-          description="Apakah Anda yakin ingin menghapus Tahapan Tugas ini?"
+        <LayoutModal loading={loadingDelete} opened={isOpenModal} onClose={() => setOpenModal(false)}
+          description="Apakah Anda yakin ingin menghapus tahapan tugas ini?"
           onYes={(val) => {
             if (val) {
               onDelete()
+            } else {
+              setOpenModal(false)
             }
-            setOpenModal(false)
           }} />
 
         <LayoutDrawer opened={openDrawerStatus} title={'Status'} onClose={() => setOpenDrawerStatus(false)}>

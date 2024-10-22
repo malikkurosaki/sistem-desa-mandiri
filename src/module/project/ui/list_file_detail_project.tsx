@@ -17,6 +17,7 @@ export default function ListFileDetailProject() {
   const [isData, setData] = useState<IDataFileProject[]>([])
   const param = useParams<{ id: string }>()
   const [loading, setLoading] = useState(true)
+  const [loadingDelete, setLoadingDelete] = useState(false)
   const [idData, setIdData] = useState('')
   const [idStorage, setIdStorage] = useState('')
   const [nameData, setNameData] = useState('')
@@ -76,6 +77,7 @@ export default function ListFileDetailProject() {
 
   async function onDelete() {
     try {
+      setLoadingDelete(true)
       const res = await funDeleteFileProject(idData);
       if (res.success) {
         setDataRealtime([{
@@ -93,6 +95,9 @@ export default function ListFileDetailProject() {
     } catch (error) {
       console.error(error);
       toast.error("Gagal menghapus file, coba lagi nanti");
+    } finally {
+      setOpenModal(false)
+      setLoadingDelete(false)
     }
 
   }
@@ -128,7 +133,7 @@ export default function ListFileDetailProject() {
                   </Box>
                 ))
               :
-              isData.length === 0 ? <Text>Tidak ada file</Text> :
+              isData.length === 0 ? <Text c={"dimmed"} ta={"center"}>Tidak ada file</Text> :
                 isData.map((item, index) => {
                   return (
                     <Box
@@ -225,13 +230,14 @@ export default function ListFileDetailProject() {
         </LayoutDrawer>
 
 
-        <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+        <LayoutModal loading={loadingDelete} opened={isOpenModal} onClose={() => setOpenModal(false)}
           description="Apakah Anda yakin ingin menghapus file ini? File yang dihapus tidak dapat dikembalikan"
           onYes={(val) => {
             if (val) {
               onDelete()
+            } else {
+              setOpenModal(false)
             }
-            setOpenModal(false)
           }} />
 
         <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idStorage} extension={isExtension} fitur='project' />
