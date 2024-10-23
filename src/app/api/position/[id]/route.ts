@@ -1,7 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
-import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 // GET ONE JABATAN
@@ -42,7 +41,7 @@ export async function GET(request: Request, context: { params: { id: string } })
         );
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan jabatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan jabatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -89,7 +88,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
         );
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengubah status jabatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengubah status jabatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -135,6 +134,6 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengedit jabatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengedit jabatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

@@ -21,6 +21,6 @@ export async function GET(request: Request) {
         return NextResponse.json({ success: true, message: "Berhasil mendapatkan role user", data: res, }, { status: 200 });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan role user, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan role user, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

@@ -3,8 +3,6 @@ import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
-import path from "path";
-import fs from "fs";
 
 // GET ALL MEMBER / USER
 export async function GET(request: Request) {
@@ -129,7 +127,7 @@ export async function GET(request: Request) {
 
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ success: false, message: "Gagal mendapatkan member, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+    return NextResponse.json({ success: false, message: "Gagal mendapatkan anggota, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
   }
 }
 
@@ -137,7 +135,6 @@ export async function GET(request: Request) {
 // CREATE MEMBER / USER
 export async function POST(request: Request) {
   try {
-
     const user = await funGetUserByCookies()
     if (user.id == undefined) {
       return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
@@ -212,13 +209,13 @@ export async function POST(request: Request) {
       // create log user
       const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data user baru', table: 'user', data: users.id })
 
-      return Response.json({ success: true, message: 'Sukses membuat user', data: users}, { status: 200 });
+      return Response.json({ success: true, message: 'Sukses membuat user', data: users }, { status: 200 });
     } else {
       return Response.json({ success: false, message: "User sudah ada" }, { status: 400 });
     }
 
   } catch (error) {
     console.error(error);
-    return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
+    return Response.json({ success: false, message: "Gagal membuat anggota, coba lagi nanti (error: 500)" }, { status: 500 });
   }
 }

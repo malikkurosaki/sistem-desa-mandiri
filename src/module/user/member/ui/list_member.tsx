@@ -1,13 +1,11 @@
 "use client";
-import { TEMA, WARNA } from "@/module/_global";
-import { Box, rem, Tabs, TextInput } from "@mantine/core";
-import React from "react";
-import { HiMagnifyingGlass, HiMiniUser } from "react-icons/hi2";
+import { TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
+import { Box, rem, Tabs } from "@mantine/core";
+import { useRouter, useSearchParams } from "next/navigation";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import TabListMember from "./tab_list_member";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useHookstate } from "@hookstate/core";
 
 export default function ListMember() {
   const iconStyle = { width: rem(20), height: rem(20) };

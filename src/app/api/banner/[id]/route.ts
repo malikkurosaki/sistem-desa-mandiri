@@ -22,7 +22,7 @@ export async function GET(request: Request, context: { params: { id: string } })
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan banner", data }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan banner, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan banner, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -53,7 +53,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal menghapus banner, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menghapus banner, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -108,6 +108,6 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mengupdate banner, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mengupdate banner, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }

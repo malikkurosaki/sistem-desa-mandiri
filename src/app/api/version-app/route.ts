@@ -5,6 +5,6 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: true, version: "0.1.5", mode: "staging" }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, version: "Gagal mendapatkan version, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, version: "Gagal mendapatkan version, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }

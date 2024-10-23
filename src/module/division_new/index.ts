@@ -17,6 +17,8 @@ import ReportDivisionId from './ui/report_division_id';
 import { funGetDivisionById, funGetListDivisionByIdDivision, funGetSearchMemberDivision } from './lib/api_division';
 import { globalIsAdminDivision } from './lib/val_division';
 import WrapLayoutDivision from './ui/wrap_division';
+import TabListDivision from './ui/tab_list_division';
+import NavbarListDivision from './ui/navbar_list_division';
 
 export { CreateUsers };
 export { CreateAdminDivision };
@@ -39,3 +41,5 @@ export { funGetListDivisionByIdDivision }
 export { funGetSearchMemberDivision }
 export { globalIsAdminDivision }
 export { WrapLayoutDivision }
+export { TabListDivision }
+export { NavbarListDivision }
