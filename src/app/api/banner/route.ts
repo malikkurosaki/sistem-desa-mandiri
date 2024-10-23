@@ -25,7 +25,7 @@ export async function GET() {
       return NextResponse.json({ success: true, message: "Berhasil mendapatkan banner", data }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan data banner, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan data banner, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -69,6 +69,6 @@ export async function POST(request: Request) {
       }
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal menambahkan banner, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menambahkan banner, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }

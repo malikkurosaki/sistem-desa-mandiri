@@ -1,9 +1,9 @@
-import moment from "moment";
-import { NextResponse } from "next/server";
-import "moment/locale/id";
-import { funGetUserByCookies } from "@/module/auth";
 import { prisma } from "@/module/_global";
+import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
+import moment from "moment";
+import "moment/locale/id";
+import { NextResponse } from "next/server";
 
 // GET HISTORY 
 export async function GET(request: Request) {
@@ -104,6 +104,6 @@ export async function GET(request: Request) {
 
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan riwayat acara kalender, coba lagi nanti" }, { status: 404 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan riwayat acara kalender, coba lagi nanti (error: 500)" }, { status: 404 });
     }
 }

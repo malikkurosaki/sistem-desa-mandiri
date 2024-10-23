@@ -1,7 +1,7 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
-import _, { remove } from "lodash";
+import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
 import { Frequency, RRule } from 'rrule';
@@ -100,16 +100,10 @@ export async function GET(request: Request, context: { params: { id: string } })
         }
 
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender", data: dataFix }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kalender", data: dataFix }, { status: 200 });
 
     } catch (error) {
-        return NextResponse.json(
-            {
-                success: false,
-                message: "Gagal mendapatkan calender, data tidak ditemukan",
-            },
-            { status: 404 }
-        );
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan kalender, data tidak ditemukan (error: 500)", }, { status: 500 });
     }
 }
 
@@ -154,12 +148,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
         return NextResponse.json({ success: true, message: "Berhasil menghapus acara kalender", data }, { status: 200 });
 
     } catch (error) {
-        return NextResponse.json(
-            {
-                success: false,
-                message: "Gagal menghapus calender, coba lagi nanti",
-            },
-            { status: 500 }
+        return NextResponse.json({ success: false, message: "Gagal menghapus kalender, coba lagi nanti (error: 500)", }, { status: 500 }
         );
     }
 }
@@ -260,12 +249,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
         return NextResponse.json({ success: true, message: "Berhasil mengedit acara" }, { status: 200 });
 
     } catch (error) {
-        return NextResponse.json(
-            {
-                success: false,
-                message: "Gagal mengedit acara, coba lagi nanti",
-            },
-            { status: 500 }
+        return NextResponse.json({ success: false, message: "Gagal mengedit acara, coba lagi nanti (error: 500)", }, { status: 500 }
         );
     }
 }

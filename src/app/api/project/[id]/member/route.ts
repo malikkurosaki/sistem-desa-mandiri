@@ -166,10 +166,10 @@ export async function GET(request: Request, context: { params: { id: string } })
             member: fixMember
         }
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan project", data: dataFix, }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kegiatan", data: dataFix, }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan project, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

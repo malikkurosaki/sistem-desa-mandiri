@@ -1,6 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
-import _, { ceil, some } from "lodash";
+import _, { ceil } from "lodash";
 import moment from "moment";
 import "moment/locale/id";
 import { NextResponse } from "next/server";
@@ -451,6 +451,6 @@ export async function GET(request: Request) {
    }
    catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan data, coba lagi nanti 99", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan data, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }

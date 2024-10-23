@@ -1,10 +1,10 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
-import { NextResponse } from "next/server";
 import "moment/locale/id";
-import { createLogUser } from "@/module/user";
+import { NextResponse } from "next/server";
 
 
 // GET ALL DISCUSSION DIVISION ACTIVE = TRUE
@@ -86,7 +86,7 @@ export async function GET(request: Request) {
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan diskusi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -180,6 +180,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil menambahkan diskusi", notif: dataNotif }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal menambahkan diskusi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menambahkan diskusi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };
