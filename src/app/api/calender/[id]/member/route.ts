@@ -26,7 +26,7 @@ export async function GET(request: Request, context: { params: { id: string } })
          return NextResponse.json(
             {
                success: false,
-               message: "Gagal mendapatkan calender, data tidak ditemukan",
+               message: "Gagal mendapatkan kalender, data tidak ditemukan",
             },
             { status: 404 }
          );
@@ -56,15 +56,10 @@ export async function GET(request: Request, context: { params: { id: string } })
 
       const result = { ...dataCalender, timeStart, timeEnd }
 
-      return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender", data: result }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan kalender", data: result }, { status: 200 });
 
    } catch (error) {
-      return NextResponse.json(
-         {
-            success: false,
-            message: "Gagal mendapatkan calender, data tidak ditemukan",
-         },
-         { status: 404 }
+      return NextResponse.json( { success: false, message: "Gagal mendapatkan kalender, data tidak ditemukan (error: 500)", }, { status: 500 }
       );
    }
 }
@@ -116,7 +111,7 @@ export async function POST(request: Request, context: { params: { id: string } }
       return NextResponse.json({ success: true, message: "Berhasil menambahkan anggota", }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal menambah anggota, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menambah anggota, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 
 
@@ -171,6 +166,6 @@ export async function DELETE(request: Request, context: { params: { id: string }
       );
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }

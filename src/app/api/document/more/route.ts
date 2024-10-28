@@ -73,7 +73,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil memindahkan item" }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal memindahkan item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal memindahkan item, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };
 
@@ -157,7 +157,7 @@ export async function PUT(request: Request) {
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal salin item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal salin item, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };
 
@@ -197,6 +197,6 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil membagikan item" }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal membagikan item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal membagikan item, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };

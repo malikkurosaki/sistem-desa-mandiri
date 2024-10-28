@@ -1,24 +1,26 @@
 "use client"
-import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, Button, Divider, Flex, Grid, Group, Skeleton, Stack, Text } from '@mantine/core';
+import { globalRole, LayoutDrawer, LayoutNavbarNew, SkeletonList, TEMA } from '@/module/_global';
+import LayoutModal from '@/module/_global/layout/layout_modal';
+import { funGetUserByCookies } from '@/module/auth';
+import { useHookstate } from '@hookstate/core';
+import { ActionIcon, Avatar, Box, Divider, Flex, Grid, Group, SimpleGrid, Skeleton, Stack, Text } from '@mantine/core';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { AiOutlineUserAdd } from 'react-icons/ai';
-import { FaUserTie } from 'react-icons/fa6';
-import { IoIosCloseCircle } from 'react-icons/io';
-import { LuClipboardEdit } from 'react-icons/lu';
-import { funDeleteMemberDivision, funEditStatusAdminDivision, funGetDivisionById } from '../lib/api_division';
+import { FaPencil, FaToggleOff, FaUserTie } from 'react-icons/fa6';
+import { HiMenu } from 'react-icons/hi';
+import { IoIosCloseCircle, IoIosWarning } from 'react-icons/io';
+import { funDeleteMemberDivision, funEditStatusAdminDivision, funGetDivisionById, funUpdateStatusDivision } from '../lib/api_division';
 import { IDataMemberDivision } from '../lib/type_division';
-import LayoutModal from '@/module/_global/layout/layout_modal';
-import { useHookstate } from '@hookstate/core';
-import { funGetUserByCookies } from '@/module/auth';
 
 
 export default function InformationDivision() {
   const router = useRouter()
   const [openDrawer, setDrawer] = useState(false)
+  const [openDrawerInfo, setDrawerInfo] = useState(false)
+  const [valActive, setValActive] = useState(true)
   const param = useParams<{ id: string }>()
   const [name, setName] = useState('')
   const [deskripsi, setDeskripsi] = useState('')
@@ -28,11 +30,13 @@ export default function InformationDivision() {
   const [valChooseMemberStatus, setChooseMemberStatus] = useState<boolean>(false)
   const [valChooseMemberName, setChooseMemberName] = useState("")
   const [isOpenModal, setOpenModal] = useState(false)
+  const [isOpenModalStatus, setOpenModalStatus] = useState(false)
   const roleLogin = useHookstate(globalRole)
   const [isAdmin, setAdmin] = useState(false)
   const isMobile = useMediaQuery('(max-width: 455px)');
   const isMobile2 = useMediaQuery("(max-width: 438px)");
   const tema = useHookstate(TEMA)
+  const [loadingStatus, setLoadingStatus] = useState(false)
 
   async function getOneData() {
     try {
@@ -43,6 +47,7 @@ export default function InformationDivision() {
         setName(res.data.division.name);
         setDeskripsi(res.data.division.desc);
         setMember(res.data.member)
+        setValActive(res.data.division.isActive)
         const cek = res.data.member.some((i: any) => i.idUser == login.id && i.isAdmin == true)
         setAdmin(cek)
       } else {
@@ -105,20 +110,53 @@ export default function InformationDivision() {
     }
   }
 
+  async function editStatusDivisi() {
+    try {
+      setLoadingStatus(true)
+      const res = await funUpdateStatusDivision(param.id, { isActive: valActive })
+      if (res.success) {
+        toast.success(res.message)
+        getOneData()
+      } else {
+        toast.error(res.message)
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal mendapatkan divisi, coba lagi nanti");
+    } finally {
+      setDrawerInfo(false)
+      setLoadingStatus(false)
+      setOpenModalStatus(false)
+    }
+  }
+
   return (
     <Box>
       <LayoutNavbarNew back={"/division/" + param.id} title={name}
         menu={
           ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
-            <ActionIcon variant="light" onClick={() => {
-              router.push('/division/edit/' + param.id)
-            }} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
-              <LuClipboardEdit size={20} color='white' />
+            <ActionIcon variant="light" onClick={() => { setDrawerInfo(true) }} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
+              <HiMenu size={20} color='white' />
             </ActionIcon>
             : <></>
         }
       />
       <Box p={20}>
+        {
+          !valActive ?
+            <Box mb={10}>
+              <Box p={15} bg={"#FFF2CD"} style={{
+                borderRadius: 10,
+              }}>
+                <Group align='center'>
+                  <IoIosWarning size={25} />
+                  <Text fw={"bold"}>Divisi dinonaktifkan</Text>
+                </Group>
+              </Box>
+            </Box>
+            : <></>
+        }
+
         <Box>
           <Text fw={"bold"}>Deskripsi Divisi</Text>
           <Box p={20} bg={"white"} style={{
@@ -163,7 +201,7 @@ export default function InformationDivision() {
                 </Box>
                 :
 
-                ((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) ?
+                (((roleLogin.get() != 'user' && roleLogin.get() != 'coadmin') || isAdmin) && valActive) ?
                   <Group align='center' onClick={() => router.push('/division/add-member/' + param.id)}>
                     <Avatar size={'lg'}>
                       <AiOutlineUserAdd size={30} color={tema.get().utama} />
@@ -223,17 +261,17 @@ export default function InformationDivision() {
 
       <LayoutDrawer opened={openDrawer} onClose={() => setDrawer(false)} title={valChooseMemberName}>
         <Box>
-          <Group align='center' mb={20} onClick={() => editStatusAdmin()}>
+          <Group align='center' mb={20} onClick={() => valActive ? editStatusAdmin() : undefined}>
             <ActionIcon variant="light" size={60} aria-label="admin" radius="xl">
-              <FaUserTie size={30} color={tema.get().utama} />
+              <FaUserTie size={30} color={valActive ? tema.get().utama : "gray"} />
             </ActionIcon>
-            <Text c={tema.get().utama}>{(valChooseMemberStatus == false) ? "Jadikan admin" : "Memberhentikan sebagai admin"}</Text>
+            <Text c={valActive ? tema.get().utama : "gray"}>{(valChooseMemberStatus == false) ? "Jadikan admin" : "Memberhentikan sebagai admin"}</Text>
           </Group>
-          <Group align='center' onClick={() => setOpenModal(true)}>
+          <Group align='center' onClick={() => valActive ? setOpenModal(true) : undefined}>
             <ActionIcon variant="light" size={60} aria-label="admin" radius="xl">
-              <IoIosCloseCircle size={40} color={tema.get().utama} />
+              <IoIosCloseCircle size={40} color={valActive ? tema.get().utama : "gray"} />
             </ActionIcon>
-            <Text c={tema.get().utama}>Keluarkan dari divisi</Text>
+            <Text c={valActive ? tema.get().utama : "gray"}>Keluarkan dari divisi</Text>
           </Group>
         </Box>
       </LayoutDrawer>
@@ -245,6 +283,41 @@ export default function InformationDivision() {
             setOpenModal(false)
           } else {
             deleteMember()
+          }
+        }} />
+
+      <LayoutDrawer opened={openDrawerInfo} onClose={() => setDrawerInfo(false)} title={"Menu"}>
+        <Box>
+          <Stack pt={10}>
+            <SimpleGrid cols={{ base: 2, sm: 2, lg: 3 }} >
+              <Flex onClick={() => router.push('/division/edit/' + param.id)} justify={'center'} align={'center'} direction={'column'} >
+                <Box>
+                  <FaPencil size={30} color={tema.get().utama} />
+                </Box>
+                <Box>
+                  <Text c={tema.get().utama}>Edit Divisi</Text>
+                </Box>
+              </Flex>
+              <Flex onClick={() => { setOpenModalStatus(true) }} justify={'center'} align={'center'} direction={'column'} >
+                <Box>
+                  <FaToggleOff size={30} color={tema.get().utama} />
+                </Box>
+                <Box>
+                  <Text c={tema.get().utama}>{valActive ? "Non Aktifkan Divisi" : "Aktifkan Divisi"}</Text>
+                </Box>
+              </Flex>
+            </SimpleGrid>
+          </Stack>
+        </Box>
+      </LayoutDrawer>
+
+      <LayoutModal loading={loadingStatus} opened={isOpenModalStatus} onClose={() => setOpenModalStatus(false)}
+        description="Apakah Anda yakin ingin mangubah status aktifasi divisi?"
+        onYes={(val) => {
+          if (!val) {
+            setOpenModalStatus(false)
+          } else {
+            editStatusDivisi()
           }
         }} />
     </Box>

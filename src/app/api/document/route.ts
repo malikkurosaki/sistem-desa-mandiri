@@ -110,7 +110,7 @@ export async function GET(request: Request) {
                select: {
                   DivisionDocumentFolderFile: {
                      select: {
-                        idStorage: true, 
+                        idStorage: true,
                         id: true,
                         category: true,
                         name: true,
@@ -220,7 +220,7 @@ export async function GET(request: Request) {
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan item, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -296,7 +296,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil membuat folder baru" }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal membuat folder, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal membuat folder, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };
 
@@ -356,7 +356,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil mengubah nama item" }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mengubah nama item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mengubah nama item (error: 500), coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
 
@@ -390,6 +390,6 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil menghapus item" }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal menghapus item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menghapus item, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };

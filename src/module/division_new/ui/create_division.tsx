@@ -3,7 +3,7 @@ import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
 import { useHookstate } from "@hookstate/core";
-import { Avatar, Box, Button, Divider, Grid, Group, rem, Select, Stack, Text, Textarea, TextInput } from "@mantine/core";
+import { ActionIcon, Avatar, Box, Button, Divider, Grid, Group, rem, Select, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import { IoIosArrowDropright } from "react-icons/io";
 import { globalMemberDivision } from "../lib/val_division";
 import NavbarAdminDivision from "./navbar_admin_division";
 import NavbarCreateUsers from "./navbar_create_users";
+import { HiChevronLeft } from "react-icons/hi2";
 
 export default function CreateDivision() {
     const router = useRouter();
@@ -105,6 +106,10 @@ export default function CreateDivision() {
         return nilai
     }
 
+    function onBack() {
+        member.set([])
+        router.push('/division')
+    }
 
 
     if (isChooseAdmin) return <NavbarAdminDivision data={body} onSuccess={(val) => {
@@ -125,7 +130,15 @@ export default function CreateDivision() {
 
     return (
         <Box>
-            <LayoutNavbarNew back="/division" title="Tambah Divisi" menu />
+            <LayoutNavbarNew
+                state={
+                    <>
+                        <ActionIcon variant="light" onClick={() => { onBack() }} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
+                            <HiChevronLeft size={20} color='white' />
+                        </ActionIcon>
+                    </>
+                }
+                title="Tambah Divisi" menu />
             <Box p={20}>
                 <Stack>
                     {

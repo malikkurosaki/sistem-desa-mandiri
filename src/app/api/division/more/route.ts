@@ -1,6 +1,5 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
-import _ from "lodash";
 import { NextResponse } from "next/server";
 
 // GET LIST DIVISI BY ID DIVISI (CONTOH : UNTUK SHARE DOKUMEN)
@@ -48,6 +47,6 @@ export async function GET(request: Request) {
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }

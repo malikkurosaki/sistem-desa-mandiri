@@ -1,10 +1,8 @@
 import { DIR, funDeleteFile, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
-import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-import _ from "lodash";
 import { createLogUser } from "@/module/user";
+import _ from "lodash";
+import { NextResponse } from "next/server";
 
 // HAPUS FILE PROJECT BUKAN PAKE ISACTIVE
 export async function DELETE(request: Request, context: { params: { id: string } }) {
@@ -59,7 +57,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal menghapus file, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menghapus file, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -122,7 +120,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Upload file gagal, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Upload file gagal, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -196,6 +194,6 @@ export async function POST(request: Request, context: { params: { id: string } }
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal  mengupload file, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal  mengupload file, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }

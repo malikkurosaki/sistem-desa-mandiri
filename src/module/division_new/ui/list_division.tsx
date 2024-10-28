@@ -17,7 +17,6 @@ import DrawerDivision from './drawer_division';
 export default function ListDivision() {
   const [isList, setIsList] = useState(false)
   const router = useRouter()
-  const [openDrawer, setOpenDrawer] = useState(false)
   const [data, setData] = useState<IDataDivison[]>([])
   const [jumlah, setJumlah] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
@@ -32,6 +31,7 @@ export default function ListDivision() {
   const paddingLift = useMediaQuery('(max-width: 505px)')
   const [isRefresh, setRefresh] = useState(false)
   const notifLoadPage = useHookstate(globalNotifPage)
+  const status = searchParams.get('active')
 
 
   const handleList = () => {
@@ -40,12 +40,12 @@ export default function ListDivision() {
 
   const fetchData = async (loading: boolean) => {
     try {
-      
+
       setLoading(loading);
       if (isPage == 1) {
         setData([])
       }
-      const response = await funGetAllDivision('?search=' + searchQuery + '&group=' + group + '&page=' + isPage)
+      const response = await funGetAllDivision('?active=' + status + '&search=' + searchQuery + '&group=' + group + '&page=' + isPage)
       if (response.success) {
         setJumlah(response.total)
         setNameGroup(response.filter.name)
@@ -65,14 +65,10 @@ export default function ListDivision() {
     }
   };
 
-  function searchDivision(search: string) {
-    setSearchQuery(search)
-    setPage(1)
-  }
-
   useShallowEffect(() => {
+    setPage(1)
     fetchData(true)
-  }, [searchQuery])
+  }, [status, searchQuery])
 
 
   useShallowEffect(() => {
@@ -121,15 +117,7 @@ export default function ListDivision() {
 
   return (
     <Box>
-      <LayoutNavbarNew back='/home' title='Divisi'
-        menu={
-          (roleLogin.get() != "user" && roleLogin.get() != "coadmin") &&
-          <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
-            <HiMenu size={20} color='white' />
-          </ActionIcon>
-        } />
-
-      <Box p={20}>
+      <Box py={20}>
         {
           isRefresh &&
           <ReloadButtonTop
@@ -153,7 +141,7 @@ export default function ListDivision() {
               leftSection={<HiMagnifyingGlass size={20} />}
               placeholder="Pencarian"
               value={searchQuery}
-              onChange={(val) => { searchDivision(val.target.value) }}
+              onChange={(val) => { setSearchQuery(val.target.value) }}
             />
           </Grid.Col>
           <Grid.Col span={2}>
@@ -289,9 +277,6 @@ export default function ListDivision() {
           </Box>
         )}
       </Box>
-      <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
-        <DrawerDivision />
-      </LayoutDrawer>
     </Box>
   );
 }

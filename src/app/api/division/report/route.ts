@@ -1,12 +1,11 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
-import _, { ceil } from "lodash";
+import _ from "lodash";
 import moment from "moment";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
    try {
-
       const user = await funGetUserByCookies()
       const { searchParams } = new URL(request.url)
       const group = searchParams.get("group")
@@ -193,6 +192,6 @@ export async function GET(request: Request) {
    }
    catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan data, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan data, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }

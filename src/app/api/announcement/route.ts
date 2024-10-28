@@ -5,7 +5,6 @@ import moment from "moment";
 import "moment/locale/id";
 import { NextResponse } from "next/server";
 import { createLogUser } from '@/module/user';
-
 export const dynamic = 'force-dynamic'
 
 
@@ -99,7 +98,7 @@ export async function GET(request: Request) {
         return NextResponse.json({ success: true, message: "Berhasil mendapatkan pengumuman", data: allData, }, { status: 200 });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan pengumuman, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan pengumuman, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -207,6 +206,6 @@ export async function POST(request: Request) {
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal membuat pengumuman, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membuat pengumuman, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
