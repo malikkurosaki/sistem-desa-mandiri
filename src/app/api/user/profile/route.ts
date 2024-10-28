@@ -1,10 +1,8 @@
 import { DIR, funDeleteFile, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
-import path from "path";
-import fs from "fs";
-import { createLogUser } from "@/module/user";
 
 
 // GET PROFILE BY COOKIES
@@ -51,7 +49,7 @@ export async function GET(request: Request) {
 
         return NextResponse.json({ success: true, data: result });
     } catch (error) {
-        return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan data profile (error: 500)" }, { status: 500 });
     }
 
 }
@@ -140,7 +138,7 @@ export async function PUT(request: Request) {
 
         return NextResponse.json({ success: true, message: "Berhasil ubah profile" });
     } catch (error) {
-        return NextResponse.json({ success: false, message: "Gagal ubah profile" }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengubah profile (error: 500)" }, { status: 500 });
     }
 }
 

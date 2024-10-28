@@ -23,7 +23,7 @@ export async function GET(request: Request, context: { params: { id: string } })
       const data = await prisma.division.findUnique({
          where: {
             id: String(id),
-            isActive: true
+            // isActive: true
          }
       });
 
@@ -179,7 +179,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 
    catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -232,7 +232,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
       );
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -286,7 +286,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
       );
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mengubah status admin divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mengubah status admin divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -337,6 +337,6 @@ export async function POST(request: Request, context: { params: { id: string } }
       return NextResponse.json({ success: true, message: "Berhasil menambahkan anggota divisi" }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal menambahkan anggota divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menambahkan anggota divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };

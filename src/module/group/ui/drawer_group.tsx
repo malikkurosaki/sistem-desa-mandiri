@@ -1,14 +1,6 @@
 import { LayoutDrawer, TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
-import {
-  Box,
-  Button,
-  Flex,
-  SimpleGrid,
-  Stack,
-  Text,
-  TextInput
-} from "@mantine/core";
+import { Box, Button, Flex, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { IoAddCircle } from "react-icons/io5";
@@ -102,7 +94,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
                 borderColor: tema.get().utama,
               },
             }}
-            size="lg"
+            size="md"
             radius={10}
             label="Grup"
             required

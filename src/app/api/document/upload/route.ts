@@ -1,10 +1,8 @@
 import { DIR, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-import { createLogUser } from "@/module/user";
 
 
 // UPLOAD FILE
@@ -95,6 +93,6 @@ export async function POST(request: Request) {
       }
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal upload file, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal upload file, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };

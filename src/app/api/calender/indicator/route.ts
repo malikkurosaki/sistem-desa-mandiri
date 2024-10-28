@@ -54,7 +54,7 @@ export async function GET(request: Request) {
 
         return NextResponse.json({ success: true, message: "Berhasil mendapatkan list acara", data: result }, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan list acara" }, { status: 401 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan list acara (error: 500)" }, { status: 401 });
     }
 }
 

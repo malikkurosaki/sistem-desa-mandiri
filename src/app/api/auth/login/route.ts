@@ -23,9 +23,9 @@ export async function POST(req: NextRequest) {
       phone: user.phone,
       id: user.id,
     });
-    
+
   } catch (error) {
     console.error(error);
-    return Response.json({ message: "Internal Server Error", success: false });
+    return Response.json({ message: "Internal Server Error (error: 500)", success: false });
   }
 }

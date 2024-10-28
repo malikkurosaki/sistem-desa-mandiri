@@ -65,6 +65,6 @@ export async function GET(request: Request, context: { params: { id: string } })
         return NextResponse.json({ success: true, data: fixMember })
 
     } catch (error) {
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan member, data tidak ditemukan", }, { status: 404 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan anggota, data tidak ditemukan (error: 500)", }, { status: 500 });
     }
 }

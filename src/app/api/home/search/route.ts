@@ -1,12 +1,9 @@
-
-
-// SEARCH USER, DIVISION, PROJECT
-
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import { NextResponse } from "next/server";
 
+// SEARCH USER, DIVISION, PROJECT
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
@@ -136,6 +133,6 @@ export async function GET(request: Request) {
         return NextResponse.json({ success: true, data: allDataSearch }, { status: 200 });
 
     } catch (error) {
-        return NextResponse.json({ success: false, message: error }, { status: 500 });
+        return NextResponse.json({ success: false, message: 'Gagal mendapatkan data, coba lagi nanti (error: 500)' }, { status: 500 });
     }
 }

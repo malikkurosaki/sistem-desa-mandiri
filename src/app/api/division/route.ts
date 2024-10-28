@@ -20,6 +20,7 @@ export async function GET(request: Request) {
       const idGroup = searchParams.get("group");
       const name = searchParams.get('search');
       const page = searchParams.get('page');
+      const active = searchParams.get("active");
       const dataSkip = Number(page) * 10 - 10;
 
       if (idGroup == "null" || idGroup == undefined) {
@@ -30,7 +31,7 @@ export async function GET(request: Request) {
 
 
       let kondisi: any = {
-         isActive: true,
+         isActive: active == 'false' ? false : true,
          idVillage: String(villaId),
          idGroup: grup,
          name: {
@@ -41,7 +42,7 @@ export async function GET(request: Request) {
 
       if (roleUser != "supadmin" && roleUser != "cosupadmin" && roleUser != "admin") {
          kondisi = {
-            isActive: true,
+            isActive: active == 'false' ? false : true,
             idVillage: String(villaId),
             idGroup: grup,
             name: {
@@ -104,7 +105,7 @@ export async function GET(request: Request) {
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -226,6 +227,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil menambahkan divisi", notif: dataNotif, }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal menambahkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menambahkan divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };

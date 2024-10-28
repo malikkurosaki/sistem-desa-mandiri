@@ -1,10 +1,8 @@
 import { DIR, funDeleteFile, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
-import _, { update } from "lodash";
+import _ from "lodash";
 import { NextResponse } from "next/server";
-import path from "path";
-import fs from "fs";
 
 // GET ONE MEMBER / USER 
 export async function GET(request: Request, context: { params: { id: string } }) {
@@ -74,7 +72,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan member, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan anggota, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -131,7 +129,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengupdate status anggota, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate status anggota, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -234,6 +232,6 @@ export async function PUT(request: Request, context: { params: { id: string } })
         }
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengupdate data anggota, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate data anggota, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

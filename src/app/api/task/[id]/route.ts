@@ -3,7 +3,7 @@ import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import moment from "moment";
-import "moment/locale/id"
+import "moment/locale/id";
 import { NextResponse } from "next/server";
 
 
@@ -157,7 +157,7 @@ export async function GET(request: Request, context: { params: { id: string } })
    }
    catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan tugas divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan tugas divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -235,7 +235,7 @@ export async function POST(request: Request, context: { params: { id: string } }
       return NextResponse.json({ success: true, message: "Detail tugas berhasil ditambahkan", data, }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mengedit detail tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mengedit detail tugas, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -283,7 +283,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
       return NextResponse.json({ success: true, message: "Tugas berhasil dibatalkan", }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal membatalkan tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal membatalkan tugas, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -329,7 +329,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
       return NextResponse.json({ success: true, message: "Tugas berhasil diedit", }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mengedit tugas, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mengedit tugas, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
