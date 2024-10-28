@@ -1,15 +1,15 @@
 'use client'
-import { Box, Group, Divider, Button, Text, Skeleton, rem } from "@mantine/core";
-import { useState } from "react";
-import { FaCheck } from "react-icons/fa6";
-import { WARNA } from "../fun/WARNA";
-import LayoutNavbarNew from "../layout/layout_navbar_new";
-import { useRouter, useSearchParams } from "next/navigation";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
-import { useShallowEffect } from "@mantine/hooks";
-import toast from "react-hot-toast";
 import { useHookstate } from "@hookstate/core";
+import { Box, Button, Divider, Group, rem, Skeleton, Text } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { FaCheck } from "react-icons/fa6";
 import { TEMA } from "../bin/val_global";
+import LayoutNavbarNew from "../layout/layout_navbar_new";
+import { funGetUserByCookies } from "@/module/auth";
 
 export default function ViewFilter({ linkFilter }: { linkFilter: string }) {
    const [selectedFilter, setSelectedFilter] = useState<any>('');
@@ -38,8 +38,17 @@ export default function ViewFilter({ linkFilter }: { linkFilter: string }) {
       }
    }
 
+   async function dataUser() {
+      const user = await funGetUserByCookies()
+      setSelectedFilter(user.idGroup)
+   }
+
    useShallowEffect(() => {
-      setSelectedFilter(group)
+      if (group == "null" || group == "undefined" || group == '') {
+         dataUser()
+      } else {
+         setSelectedFilter(group)
+      }
    }, [group]);
 
 

@@ -1,16 +1,14 @@
 "use client"
-import { ReloadButtonTop } from '@/module/_global';
 import { Box, Stack } from '@mantine/core';
-import React from 'react';
 import Carosole from './carosole';
-import Features from './features';
-import ListProjects from './list_project';
-import ListDivisi from './list_divisi';
-import ListDiscussion from './list_discussion';
-import ListEventHome from './list_event';
-import ChartProgressHome from './chart_progress_tugas';
 import ChartDocumentHome from './chart_document';
+import ChartProgressHome from './chart_progress_tugas';
+import Features from './features';
 import HeaderHome from './header_home';
+import ListDiscussion from './list_discussion';
+import ListDivisi from './list_divisi';
+import ListEventHome from './list_event';
+import ListProjects from './list_project';
 
 
 export default function ViewHome() {

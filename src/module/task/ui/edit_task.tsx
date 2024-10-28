@@ -7,14 +7,15 @@ import { useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { funEditTask, funGetTaskDivisionById } from "../lib/api_task";
 import { useWibuRealtime } from "wibu-realtime";
+import { funEditTask, funGetTaskDivisionById } from "../lib/api_task";
 
 
 export default function EditTask() {
    const router = useRouter()
    const [title, setTitle] = useState("")
    const [openModal, setOpenModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const param = useParams<{ id: string, detail: string }>()
    const [loading, setLoading] = useState(true)
    const tema = useHookstate(TEMA)
@@ -45,6 +46,7 @@ export default function EditTask() {
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const res = await funEditTask(param.detail, { title })
          if (res.success) {
             setDataRealtime([{
@@ -59,6 +61,9 @@ export default function EditTask() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal mengedit tugas, coba lagi nanti")
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -139,13 +144,14 @@ export default function EditTask() {
          </Box>
 
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin mengedit tugas ini?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
       </Box>
    );

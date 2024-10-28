@@ -49,8 +49,8 @@ export async function GET(request: Request, context: { params: { id: string } })
             const progress = Math.ceil((selesai / semua) * 100)
 
             allData = {
-                progress: progress,
-                lastUpdate: moment(dataProgress[0].updatedAt).format("DD MMMM YYYY"),
+                progress: (_.isNaN(progress)) ? 0 : progress,
+                lastUpdate: moment(dataProgress[0]?.updatedAt).format("DD MMMM YYYY"),
             }
         } else if (kategori == "task") {
             const dataProgress = await prisma.projectTask.findMany({
