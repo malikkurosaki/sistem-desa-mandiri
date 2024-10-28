@@ -1,17 +1,15 @@
 'use client'
-import { TEMA, WARNA } from "@/module/_global";
+import { TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import { Carousel } from "@mantine/carousel";
-import { Box, Card, Flex, Title, Text, Progress, Stack, Skeleton, ActionIcon } from "@mantine/core";
+import { Box, Card, Flex, Progress, Skeleton, Stack, Text, Title } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { funGetHome } from "../lib/api_home";
 import { IDataHomeKegiatan } from "../lib/type_home";
-import _ from "lodash";
-import { useHookstate } from "@hookstate/core";
-import { MdMoreVert } from "react-icons/md";
-import { IoIosArrowDropright } from "react-icons/io";
 
 export default function ListProjects() {
    const router = useRouter()
@@ -24,7 +22,6 @@ export default function ListProjects() {
          setData([]);
          setLoading(true);
          const response = await funGetHome('?cat=kegiatan')
-
          if (response.success) {
             setData(response.data)
          } else {
@@ -78,8 +75,8 @@ export default function ListProjects() {
                                  </Card.Section>
                                  <Stack h={isMobile ? 100 : 150} align="stretch" justify="center">
                                     <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
-                                       <Progress.Section value={v.progress} color="yellow" striped >
-                                          <Progress.Label>{v.progress}%</Progress.Label>
+                                       <Progress.Section value={_.isNull(v.progress) ? 0 : v.progress} color="yellow" striped >
+                                          <Progress.Label>{_.isNull(v.progress) ? 0 : v.progress}%</Progress.Label>
                                        </Progress.Section>
                                     </Progress.Root>
                                     <Text c={tema.get().utama} fz={isMobile ? 14 : 16}>{v.createdAt}</Text>

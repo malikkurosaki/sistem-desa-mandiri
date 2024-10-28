@@ -12,9 +12,9 @@ import toast from "react-hot-toast";
 import { FaCheck } from "react-icons/fa6";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { IoArrowBackOutline, IoClose } from "react-icons/io5";
+import { useWibuRealtime } from "wibu-realtime";
 import { funAddMemberTask, funGetTaskDivisionById } from "../lib/api_task";
 import { IDataMemberTaskDivision } from "../lib/type_task";
-import { useWibuRealtime } from "wibu-realtime";
 
 export default function AddMemberDetailTask() {
    const router = useRouter()
@@ -25,6 +25,7 @@ export default function AddMemberDetailTask() {
    const [selectAll, setSelectAll] = useState(false)
    const [openModal, setOpenModal] = useState(false)
    const [loading, setLoading] = useState(true)
+   const [loadingModal, setLoadingModal] = useState(false)
    const [onClickSearch, setOnClickSearch] = useState(false)
    const [searchQuery, setSearchQuery] = useState('')
    const tema = useHookstate(TEMA)
@@ -106,6 +107,7 @@ export default function AddMemberDetailTask() {
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const res = await funAddMemberTask(param.detail, { idDivision: param.id, member: selectedFiles });
          if (res.success) {
             setDataRealtime([{
@@ -120,6 +122,9 @@ export default function AddMemberDetailTask() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal menambahkan anggota, coba lagi nanti");
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -317,13 +322,14 @@ export default function AddMemberDetailTask() {
             </Button>
          </Box>
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menambahkan anggota?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
       </Box>
    );

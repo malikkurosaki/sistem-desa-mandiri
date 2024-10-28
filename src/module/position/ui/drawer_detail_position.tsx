@@ -207,7 +207,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                         onChange={(e) => { onValidation('name', e.target.value) }}
                         error={
                            touched.name &&
-                           (data.name == "" ? "Error! harus memasukkan Nama Jabatan" :
+                           (data.name == "" ? "Nama Jabatan Tidak Boleh Kosong" :
                               data.name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
                            )
                         }
