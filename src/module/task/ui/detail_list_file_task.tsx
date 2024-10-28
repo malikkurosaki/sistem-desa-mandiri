@@ -9,9 +9,9 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { BsFileTextFill, BsFiletypeCsv, BsFiletypeHeic, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from "react-icons/bs";
 import { FaTrash } from "react-icons/fa6";
+import { useWibuRealtime } from "wibu-realtime";
 import { funDeleteFileTask, funGetTaskDivisionById } from "../lib/api_task";
 import { IDataFileTaskDivision } from "../lib/type_task";
-import { useWibuRealtime } from "wibu-realtime";
 
 export default function ListFileDetailTask() {
    const [isData, setData] = useState<IDataFileTaskDivision[]>([])
@@ -19,6 +19,7 @@ export default function ListFileDetailTask() {
    const param = useParams<{ id: string, detail: string }>()
    const [openDrawer, setOpenDrawer] = useState(false)
    const [isOpenModal, setOpenModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const [idData, setIdData] = useState('')
    const [idDataStorage, setIdDataStorage] = useState('')
    const [nameStorage, setNameStorage] = useState('')
@@ -75,6 +76,7 @@ export default function ListFileDetailTask() {
 
    async function onDelete() {
       try {
+         setLoadingModal(true)
          const res = await funDeleteFileTask(idData);
          if (res.success) {
             setDataRealtime([{
@@ -92,6 +94,9 @@ export default function ListFileDetailTask() {
       } catch (error) {
          console.error(error);
          toast.error("Gagal menghapus file, coba lagi nanti");
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -207,13 +212,14 @@ export default function ListFileDetailTask() {
          </LayoutDrawer>
 
 
-         <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={isOpenModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menghapus file ini? File yang dihapus tidak dapat dikembalikan"
             onYes={(val) => {
                if (val) {
                   onDelete()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
 
          <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idDataStorage} extension={isExtension} fitur='task' />

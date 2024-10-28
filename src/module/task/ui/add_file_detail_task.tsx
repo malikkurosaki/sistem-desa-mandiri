@@ -10,15 +10,16 @@ import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { FaTrash } from "react-icons/fa6";
 import { IoIosArrowDropright } from "react-icons/io";
+import { useWibuRealtime } from "wibu-realtime";
 import { funAddFileTask, funCekNamFileUploadTask } from "../lib/api_task";
 import { IListFileTask } from "../lib/type_task";
 import ResultsFile from "./results_file";
-import { useWibuRealtime } from "wibu-realtime";
 
 
 export default function AddFileDetailTask() {
    const router = useRouter()
    const [openModal, setOpenModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const [fileForm, setFileForm] = useState<any[]>([])
    const [listFile, setListFile] = useState<IListFileTask[]>([])
    const param = useParams<{ id: string, detail: string }>()
@@ -57,6 +58,7 @@ export default function AddFileDetailTask() {
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const fd = new FormData();
          for (let i = 0; i < fileForm.length; i++) {
             fd.append(`file${i}`, fileForm[i]);
@@ -78,6 +80,9 @@ export default function AddFileDetailTask() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal menambahkan tugas divisi, coba lagi nanti");
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -182,13 +187,14 @@ export default function AddFileDetailTask() {
             </Stack>
          </LayoutDrawer>
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menambahkan file?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
 
       </Box>

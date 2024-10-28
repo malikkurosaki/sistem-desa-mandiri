@@ -14,6 +14,7 @@ export default function CancelTask() {
    const router = useRouter()
    const [alasan, setAlasan] = useState("")
    const [openModal, setOpenModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const tema = useHookstate(TEMA)
    const param = useParams<{ id: string, detail: string }>()
    const [touched, setTouched] = useState({
@@ -53,6 +54,7 @@ export default function CancelTask() {
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const res = await funCancelTask(param.detail, { reason: alasan })
          if (res.success) {
             setDataRealtime([{
@@ -67,6 +69,9 @@ export default function CancelTask() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal membatalkan tugas, coba lagi nanti")
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -109,13 +114,14 @@ export default function CancelTask() {
          </Box>
 
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin membatalkan tugas ini? Pembatalan tugas bersifat permanen"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
       </Box>
    );

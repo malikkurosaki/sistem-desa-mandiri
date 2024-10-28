@@ -10,9 +10,9 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaUser } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
+import { useWibuRealtime } from "wibu-realtime";
 import { funDeleteMemberTask, funGetTaskDivisionById } from "../lib/api_task";
 import { IDataMemberTaskDivision } from "../lib/type_task";
-import { useWibuRealtime } from "wibu-realtime";
 
 
 export default function ListAnggotaDetailTask() {
@@ -21,6 +21,7 @@ export default function ListAnggotaDetailTask() {
    const param = useParams<{ id: string, detail: string }>()
    const [openDrawer, setOpenDrawer] = useState(false)
    const [isOpenModal, setOpenModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const [dataChoose, setDataChoose] = useState({ id: '', name: '' })
    const router = useRouter()
    const roleLogin = useHookstate(globalRole)
@@ -86,6 +87,7 @@ export default function ListAnggotaDetailTask() {
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const res = await funDeleteMemberTask(param.detail, { idUser: dataChoose.id });
          if (res.success) {
             setDataRealtime([{
@@ -102,6 +104,9 @@ export default function ListAnggotaDetailTask() {
       } catch (error) {
          console.error(error);
          toast.error("Gagal menghapus anggota tugas divisi, coba lagi nanti");
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -201,13 +206,14 @@ export default function ListAnggotaDetailTask() {
             </Box>
          </LayoutDrawer>
 
-         <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={isOpenModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin mengeluarkan anggota?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
       </Box>
    )
