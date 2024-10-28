@@ -202,7 +202,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                   placeholder="Nama Jabatan"
                   error={
                      touched.name &&
-                     (listData.name == "" ? "Error! harus memasukkan Nama Jabatan" :
+                     (listData.name == "" ? "Nama Jabatan Tidak Boleh Kosong" :
                         listData.name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
                      )
                   }

@@ -90,7 +90,7 @@ export default function ProgressDetailTask() {
    return (
       <Box mt={10}>
          {loading ? "" :
-            reason !== null ?
+            (reason !== null && reason != "") ?
                (
                   <Box mb={10}>
                      <Box p={15} bg={"#FFF2CD"} style={{

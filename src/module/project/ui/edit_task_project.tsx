@@ -7,8 +7,8 @@ import { useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { funEditProject, funGetOneProjectById } from '../lib/api_project';
 import { useWibuRealtime } from 'wibu-realtime';
+import { funEditProject, funGetOneProjectById } from '../lib/api_project';
 
 export default function EditTaskProject() {
   const router = useRouter()
