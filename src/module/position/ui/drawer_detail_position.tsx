@@ -186,7 +186,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: { onUp
          </Stack>
 
          <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Edit Jabatan'} >
-            <Box pt={10} pos={"relative"} h={"28.5vh"}>
+            <Box pos={"relative"} h={"28.5vh"}>
                {loading ?
                   <Box>
                      <Skeleton height={40} mt={6} radius={10} />

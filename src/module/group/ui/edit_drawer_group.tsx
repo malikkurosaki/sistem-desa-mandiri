@@ -2,15 +2,7 @@
 import { LayoutDrawer, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
-import {
-  Box,
-  Button,
-  Flex,
-  SimpleGrid,
-  Stack,
-  Text,
-  TextInput
-} from "@mantine/core";
+import { Box, Button, Flex, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -23,6 +15,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
   const [isModal, setModal] = useState(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingModal, setLoadingModal] = useState(false)
   const refresh = useHookstate(globalRefreshGroup)
   const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
@@ -90,6 +83,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
   async function nonActive(val: boolean) {
     try {
       if (val) {
+        setLoadingModal(true)
         const res = await funEditStatusGroup(id, { isActive: isActive });
         if (res.success) {
           toast.success(res.message);
@@ -99,11 +93,12 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
           toast.error(res.message)
         }
       }
-      setModal(false);
     } catch (error) {
-      setModal(false);
       console.error(error);
       toast.error("Edit grup gagal, coba lagi nanti");
+    } finally {
+      setLoadingModal(false)
+      setModal(false);
     }
   }
 
@@ -146,7 +141,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
         onClose={() => setOpenDrawerGroup(false)}
         title={"Edit Grup"}
       >
-        <Box pt={10}>
+        <Box pos={"relative"} h={"28.5vh"}>
           <TextInput
             styles={{
               input: {
@@ -155,7 +150,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
                 borderColor: tema.get().utama,
               },
             }}
-            size="lg"
+            size="md"
             value={name}
             onChange={(e) => {
               onValidation('name', e.target.value)
@@ -171,7 +166,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
             label="Grup"
             required
           />
-          <Box mt={"xl"}>
+          <Box pos={"absolute"} bottom={10} left={0} right={0}>
             <Button
               c={"white"}
               bg={tema.get().utama}
@@ -188,6 +183,7 @@ export default function EditDrawerGroup({ onUpdated, id, isActive, }: { onUpdate
       </LayoutDrawer>
 
       <LayoutModal
+        loading={loadingModal}
         opened={isModal}
         onClose={() => setModal(false)}
         description="Apakah Anda yakin ingin mangubah status aktifasi data?"
