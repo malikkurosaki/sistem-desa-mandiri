@@ -169,7 +169,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      }
                      size="md"
                      radius={10}
-                     mb={5}
+                     mb={15}
                      withAsterisk
                      onChange={(e: any) => { onValidation('idGroup', e) }}
                      styles={{
@@ -195,7 +195,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                         borderColor: tema.get().utama,
                      },
                   }}
-                  my={15}
+                  mb={15}
                   size="md"
                   onChange={(e) => { onValidation('name', e.target.value) }}
                   radius={10}

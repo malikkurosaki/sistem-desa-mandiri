@@ -28,6 +28,7 @@ export default function ListPositionActive() {
   const refresh = useHookstate(globalRefreshPosition)
   const roleLogin = useHookstate(globalRole)
   const [nameGroup, setNameGroup] = useState('')
+  const [idGroup, setIdGroup] = useState('')
   const tema = useHookstate(TEMA)
   const [dataRealTime, setDataRealtime] = useWibuRealtime({
     WIBU_REALTIME_TOKEN: keyWibu,
@@ -40,6 +41,7 @@ export default function ListPositionActive() {
       const res = await funGetAllPosition('?active=' + status + '&group=' + group + '&search=' + searchQuery)
       setDataPosition(res.data);
       setNameGroup(res.filter.name)
+      setIdGroup(res.filter.id)
       setLoading(false)
     } catch (error) {
       toast.error("Gagal mendapatkan position, coba lagi nanti");
@@ -54,7 +56,7 @@ export default function ListPositionActive() {
   }, [status, group, searchQuery, refresh.get()])
 
   useShallowEffect(() => {
-    if (dataRealTime && dataRealTime.some((i: any) => i.category == 'data-position' && i.group == group)) {
+    if (dataRealTime && dataRealTime.some((i: any) => i.category == 'data-position' && i.group == idGroup)) {
       getAllPosition(false)
     }
   }, [dataRealTime])
