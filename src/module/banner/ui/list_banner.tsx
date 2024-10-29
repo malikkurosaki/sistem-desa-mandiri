@@ -5,7 +5,7 @@ import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Box, Flex, Group, Image, Paper, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaFile, FaPencil, FaTrash } from 'react-icons/fa6';
@@ -25,6 +25,7 @@ function ListBanner() {
   const [isData, setData] = useState<IDataBanner[]>([])
   const [idData, setIdData] = useState('')
   const [isPage, setPage] = useState(1)
+  const [loadingModal, setLoadingModal] = useState(false)
 
   const fetchData = async (loading: boolean) => {
     try {
@@ -57,6 +58,7 @@ function ListBanner() {
 
   async function onDelete(id: string) {
     try {
+      setLoadingModal(true)
       const res = await funDeleteBanner(id);
       if (res.success) {
         toast.success(res.message)
@@ -70,8 +72,10 @@ function ListBanner() {
     } catch (error) {
       console.error(error);
       toast.error("Gagal menghapus banner, coba lagi nanti");
+    } finally {
+      setLoadingModal(false)
+      setOpenModal(false)
     }
-
   }
 
 
@@ -100,34 +104,34 @@ function ListBanner() {
               isData.map((v, i) => {
                 return (
                   <Box key={i} mb={20}>
-                  <Paper radius={'md'} withBorder onClick={() => {
-                    setIdData(v.id);
-                    setIdDataStorage(v.image);
-                    setExtension(v.extension);
-                    setOpenDrawer(true)
-                  }
-                  }
-                    style={{
-                      width: '100%',
-                      maxWidth: 550,
-                      height: 85,
-                      backgroundColor: 'transparent',
-                      border: `1px solid ${tema.get().bgTotalKegiatan}`
+                    <Paper radius={'md'} withBorder onClick={() => {
+                      setIdData(v.id);
+                      setIdDataStorage(v.image);
+                      setExtension(v.extension);
+                      setOpenDrawer(true)
+                    }
+                    }
+                      style={{
+                        width: '100%',
+                        maxWidth: 550,
+                        height: 85,
+                        backgroundColor: 'transparent',
+                        border: `1px solid ${tema.get().bgTotalKegiatan}`
 
-                    }}>
-                    <Group mt={"25"}>
-                      <ActionIcon variant='transparent' w={"100"}>
-                        <Image
-                          radius={"xs"}
-                          src={`https://wibu-storage.wibudev.com/api/files/${v.image}`}
-                          alt=''
-                          w={76}
-                          h={38.9}
-                        />
-                      </ActionIcon>
-                      <Text c={"dark"} fz={"h4"}>{v.title}</Text>
-                    </Group>
-                  </Paper>
+                      }}>
+                      <Group mt={"25"}>
+                        <ActionIcon variant='transparent' w={"100"}>
+                          <Image
+                            radius={"xs"}
+                            src={`https://wibu-storage.wibudev.com/api/files/${v.image}`}
+                            alt=''
+                            w={76}
+                            h={38.9}
+                          />
+                        </ActionIcon>
+                        <Text c={"dark"} fz={"h4"}>{v.title}</Text>
+                      </Group>
+                    </Paper>
                   </Box>
                 )
               })
@@ -178,14 +182,16 @@ function ListBanner() {
       </LayoutDrawer>
 
       <LayoutModal
+        loading={loadingModal}
         opened={isOpenModal}
         onClose={() => setOpenModal(false)}
         description='Apakah Anda yakin ingin menghapus banner?'
         onYes={(val) => {
           if (val) {
             onDelete(idData)
+          } else {
+            setOpenModal(false)
           }
-          setOpenModal(false)
         }} />
 
       <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idDataStorage} extension={isExtension} fitur="image" />
