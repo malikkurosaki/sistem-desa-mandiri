@@ -1,10 +1,6 @@
-import { useHookstate } from '@hookstate/core';
 import { Box, Center, Grid, Group, SimpleGrid, Skeleton } from '@mantine/core';
-import React from 'react';
-import { TEMA } from '../bin/val_global';
 
 export default function SkeletonDetailListTugasTask() {
-  const tema = useHookstate(TEMA)
   return (
     <Box>
       <Skeleton width={30} height={30} radius={"md"} />
@@ -17,7 +13,7 @@ export default function SkeletonDetailListTugasTask() {
           <Box
             style={{
               borderRadius: 10,
-              border: `1px solid ${tema.get().bgTotalKegiatan}`,
+              border: `1px solid ${"#D6D8F6"}`,
               padding: 10,
             }}
           >
@@ -36,7 +32,7 @@ export default function SkeletonDetailListTugasTask() {
                   h={45}
                   style={{
                     borderRadius: 10,
-                    border: `1px solid ${tema.get().bgTotalKegiatan}`,
+                    border: `1px solid ${"#D6D8F6"}`,
                   }}
                 >
                   <Skeleton ml={5} width={"80%"} height={20} radius={"md"} />
@@ -50,7 +46,7 @@ export default function SkeletonDetailListTugasTask() {
                   h={45}
                   style={{
                     borderRadius: 10,
-                    border: `1px solid ${tema.get().bgTotalKegiatan}`,
+                    border: `1px solid ${"#D6D8F6"}`,
                   }}
                 >
                   <Skeleton ml={5} width={"80%"} height={20} radius={"md"} />
