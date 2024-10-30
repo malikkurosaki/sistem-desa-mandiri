@@ -1,11 +1,9 @@
 'use client'
-import { ActionIcon, Box } from '@mantine/core';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import { HiChevronLeft } from 'react-icons/hi2';
-import { WARNA } from '../fun/WARNA';
-import _ from 'lodash';
 import { useHookstate } from '@hookstate/core';
+import { ActionIcon, Box } from '@mantine/core';
+import _ from 'lodash';
+import { useRouter } from 'next/navigation';
+import { HiChevronLeft } from 'react-icons/hi2';
 import { TEMA } from '../bin/val_global';
 
 function LayoutIconBack({ back }: { back?: string }) {
