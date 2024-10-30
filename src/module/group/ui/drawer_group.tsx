@@ -12,6 +12,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
   const [namaGroup, setNamaGroup] = useState("");
   const tema = useHookstate(TEMA)
   const refresh = useHookstate(globalRefreshGroup)
+  const [loading, setLoading] = useState(false)
   const [touched, setTouched] = useState({
     name: false,
   });
@@ -19,8 +20,8 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
 
   async function createData() {
     try {
+      setLoading(true)
       const response = await funCreateGroup({ name: namaGroup })
-
       if (response.success) {
         toast.success(response.message);
         refresh.set(!refresh.get())
@@ -33,6 +34,8 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
     } catch (error) {
       console.error(error);
       toast.error("Gagal menambahkan grup, coba lagi nanti");
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -85,7 +88,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
         onClose={() => setOpenDrawerGroup(false)}
         title={"Tambah Grup"}
       >
-        <Box pt={10}>
+        <Box pos={"relative"} h={"28.5vh"}>
           <TextInput
             styles={{
               input: {
@@ -109,7 +112,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
               )
             }
           />
-          <Box mt={"xl"}>
+          <Box pos={"absolute"} bottom={10} left={0} right={0}>
             <Button
               c={"white"}
               bg={tema.get().utama}
@@ -117,6 +120,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
               radius={30}
               fullWidth
               onClick={() => { onCheck() }}
+              loading={loading}
             >
               Simpan
             </Button>

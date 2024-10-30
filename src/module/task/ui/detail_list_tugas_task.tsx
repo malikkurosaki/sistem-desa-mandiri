@@ -157,7 +157,7 @@ export default function ListTugasDetailTask() {
                      </Box>
                   </>
                   :
-                  isData.length === 0 ? <Text c={"dimmed"} ta={"center"} fs={"italic"}>Tidak ada tugas</Text> :
+                  isData.length === 0 ? <Text c={"dimmed"} ta={"center"} fs={"italic"} py={20}>Tidak ada tugas</Text> :
                      isData.map((item, index) => {
                         return (
                            <Box key={index}>

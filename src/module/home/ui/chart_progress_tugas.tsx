@@ -1,13 +1,13 @@
 'use client'
-import { TEMA, WARNA } from "@/module/_global";
-import { Box, Text } from "@mantine/core";
+import { TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
+import { Box } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { EChartsOption } from "echarts";
 import EChartsReact from "echarts-for-react";
 import { useState } from "react";
-import { funGetHome } from "../lib/api_home";
 import toast from "react-hot-toast";
-import { useHookstate } from "@hookstate/core";
+import { funGetHome } from "../lib/api_home";
 
 export default function ChartProgressHome() {
    const [options, setOptions] = useState<EChartsOption>({});
@@ -41,7 +41,7 @@ export default function ChartProgressHome() {
       }
    };
 
-   const loadData = (value:any) => {
+   const loadData = (value: any) => {
       const option: EChartsOption = {
          title: {
             text: "PROGRES KEGIATAN",

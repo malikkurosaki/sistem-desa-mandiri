@@ -3,11 +3,11 @@ import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
 import { Box, Flex, SimpleGrid, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaPencil, FaTrash } from 'react-icons/fa6';
 import { IoColorPalette } from 'react-icons/io5';
-import { funChangeTheme, funDeleteTheme, funGetThemeById } from '../lib/api_theme';
+import { funChangeTheme, funDeleteTheme } from '../lib/api_theme';
 import { globalRefreshTheme } from '../lib/val_theme';
 
 export default function DrawerPaletEditEndDefault({ id, idVillage, isUse }: { id: string, idVillage: string, isUse: boolean }) {
@@ -16,9 +16,12 @@ export default function DrawerPaletEditEndDefault({ id, idVillage, isUse }: { id
   const [isModalDel, setModalDel] = useState(false)
   const tema = useHookstate(TEMA)
   const refresh = useHookstate(globalRefreshTheme)
+  const [loadingApply, setLoadingApply] = useState(false)
+  const [loadingDelete, setLoadingDelete] = useState(false)
 
   async function onChangeTheme() {
     try {
+      setLoadingApply(true)
       const res = await funChangeTheme(id)
       if (res.success) {
         tema.set(res.data)
@@ -29,11 +32,15 @@ export default function DrawerPaletEditEndDefault({ id, idVillage, isUse }: { id
     } catch (error) {
       console.error(error)
       toast.error("Gagal mengubah tema, coba lagi nanti");
+    } finally {
+      setLoadingApply(false)
+      setModal(false)
     }
   }
 
   async function onDelete() {
     try {
+      setLoadingDelete(true)
       const res = await funDeleteTheme(id)
       if (res.success) {
         toast.success(res.message);
@@ -44,6 +51,9 @@ export default function DrawerPaletEditEndDefault({ id, idVillage, isUse }: { id
     } catch (error) {
       console.error(error)
       toast.error("Gagal menghapus tema, coba lagi nanti");
+    } finally {
+      setLoadingDelete(false)
+      setModalDel(false)
     }
   }
 
@@ -86,23 +96,25 @@ export default function DrawerPaletEditEndDefault({ id, idVillage, isUse }: { id
         }
       </SimpleGrid>
 
-      <LayoutModal opened={isModal} onClose={() => setModal(false)}
+      <LayoutModal loading={loadingApply} opened={isModal} onClose={() => setModal(false)}
         description="Apakah Anda yakin ingin mengubah Tema Aplikasi?"
         onYes={(val) => {
           if (val) {
             onChangeTheme()
+          }else{
+            setModal(false)
           }
-          setModal(false)
         }} />
 
 
-      <LayoutModal opened={isModalDel} onClose={() => setModalDel(false)}
+      <LayoutModal loading={loadingDelete} opened={isModalDel} onClose={() => setModalDel(false)}
         description="Apakah Anda yakin ingin menghapus Tema Aplikasi?"
         onYes={(val) => {
           if (val) {
             onDelete()
+          }else{
+            setModalDel(false)
           }
-          setModalDel(false)
         }} />
     </Box>
   );
