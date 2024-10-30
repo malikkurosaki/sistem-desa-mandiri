@@ -2,7 +2,7 @@
 import { TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
 import { Carousel } from "@mantine/carousel";
-import { Box, Card, Flex, Progress, Skeleton, Stack, Text, Title } from "@mantine/core";
+import { Badge, Box, Card, Flex, Group, Progress, Skeleton, Stack, Text, Title } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
@@ -79,7 +79,24 @@ export default function ListProjects() {
                                           <Progress.Label>{_.isNull(v.progress) ? 0 : v.progress}%</Progress.Label>
                                        </Progress.Section>
                                     </Progress.Root>
-                                    <Text c={tema.get().utama} fz={isMobile ? 14 : 16}>{v.createdAt}</Text>
+                                    <Group align='center' pt={10} justify='space-between'>
+                                       <Text c={tema.get().utama} fz={isMobile ? 14 : 16}>{v.createdAt}</Text>
+                                       <Badge color={
+                                          v.status === 0 ? '#1372C4' :
+                                             v.status === 1 ? '#C5771A' :
+                                                v.status === 2 ? '#0B6025' :
+                                                   v.status === 3 ? '#BB1F1F' :
+                                                      "grey"
+                                       }>
+                                          {
+                                             v.status === 0 ? 'Segera' :
+                                                v.status === 1 ? 'Dikerjakan' :
+                                                   v.status === 2 ? 'Selesai' :
+                                                      v.status === 3 ? 'Dibatalkan' :
+                                                         "Segera"
+                                          }
+                                       </Badge>
+                                    </Group>
                                  </Stack>
                               </Card>
                            </Box>
