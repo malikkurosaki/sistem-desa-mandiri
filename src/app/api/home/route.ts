@@ -185,9 +185,10 @@ export async function GET(request: Request) {
             const cek = data.some((i: any) => i.status == dataStatus[index].status)
             if (cek) {
                const find = ((Number(data.find((i: any) => i.status == dataStatus[index].status)?._count) * 100) / data.reduce((n, { _count }) => n + _count, 0)).toFixed(2)
+               const fix = find.substr(-2, 2) == "00" ? find.substr(0, 2) : find
                input = {
                   name: dataStatus[index].name,
-                  value: find
+                  value: fix
                }
             } else {
                input = {

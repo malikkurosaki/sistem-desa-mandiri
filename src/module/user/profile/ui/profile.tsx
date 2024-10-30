@@ -1,19 +1,19 @@
 "use client"
-import { LayoutIconBack, LayoutNavbarHome, SkeletonAvatar, SkeletonDetailProfile, TEMA, WARNA } from "@/module/_global";
-import { ActionIcon, Avatar, Box, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
-import { RiIdCardFill } from "react-icons/ri";
-import { FaSquarePhone } from "react-icons/fa6";
-import { MdEmail } from "react-icons/md";
-import { IoMaleFemale } from "react-icons/io5";
-import toast from "react-hot-toast";
-import { LuLogOut } from "react-icons/lu";
+import { LayoutIconBack, LayoutNavbarHome, SkeletonDetailProfile, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { useState } from "react";
-import { funGetProfileByCookies } from "../lib/api_profile";
-import { useShallowEffect } from "@mantine/hooks";
-import { IProfileById } from "../lib/type_profile";
-import { useRouter } from "next/navigation";
 import { useHookstate } from "@hookstate/core";
+import { ActionIcon, Avatar, Box, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { FaSquarePhone } from "react-icons/fa6";
+import { IoMaleFemale } from "react-icons/io5";
+import { LuLogOut } from "react-icons/lu";
+import { MdEmail } from "react-icons/md";
+import { RiIdCardFill } from "react-icons/ri";
+import { funGetProfileByCookies } from "../lib/api_profile";
+import { IProfileById } from "../lib/type_profile";
 
 export default function Profile() {
   const [openModal, setOpenModal] = useState(false);
@@ -22,6 +22,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true)
   const [img, setIMG] = useState<any | null>()
   const tema = useHookstate(TEMA)
+  const [loadingModal, setLoadingModal] = useState(false)
 
   async function getData() {
     try {
@@ -44,17 +45,19 @@ export default function Profile() {
   async function onLogout(val: boolean) {
     try {
       if (val) {
+        setLoadingModal(true)
         await fetch('/api/auth/logout', {
           method: 'DELETE',
         });
         toast.success('Logout Sukses')
         window.location.href = '/';
       }
-
-      setOpenModal(false)
-
     } catch (error) {
       console.error(error);
+      toast.error("Logout gagal, coba lagi nanti");
+    } finally {
+      setLoadingModal(false)
+      setOpenModal(false)
     }
   }
   return (
@@ -72,12 +75,12 @@ export default function Profile() {
             justify="center"
             gap="xs"
           >
-            {loading ? <Skeleton height={100} radius={"100"} width={100} /> :      
-            <Avatar
-              size="100"
-              radius={"100"}
-              src={img}
-            />
+            {loading ? <Skeleton height={100} radius={"100"} width={100} /> :
+              <Avatar
+                size="100"
+                radius={"100"}
+                src={img}
+              />
             }
             {/* <SkeletonAvatar size="100" sizeNoImg="100" img={img} /> */}
             {loading ?
@@ -150,7 +153,7 @@ export default function Profile() {
           </Stack>
         }
       </Box>
-      <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+      <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
         description="Apakah Anda yakin ingin keluar?"
         onYes={(val) => onLogout(val)} />
     </>

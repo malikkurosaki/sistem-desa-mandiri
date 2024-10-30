@@ -1,4 +1,3 @@
-
 import { ListBanner, NavbarBanner } from "@/module/banner";
 import { Box } from "@mantine/core";
 
@@ -7,7 +6,6 @@ export default function Page() {
       <Box>
          <NavbarBanner />
          <ListBanner />
-    
       </Box>
    );
 }

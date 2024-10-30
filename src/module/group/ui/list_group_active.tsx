@@ -1,26 +1,17 @@
-import { LayoutDrawer, SkeletonSingle, TEMA, WARNA } from "@/module/_global";
-import {
-  ActionIcon,
-  Box,
-  Flex,
-  Grid,
-  Group,
-  Skeleton,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import React, { useEffect, useState } from "react";
+import { LayoutDrawer, SkeletonSingle, TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
+import { ActionIcon, Box, Flex, Grid, Group, Text, TextInput } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { HiMagnifyingGlass } from "react-icons/hi2";
-import EditDrawerGroup from "./edit_drawer_group";
-import toast from "react-hot-toast";
-import { useShallowEffect } from "@mantine/hooks";
 import { funGetAllGroup } from "../lib/api_group";
 import { IDataGroup } from "../lib/type_group";
-import { useSearchParams } from "next/navigation";
-import _ from "lodash";
-import { useHookstate } from "@hookstate/core";
 import { globalRefreshGroup } from "../lib/val_group";
+import EditDrawerGroup from "./edit_drawer_group";
 
 
 export default function ListGroupActive() {
@@ -117,7 +108,7 @@ export default function ListGroupActive() {
                       base: 3,
                       xl: 2
                     }}>
-                      <Flex justify={{base: "center", xl: "flex-start"}}>
+                      <Flex justify={{ base: "center", xl: "flex-start" }}>
                         <ActionIcon
                           variant="light"
                           bg={tema.get().bgTotalKegiatan}
@@ -143,8 +134,8 @@ export default function ListGroupActive() {
                         }}
                       >
                         <Text fw={"bold"} c={tema.get().utama} lineClamp={1}>
-                      {v.name}
-                    </Text>
+                          {v.name}
+                        </Text>
                       </Box>
                     </Grid.Col>
                   </Grid>

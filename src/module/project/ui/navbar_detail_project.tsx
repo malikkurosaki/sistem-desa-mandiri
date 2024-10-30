@@ -10,8 +10,8 @@ import { FaFileCirclePlus, FaPencil, FaUsers } from 'react-icons/fa6';
 import { HiMenu } from 'react-icons/hi';
 import { IoAddCircle } from 'react-icons/io5';
 import { MdCancel } from 'react-icons/md';
-import { funGetOneProjectById } from '../lib/api_project';
 import { useWibuRealtime } from 'wibu-realtime';
+import { funGetOneProjectById } from '../lib/api_project';
 
 export default function NavbarDetailProject() {
   const router = useRouter()
@@ -54,7 +54,7 @@ export default function NavbarDetailProject() {
 
   return (
     <>
-      <LayoutNavbarNew back="/project?status=0" title={name} menu={
+      <LayoutNavbarNew back="" title={name} menu={
         <ActionIcon
           variant="light"
           bg={tema.get().bgIcon}
