@@ -65,6 +65,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                     status: true,
                     dateStart: true,
                     dateEnd: true,
+                    createdAt: true
                 },
                 orderBy: {
                     createdAt: 'asc'
@@ -72,12 +73,13 @@ export async function GET(request: Request, context: { params: { id: string } })
             })
 
             const formatData = dataProgress.map((v: any) => ({
-                ..._.omit(v, ["dateStart", "dateEnd"]),
+                ..._.omit(v, ["dateStart", "dateEnd", "createdAt"]),
                 dateStart: moment(v.dateStart).format("DD-MM-YYYY"),
                 dateEnd: moment(v.dateEnd).format("DD-MM-YYYY"),
+                createdAt: moment(v.createdAt).format("DD-MM-YYYY HH:mm"),
             }))
-
-            allData = formatData
+            const dataFix = _.orderBy(formatData, 'createdAt', 'asc')
+            allData = dataFix
 
         } else if (kategori == "file") {
             const dataFile = await prisma.projectFile.findMany({
@@ -86,7 +88,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                     idProject: String(id)
                 },
                 orderBy: {
-                    createdAt: 'desc'
+                    createdAt: 'asc'
                 },
                 select: {
                     id: true,

@@ -17,6 +17,7 @@ export default function NavbarDetailProject() {
   const router = useRouter()
   const param = useParams<{ id: string }>()
   const [name, setName] = useState('')
+  const [grup, setGrup] = useState("")
   const [isOpen, setOpen] = useState(false)
   const roleLogin = useHookstate(globalRole)
   const tema = useHookstate(TEMA)
@@ -32,6 +33,7 @@ export default function NavbarDetailProject() {
       if (res.success) {
         setName(res.data.title);
         setReason(res.data.reason);
+        setGrup(res.data.idGroup);
       } else {
         toast.error(res.message);
       }
@@ -54,7 +56,7 @@ export default function NavbarDetailProject() {
 
   return (
     <>
-      <LayoutNavbarNew back="" title={name} menu={
+      <LayoutNavbarNew back={`/project?group=${grup}`} title={name} menu={
         <ActionIcon
           variant="light"
           bg={tema.get().bgIcon}

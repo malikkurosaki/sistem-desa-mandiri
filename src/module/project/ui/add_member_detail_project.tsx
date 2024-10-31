@@ -3,7 +3,7 @@ import { keyWibu, LayoutNavbarNew, SkeletonList, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
 import { Carousel } from '@mantine/carousel';
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Skeleton, Stack, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Stack, Text, TextInput } from '@mantine/core';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -50,7 +50,6 @@ export default function AddMemberDetailProject() {
       } else {
         toast.error(res.message);
       }
-      setLoading(false)
     } catch (error) {
       console.error(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
@@ -296,20 +295,16 @@ export default function AddMemberDetailProject() {
         zIndex: 999,
         backgroundColor: `${tema.get().bgUtama}`,
       }}>
-        {loading ?
-          <Skeleton height={50} radius={30} />
-          :
-          <Button
-            c={"white"}
-            bg={tema.get().utama}
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => { onVerifikasi() }}
-          >
-            Simpan
-          </Button>
-        }
+        <Button
+          c={"white"}
+          bg={tema.get().utama}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => { onVerifikasi() }}
+        >
+          Simpan
+        </Button>
       </Box>
 
       <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
