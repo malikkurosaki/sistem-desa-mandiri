@@ -136,6 +136,10 @@ export async function GET(request: Request, context: { params: { id: string } })
                 id: {
                     not: String(userId)
                 },
+                OR: [
+                    { idUserRole: 'coadmin', },
+                    { idUserRole: 'user', }
+                ],
                 isActive: true,
                 name: {
                     contains: (name == undefined || name == "null") ? "" : name,
@@ -147,14 +151,24 @@ export async function GET(request: Request, context: { params: { id: string } })
                 id: true,
                 name: true,
                 email: true,
-                img: true
+                img: true,
+                UserRole: {
+                    select: {
+                        name: true
+                    }
+                }
             },
             orderBy: {
                 name: 'asc'
             }
         })
 
-        const fixMember = member.map((v: any) => ({
+        const omitData = member.map((v: any) => ({
+            ..._.omit(v, ["UserRole"]),
+            userRole: v.UserRole.name
+        }))
+
+        const fixMember = omitData.map((v: any) => ({
             idUser: v.id,
             name: v.name,
             email: v.email,

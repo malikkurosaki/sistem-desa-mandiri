@@ -2,7 +2,7 @@
 import { keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
-import { Box, Button, Flex, Group, rem, SimpleGrid, Stack, Text, } from "@mantine/core";
+import { Box, Button, Flex, Group, Loader, rem, SimpleGrid, Stack, Text, } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import _ from "lodash";
 import { useParams, useRouter } from "next/navigation";
@@ -10,10 +10,10 @@ import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { FaTrash } from "react-icons/fa6";
 import { IoIosArrowDropright } from "react-icons/io";
+import { useWibuRealtime } from "wibu-realtime";
 import { funAddFileProject, funCekNamFileUploadProject } from "../lib/api_project";
 import { IListFileTaskProject } from "../lib/type_project";
 import ResultsFile from "./results_file";
-import { useWibuRealtime } from "wibu-realtime";
 
 
 export default function AddFileDetailProject() {
@@ -26,6 +26,7 @@ export default function AddFileDetailProject() {
    const [indexDelFile, setIndexDelFile] = useState<number>(0)
    const [openDrawerFile, setOpenDrawerFile] = useState(false)
    const tema = useHookstate(TEMA)
+   const [loadingUpload, setLoadingUpload] = useState(false)
    const openRef = useRef<() => void>(null)
    const [dataRealTime, setDataRealtime] = useWibuRealtime({
       WIBU_REALTIME_TOKEN: keyWibu,
@@ -41,6 +42,7 @@ export default function AddFileDetailProject() {
 
    async function cekFileName(data: any) {
       try {
+         setLoadingUpload(true)
          const fd = new FormData();
          fd.append(`file`, data);
          const res = await funCekNamFileUploadProject(param.id, fd)
@@ -53,6 +55,8 @@ export default function AddFileDetailProject() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal menambahkan file, coba lagi nanti")
+      } finally {
+         setLoadingUpload(false)
       }
    }
 
@@ -92,8 +96,7 @@ export default function AddFileDetailProject() {
    return (
       <Box>
          <LayoutNavbarNew back="" title={"Tambah File"} menu />
-
-         <Box p={20}>
+         <Box p={20} pb={100}>
             <Stack>
                <Dropzone
                   openRef={openRef}
@@ -147,6 +150,13 @@ export default function AddFileDetailProject() {
                   </Box>
                </Box>
             }
+            {
+               loadingUpload &&
+               <Group justify="center" py={20}>
+                  <Loader color="gray" type="dots" />
+               </Group>
+            }
+
          </Box>
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),

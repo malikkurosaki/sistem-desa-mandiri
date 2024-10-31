@@ -110,7 +110,7 @@ export default function ProgressDetailProject() {
           :
           <Box
             p={20}
-            bg={"#DCEED8"}
+            bg={tema.get().bgTotalKegiatan}
             style={{
               borderRadius: 10,
             }}
