@@ -1,18 +1,17 @@
 "use client"
 import { LayoutNavbarNew, TEMA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 import { Box, Skeleton, Stack } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
-import React, { useState } from 'react';
-import EchartPaiReport from './echart_pai_report';
-import EchartBarReport from './echart_bar_report';
-import EventReport from './event_report';
-import DiscussionReport from './discussion_report';
-import { useParams } from 'next/navigation';
-import { funGetReportDivision } from '../lib/api_division';
 import moment from 'moment';
 import "moment/locale/id";
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useHookstate } from '@hookstate/core';
+import { funGetReportDivision } from '../lib/api_division';
+import EchartBarReport from './echart_bar_report';
+import EchartPaiReport from './echart_pai_report';
+import EventReport from './event_report';
 
 
 export default function ReportDivisionId() {
@@ -64,6 +63,7 @@ export default function ReportDivisionId() {
       <Box p={20}>
         <Stack>
           <DateInput
+            valueFormat='DD-MM-YYYY'
             value={value}
             onChange={(val) => { onChangeDate(val) }}
             radius={10}

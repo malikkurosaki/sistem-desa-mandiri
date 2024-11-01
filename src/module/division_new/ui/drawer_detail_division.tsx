@@ -1,10 +1,9 @@
 "use client"
 import { TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
-import { Box, Stack, SimpleGrid, Flex, Text } from "@mantine/core";
+import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
 import { BsInfoCircle } from "react-icons/bs";
-import { FaPencil } from "react-icons/fa6";
 import { TbReportAnalytics } from "react-icons/tb";
 
 export default function DrawerDetailDivision() {
