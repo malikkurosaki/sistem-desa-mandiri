@@ -1,5 +1,5 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
+import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
 import { ActionIcon } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -15,12 +15,16 @@ export default function NavbarDetailDivision() {
    const param = useParams<{ id: string }>()
    const [name, setName] = useState('')
    const tema = useHookstate(TEMA)
+   const roleLogin = useHookstate(globalRole)
+   const [grup, setGroup] = useState('')
+
 
    async function getOneData() {
       try {
          const res = await funGetDivisionById(param.id);
          if (res.success) {
             setName(res.data.division.name);
+            setGroup(res.data.division.idGroup)
          } else {
             toast.error(res.message);
          }
@@ -37,7 +41,7 @@ export default function NavbarDetailDivision() {
 
    return (
       <>
-         <LayoutNavbarNew back="" title={name} menu={
+         <LayoutNavbarNew back={roleLogin.get() == 'supadmin' ? `/division?group=${grup}` : '/division'} title={name} menu={
             <ActionIcon variant="light" onClick={() => (setOpenDrawer(true))} bg={tema.get().bgIcon} size="lg" radius="lg" aria-label="Settings">
                <HiMenu size={20} color='white' />
             </ActionIcon>

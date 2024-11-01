@@ -28,7 +28,8 @@ export default function CreateAnggotaDivision() {
   const [loading, setLoading] = useState(true)
   const [onClickSearch, setOnClickSearch] = useState(false)
   const tema = useHookstate(TEMA)
-  const isMobile2 = useMediaQuery("(max-width: 438px)");
+  const isMobile2 = useMediaQuery("(max-width: 438px)")
+  const [loadingModal, setLoadingModal] = useState(false)
 
   const handleFileClick = (index: number) => {
     if (selectedFiles.some((i: any) => i.idUser == dataMember[index].id)) {
@@ -44,16 +45,25 @@ export default function CreateAnggotaDivision() {
 
 
   async function loadMember(group: string, search: string) {
-    setLoading(true)
-    const res = await funGetAllmember('?active=true&group=' + group + '&search=' + search);
-    const user = await funGetUserByCookies();
+    try {
+      setLoading(true)
+      const res = await funGetAllmember('?active=true&group=' + group + '&search=' + search);
+      const user = await funGetUserByCookies();
 
-    if (res.success) {
-      setDataMember(res.data.filter((i: any) => i.id != user.id))
-    } else {
-      toast.error(res.message)
+      if (res.success) {
+        const dariUserLogin = res.data.filter((i: any) => i.id != user.id)
+        const fixListUser = dariUserLogin.filter((i: any) => i.idUserRole == 'coadmin' || i.idUserRole == 'user')
+        setDataMember(fixListUser)
+      } else {
+        toast.error(res.message)
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error("Gagal memuat data, coba lagi nanti")
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
+
   }
 
   async function loadFirst() {
@@ -69,6 +79,7 @@ export default function CreateAnggotaDivision() {
 
   async function addMember() {
     try {
+      setLoadingModal(true)
       const res = await funAddDivisionMember(param.id, selectedFiles)
       if (res.success) {
         toast.success(res.message)
@@ -76,13 +87,20 @@ export default function CreateAnggotaDivision() {
       } else {
         toast.error(res.message)
       }
-      setOpen(false)
     } catch (error) {
-      setOpen(false)
       console.error(error);
       toast.error("Gagal menambahkan anggota divisi, coba lagi nanti");
-
+    } finally {
+      setLoadingModal(false)
+      setOpen(false)
     }
+  }
+
+  function onCheck() {
+    if (selectedFiles.length == 0) {
+      return toast.error("Error! silahkan pilih anggota")
+    }
+    setOpen(true)
   }
 
 
@@ -149,7 +167,7 @@ export default function CreateAnggotaDivision() {
         borderBottom: `1px solid ${"#E0DFDF"}`
       }}>
         {selectedFiles.length > 0 ? (
-          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"}  withControls={false}>
+          <Carousel dragFree slideGap={"xs"} align="start" slideSize={"xs"} withControls={false}>
             {selectedFiles.map((v: any, i: any) => {
               return (
                 <Carousel.Slide key={i}>
@@ -195,51 +213,51 @@ export default function CreateAnggotaDivision() {
               <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
             </Stack>
             :
-          <Box pt={90} mb={100}>
-            {dataMember.map((v: any, index: any) => {
-              const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id)
-              const found = memberDb.some((i: any) => i.idUser == v.id)
-              return (
-                <Box my={10} key={index} onClick={() => (!found) ? handleFileClick(index) : null}>
-                  <Grid align='center' >
-                    <Grid.Col
-                    span={{
-                      base: 1,
-                      xs: 1,
-                      sm: 1,
-                      md: 1,
-                      lg: 1,
-                      xl: 1,
-                    }}
-                    >
-                      <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
-                    </Grid.Col>
-                    <Grid.Col
-                     span={{
-                      base: 11,
-                      xs: 11,
-                      sm: 11,
-                      md: 11,
-                      lg: 11,
-                      xl: 11,
-                    }}
-                    >
-                      <Flex justify='space-between' align={"center"}>
-                        <Flex direction={'column'} align="flex-start" justify="flex-start">
-                          <Text pl={isMobile2 ? 40 : 30} lineClamp={1}>{v.name}</Text>
-                          <Text pl={isMobile2 ? 40 : 30} c={"dimmed"} lineClamp={1}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
+            <Box pt={90} mb={100}>
+              {dataMember.map((v: any, index: any) => {
+                const isSelected = selectedFiles.some((i: any) => i.idUser == dataMember[index].id)
+                const found = memberDb.some((i: any) => i.idUser == v.id)
+                return (
+                  <Box my={10} key={index} onClick={() => (!found) ? handleFileClick(index) : null}>
+                    <Grid align='center' >
+                      <Grid.Col
+                        span={{
+                          base: 1,
+                          xs: 1,
+                          sm: 1,
+                          md: 1,
+                          lg: 1,
+                          xl: 1,
+                        }}
+                      >
+                        <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
+                      </Grid.Col>
+                      <Grid.Col
+                        span={{
+                          base: 11,
+                          xs: 11,
+                          sm: 11,
+                          md: 11,
+                          lg: 11,
+                          xl: 11,
+                        }}
+                      >
+                        <Flex justify='space-between' align={"center"}>
+                          <Flex direction={'column'} align="flex-start" justify="flex-start">
+                            <Text pl={isMobile2 ? 40 : 30} lineClamp={1}>{v.name}</Text>
+                            <Text pl={isMobile2 ? 40 : 30} c={"dimmed"} lineClamp={1}>{(found) ? "sudah menjadi anggota divisi" : ""}</Text>
+                          </Flex>
+                          {isSelected ? <FaCheck /> : null}
                         </Flex>
-                        {isSelected ? <FaCheck /> : null}
-                      </Flex>
-                    </Grid.Col>
-                  </Grid>
-                  <Box mt={10}>
-                    <Divider size={"xs"} />
+                      </Grid.Col>
+                    </Grid>
+                    <Box mt={10}>
+                      <Divider size={"xs"} />
+                    </Box>
                   </Box>
-                </Box>
-              )
-            })}
-          </Box>
+                )
+              })}
+            </Box>
         }
       </Box>
       <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
@@ -253,12 +271,12 @@ export default function CreateAnggotaDivision() {
           size="lg"
           radius={30}
           fullWidth
-          onClick={() => { setOpen(true) }}
+          onClick={() => { onCheck() }}
         >
           Simpan
         </Button>
       </Box>
-      <LayoutModal opened={isOpen} onClose={() => setOpen(false)}
+      <LayoutModal loading={loadingModal} opened={isOpen} onClose={() => setOpen(false)}
         description="Apakah Anda yakin ingin menambahkan anggota divisi?"
         onYes={(val) => {
           if (val) {

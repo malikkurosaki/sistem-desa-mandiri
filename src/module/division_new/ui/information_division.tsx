@@ -37,10 +37,11 @@ export default function InformationDivision() {
   const isMobile2 = useMediaQuery("(max-width: 438px)");
   const tema = useHookstate(TEMA)
   const [loadingStatus, setLoadingStatus] = useState(false)
+  const [loadingDelete, setLoadingDelete] = useState(false)
 
-  async function getOneData() {
+  async function getOneData(loading: boolean) {
     try {
-      setLoading(true);
+      setLoading(loading)
       const res = await funGetDivisionById(param.id);
       const login = await funGetUserByCookies()
       if (res.success) {
@@ -53,18 +54,17 @@ export default function InformationDivision() {
       } else {
         toast.error(res.message);
       }
-      setLoading(false);
 
     } catch (error) {
       console.error(error);
       toast.error("Gagal mendapatkan divisi, coba lagi nanti");
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
   useShallowEffect(() => {
-    getOneData();
+    getOneData(true);
   }, [param.id])
 
 
@@ -77,19 +77,21 @@ export default function InformationDivision() {
 
   async function deleteMember() {
     try {
+      setLoadingDelete(true)
       const res = await funDeleteMemberDivision(param.id, { id: valChooseMember })
       if (res.success) {
         toast.success(res.message)
         setDrawer(false)
-        getOneData()
+        getOneData(false)
       } else {
         toast.error(res.message)
       }
-      setOpenModal(false)
     } catch (error) {
       console.error(error);
-      setOpenModal(false)
       toast.error("Gagal mendapatkan divisi, coba lagi nanti");
+    } finally {
+      setLoadingDelete(false)
+      setOpenModal(false)
     }
   }
 
@@ -99,7 +101,7 @@ export default function InformationDivision() {
       const res = await funEditStatusAdminDivision(param.id, { id: valChooseMember, isAdmin: valChooseMemberStatus })
       if (res.success) {
         toast.success(res.message)
-        getOneData()
+        getOneData(false)
       } else {
         toast.error(res.message)
       }
@@ -116,7 +118,7 @@ export default function InformationDivision() {
       const res = await funUpdateStatusDivision(param.id, { isActive: valActive })
       if (res.success) {
         toast.success(res.message)
-        getOneData()
+        getOneData(false)
       } else {
         toast.error(res.message)
       }
@@ -276,7 +278,7 @@ export default function InformationDivision() {
         </Box>
       </LayoutDrawer>
 
-      <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+      <LayoutModal loading={loadingDelete} opened={isOpenModal} onClose={() => setOpenModal(false)}
         description="Apakah Anda yakin ingin mengeluarkan anggota?"
         onYes={(val) => {
           if (!val) {
