@@ -114,7 +114,7 @@ export default function EditTask() {
                      onChange={(e) => { onValidation('title', e.target.value) }}
                      error={
                         touched.title && (
-                           title == "" ? "Error! harus memasukkan judul tugas" : null
+                           title == "" ? "Judul Tugas Tidak Boleh Kosong" : null
                         )
                      }
                   />

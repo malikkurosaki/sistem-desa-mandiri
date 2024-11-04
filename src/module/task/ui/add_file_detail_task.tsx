@@ -2,7 +2,7 @@
 import { keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
-import { Box, Button, Flex, Group, rem, SimpleGrid, Stack, Text, } from "@mantine/core";
+import { Box, Button, Flex, Group, Loader, rem, SimpleGrid, Stack, Text, } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import _ from "lodash";
 import { useParams, useRouter } from "next/navigation";
@@ -27,6 +27,7 @@ export default function AddFileDetailTask() {
    const [openDrawerFile, setOpenDrawerFile] = useState(false)
    const tema = useHookstate(TEMA)
    const openRef = useRef<() => void>(null)
+   const [loadingUpload, setLoadingUpload] = useState(false)
    const [dataRealTime, setDataRealtime] = useWibuRealtime({
       WIBU_REALTIME_TOKEN: keyWibu,
       project: "sdm"
@@ -41,6 +42,7 @@ export default function AddFileDetailTask() {
 
    async function cekFileName(data: any) {
       try {
+         setLoadingUpload(true)
          const fd = new FormData();
          fd.append(`file`, data);
          const res = await funCekNamFileUploadTask(param.detail, fd)
@@ -53,6 +55,8 @@ export default function AddFileDetailTask() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal menambahkan file, coba lagi nanti")
+      } finally {
+         setLoadingUpload(false)
       }
    }
 
@@ -145,6 +149,12 @@ export default function AddFileDetailTask() {
                      }
                   </Box>
                </Box>
+            }
+            {
+               loadingUpload &&
+               <Group justify="center" py={20}>
+                  <Loader color="gray" type="dots" />
+               </Group>
             }
          </Box>
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
