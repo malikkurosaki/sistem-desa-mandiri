@@ -1,15 +1,15 @@
 import { currentScroll, globalNotifPage, ReloadButtonTop, SkeletonList, TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Progress, Skeleton, Text, TextInput, Title } from "@mantine/core";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from "react-icons/hi2";
-import { MdAccountCircle } from "react-icons/md";
-import { IDataTask } from "../lib/type_task";
-import { funGetAllTask } from "../lib/api_task";
-import toast from "react-hot-toast";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
-import { useHookstate } from "@hookstate/core";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from "react-icons/hi2";
+import { MdAccountCircle } from "react-icons/md";
+import { funGetAllTask } from "../lib/api_task";
+import { IDataTask } from "../lib/type_task";
 
 export default function ListDivisionTask() {
    const [isList, setIsList] = useState(false)
@@ -46,8 +46,6 @@ export default function ListDivisionTask() {
          } else {
             toast.error(response.message);
          }
-
-         setLoading(false);
       } catch (error) {
          toast.error("Gagal mendapatkan tugas divisi, coba lagi nanti");
          console.error(error);
@@ -149,7 +147,7 @@ export default function ListDivisionTask() {
             <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
                <Text fw={'bold'} c={tema.get().utama}>Total Tugas</Text>
                <Flex justify={'center'} align={'center'} h={'100%'}>
-                  <Text fz={40} fw={'bold'} c={tema.get().utama}>{totalData}</Text>
+                  <Text fz={40} fw={'bold'} c={tema.get().utama}>{loading ? 0 : totalData}</Text>
                </Flex>
             </Box>
             {isList ? (
@@ -173,7 +171,7 @@ export default function ListDivisionTask() {
                            isData.map((v, i) => {
                               return (
                                  <Box key={i}>
-                                    <Grid align='center'>
+                                    <Grid align='center' onClick={() => router.push(`task/${v.id}`)}>
                                        <Grid.Col span={{
                                           base: 1,
                                           xs: 1,
@@ -182,7 +180,7 @@ export default function ListDivisionTask() {
                                           lg: 1,
                                           xl: 1
                                        }}>
-                                          <Group onClick={() => router.push(`task/${v.id}`)}>
+                                          <Group>
                                              <Center>
                                                 <ActionIcon
                                                    variant="gradient"

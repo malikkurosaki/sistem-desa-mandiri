@@ -4,7 +4,7 @@ import LayoutModal from "@/module/_global/layout/layout_modal";
 import { funGetSearchMemberDivision, IDataMemberDivision } from "@/module/division_new";
 import { useHookstate } from "@hookstate/core";
 import { Carousel } from "@mantine/carousel";
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Stack, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Indicator, rem, Stack, Text, TextInput } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -53,7 +53,6 @@ export default function AddMemberDetailTask() {
             toast.error(res.message);
          }
 
-         setLoading(false)
       } catch (error) {
          console.error(error)
          toast.error("Gagal mendapatkan anggota, coba lagi nanti");
@@ -143,6 +142,7 @@ export default function AddMemberDetailTask() {
    async function fetchGetMember(val: string) {
       setSearchQuery(val)
       try {
+         setLoading(true)
          const res = await funGetSearchMemberDivision('?search=' + val, param.id);
          if (res.success) {
             setData(res.data)
@@ -151,6 +151,8 @@ export default function AddMemberDetailTask() {
          }
       } catch (error) {
          console.error(error);
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -243,12 +245,12 @@ export default function AddMemberDetailTask() {
 
 
          <Box p={20}>
-            <Group justify="space-between" mt={100} onClick={handleSelectAll}>
+            {/* <Group justify="space-between" mt={100} onClick={handleSelectAll}>
                <Text c={tema.get().utama} fw={"bold"}>
                   Pilih Semua Anggota
                </Text>
                {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-            </Group>
+            </Group> */}
             {loading ? Array(8)
                .fill(null)
                .map((_, i) => (
@@ -267,7 +269,7 @@ export default function AddMemberDetailTask() {
                         const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
                         const found = isDataMember.some((i: any) => i.idUser == v.idUser)
                         return (
-                           <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
+                           <Box mb={15} mt={i === 0 ? 100 : 0} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
                               <Grid align='center'>
                                  <Grid.Col span={{
                                     base: 1,

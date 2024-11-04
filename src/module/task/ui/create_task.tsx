@@ -34,7 +34,6 @@ export default function CreateTask() {
   const [dataTask, setDataTask] = useState<IFormDateTask[]>([])
   const openRef = useRef<() => void>(null)
   const [fileForm, setFileForm] = useState<any[]>([])
-  const [imgForm, setImgForm] = useState<any>()
   const [listFile, setListFile] = useState<IListFileTask[]>([])
   const [indexDelFile, setIndexDelFile] = useState<number>(0)
   const [indexDelTask, setIndexDelTask] = useState<number>(0)

@@ -1,38 +1,20 @@
 "use client"
-import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from "@/module/_global";
-import { funGetDivisionById, funGetSearchMemberDivision, IDataMemberDivision } from "@/module/division_new";
+import { LayoutNavbarNew, SkeletonList, TEMA } from "@/module/_global";
+import { funGetSearchMemberDivision, IDataMemberDivision } from "@/module/division_new";
 import { useHookstate } from "@hookstate/core";
-import {
-  ActionIcon,
-  Avatar,
-  Box,
-  Button,
-  Center,
-  Divider,
-  Flex,
-  Grid,
-  Group,
-  Indicator,
-  rem,
-  Skeleton,
-  Stack,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { Carousel } from "@mantine/carousel";
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Skeleton, Stack, Text, TextInput } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { globalMemberTask } from "../lib/val_task";
-import { FaCheck } from "react-icons/fa6";
-import { RiListCheck } from "react-icons/ri";
 import { BsListCheck } from "react-icons/bs";
+import { FaCheck } from "react-icons/fa6";
 import { HiChevronLeft, HiMagnifyingGlass } from "react-icons/hi2";
 import { IoArrowBackOutline, IoClose } from "react-icons/io5";
-import { Carousel } from "@mantine/carousel";
+import { globalMemberTask } from "../lib/val_task";
 
 export default function CreateUsersProject({ onClose }: { onClose: (val: any) => void }) {
-  const router = useRouter()
   const param = useParams<{ id: string }>()
   const [selectedFiles, setSelectedFiles] = useState<any>([])
   const [isData, setData] = useState<IDataMemberDivision[]>([])
@@ -57,7 +39,6 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
       } else {
         toast.error(response.message)
       }
-      setLoading(false)
     } catch (error) {
       console.error(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
@@ -122,6 +103,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
   async function fetchGetMember(val: string) {
     setSearchQuery(val)
     try {
+      setLoading(true)
       const res = await funGetSearchMemberDivision('?search=' + val, param.id);
       if (res.success) {
         setData(res.data)
@@ -130,6 +112,8 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -228,7 +212,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
 
 
       <Box p={20}>
-        {loading ?
+        {/* {loading ?
           <Skeleton height={20} width={"100%"} mt={20} />
           :
           <Group justify="space-between" mt={100} onClick={handleSelectAll}>
@@ -237,7 +221,7 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
             </Text>
             <BsListCheck size={25} style={{ marginRight: 5 }} color={tema.get().utama} />
           </Group>
-        }
+        } */}
         <Box mt={15} mb={100}>
           {loading ?
             Array(8)
@@ -249,47 +233,47 @@ export default function CreateUsersProject({ onClose }: { onClose: (val: any) =>
               ))
             :
             (isData.length === 0) ?
-            <Stack align="stretch" justify="center" w={"100%"} h={"60vh"}>
-              <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
-            </Stack>
-            :
-            isData.map((v, i) => {
-              const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
-              return (
-                <Box mb={15} key={i} onClick={() => handleFileClick(i)}>
-                  <Grid align='center'>
-                    <Grid.Col span={{
-                      base: 1,
-                      xs: 1,
-                      sm: 1,
-                      md: 1,
-                      lg: 1,
-                      xl: 1
-                    }}>
-                      <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
-                    </Grid.Col>
-                    <Grid.Col span={{
-                      base: 11,
-                      xs: 11,
-                      sm: 11,
-                      md: 11,
-                      lg: 11,
-                      xl: 11,
-                    }}>
-                      <Flex justify='space-between' align={"center"}>
-                        <Flex direction={'column'} align="flex-start" justify="flex-start">
-                          <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
+              <Stack align="stretch" justify="center" w={"100%"} h={"60vh"}>
+                <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada anggota</Text>
+              </Stack>
+              :
+              isData.map((v, i) => {
+                const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
+                return (
+                  <Box mb={15} key={i} onClick={() => handleFileClick(i)} mt={i===0 ? 100 : 0}>
+                    <Grid align='center'>
+                      <Grid.Col span={{
+                        base: 1,
+                        xs: 1,
+                        sm: 1,
+                        md: 1,
+                        lg: 1,
+                        xl: 1
+                      }}>
+                        <Avatar src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} alt="it's me" size="lg" />
+                      </Grid.Col>
+                      <Grid.Col span={{
+                        base: 11,
+                        xs: 11,
+                        sm: 11,
+                        md: 11,
+                        lg: 11,
+                        xl: 11,
+                      }}>
+                        <Flex justify='space-between' align={"center"}>
+                          <Flex direction={'column'} align="flex-start" justify="flex-start">
+                            <Text lineClamp={1} pl={isMobile2 ? 40 : 30}>{v.name}</Text>
+                          </Flex>
+                          {isSelected ? <FaCheck /> : null}
                         </Flex>
-                        {isSelected ? <FaCheck /> : null}
-                      </Flex>
-                    </Grid.Col>
-                  </Grid>
-                  <Box mt={10}>
-                    <Divider size={"xs"} />
+                      </Grid.Col>
+                    </Grid>
+                    <Box mt={10}>
+                      <Divider size={"xs"} />
+                    </Box>
                   </Box>
-                </Box>
-              );
-            })
+                );
+              })
           }
         </Box>
       </Box>
