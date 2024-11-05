@@ -125,6 +125,11 @@ export async function GET(request: Request) {
                         updatedAt: true
                      }
                   }
+               },
+               orderBy: {
+                  DivisionDocumentFolderFile: {
+                     createdAt: 'desc'
+                  }
                }
             })
 
@@ -169,7 +174,7 @@ export async function GET(request: Request) {
             updatedAt: true
          },
          orderBy: {
-            name: 'asc'
+            createdAt: 'desc'
          }
       })
 
@@ -185,7 +190,7 @@ export async function GET(request: Request) {
          allData.push(...formatDataShare)
       }
 
-      const formatData = _.orderBy(allData, ['category', 'name'], ['desc', 'asc']);
+      const formatData = _.orderBy(allData, ['category', 'createdAt'], ['desc', 'asc']);
 
       let pathNow = path
       let jalur = []

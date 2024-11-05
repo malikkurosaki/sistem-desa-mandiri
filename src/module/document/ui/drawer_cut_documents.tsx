@@ -8,11 +8,11 @@ import toast from "react-hot-toast";
 import { FcFolder } from "react-icons/fc";
 import { GoChevronRight } from "react-icons/go";
 import { MdFolder } from "react-icons/md";
+import { useWibuRealtime } from "wibu-realtime";
 import { funCreateFolder, funGetAllDocument } from "../lib/api_document";
 import { IDataDocument, IFormDetailMoreItem, IJalurItem, } from "../lib/type_document";
-import { useWibuRealtime } from "wibu-realtime";
 
-export default function DrawerCutDocuments({ category, onChoosePath, data, }: { category: string; data: IFormDetailMoreItem[]; onChoosePath: (val: string) => void; }) {
+export default function DrawerCutDocuments({ category, loadingAction, onChoosePath, data, }: { category: string; loadingAction: boolean; data: IFormDetailMoreItem[]; onChoosePath: (val: string) => void; }) {
   const [opened, setOpened] = useState(false);
   const param = useParams<{ id: string }>();
   const [path, setPath] = useState("home");
@@ -100,6 +100,7 @@ export default function DrawerCutDocuments({ category, onChoosePath, data, }: { 
           </Grid.Col>
           <Grid.Col span={6}>
             <Button
+              loading={loadingAction}
               variant="filled"
               fullWidth
               color={tema.get().utama}
