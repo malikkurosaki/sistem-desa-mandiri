@@ -100,7 +100,7 @@ export async function GET(request: Request, context: { params: { id: string } })
         }
 
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kalender", data: dataFix }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kalender", data: dataFix, user: user.id }, { status: 200 });
 
     } catch (error) {
         return NextResponse.json({ success: false, message: "Gagal mendapatkan kalender, data tidak ditemukan (error: 500)", }, { status: 500 });
@@ -139,13 +139,16 @@ export async function DELETE(request: Request, context: { params: { id: string }
             },
             data: {
                 isActive: false
+            },
+            select: {
+                dateStart: true
             }
         });
 
         // create log user
         const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus data acara kalender', table: 'divisionCalendar', data: id })
 
-        return NextResponse.json({ success: true, message: "Berhasil menghapus acara kalender", data }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil menghapus acara kalender", data, user: user.id }, { status: 200 });
 
     } catch (error) {
         return NextResponse.json({ success: false, message: "Gagal menghapus kalender, coba lagi nanti (error: 500)", }, { status: 500 }

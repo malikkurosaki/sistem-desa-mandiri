@@ -211,6 +211,7 @@ export default function CreateCalenderDivisionCaleder() {
                         }
                     />
                     <DateInput
+                        valueFormat='DD-MM-YYYY'
                         required
                         styles={{
                             input: {
