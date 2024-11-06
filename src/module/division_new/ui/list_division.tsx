@@ -1,5 +1,5 @@
 'use client'
-import { currentScroll, globalNotifPage, globalRole, LayoutDrawer, LayoutNavbarNew, ReloadButtonTop, SkeletonList, TEMA } from '@/module/_global';
+import { currentScroll, globalNotifPage, globalRole, ReloadButtonTop, SkeletonList, TEMA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
@@ -7,12 +7,10 @@ import _ from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { HiMenu } from 'react-icons/hi';
 import { HiMagnifyingGlass, HiMiniUserGroup, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
 import { MdAccountCircle } from 'react-icons/md';
 import { funGetAllDivision } from '../lib/api_division';
 import { IDataDivison } from '../lib/type_division';
-import DrawerDivision from './drawer_division';
 
 export default function ListDivision() {
   const [isList, setIsList] = useState(false)
@@ -243,36 +241,42 @@ export default function ListDivision() {
                   </Box>
                 ))
               :
-              data?.map((v: any, i: any) => {
-                return (
-                  <Box key={i} mb={20}>
-                    <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
-                      <Card.Section>
-                        <Box h={120} bg={tema.get().utama}>
-                          <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
-                            <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.name}</Title>
-                          </Flex>
+              _.isEmpty(data)
+                ?
+                <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                  <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Divisi</Text>
+                </Box>
+                :
+                data?.map((v: any, i: any) => {
+                  return (
+                    <Box key={i} mb={20}>
+                      <Card shadow="sm" padding="md" component="a" radius={10} onClick={() => router.push(`/division/${v.id}`)}>
+                        <Card.Section>
+                          <Box h={120} bg={tema.get().utama}>
+                            <Flex justify={'center'} align={'center'} h={"100%"} pl={20} pr={20}>
+                              <Title order={3} c={"white"} ta={"center"} lineClamp={2}>{v.name}</Title>
+                            </Flex>
+                          </Box>
+                        </Card.Section>
+                        <Box pt={10}>
+                          <Text lineClamp={2}>{v.desc}</Text>
+                          <Group align='center' pt={10} justify='flex-end'>
+                            <Avatar.Group>
+                              <Avatar>
+                                <MdAccountCircle size={32} color={tema.get().utama} />
+                              </Avatar>
+                              <Avatar>
+                                {
+                                  (v.jumlah_member == 0) ? "0" : "+" + (v.jumlah_member - 1)
+                                }
+                              </Avatar>
+                            </Avatar.Group>
+                          </Group>
                         </Box>
-                      </Card.Section>
-                      <Box pt={10}>
-                        <Text lineClamp={2}>{v.desc}</Text>
-                        <Group align='center' pt={10} justify='flex-end'>
-                          <Avatar.Group>
-                            <Avatar>
-                              <MdAccountCircle size={32} color={tema.get().utama} />
-                            </Avatar>
-                            <Avatar>
-                              {
-                                (v.jumlah_member == 0) ? "0" : "+" + (v.jumlah_member - 1)
-                              }
-                            </Avatar>
-                          </Avatar.Group>
-                        </Group>
-                      </Box>
-                    </Card>
-                  </Box>
-                );
-              })
+                      </Card>
+                    </Box>
+                  );
+                })
             }
           </Box>
         )}

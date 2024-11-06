@@ -1,15 +1,15 @@
 'use client'
 import { TEMA, } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import { Carousel } from "@mantine/carousel";
-import { Box, Image, Text, Center, Paper, Stack, UnstyledButton, Skeleton, Group } from "@mantine/core";
-import * as ICON from '../lib/file_icon'
-import { useParams, useRouter } from "next/navigation";
+import { Box, Center, Group, Image, Skeleton, Stack, Text, UnstyledButton } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { funGetDetailDivisionById } from "../lib/api_division";
+import * as ICON from '../lib/file_icon';
 import { IDataKalenderOnDetailDivision } from "../lib/type_division";
-import { useState } from "react";
-import { useHookstate } from "@hookstate/core";
 
 const iconContainer = (icon: string) => 'data:image/svg+xml;base64,' + btoa(icon)
 
@@ -29,7 +29,6 @@ export default function ListDocumentOnDetailDivision() {
          } else {
             toast.error(res.message);
          }
-         setLoading(false);
       } catch (error) {
          console.error(error);
          toast.error("Gagal mendapatkan divisi, coba lagi nanti");
@@ -60,7 +59,7 @@ export default function ListDocumentOnDetailDivision() {
                      ))
                   : (data.length === 0) ?
                      <Stack align="stretch" justify="center" w={"100%"}>
-                        <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada file</Text>
+                        <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada dokumen</Text>
                      </Stack>
                      : <></>
             }

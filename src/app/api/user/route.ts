@@ -50,6 +50,7 @@ export async function GET(request: Request) {
         },
         select: {
           id: true,
+          idUserRole: true,
           isActive: true,
           nik: true,
           name: true,
@@ -92,6 +93,7 @@ export async function GET(request: Request) {
         },
         select: {
           id: true,
+          idUserRole: true,
           isActive: true,
           nik: true,
           name: true,

@@ -1,8 +1,7 @@
-import { Box, Divider, Group, ScrollArea, Stack, Text } from '@mantine/core';
-import React from 'react';
-import { IDataReportDivision } from '../lib/type_division';
+import { Box, Divider, Group, Text } from '@mantine/core';
 import _ from 'lodash';
 import { useRouter } from 'next/navigation';
+import { IDataReportDivision } from '../lib/type_division';
 
 export default function EventReport({ data, tgl }: { data: IDataReportDivision[], tgl: string }) {
   const router = useRouter()
@@ -14,7 +13,7 @@ export default function EventReport({ data, tgl }: { data: IDataReportDivision[]
         _.isEmpty(data)
           ?
           <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '20vh' }}>
-            <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada event</Text>
+            <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada acara</Text>
           </Box>
           :
           data.map((event, index) => {
