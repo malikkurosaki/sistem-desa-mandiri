@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { EChartsOption, color } from "echarts";
-import EChartsReact from "echarts-for-react";
-import { useShallowEffect } from '@mantine/hooks';
-import * as echarts from 'echarts';
-import { Box } from '@mantine/core';
 import { TEMA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
+import { Box } from '@mantine/core';
+import { useShallowEffect } from '@mantine/hooks';
+import { EChartsOption } from "echarts";
+import EChartsReact from "echarts-for-react";
+import { useState } from 'react';
 
 export default function EchartPaiReport({ data }: { data: any }) {
   const [options, setOptions] = useState<EChartsOption>({});

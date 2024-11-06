@@ -55,7 +55,6 @@ export default function ListProject() {
       } else {
         toast.error(response.message);
       }
-      setLoading(false);
     } catch (error) {
       toast.error("Gagal mendapatkan kegiatan, coba lagi nanti");
       console.error(error);

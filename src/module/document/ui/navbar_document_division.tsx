@@ -18,13 +18,13 @@ import { HiMenu } from "react-icons/hi";
 import { LuShare2 } from "react-icons/lu";
 import { MdClose, MdOutlineMoreHoriz } from "react-icons/md";
 import { RiListCheck } from "react-icons/ri";
+import { useWibuRealtime } from "wibu-realtime";
 import { funDeleteDocument, funGetAllDocument, funRenameDocument, } from "../lib/api_document";
 import { IDataDocument, IJalurItem } from "../lib/type_document";
 import { globalRefreshDocument } from "../lib/val_document";
 import DrawerMenuDocumentDivision from "./drawer_menu_document_division";
 import DrawerMore from "./drawer_more";
 import DrawerShareDocument from "./drawer_share_document";
-import { useWibuRealtime } from "wibu-realtime";
 
 export default function NavbarDocumentDivision() {
   const router = useRouter();
@@ -52,6 +52,8 @@ export default function NavbarDocumentDivision() {
   const isMobile2 = useMediaQuery("(max-width: 496px)");
   const tema = useHookstate(TEMA);
   const [loading, setLoading] = useState(true);
+  const [loadingRename, setLoadingRename] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const [dataRealTime, setDataRealtime] = useWibuRealtime({
     WIBU_REALTIME_TOKEN: keyWibu,
     project: "sdm"
@@ -138,8 +140,9 @@ export default function NavbarDocumentDivision() {
   };
 
   async function onConfirmDelete(val: boolean) {
-    if (val) {
-      try {
+    try {
+      if (val) {
+        setLoadingDelete(true)
         const respon = await funDeleteDocument(selectedFiles);
         if (respon.success) {
           getOneData(false);
@@ -150,19 +153,20 @@ export default function NavbarDocumentDivision() {
         } else {
           toast.error(respon.message);
         }
-      } catch (error) {
-        console.error(error);
-        toast.error("Gagal menghapus item, coba lagi nanti");
+        handleBatal();
       }
-
-      handleBatal();
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal menghapus item, coba lagi nanti");
+    } finally {
+      setLoadingDelete(false)
+      setIsDelete(false);
     }
-
-    setIsDelete(false);
   }
 
   async function onRenameSubmit() {
     try {
+      setLoadingRename(true);
       const res = await funRenameDocument(bodyRename);
       if (res.success) {
         setDataRealtime([{
@@ -176,11 +180,13 @@ export default function NavbarDocumentDivision() {
     } catch (error) {
       console.error(error);
       toast.error("Gagal mengganti nama item, coba lagi nanti");
+    } finally {
+      setLoadingRename(false)
+      setSelectedFiles([]);
+      setDariSelectAll(false);
+      setRename(false);
     }
 
-    setSelectedFiles([]);
-    setDariSelectAll(false);
-    setRename(false);
   }
 
   useShallowEffect(() => {
@@ -802,6 +808,7 @@ export default function NavbarDocumentDivision() {
 
       {/* MODAL KONFIRMASI DELETE */}
       <LayoutModal
+        loading={loadingDelete}
         opened={isDelete}
         onClose={() => setIsDelete(false)}
         description="Apakah Anda yakin ingin menghapus item?"
@@ -861,6 +868,7 @@ export default function NavbarDocumentDivision() {
             </Grid.Col>
             <Grid.Col span={6}>
               <Button
+                loading={loadingRename}
                 variant="subtle"
                 fullWidth
                 color={tema.get().utama}

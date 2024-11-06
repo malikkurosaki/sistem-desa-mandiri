@@ -1,4 +1,4 @@
-import { IFormAddDetailproject, IFormAddMemberProject, IFormDateProject, IFormProject } from "./type_project";
+import { IFormAddDetailproject, IFormAddMemberProject, IFormDateProject } from "./type_project";
 
 
 export const funGetAllProject = async (path?: string) => {

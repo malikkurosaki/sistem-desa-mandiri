@@ -23,13 +23,15 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
       WIBU_REALTIME_TOKEN: keyWibu,
       project: "sdm"
    })
+   const [loadingUpdate, setLoadingUpdate] = useState(false)
+   const [loadingDelete, setLoadingDelete] = useState(false)
 
 
    async function fetchStatusDiscussion(val: boolean) {
       try {
+         setLoadingUpdate(true)
          if (val) {
             const response = await funEditStatusDiscussion(id, { status: status })
-
             if (response.success) {
                toast.success(response.message)
                refresh.set(!refresh.get())
@@ -38,40 +40,37 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
                   id: id,
                }])
                onSuccess(false)
-               setValModalStatus(false)
             } else {
                toast.error(response.message)
             }
          }
-         setValModalStatus(false)
       } catch (error) {
          console.error(error);
-         setValModalStatus(false)
          toast.error("Gagal menambahkan diskusi, coba lagi nanti");
       } finally {
+         setLoadingUpdate(false)
          setValModalStatus(false)
       }
    }
 
    async function fetchDeleteDiscussion(val: boolean) {
       try {
+         setLoadingDelete(true)
          if (val) {
             const response = await funDeleteDiscussion(id)
             if (response.success) {
                toast.success(response.message)
-               setValModal(false)
                onSuccess(false)
                router.push(`/division/${param.id}/discussion`)
             } else {
                toast.error(response.message)
             }
          }
-         setValModal(false)
       } catch (error) {
          console.error(error);
-         setValModal(false)
          toast.error("Gagal hapus diskusi, coba lagi nanti");
       } finally {
+         setLoadingDelete(false)
          setValModal(false)
       }
    }
@@ -130,12 +129,12 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
             </SimpleGrid>
          </Stack>
 
-         <LayoutModal opened={isValModal} onClose={() => setValModal(false)}
+         <LayoutModal loading={loadingDelete} opened={isValModal} onClose={() => setValModal(false)}
             description="Apakah Anda yakin ingin menghapus diskusi ini?"
             onYes={(val) => { fetchDeleteDiscussion(val) }} />
 
 
-         <LayoutModal opened={isValModalStatus} onClose={() => setValModalStatus(false)}
+         <LayoutModal loading={loadingUpdate} opened={isValModalStatus} onClose={() => setValModalStatus(false)}
             description="Apakah Anda yakin ingin mengubah status diskusi ini?"
             onYes={(val) => { fetchStatusDiscussion(val) }} />
       </Box>

@@ -70,8 +70,6 @@ export default function EditDivision() {
       } else {
         toast.error(res.message);
       }
-      setLoading(false);
-
     } catch (error) {
       console.error(error);
       toast.error("Gagal mendapatkan divisi, coba lagi nanti");
@@ -87,6 +85,7 @@ export default function EditDivision() {
       const res = await funEditDivision(param.id, body)
       if (res.success) {
         toast.success(res.message)
+        router.push("/division/info/" + param.id)
       } else {
         toast.error(res.message)
       }

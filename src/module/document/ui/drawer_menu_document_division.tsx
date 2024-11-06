@@ -24,6 +24,7 @@ export default function DrawerMenuDocumentDivision() {
   const openRef = useRef<() => void>(null)
   const tema = useHookstate(TEMA)
   const [loading, setLoading] = useState(false)
+  const [loadingCreate, setLoadingCreate] = useState(false)
   const [dataRealTime, setDataRealtime] = useWibuRealtime({
     WIBU_REALTIME_TOKEN: keyWibu,
     project: "sdm"
@@ -36,6 +37,7 @@ export default function DrawerMenuDocumentDivision() {
 
   async function onCreateFolder() {
     try {
+      setLoadingCreate(true)
       const res = await funCreateFolder(bodyFolder)
       if (!res.success) {
         toast.error(res.message)
@@ -48,11 +50,13 @@ export default function DrawerMenuDocumentDivision() {
     } catch (error) {
       console.error(error);
       toast.error("Gagal membuat folder baru, coba lagi nanti");
+    } finally {
+      setLoadingCreate(false)
+      refresh.set(true)
+      setOpenModal(false)
+      setOpenDrawerDocument(false)
     }
 
-    refresh.set(true)
-    setOpenModal(false)
-    setOpenDrawerDocument(false)
   }
 
   async function onUploadFile(data: any) {
@@ -204,7 +208,7 @@ export default function DrawerMenuDocumentDivision() {
               <Button variant="subtle" fullWidth color='#969494' onClick={() => setOpenModal(false)}>Batalkan</Button>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Button variant="subtle" fullWidth color={tema.get().utama} onClick={() => onCreateFolder()}>Membuat</Button>
+              <Button loading={loadingCreate} variant="subtle" fullWidth color={tema.get().utama} onClick={() => onCreateFolder()}>Membuat</Button>
             </Grid.Col>
           </Grid>
         </Box>

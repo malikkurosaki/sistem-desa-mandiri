@@ -8,14 +8,20 @@ export async function GET(request: Request) {
    try {
       const user = await funGetUserByCookies()
       const { searchParams } = new URL(request.url)
-      const group = searchParams.get("group")
+      const idGroup = searchParams.get("group")
       const division = searchParams.get("division")
       const date = searchParams.get("date")
+      let grup
 
       if (user.id == undefined) {
          return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 })
       }
 
+      if (idGroup == "null" || idGroup == undefined || idGroup == "") {
+         grup = user.idGroup
+      } else {
+         grup = idGroup
+      }
 
       // CHART PROGRESS
       let kondisiProgress
@@ -26,7 +32,7 @@ export async function GET(request: Request) {
                lte: new Date(String(date))
             },
             Division: {
-               idGroup: String(group)
+               idGroup: String(grup)
             }
          }
       } else {
@@ -52,9 +58,10 @@ export async function GET(request: Request) {
          const cek = data.some((i: any) => i.status == dataStatus[index].status)
          if (cek) {
             const find = ((Number(data.find((i: any) => i.status == dataStatus[index].status)?._count) * 100) / data.reduce((n, { _count }) => n + _count, 0)).toFixed(2)
+            const fix = find != "100.00" ? find.substr(-2, 2) == "00" ? find.substr(0, 2) : find : "100"
             input = {
                name: dataStatus[index].name,
-               value: find
+               value: fix
             }
          } else {
             input = {
@@ -75,7 +82,7 @@ export async function GET(request: Request) {
             isActive: true,
             category: 'FILE',
             Division: {
-               idGroup: String(group)
+               idGroup: String(grup)
             },
             createdAt: {
                lte: new Date(String(date))
@@ -137,7 +144,7 @@ export async function GET(request: Request) {
          kondisiEvent = {
             isActive: true,
             Division: {
-               idGroup: String(group)
+               idGroup: String(grup)
             },
             dateStart: new Date(String(date))
          }

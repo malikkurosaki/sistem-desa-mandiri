@@ -6,7 +6,7 @@ import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, rem
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import moment from "moment";
 import "moment/locale/id";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { GrChatOption } from "react-icons/gr";
@@ -23,7 +23,6 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    const [isComent, setIsComent] = useState("")
    const param = useParams<{ id: string, detail: string }>()
    const [isLoad, setIsLoad] = useState(true)
-   const router = useRouter()
    const refresh = useHookstate(globalRefreshDiscussion)
    const roleLogin = useHookstate(globalRole)
    const [isCreator, setCreator] = useState(false)

@@ -1,25 +1,26 @@
 'use client'
-import { LayoutDrawer, LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, Center, CopyButton, Divider, Flex, Grid, Group, SimpleGrid, Skeleton, Spoiler, Stack, Text, Tooltip } from '@mantine/core';
-import React, { useState } from 'react';
-import { BsCalendar2Event, BsCalendarDate } from 'react-icons/bs';
-import { MdEventNote, MdOutlineFormatListBulleted } from "react-icons/md";
-import { LuClock, LuCopy, LuLink } from "react-icons/lu";
-import { FaCheck, FaUser } from 'react-icons/fa6';
-import { TbCopy } from 'react-icons/tb';
-import { HiMenu } from 'react-icons/hi';
-import DrawerDetailEvent from './drawer_detail_event';
-import { useParams, useRouter } from 'next/navigation';
-import { funDeleteMemberCalender, funGetOneCalender } from '../lib/api_calender';
+import { keyWibu, LayoutDrawer, LayoutNavbarNew, SkeletonList, TEMA } from '@/module/_global';
+import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
+import { ActionIcon, Avatar, Box, Center, CopyButton, Divider, Flex, Grid, Group, SimpleGrid, Spoiler, Stack, Text, Tooltip } from '@mantine/core';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import moment from "moment";
 import "moment/locale/id";
-import { IDataDetailByIdCalender, IDataDetailByIdMember } from '../lib/type_calender';
-import SkeletonDetailEvent from './skeleton_detail_event';
-import { IoIosCloseCircle } from 'react-icons/io';
-import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useHookstate } from '@hookstate/core';
+import { BsCalendar2Event, BsCalendarDate } from 'react-icons/bs';
+import { FaCheck, FaUser } from 'react-icons/fa6';
+import { HiMenu } from 'react-icons/hi';
+import { IoIosCloseCircle } from 'react-icons/io';
+import { LuClock, LuLink } from "react-icons/lu";
+import { MdOutlineFormatListBulleted } from "react-icons/md";
+import { TbCopy } from 'react-icons/tb';
+import { useWibuRealtime } from 'wibu-realtime';
+import { funDeleteMemberCalender, funGetOneCalender } from '../lib/api_calender';
+import { IDataDetailByIdCalender, IDataDetailByIdMember } from '../lib/type_calender';
+import DrawerDetailEvent from './drawer_detail_event';
+import SkeletonDetailEvent from './skeleton_detail_event';
 
 export default function DetailEventDivision() {
   const param = useParams<{ id: string, detail: string }>()
@@ -35,16 +36,22 @@ export default function DetailEventDivision() {
   const tema = useHookstate(TEMA)
   const isMobile2 = useMediaQuery("(max-width: 460px)");
   const isMobile = useMediaQuery('(max-width: 369px)');
+  const [loadingDelete, setLoadingDelete] = useState(false)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
+  const [isUserLogin, setUserLogin] = useState('')
 
 
-  const getData = async () => {
+  const getData = async (loading: boolean) => {
     try {
-      setLoading(true)
+      setLoading(loading)
       const response = await funGetOneCalender(param.detail)
+      setUserLogin(response.user)
       setDataCalender(response.data.calender)
       setDataAnggota(response.data.member)
       setLengthMember(response.data.total)
-      setLoading(false)
     } catch (error) {
       console.error(error)
     } finally {
@@ -53,16 +60,34 @@ export default function DetailEventDivision() {
   }
 
   useShallowEffect(() => {
-    getData()
+    getData(true)
   }, [])
+
+  useShallowEffect(() => {
+    if (dataRealTime && dataRealTime.some((i: any) => i.category == 'calendar-detail' && i.id == isDataCalender?.idCalendar)) {
+      getData(false)
+    }
+
+    if (dataRealTime && dataRealTime.some((i: any) => i.category == 'calendar-detail-delete' && i.id == isDataCalender?.idCalendar && i.idUserFrom != isUserLogin)) {
+      toast.error("Data telah di hapus, anda akan beralih ke halaman list acara")
+      setTimeout(() => {
+        router.push(`/division/${param.id}/calender`)
+      }, 2000)
+    }
+  }, [dataRealTime])
 
   async function onSubmit() {
     try {
+      setLoadingDelete(true)
       const res = await funDeleteMemberCalender(String(isDataCalender?.idCalendar), { idUser: dataChoose.id });
       if (res.success) {
+        setDataRealtime([{
+          category: "calendar-detail",
+          id: isDataCalender?.idCalendar,
+        }])
         toast.success(res.message)
         setDataChoose({ id: '', name: '' })
-        getData()
+        getData(false)
         setOpenDrawer(false)
         setOpenDrawerUser(false)
       } else {
@@ -71,6 +96,9 @@ export default function DetailEventDivision() {
     } catch (error) {
       console.error(error);
       toast.error("Gagal mengeluarkan anggota, coba lagi nanti");
+    } finally {
+      setLoadingDelete(false)
+      setOpenModal(false)
     }
   }
 
@@ -432,16 +460,17 @@ export default function DetailEventDivision() {
         </Box>
       </LayoutDrawer>
 
-      <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+      <LayoutModal loading={loadingDelete} opened={isOpenModal} onClose={() => setOpenModal(false)}
         description="Apakah Anda yakin ingin mengeluarkan anggota?"
         onYes={(val) => {
           if (val) {
             onSubmit()
+          } else {
+            setOpenModal(false)
           }
-          setOpenModal(false)
         }} />
       <LayoutDrawer opened={openDrawer} title={'Menu'} onClose={() => setOpenDrawer(false)}>
-        <DrawerDetailEvent idCalendar={String(isDataCalender?.idCalendar)} />
+        <DrawerDetailEvent idCalendar={String(isDataCalender?.idCalendar)} close={() => { setOpenDrawer(false) }} />
       </LayoutDrawer>
     </Box>
   );

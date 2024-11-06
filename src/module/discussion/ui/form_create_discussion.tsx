@@ -15,7 +15,6 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
    const [isValModal, setValModal] = useState(false)
    const [loadingModal, setLoadingModal] = useState(false)
    const router = useRouter()
-   const [isImg, setImg] = useState("")
    const param = useParams<{ id: string, detail: string }>()
    const [loading, setLoading] = useState(true)
    const [img, setIMG] = useState<any | null>()
@@ -51,25 +50,27 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
 
    async function createDiscussion(val: boolean) {
       try {
-         setLoadingModal(true)
-         const response = await funCreateDiscussion({
-            desc: isData.desc,
-            idDivision: id
-         })
+         if (val) {
+            setLoadingModal(true)
+            const response = await funCreateDiscussion({
+               desc: isData.desc,
+               idDivision: id
+            })
 
-         if (response.success) {
-            setDataRealtime(response.notif)
-            toast.success(response.message)
-            router.push(`/division/${param.id}/discussion/`)
-         } else {
-            toast.error(response.message)
+            if (response.success) {
+               setDataRealtime(response.notif)
+               toast.success(response.message)
+               router.push(`/division/${param.id}/discussion/`)
+            } else {
+               toast.error(response.message)
+            }
          }
       } catch (error) {
          console.error(error);
          toast.error("Gagal menambahkan diskusi, coba lagi nanti");
       } finally {
-         setValModal(false)
          setLoadingModal(false)
+         setValModal(false)
       }
    }
 

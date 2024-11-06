@@ -1,16 +1,15 @@
 'use client'
 import { TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import { Carousel } from "@mantine/carousel";
-import { Avatar, Box, Group, Skeleton, Stack, Text } from "@mantine/core";
+import { Box, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { CiClock2 } from "react-icons/ci";
 import { funGetDetailDivisionById } from "../lib/api_division";
-import { useState } from "react";
 import { IDataTaskOnDetailDivision } from "../lib/type_division";
-import _ from "lodash";
-import { useHookstate } from "@hookstate/core";
 
 
 export default function ListTaskOnDetailDivision() {
@@ -29,7 +28,6 @@ export default function ListTaskOnDetailDivision() {
          } else {
             toast.error(res.message);
          }
-         setLoading(false);
       } catch (error) {
          console.error(error);
          toast.error("Gagal mendapatkan divisi, coba lagi nanti");
@@ -61,7 +59,7 @@ export default function ListTaskOnDetailDivision() {
                   :
                   (data.length === 0) ?
                      <Stack align="stretch" justify="center" w={"100%"}>
-                        <Text c="dimmed" ta={"center"} fs={"italic"}>Belum ada tugas hari ini</Text>
+                        <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada tugas hari ini</Text>
                      </Stack>
                      : <></>
             }
