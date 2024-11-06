@@ -54,16 +54,15 @@ export default function ListDivisionTask() {
       }
    };
 
+   useShallowEffect(() => {
+      fetchData(false)
+   }, [isPage])
+
 
    useShallowEffect(() => {
       setPage(1)
       fetchData(true);
    }, [status, searchQuery]);
-
-
-   useShallowEffect(() => {
-      fetchData(false)
-   }, [isPage])
 
    useEffect(() => {
       const handleScroll = async () => {
@@ -249,8 +248,8 @@ export default function ListDivisionTask() {
                                     </Card.Section>
                                     <Box pt={10}>
                                        <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
-                                          <Progress.Section value={v.progress} color="yellow" striped >
-                                             <Progress.Label>{v.progress}%</Progress.Label>
+                                          <Progress.Section value={_.isNull(v.progress) ? 0 : v.progress} color="yellow" striped >
+                                             <Progress.Label>{_.isNull(v.progress) ? 0 : v.progress}%</Progress.Label>
                                           </Progress.Section>
                                        </Progress.Root>
                                        <Text my={10}>{v.desc}</Text>
