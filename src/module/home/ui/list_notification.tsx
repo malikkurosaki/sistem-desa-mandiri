@@ -1,27 +1,14 @@
 "use client";
-import { currentScroll, TEMA, WARNA } from "@/module/_global";
+import { currentScroll, TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
-import {
-  ActionIcon,
-  Box,
-  Center,
-  Flex,
-  Grid,
-  Group,
-  Skeleton,
-  Spoiler,
-  Text,
-} from "@mantine/core";
+import { ActionIcon, Box, Grid, Skeleton, Spoiler, Text } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { FaBell } from "react-icons/fa6";
-import { IListNotification } from "../lib/type_notification";
-import {
-  funGetAllNotification,
-  funReadNotification,
-} from "../lib/api_notification";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { FaBell } from "react-icons/fa6";
+import { funGetAllNotification, funReadNotification, } from "../lib/api_notification";
+import { IListNotification } from "../lib/type_notification";
 
 export default function ListNotification() {
   const router = useRouter();
@@ -69,7 +56,7 @@ export default function ListNotification() {
         const containerHeight = containerRef.current.clientHeight;
         const scrollHeight = containerRef.current.scrollHeight;
 
-        if (scrollTop + containerHeight >= scrollHeight) {
+        if (scrollTop + containerHeight + 1 >= scrollHeight) {
           setPage(isPage + 1);
         }
       }
@@ -82,11 +69,7 @@ export default function ListNotification() {
     };
   }, [containerRef, isPage]);
 
-  async function onReadNotif(
-    category: string,
-    idContent: string,
-    idData: string
-  ) {
+  async function onReadNotif(category: string, idContent: string, idData: string) {
     try {
       const response = await funReadNotification({ id: idData });
       if (response.success) {
@@ -235,7 +218,7 @@ export default function ListNotification() {
         </Box>
       )}
 
-      {}
+      { }
     </Box>
   );
 }
