@@ -45,6 +45,12 @@ export interface IFormDateProject {
   title: string,
 }
 
+export interface NewIFormDateProject{
+  dateStart: string,
+  dateEnd: string,
+  title: string,
+}
+
 export interface IFormMemberProject {
   idUser: string,
   name: string,
@@ -53,8 +59,8 @@ export interface IFormMemberProject {
 
 
 export interface IFormAddDetailproject {
-  dateStart: Date,
-  dateEnd: Date,
+  dateStart: string,
+  dateEnd: string,
   name: string
 }
 
