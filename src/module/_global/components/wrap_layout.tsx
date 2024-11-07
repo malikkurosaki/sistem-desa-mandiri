@@ -1,15 +1,14 @@
 'use client'
+import { globalParamJumlahNotif } from "@/module/home";
 import { useHookstate } from "@hookstate/core";
-import { globalNotifPage, globalRole, keyWibu, TEMA } from "../bin/val_global";
 import { useShallowEffect } from "@mantine/hooks";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useWibuRealtime } from "wibu-realtime";
+import { globalNotifPage, globalRole, keyWibu, TEMA } from "../bin/val_global";
 import NotificationCustome from "./notification_custome";
-import { usePathname, useRouter } from "next/navigation";
-import { globalParamJumlahNotif } from "@/module/home";
-import ReloadButtonTop from "./reload_button_top";
 
-export default function WrapLayout({ children, role, theme, user }: { children: React.ReactNode, role: any, theme: any, user: any }) {
+export default function WrapLayout({ children, role, theme, user, village }: { children: React.ReactNode, role: any, theme: any, user: any, village: any }) {
    const router = useRouter()
    const roleLogin = useHookstate(globalRole)
    const tema = useHookstate(TEMA)
@@ -43,6 +42,10 @@ export default function WrapLayout({ children, role, theme, user }: { children: 
                setTampilNotif(false);
             }, 4000);
          }
+      }
+
+      if (data && data.some((v: any) => v.category == "applied-theme" && v.user != user && v.village == village)) {
+         tema.set(data[0]?.theme)
       }
    }, [data])
 
