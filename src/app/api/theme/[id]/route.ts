@@ -170,7 +170,7 @@ export async function POST(request: Request, context: { params: { id: string } }
       // create log user
       const log = await createLogUser({ act: 'DELETE', desc: 'User mengganti tema', table: 'colorTheme', data: id })
 
-      return NextResponse.json({ success: true, message: "Tema berhasil diganti", data: dataTheme }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Tema berhasil diganti", data: { village: user.idVillage, user: user.id }, theme: dataTheme }, { status: 200 });
 
    } catch (error) {
       console.error(error);

@@ -38,7 +38,7 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
       const res = await funGetAllmember('?active=true&group=' + grup + '&search=' + search);
       const user = await funGetUserByCookies();
       if (res.success) {
-        setDataMember(res.data.filter((i: any) => i.id != user.id))
+        setDataMember(res.data.filter((i: any) => i.id != user.id && i.idUserRole != 'supadmin' && i.idUserRole != 'cosupadmin'))
         // cek data member sebelumnya
         if (member.length > 0) {
           setSelectedFiles(JSON.parse(JSON.stringify(member.get())))

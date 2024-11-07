@@ -156,7 +156,7 @@ export default function ListProject() {
         <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
           <Text fw={'bold'} c={tema.get().utama}>Total Kegiatan</Text>
           <Flex justify={'center'} align={'center'} h={'100%'}>
-            <Text fz={40} fw={'bold'} c={tema.get().utama}>{totalData}</Text>
+            <Text fz={40} fw={'bold'} c={tema.get().utama}>{loading ? 0 : totalData}</Text>
           </Flex>
         </Box>
         {isList ? (

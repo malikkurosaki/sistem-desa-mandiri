@@ -1,10 +1,9 @@
-import { Box, Center, Grid, Group, SimpleGrid, Spoiler, Text } from '@mantine/core';
-import React from 'react';
-import { AiOutlineFileSync } from "react-icons/ai";
-import { IFormDateProject } from '../lib/type_project';
+import { Box, Center, Grid, Group, SimpleGrid, Text } from '@mantine/core';
 import moment from 'moment';
+import { AiOutlineFileSync } from "react-icons/ai";
+import { NewIFormDateProject } from '../lib/type_project';
 
-export default function ResultsDateAndTask(data: IFormDateProject) {
+export default function ResultsDateAndTask(data: NewIFormDateProject) {
   return (
     <Box pt={5}>
       <Box bg={"white"} style={{

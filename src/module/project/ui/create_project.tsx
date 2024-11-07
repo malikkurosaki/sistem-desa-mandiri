@@ -15,7 +15,7 @@ import { FaTrash } from "react-icons/fa6";
 import { IoIosArrowDropright } from "react-icons/io";
 import { useWibuRealtime } from "wibu-realtime";
 import { funCreateProject } from "../lib/api_project";
-import { IFormDateProject, IFormMemberProject, IListFileTaskProject } from "../lib/type_project";
+import { IFormMemberProject, IListFileTaskProject, NewIFormDateProject } from "../lib/type_project";
 import { globalMemberProject } from "../lib/val_project";
 import ViewDateEndTask from "./create_date_end_task";
 import CreateUsersProject from "./create_users_project";
@@ -32,7 +32,7 @@ export default function CreateProject() {
   const member = useHookstate(globalMemberProject)
   const memberValue = member.get() as IFormMemberProject[]
   const [openTugas, setOpenTugas] = useState(false)
-  const [dataTask, setDataTask] = useState<IFormDateProject[]>([])
+  const [dataTask, setDataTask] = useState<NewIFormDateProject[]>([])
   const openRef = useRef<() => void>(null)
   const [fileForm, setFileForm] = useState<any[]>([])
   const [listFile, setListFile] = useState<IListFileTaskProject[]>([])
