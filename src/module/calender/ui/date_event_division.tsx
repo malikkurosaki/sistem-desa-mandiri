@@ -22,6 +22,7 @@ export default function DateEventDivision() {
   const [isMonth, setMonth] = useState<any>(moment().month() + 1)
   const [loading, setLoading] = useState(true)
   const isMobile = useMediaQuery('(max-width: 369px)');
+  const [isDateChoose, setDataChoose] = useState<any>(moment().format('YYYY-MM-DD'))
   const [dataRealTime, setDataRealtime] = useWibuRealtime({
     WIBU_REALTIME_TOKEN: keyWibu,
     project: "sdm"
@@ -37,7 +38,6 @@ export default function DateEventDivision() {
       } else {
         toast.error(response.message)
       }
-      setLoading(false)
     } catch (error) {
       console.error(error)
       toast.error("Gagal mendapatkan list acara")
@@ -63,6 +63,7 @@ export default function DateEventDivision() {
 
   async function changeMonth(value: any) {
     const monthKlik = moment(value).format('MM')
+    setDataChoose(value)
     if (monthKlik != isMonth) {
       setMonth(monthKlik)
       getIndicator(value)
@@ -99,7 +100,7 @@ export default function DateEventDivision() {
       getIndicator(isDate)
       getData(isDate, false)
     } else if (dataRealTime && dataRealTime.some((i: any) => i.category == 'calendar-event' && i.division == param.id && i.date != isDate)) {
-      getIndicator(isDate)
+      getIndicator(isDateChoose)
     }
   }, [dataRealTime])
 
