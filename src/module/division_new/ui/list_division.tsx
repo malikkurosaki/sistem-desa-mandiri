@@ -63,15 +63,18 @@ export default function ListDivision() {
     }
   };
 
+
+  useShallowEffect(() => {
+    fetchData(false)
+  }, [isPage])
+
+
   useShallowEffect(() => {
     setPage(1)
     fetchData(true)
   }, [status, searchQuery])
 
 
-  useShallowEffect(() => {
-    fetchData(false)
-  }, [isPage])
 
   useEffect(() => {
     const handleScroll = async () => {
@@ -157,7 +160,7 @@ export default function ListDivision() {
           <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
             <Text fw={'bold'} c={tema.get().utama}>Total Divisi</Text>
             <Flex justify={'center'} align={'center'} h={'100%'}>
-              <Text fz={40} fw={'bold'} c={tema.get().utama}>{jumlah}</Text>
+              <Text fz={40} fw={'bold'} c={tema.get().utama}>{loading ? 0 : jumlah}</Text>
             </Flex>
           </Box>
         </Box>

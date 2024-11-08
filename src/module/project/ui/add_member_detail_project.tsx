@@ -223,12 +223,12 @@ export default function AddMemberDetailProject() {
       </Box>
 
       <Box p={20}>
-        <Group justify="space-between" mt={100} onClick={handleSelectAll}>
+        {/* <Group justify="space-between" mt={100} onClick={handleSelectAll}>
           <Text c={tema.get().utama} fw={"bold"}>
             Pilih Semua Anggota
           </Text>
           {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-        </Group>
+        </Group> */}
         {loading ?
           Array(8)
             .fill(null)

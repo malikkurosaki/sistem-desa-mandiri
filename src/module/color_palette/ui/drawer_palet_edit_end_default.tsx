@@ -1,4 +1,4 @@
-import { TEMA } from '@/module/_global';
+import { keyWibu, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
 import { Box, Flex, SimpleGrid, Text } from '@mantine/core';
@@ -9,6 +9,7 @@ import { FaPencil, FaTrash } from 'react-icons/fa6';
 import { IoColorPalette } from 'react-icons/io5';
 import { funChangeTheme, funDeleteTheme } from '../lib/api_theme';
 import { globalRefreshTheme } from '../lib/val_theme';
+import { useWibuRealtime } from 'wibu-realtime';
 
 export default function DrawerPaletEditEndDefault({ id, idVillage, isUse }: { id: string, idVillage: string, isUse: boolean }) {
   const router = useRouter()
@@ -18,13 +19,23 @@ export default function DrawerPaletEditEndDefault({ id, idVillage, isUse }: { id
   const refresh = useHookstate(globalRefreshTheme)
   const [loadingApply, setLoadingApply] = useState(false)
   const [loadingDelete, setLoadingDelete] = useState(false)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
   async function onChangeTheme() {
     try {
       setLoadingApply(true)
       const res = await funChangeTheme(id)
       if (res.success) {
-        tema.set(res.data)
+        setDataRealtime([{
+          category: "applied-theme",
+          village: res.data.village,
+          user: res.data.user,
+          theme: res.theme
+        }])
+        tema.set(res.theme)
         refresh.set(!refresh.get())
       } else {
         toast.error(res.message);
@@ -101,7 +112,7 @@ export default function DrawerPaletEditEndDefault({ id, idVillage, isUse }: { id
         onYes={(val) => {
           if (val) {
             onChangeTheme()
-          }else{
+          } else {
             setModal(false)
           }
         }} />
@@ -112,7 +123,7 @@ export default function DrawerPaletEditEndDefault({ id, idVillage, isUse }: { id
         onYes={(val) => {
           if (val) {
             onDelete()
-          }else{
+          } else {
             setModalDel(false)
           }
         }} />

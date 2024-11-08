@@ -3,15 +3,15 @@ import { LayoutNavbarNew, TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
 import { ActionIcon, Box, Button, Flex, Group, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
+import { useShallowEffect } from "@mantine/hooks";
 import moment from "moment";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiChevronLeft } from "react-icons/hi2";
-import { IFormDateProject } from "../lib/type_project";
-import { useShallowEffect } from "@mantine/hooks";
+import { NewIFormDateProject } from "../lib/type_project";
 
 
-export default function ViewDateEndTask({ onClose, onSet }: { onClose: (val: boolean) => void, onSet: (val: IFormDateProject) => void }) {
+export default function ViewDateEndTask({ onClose, onSet }: { onClose: (val: boolean) => void, onSet: (val: NewIFormDateProject) => void }) {
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const [title, setTitle] = useState("")
   const tema = useHookstate(TEMA)
@@ -29,8 +29,8 @@ export default function ViewDateEndTask({ onClose, onSet }: { onClose: (val: boo
       return toast.error("Error! harus memasukkan judul tugas")
 
     onSet({
-      dateStart: value[0],
-      dateEnd: value[1],
+      dateStart: moment(value[0]).format('YYYY-MM-DD'),
+      dateEnd: moment(value[1]).format('YYYY-MM-DD'),
       title: title
     })
   }
