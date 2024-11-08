@@ -1,21 +1,19 @@
 "use client"
 import { LayoutDrawer, LayoutNavbarNew, TEMA } from '@/module/_global';
-import { ActionIcon, Box, Checkbox, Flex, Group, Skeleton, Text } from '@mantine/core';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useHookstate } from '@hookstate/core';
+import { ActionIcon, Box, Flex, Group, Skeleton, Text } from '@mantine/core';
+import { useShallowEffect } from '@mantine/hooks';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaCircleCheck } from 'react-icons/fa6';
 import { HiMenu } from 'react-icons/hi';
-import DrawerCreatePalette from './drawer_create_palette';
-import DrawerPaletEditEndDefault from './drawer_palet_edit_end_default';
-import { useHookstate } from '@hookstate/core';
 import { funGetAllTheme } from '../lib/api_theme';
 import { IDataTheme } from '../lib/type_theme';
-import toast from 'react-hot-toast';
-import { useShallowEffect } from '@mantine/hooks';
 import { globalRefreshTheme } from '../lib/val_theme';
+import DrawerCreatePalette from './drawer_create_palette';
+import DrawerPaletEditEndDefault from './drawer_palet_edit_end_default';
 
 export default function ListColorPalette() {
-  const router = useRouter()
   const [isOpen, setOpen] = useState(false)
   const [isOpenTambahan, setOpenTambahan] = useState(false)
   const tema = useHookstate(TEMA)
@@ -36,7 +34,6 @@ export default function ListColorPalette() {
       } else {
         toast.error(res.message)
       }
-      setLoading(false)
     } catch (error) {
       console.error(error)
       toast.error("Gagal mendapatkan data tema, coba lagi nanti")

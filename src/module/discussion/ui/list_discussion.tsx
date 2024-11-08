@@ -46,13 +46,13 @@ export default function ListDiscussion({ id }: { id: string }) {
    }
 
    useShallowEffect(() => {
+      getData(false)
+   }, [isPage])
+
+   useShallowEffect(() => {
       setPage(1)
       getData(true)
    }, [searchQuery])
-
-   useShallowEffect(() => {
-      getData(false)
-   }, [isPage])
 
    useEffect(() => {
       const handleScroll = async () => {
@@ -78,7 +78,6 @@ export default function ListDiscussion({ id }: { id: string }) {
 
 
    useShallowEffect(() => {
-      console.log(notifLoadPage.get())
       if (notifLoadPage.get().category == 'division/' + param.id + '/discussion' && notifLoadPage.get().load == true) {
          setRefresh(true)
       }

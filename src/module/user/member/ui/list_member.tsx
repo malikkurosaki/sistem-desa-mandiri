@@ -42,7 +42,7 @@ export default function ListMember() {
             Aktif
           </Tabs.Tab>
           <Tabs.Tab
-            value="tidak-aktif"
+            value="false"
             w={"53%"}
             leftSection={<IoCloseCircleOutline style={iconStyle} />}
             onClick={() => {

@@ -55,10 +55,15 @@ export default function DrawerDetailDiscussion({ onSuccess, id, status, idDivisi
 
    async function fetchDeleteDiscussion(val: boolean) {
       try {
-         setLoadingDelete(true)
          if (val) {
+            setLoadingDelete(true)
             const response = await funDeleteDiscussion(id)
             if (response.success) {
+               setDataRealtime([{
+                  category: "discussion-delete",
+                  id: id,
+                  user: response.user
+               }])
                toast.success(response.message)
                onSuccess(false)
                router.push(`/division/${param.id}/discussion`)

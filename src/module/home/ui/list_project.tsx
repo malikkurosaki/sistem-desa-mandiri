@@ -46,7 +46,7 @@ export default function ListProjects() {
    return (
       <>
          <Box pt={10}>
-            <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Kegiatan Terbaru</Text>
+            <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Kegiatan Terupdate</Text>
             {loading ?
                <Box pb={20}>
                   <Skeleton width={"100%"} height={200} radius={"md"} />
