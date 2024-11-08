@@ -72,7 +72,7 @@ export default function DetailEventDivision() {
       toast.error("Data telah di hapus, anda akan beralih ke halaman list acara")
       setTimeout(() => {
         router.push(`/division/${param.id}/calender`)
-      }, 2000)
+      }, 1000)
     }
   }, [dataRealTime])
 
