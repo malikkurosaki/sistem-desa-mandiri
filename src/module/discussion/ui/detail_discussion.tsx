@@ -6,7 +6,7 @@ import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, rem
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import moment from "moment";
 import "moment/locale/id";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { GrChatOption } from "react-icons/gr";
@@ -26,8 +26,10 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    const refresh = useHookstate(globalRefreshDiscussion)
    const roleLogin = useHookstate(globalRole)
    const [isCreator, setCreator] = useState(false)
+   const [isUser, setUser] = useState('')
    const adminLogin = useHookstate(globalIsAdminDivision)
    const tema = useHookstate(TEMA)
+   const router = useRouter()
    const isMobile = useMediaQuery('(max-width: 369px)');
    const isMobile2 = useMediaQuery("(max-width: 438px)");
    const [dataRealTime, setDataRealtime] = useWibuRealtime({
@@ -42,6 +44,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
          setData(response.data)
          setIsLoad(false)
          setCreator(response.data.isCreator)
+         setUser(response.user)
       } catch (error) {
          console.error(error)
       } finally {
@@ -56,6 +59,13 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    useShallowEffect(() => {
       if (dataRealTime && dataRealTime.some((i: any) => i.category == 'discussion-detail' && i.id == id)) {
          getData(false)
+      }
+
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'discussion-delete' && i.id == id && i.user != isUser)) {
+         toast.error("Data telah di hapus, anda akan beralih ke halaman list diskusi")
+         setTimeout(() => {
+            router.push(`/division/${param.id}/discussion`)
+         }, 1000)
       }
    }, [dataRealTime])
 

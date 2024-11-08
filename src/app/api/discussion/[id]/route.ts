@@ -87,7 +87,7 @@ export async function GET(request: Request, context: { params: { id: string } })
             totalComments: comments.length,
         };
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan diskusi", data: response }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan diskusi", data: response, user: user.id }, { status: 200 });
 
     } catch (error) {
         console.error(error);
@@ -175,7 +175,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
         // create log user
         const log = await createLogUser({ act: 'DELETE', desc: 'User menghapus data diskusi', table: 'divisionDisscussion', data: id })
 
-        return NextResponse.json({ success: true, message: "Berhasil menghapus diskusi" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil menghapus diskusi", user: user.id }, { status: 200 });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ success: false, message: "Gagal menghapus diskusi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
