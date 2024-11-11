@@ -14,14 +14,14 @@ export interface IFormMemberTask {
 
 
 export interface IFormDateTask {
-   dateStart: Date,
-   dateEnd: Date,
+   dateStart: string,
+   dateEnd: string,
    title: string
 }
 
 export interface IFormAddDetailTask {
-   dateStart: Date,
-   dateEnd: Date,
+   dateStart: string,
+   dateEnd: string,
    title: string
    idDivision: string
 }
