@@ -170,6 +170,25 @@ export async function POST(request: Request) {
          })
       }
 
+      if (userRoleLogin != "cosupadmin") {
+         const ketuaGrup = await prisma.user.findFirst({
+            where: {
+               isActive: true,
+               idUserRole: "cosupadmin",
+               idGroup: user.idGroup
+            }
+         })
+
+         dataNotif.push({
+            idUserTo: ketuaGrup?.id,
+            idUserFrom: userId,
+            category: 'division/' + idDivision + '/discussion',
+            idContent: data.id,
+            title: 'Diskusi Baru',
+            desc: 'Terdapat diskusi baru. Silahkan periksa detailnya.'
+         })
+      }
+
       const insertNotif = await prisma.notifications.createMany({
          data: dataNotif
       })
