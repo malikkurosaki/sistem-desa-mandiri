@@ -38,8 +38,8 @@ export default function EditDetailTask() {
          setLoadingModal(true)
          const res = await funEditDetailTask(param.detail, {
             title: title,
-            dateStart: value[0],
-            dateEnd: value[1],
+            dateStart: moment(value[0]).format('YYYY-MM-DD'),
+            dateEnd: moment(value[1]).format('YYYY-MM-DD'),
          })
 
          if (res.success) {
