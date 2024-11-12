@@ -142,8 +142,8 @@ export async function GET(request: Request) {
                extension: v.DivisionDocumentFolderFile.extension,
                path: v.DivisionDocumentFolderFile.path,
                createdBy: v.DivisionDocumentFolderFile.User.name,
-               createdAt: moment(v.DivisionDocumentFolderFile.createdAt).format("DD-MM-YYYY HH:mm"),
-               updatedAt: moment(v.DivisionDocumentFolderFile.updatedAt).format("DD-MM-YYYY HH:mm"),
+               createdAt: v.DivisionDocumentFolderFile.createdAt,
+               updatedAt: v.DivisionDocumentFolderFile.updatedAt,
                share: true
             }))
 
@@ -181,8 +181,8 @@ export async function GET(request: Request) {
       const allData = data.map((v: any) => ({
          ..._.omit(v, ["User", "createdAt", "updatedAt"]),
          createdBy: v.User.name,
-         createdAt: moment(v.createdAt).format("DD-MM-YYYY HH:mm"),
-         updatedAt: moment(v.updatedAt).format("DD-MM-YYYY HH:mm"),
+         createdAt: v.createdAt,
+         updatedAt: v.updatedAt,
          share: false
       }))
 
@@ -190,7 +190,13 @@ export async function GET(request: Request) {
          allData.push(...formatDataShare)
       }
 
-      const formatData = _.orderBy(allData, ['category', 'createdAt'], ['desc', 'asc']);
+      const formatData = _.orderBy(allData, ['category', 'createdAt'], ['desc', 'desc']);
+
+      const fixData = formatData.map((v: any) => ({
+         ..._.omit(v, ["createdAt", "updatedAt"]),
+         createdAt: moment(v.createdAt).format("DD-MM-YYYY HH:mm"),
+         updatedAt: moment(v.updatedAt).format("DD-MM-YYYY HH:mm"),
+      }))
 
       let pathNow = path
       let jalur = []
@@ -221,7 +227,7 @@ export async function GET(request: Request) {
       jalur.push({ id: 'home', name: 'home' })
       jalur = [...jalur].reverse()
 
-      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: formatData, jalur }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: fixData, jalur }, { status: 200 });
 
    } catch (error) {
       console.error(error);
