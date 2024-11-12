@@ -2,7 +2,6 @@ import { DIR, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _, { ceil } from "lodash";
-import moment from "moment";
 import { NextResponse } from "next/server";
 
 
@@ -145,8 +144,8 @@ export async function POST(request: Request) {
             idDivision: idDivision,
             idProject: data.id,
             title: v.title,
-            dateStart: new Date(moment(v.dateStart).format('YYYY-MM-DD')),
-            dateEnd: new Date(moment(v.dateEnd).format('YYYY-MM-DD')),
+            dateStart: new Date(v.dateStart),
+            dateEnd: new Date(v.dateEnd),
          }))
 
          const insertTask = await prisma.divisionProjectTask.createMany({

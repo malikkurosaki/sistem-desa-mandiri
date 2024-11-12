@@ -29,8 +29,8 @@ export default function ViewDateEndTask({ onClose, onSet }: { onClose: (val: boo
       return toast.error("Error! harus memasukkan judul tugas")
 
     onSet({
-      dateStart: value[0],
-      dateEnd: value[1],
+      dateStart: moment(value[0]).format('YYYY-MM-DD'),
+      dateEnd: moment(value[1]).format('YYYY-MM-DD'),
       title: title
     })
 

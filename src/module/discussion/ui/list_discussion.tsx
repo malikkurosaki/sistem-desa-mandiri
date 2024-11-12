@@ -1,5 +1,5 @@
 'use client'
-import { currentScroll, globalNotifPage, ReloadButtonTop, TEMA } from "@/module/_global";
+import { currentScroll, globalNotifPage, keyWibu, ReloadButtonTop, TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
 import { Avatar, Badge, Box, Divider, Flex, Grid, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { GrChatOption } from "react-icons/gr";
 import { HiMagnifyingGlass } from "react-icons/hi2";
+import { useWibuRealtime } from "wibu-realtime";
 import { funGetAllDiscussion } from "../lib/api_discussion";
 import { IDataDiscussion } from "../lib/type_discussion";
 
@@ -24,6 +25,10 @@ export default function ListDiscussion({ id }: { id: string }) {
    const [isPage, setPage] = useState(1)
    const notifLoadPage = useHookstate(globalNotifPage)
    const [isRefresh, setRefresh] = useState(false)
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    const getData = async (loading: boolean) => {
       try {
@@ -82,6 +87,12 @@ export default function ListDiscussion({ id }: { id: string }) {
          setRefresh(true)
       }
    }, [notifLoadPage.get().load])
+
+   useShallowEffect(() => {
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'division/' + param.id + '/discussion')) {
+         setRefresh(true)
+      }
+   }, [dataRealTime])
 
    function onRefresh() {
       notifLoadPage.set({
