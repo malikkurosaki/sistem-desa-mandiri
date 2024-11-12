@@ -4,13 +4,13 @@ import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
 import { Box, Button, Flex, Group, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
+import { useShallowEffect } from "@mantine/hooks";
 import moment from "moment";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useWibuRealtime } from "wibu-realtime";
 import { funCreateDetailTask } from "../lib/api_task";
-import { useShallowEffect } from "@mantine/hooks";
 
 export default function AddDetailTask() {
    const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
@@ -59,8 +59,8 @@ export default function AddDetailTask() {
          setLoadingModal(true)
          const res = await funCreateDetailTask(param.detail, {
             title,
-            dateStart: (value[0] != null) ? value[0] : new Date,
-            dateEnd: (value[1] != null) ? value[1] : new Date,
+            dateStart: (value[0] != null) ? moment(value[0]).format('YYYY-MM-DD') : moment(new Date).format('YYYY-MM-DD'),
+            dateEnd: (value[1] != null) ? moment(value[1]).format('YYYY-MM-DD') : moment(new Date).format('YYYY-MM-DD'),
             idDivision: param.id
          })
 

@@ -2,7 +2,6 @@ import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
-import moment from "moment";
 import { NextResponse } from "next/server";
 
 
@@ -77,8 +76,6 @@ export async function DELETE(request: Request, context: { params: { id: string }
       return NextResponse.json({ success: false, message: "Gagal menghapus tugas divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
-
-
 
 // EDIT STATUS DETAIL TASK
 export async function PUT(request: Request, context: { params: { id: string } }) {
@@ -218,8 +215,8 @@ export async function POST(request: Request, context: { params: { id: string } }
          },
          data: {
             title,
-            dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
-            dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
+            dateStart: new Date(dateStart),
+            dateEnd: new Date(dateEnd),
          },
       });
 

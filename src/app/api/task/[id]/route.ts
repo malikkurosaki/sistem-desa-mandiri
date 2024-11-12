@@ -193,8 +193,8 @@ export async function POST(request: Request, context: { params: { id: string } }
             idProject: id,
             idDivision,
             title,
-            dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
-            dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
+            dateStart: new Date(dateStart),
+            dateEnd: new Date(dateEnd),
          },
          select: {
             id: true
