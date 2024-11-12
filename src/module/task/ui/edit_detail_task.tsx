@@ -1,28 +1,15 @@
 "use client";
 import { LayoutNavbarNew, TEMA } from "@/module/_global";
-import {
-   Avatar,
-   Box,
-   Button,
-   Flex,
-   Group,
-   Input,
-   rem,
-   SimpleGrid,
-   Skeleton,
-   Stack,
-   Text,
-   TextInput,
-} from "@mantine/core";
-import React, { useState } from "react";
-import { DatePicker } from "@mantine/dates";
-import { useParams, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import moment from "moment";
-import { funEditDetailTask, funGetDetailTask } from "../lib/api_task";
-import { useShallowEffect } from "@mantine/hooks";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
+import { Box, Button, Flex, Group, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
+import { useShallowEffect } from "@mantine/hooks";
+import moment from "moment";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { funEditDetailTask, funGetDetailTask } from "../lib/api_task";
 
 
 export default function EditDetailTask() {
@@ -32,10 +19,12 @@ export default function EditDetailTask() {
    const param = useParams<{ id: string, detail: string }>()
    const [openModal, setOpenModal] = useState(false)
    const [loading, setLoading] = useState(true)
+   const [loadingModal, setLoadingModal] = useState(false)
    const [idTugas, setIdTugas] = useState("")
    const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       title: false,
+      date: false
    });
 
    async function onSubmit() {
@@ -46,10 +35,11 @@ export default function EditDetailTask() {
          return toast.error("Error! harus memasukkan judul tugas")
 
       try {
+         setLoadingModal(true)
          const res = await funEditDetailTask(param.detail, {
             title: title,
-            dateStart: value[0],
-            dateEnd: value[1],
+            dateStart: moment(value[0]).format('YYYY-MM-DD'),
+            dateEnd: moment(value[1]).format('YYYY-MM-DD'),
          })
 
          if (res.success) {
@@ -61,6 +51,9 @@ export default function EditDetailTask() {
       } catch (error) {
          console.error(error);
          toast.error("Gagal edit detail tugas divisi, coba lagi nanti");
+      } finally {
+         setOpenModal(false)
+         setLoadingModal(false)
       }
 
    }
@@ -107,8 +100,21 @@ export default function EditDetailTask() {
          } else {
             setTouched({ ...touched, title: false })
          }
+      } else if (kategori == 'date') {
+         const array = val.split(",")
+         if (array[0] == '' || array[1] == '') {
+            setTouched({ ...touched, date: true })
+         } else {
+            setTouched({ ...touched, date: false })
+         }
       }
    }
+
+
+   useShallowEffect(() => {
+      onValidation('date', String(value))
+   }, [value])
+
 
    return (
       <Box>
@@ -135,7 +141,9 @@ export default function EditDetailTask() {
                      <Skeleton height={45} mt={20} radius={10} />
                      :
                      <>
-                        <Text>Tanggal Mulai</Text>
+                        <Flex justify="flex-start" align="flex-start" direction="row" wrap="nowrap" gap={5}>
+                           <Text fw={500}>Tanggal Mulai</Text> <Text c={"red"}>*</Text>
+                        </Flex>
                         <Group
                            justify="center"
                            bg={"white"}
@@ -152,7 +160,9 @@ export default function EditDetailTask() {
                      <Skeleton height={45} mt={20} radius={10} />
                      :
                      <>
-                        <Text c={tema.get().utama}>Tanggal Berakhir</Text>
+                        <Flex justify="flex-start" align="flex-start" direction="row" wrap="nowrap" gap={5}>
+                           <Text fw={500}>Tanggal Berakhir</Text> <Text c={"red"}>*</Text>
+                        </Flex>
                         <Group
                            justify="center"
                            bg={"white"}
@@ -165,6 +175,12 @@ export default function EditDetailTask() {
                   }
                </Box>
             </SimpleGrid>
+            {
+               (!loading && touched && touched.date)
+                  ? <Text size="sm" c={"red"}>Tanggal Tidak Boleh Kosong</Text>
+                  : <></>
+            }
+
             <Stack pt={15} pb={100}>
                {loading ?
                   <Skeleton height={40} mt={20} radius={10} />
@@ -176,19 +192,18 @@ export default function EditDetailTask() {
                            borderRadius: 10,
                         },
                      }}
-                     label={"Judul Tahapan"}
+                     label={"Judul Tugas"}
                      required
-                     placeholder="Input Judul Tahapan"
+                     placeholder="Input Judul Tugas"
                      size="md"
                      value={title}
                      error={
                         touched.title &&
-                        (title == "" ? "Error! harus memasukkan Judul Tahapan" : ""
-                        )
-                      }
+                        (title == "" ? "Judul Tugas Tidak Boleh Kosong" : "")
+                     }
                      onChange={(e) => {
                         onValidation('title', e.target.value)
-                      }}
+                     }}
                   />
                }
             </Stack>
@@ -214,13 +229,14 @@ export default function EditDetailTask() {
             }
          </Box>
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin mengubah data?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
       </Box>
    );

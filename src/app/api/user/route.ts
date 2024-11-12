@@ -3,8 +3,6 @@ import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
 import { NextResponse } from "next/server";
-import path from "path";
-import fs from "fs";
 
 // GET ALL MEMBER / USER
 export async function GET(request: Request) {
@@ -20,7 +18,8 @@ export async function GET(request: Request) {
     if (user.id == undefined) {
       return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
     }
-    if (idGroup == "null" || idGroup == undefined) {
+
+    if (idGroup == "null" || idGroup == undefined || idGroup == "") {
       fixGroup = user.idGroup
     } else {
       fixGroup = idGroup
@@ -51,6 +50,7 @@ export async function GET(request: Request) {
         },
         select: {
           id: true,
+          idUserRole: true,
           isActive: true,
           nik: true,
           name: true,
@@ -93,6 +93,7 @@ export async function GET(request: Request) {
         },
         select: {
           id: true,
+          idUserRole: true,
           isActive: true,
           nik: true,
           name: true,
@@ -128,7 +129,7 @@ export async function GET(request: Request) {
 
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ success: false, message: "Gagal mendapatkan member, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+    return NextResponse.json({ success: false, message: "Gagal mendapatkan anggota, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
   }
 }
 
@@ -136,7 +137,6 @@ export async function GET(request: Request) {
 // CREATE MEMBER / USER
 export async function POST(request: Request) {
   try {
-
     const user = await funGetUserByCookies()
     if (user.id == undefined) {
       return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
@@ -166,7 +166,7 @@ export async function POST(request: Request) {
 
     const cekPhone = await prisma.user.count({
       where: {
-        phone: data.phone
+        phone: "62" + data.phone
       },
     });
 
@@ -176,7 +176,7 @@ export async function POST(request: Request) {
         data: {
           nik: data.nik,
           name: data.name,
-          phone: data.phone,
+          phone: "62" + data.phone,
           email: data.email,
           gender: data.gender,
           idGroup: groupFix,
@@ -185,7 +185,8 @@ export async function POST(request: Request) {
           idUserRole: data.idUserRole,
         },
         select: {
-          id: true
+          id: true,
+          idGroup: true,
         },
       });
 
@@ -210,13 +211,13 @@ export async function POST(request: Request) {
       // create log user
       const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data user baru', table: 'user', data: users.id })
 
-      return Response.json({ success: true, message: 'Sukses membuat user' }, { status: 200 });
+      return Response.json({ success: true, message: 'Sukses membuat user', data: users }, { status: 200 });
     } else {
       return Response.json({ success: false, message: "User sudah ada" }, { status: 400 });
     }
 
   } catch (error) {
     console.error(error);
-    return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
+    return Response.json({ success: false, message: "Gagal membuat anggota, coba lagi nanti (error: 500)" }, { status: 500 });
   }
 }

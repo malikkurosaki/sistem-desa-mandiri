@@ -1,27 +1,24 @@
 "use client"
-import { LayoutNavbarNew, SkeletonList, SkeletonSingle, SkeletonUser, TEMA } from '@/module/_global';
-import { useHookstate } from '@hookstate/core';
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Indicator, Input, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
-import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { HiChevronLeft, HiMagnifyingGlass } from 'react-icons/hi2';
-import { funGetAllmember, TypeUser } from '@/module/user';
+import { LayoutNavbarNew, SkeletonList, TEMA } from '@/module/_global';
 import { funGetUserByCookies } from '@/module/auth';
-import toast from 'react-hot-toast';
-import { globalMemberProject } from '../lib/val_project';
-import { FaCheck } from 'react-icons/fa6';
-import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
+import { funGetAllmember, TypeUser } from '@/module/user';
+import { useHookstate } from '@hookstate/core';
 import { Carousel } from '@mantine/carousel';
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Indicator, rem, Stack, Text, TextInput } from '@mantine/core';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { FaCheck } from 'react-icons/fa6';
+import { HiChevronLeft, HiMagnifyingGlass } from 'react-icons/hi2';
+import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
+import { globalMemberProject } from '../lib/val_project';
 
 
 export default function CreateUsersProject({ grup, onClose }: { grup?: string, onClose: (val: any) => void }) {
-  const router = useRouter()
   const member = useHookstate(globalMemberProject)
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
   const [dataMember, setDataMember] = useState<TypeUser>([])
   const [loading, setLoading] = useState(true)
-  const [openTugas, setOpenTugas] = useState(false)
   const [onClickSearch, setOnClickSearch] = useState(false)
   const tema = useHookstate(TEMA)
   const isMobile2 = useMediaQuery("(max-width: 438px)");
@@ -36,21 +33,25 @@ export default function CreateUsersProject({ grup, onClose }: { grup?: string, o
 
 
   async function loadData(search: string) {
-    setLoading(true)
-    const res = await funGetAllmember('?active=true&group=' + grup + '&search=' + search);
-    const user = await funGetUserByCookies();
-
-    if (res.success) {
-      setDataMember(res.data.filter((i: any) => i.id != user.id))
-
-      // cek data member sebelumnya
-      if (member.length > 0) {
-        setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
+    try {
+      setLoading(true)
+      const res = await funGetAllmember('?active=true&group=' + grup + '&search=' + search);
+      const user = await funGetUserByCookies();
+      if (res.success) {
+        setDataMember(res.data.filter((i: any) => i.id != user.id && i.idUserRole != 'supadmin' && i.idUserRole != 'cosupadmin'))
+        // cek data member sebelumnya
+        if (member.length > 0) {
+          setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
+        }
+      } else {
+        toast.error("Gagal mendapatkan data, coba lagi nanti")
       }
-    } else {
-      toast.error(res.message)
+    } catch (error) {
+      console.error(error)
+      toast.error("Gagal mendapatkan data, coba lagi nanti")
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
 

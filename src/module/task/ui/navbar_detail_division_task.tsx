@@ -1,17 +1,18 @@
 'use client'
-import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
+import { globalRole, keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
+import { globalIsAdminDivision } from "@/module/division_new";
+import { useHookstate } from "@hookstate/core";
 import { ActionIcon, Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { funGetTaskDivisionById } from "../lib/api_task";
-import { useShallowEffect } from "@mantine/hooks";
+import { FaFileCirclePlus, FaPencil, FaUsers } from "react-icons/fa6";
 import { HiMenu } from "react-icons/hi";
 import { IoAddCircle } from "react-icons/io5";
-import { FaFileCirclePlus, FaPencil, FaUsers } from "react-icons/fa6";
 import { MdCancel } from "react-icons/md";
-import { globalIsAdminDivision } from "@/module/division_new";
-import { useHookstate } from "@hookstate/core";
+import { funGetTaskDivisionById } from "../lib/api_task";
+import { useWibuRealtime } from "wibu-realtime";
 
 export default function NavbarDetailDivisionTask() {
    const router = useRouter()
@@ -22,6 +23,10 @@ export default function NavbarDetailDivisionTask() {
    const adminLogin = useHookstate(globalIsAdminDivision)
    const tema = useHookstate(TEMA)
    const [reason, setReason] = useState("")
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    async function getOneData() {
       try {
@@ -42,6 +47,13 @@ export default function NavbarDetailDivisionTask() {
    useShallowEffect(() => {
       getOneData();
    }, [param.detail])
+
+
+   useShallowEffect(() => {
+      if (dataRealTime && dataRealTime.some((i: any) => (i.category == 'tugas-detail' || i.category == 'tugas-detail-status') && i.id == param.detail)) {
+         getOneData()
+      }
+   }, [dataRealTime])
 
    return (
       <>

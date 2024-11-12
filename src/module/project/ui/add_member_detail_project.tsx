@@ -1,18 +1,19 @@
 "use client"
-import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { IDataMemberProject, IDataMemberProjectDetail } from '../lib/type_project';
-import toast from 'react-hot-toast';
-import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
-import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Skeleton, Stack, Text, TextInput } from '@mantine/core';
-import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA, WARNA } from '@/module/_global';
-import { FaCheck } from 'react-icons/fa6';
+import { keyWibu, LayoutNavbarNew, SkeletonList, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
+import { useHookstate } from '@hookstate/core';
+import { Carousel } from '@mantine/carousel';
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Stack, Text, TextInput } from '@mantine/core';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { FaCheck } from 'react-icons/fa6';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
-import { Carousel } from '@mantine/carousel';
-import { useHookstate } from '@hookstate/core';
+import { useWibuRealtime } from 'wibu-realtime';
+import { funAddMemberProject, funGetAllMemberById, funGetOneProjectById } from '../lib/api_project';
+import { IDataMemberProject, IDataMemberProjectDetail } from '../lib/type_project';
 
 export default function AddMemberDetailProject() {
   const router = useRouter()
@@ -26,7 +27,12 @@ export default function AddMemberDetailProject() {
   const [onClickSearch, setOnClickSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const tema = useHookstate(TEMA)
-  const isMobile2 = useMediaQuery("(max-width: 438px)");
+  const isMobile2 = useMediaQuery("(max-width: 438px)")
+  const [loadingModal, setLoadingModal] = useState(false)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
 
   async function getData() {
@@ -44,7 +50,6 @@ export default function AddMemberDetailProject() {
       } else {
         toast.error(res.message);
       }
-      setLoading(false)
     } catch (error) {
       console.error(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
@@ -97,8 +102,13 @@ export default function AddMemberDetailProject() {
 
   async function onSubmit() {
     try {
+      setLoadingModal(true)
       const res = await funAddMemberProject(param.id, { member: selectedFiles });
       if (res.success) {
+        setDataRealtime([{
+          category: "project-detail-anggota",
+          id: param.id,
+        }])
         toast.success(res.message)
         router.back()
       } else {
@@ -107,6 +117,9 @@ export default function AddMemberDetailProject() {
     } catch (error) {
       console.error(error)
       toast.error("Gagal menambahkan anggota, coba lagi nanti");
+    } finally {
+      setOpenModal(false)
+      setLoadingModal(true)
     }
   }
 
@@ -210,12 +223,12 @@ export default function AddMemberDetailProject() {
       </Box>
 
       <Box p={20}>
-        <Group justify="space-between" mt={100} onClick={handleSelectAll}>
+        {/* <Group justify="space-between" mt={100} onClick={handleSelectAll}>
           <Text c={tema.get().utama} fw={"bold"}>
             Pilih Semua Anggota
           </Text>
           {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-        </Group>
+        </Group> */}
         {loading ?
           Array(8)
             .fill(null)
@@ -282,29 +295,26 @@ export default function AddMemberDetailProject() {
         zIndex: 999,
         backgroundColor: `${tema.get().bgUtama}`,
       }}>
-        {loading ?
-          <Skeleton height={50} radius={30} />
-          :
-          <Button
-            c={"white"}
-            bg={tema.get().utama}
-            size="lg"
-            radius={30}
-            fullWidth
-            onClick={() => { onVerifikasi() }}
-          >
-            Simpan
-          </Button>
-        }
+        <Button
+          c={"white"}
+          bg={tema.get().utama}
+          size="lg"
+          radius={30}
+          fullWidth
+          onClick={() => { onVerifikasi() }}
+        >
+          Simpan
+        </Button>
       </Box>
 
-      <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+      <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
         description="Apakah Anda yakin ingin menambahkan anggota?"
         onYes={(val) => {
           if (val) {
             onSubmit()
+          } else {
+            setOpenModal(false)
           }
-          setOpenModal(false)
         }} />
     </Box>
   );

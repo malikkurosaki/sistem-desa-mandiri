@@ -20,7 +20,7 @@ export default function NotificationCustome({ onClose, title, desc, onClick }: {
   useShallowEffect(() => {
     const timer = setTimeout(() => {
       setOpened(false)
-    }, 2000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
 

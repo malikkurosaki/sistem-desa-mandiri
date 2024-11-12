@@ -1,19 +1,19 @@
 'use client'
-import { LayoutNavbarHome, LayoutIconBack, WARNA, LayoutDrawer, SkeletonDetailProfile, globalRole, TEMA } from "@/module/_global";
-import { Box, Group, ActionIcon, Stack, Text, Center, Avatar, Skeleton, Grid } from "@mantine/core";
-import { HiMenu } from "react-icons/hi";
-import DrawerDetailMember from "./drawer_detail_member";
-import { useState } from "react";
-import { RiIdCardFill } from "react-icons/ri";
-import { FaSquarePhone } from "react-icons/fa6";
-import { MdEmail } from "react-icons/md";
-import { IoMaleFemale } from "react-icons/io5";
-import { useShallowEffect } from "@mantine/hooks";
-import { funGetOneMember } from "../lib/api_member";
-import toast from "react-hot-toast";
-import { IListMember, IMember } from "../lib/type_member";
+import { globalRole, LayoutDrawer, LayoutIconBack, LayoutNavbarHome, SkeletonDetailProfile, TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
+import { ActionIcon, Avatar, Box, Center, Grid, Group, Skeleton, Stack, Text } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { FaSquarePhone } from "react-icons/fa6";
+import { HiMenu } from "react-icons/hi";
+import { IoMaleFemale } from "react-icons/io5";
+import { MdEmail } from "react-icons/md";
+import { RiIdCardFill } from "react-icons/ri";
 import { valueRoleUser } from "../../lib/val_user";
+import { funGetOneMember } from "../lib/api_member";
+import { IListMember, IMember } from "../lib/type_member";
+import DrawerDetailMember from "./drawer_detail_member";
 
 
 export default function NavbarDetailMember({ id }: IMember) {

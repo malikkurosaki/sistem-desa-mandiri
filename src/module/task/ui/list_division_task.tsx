@@ -1,15 +1,15 @@
-import { currentScroll, SkeletonList, TEMA } from "@/module/_global";
+import { currentScroll, globalNotifPage, ReloadButtonTop, SkeletonList, TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import { ActionIcon, Avatar, Box, Card, Center, Divider, Flex, Grid, Group, Progress, Skeleton, Text, TextInput, Title } from "@mantine/core";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from "react-icons/hi2";
-import { MdAccountCircle } from "react-icons/md";
-import { IDataTask } from "../lib/type_task";
-import { funGetAllTask } from "../lib/api_task";
-import toast from "react-hot-toast";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import _ from "lodash";
-import { useHookstate } from "@hookstate/core";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from "react-icons/hi2";
+import { MdAccountCircle } from "react-icons/md";
+import { funGetAllTask } from "../lib/api_task";
+import { IDataTask } from "../lib/type_task";
 
 export default function ListDivisionTask() {
    const [isList, setIsList] = useState(false)
@@ -25,6 +25,8 @@ export default function ListDivisionTask() {
    const { value: containerRef } = useHookstate(currentScroll)
    const [isPage, setPage] = useState(1)
    const [totalData, setTotalData] = useState(0)
+   const [isRefresh, setRefresh] = useState(false)
+   const notifLoadPage = useHookstate(globalNotifPage)
 
    const handleList = () => {
       setIsList(!isList)
@@ -32,21 +34,18 @@ export default function ListDivisionTask() {
 
    const fetchData = async (loading: boolean) => {
       try {
-         if (loading)
-            setLoading(true)
+         setLoading(loading)
          const response = await funGetAllTask('?division=' + param.id + '&status=' + status + '&search=' + searchQuery + '&page=' + isPage)
          if (response.success) {
             setTotalData(response.total)
             if (isPage == 1) {
                setData(response?.data)
             } else {
-               setData([...isData, ...response.data])
+               setData((isData) => [...isData, ...response.data])
             }
          } else {
             toast.error(response.message);
          }
-
-         setLoading(false);
       } catch (error) {
          toast.error("Gagal mendapatkan tugas divisi, coba lagi nanti");
          console.error(error);
@@ -55,16 +54,15 @@ export default function ListDivisionTask() {
       }
    };
 
+   useShallowEffect(() => {
+      fetchData(false)
+   }, [isPage])
+
 
    useShallowEffect(() => {
       setPage(1)
       fetchData(true);
    }, [status, searchQuery]);
-
-
-   useShallowEffect(() => {
-      fetchData(false)
-   }, [isPage])
 
    useEffect(() => {
       const handleScroll = async () => {
@@ -87,8 +85,36 @@ export default function ListDivisionTask() {
       };
    }, [containerRef, isPage]);
 
+
+   useShallowEffect(() => {
+      if (notifLoadPage.get().category == 'division/' + param.id + '/task' && notifLoadPage.get().load == true) {
+         setRefresh(true)
+      }
+   }, [notifLoadPage.get().load])
+
+   function onRefresh() {
+      notifLoadPage.set({
+         category: '',
+         load: false
+      })
+      setRefresh(false)
+      setPage(1)
+      setTimeout(() => {
+         fetchData(false)
+      }, 500)
+   }
+
+
    return (
       <Box py={20}>
+         {
+            isRefresh &&
+            <ReloadButtonTop
+               onReload={() => { onRefresh() }}
+               title='UPDATE'
+            />
+
+         }
          <Grid justify='center' align='center'>
             <Grid.Col span={10}>
                <TextInput
@@ -120,7 +146,7 @@ export default function ListDivisionTask() {
             <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
                <Text fw={'bold'} c={tema.get().utama}>Total Tugas</Text>
                <Flex justify={'center'} align={'center'} h={'100%'}>
-                  <Text fz={40} fw={'bold'} c={tema.get().utama}>{totalData}</Text>
+                  <Text fz={40} fw={'bold'} c={tema.get().utama}>{loading ? 0 : totalData}</Text>
                </Flex>
             </Box>
             {isList ? (
@@ -144,7 +170,7 @@ export default function ListDivisionTask() {
                            isData.map((v, i) => {
                               return (
                                  <Box key={i}>
-                                    <Grid align='center'>
+                                    <Grid align='center' onClick={() => router.push(`task/${v.id}`)}>
                                        <Grid.Col span={{
                                           base: 1,
                                           xs: 1,
@@ -153,7 +179,7 @@ export default function ListDivisionTask() {
                                           lg: 1,
                                           xl: 1
                                        }}>
-                                          <Group onClick={() => router.push(`task/${v.id}`)}>
+                                          <Group>
                                              <Center>
                                                 <ActionIcon
                                                    variant="gradient"
@@ -222,8 +248,8 @@ export default function ListDivisionTask() {
                                     </Card.Section>
                                     <Box pt={10}>
                                        <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
-                                          <Progress.Section value={v.progress} color="yellow" striped >
-                                             <Progress.Label>{v.progress}%</Progress.Label>
+                                          <Progress.Section value={_.isNull(v.progress) ? 0 : v.progress} color="yellow" striped >
+                                             <Progress.Label>{_.isNull(v.progress) ? 0 : v.progress}%</Progress.Label>
                                           </Progress.Section>
                                        </Progress.Root>
                                        <Text my={10}>{v.desc}</Text>

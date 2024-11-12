@@ -8,7 +8,7 @@ export default function LayoutDrawer({ opened, onClose, title, children, size }:
   const tema = useHookstate(TEMA)
   return (
     <Box>
-      <Drawer opened={opened} title={<Text c={tema.get().utama} fw={'bold'}>{title}</Text>} onClose={onClose} position={"bottom"} size={(size == 'lg') ? '80%' : '40%' }
+      <Drawer opened={opened} title={<Text c={tema.get().utama} fw={'bold'}>{title}</Text>} onClose={onClose} position={"bottom"} size={(size == 'lg') ? '80%' : (size == 'md') ? '45%' : '40%'}
         styles={{
           content: {
             backgroundColor: "white",

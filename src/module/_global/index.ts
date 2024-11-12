@@ -1,5 +1,5 @@
 import prisma from "./bin/prisma";
-import { currentScroll, DIR, globalNotifPage, globalRole, pwd_key_config, TEMA } from "./bin/val_global";
+import { currentScroll, DIR, globalNotifPage, globalRole, keyWibu, pwd_key_config, TEMA } from "./bin/val_global";
 import SkeletonAvatar from "./components/skeleton_avatar";
 import SkeletonDetailDiscussionComment from "./components/skeleton_detail_discussion_comment";
 import SkeletonDetailDiscussionMember from "./components/skeleton_detail_discussion_member";
@@ -25,6 +25,7 @@ import NotificationCustome from "./components/notification_custome";
 import { ScrollProvider } from "./components/scroll_provider";
 import SkeletonUser from "./components/skeleton_user";
 import SkeletonList from "./components/skeleton_list";
+import { funViewDir } from "./fun/view_dir";
 
 export { WARNA };
 export { LayoutLogin };
@@ -58,3 +59,5 @@ export { ScrollProvider }
 export { currentScroll }
 export { SkeletonUser }
 export { SkeletonList }
+export { keyWibu }
+export { funViewDir }

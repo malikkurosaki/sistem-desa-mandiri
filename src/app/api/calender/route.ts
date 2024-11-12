@@ -1,10 +1,10 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from '@/module/user';
 import _ from "lodash";
 import moment from "moment";
-import { NextResponse } from "next/server";
 import "moment/locale/id";
-import { createLogUser } from '@/module/user';
+import { NextResponse } from "next/server";
 import { Frequency, RRule } from 'rrule';
 
 //GET ALL CALENDER
@@ -85,15 +85,15 @@ export async function GET(request: Request) {
             }))
 
 
-            return NextResponse.json({ success: true, message: "Berhasil mendapatkan calender", data: allOmit }, { status: 200 });
+            return NextResponse.json({ success: true, message: "Berhasil mendapatkan kalender", data: allOmit }, { status: 200 });
 
         } else {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, data tidak ditemukan" }, { status: 404 });
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan kalender, data tidak ditemukan" }, { status: 404 });
         }
 
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan calender, data tidak ditemukan" }, { status: 404 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan kalender, data tidak ditemukan (error: 500)" }, { status: 404 });
     }
 }
 
@@ -191,6 +191,6 @@ export async function POST(request: Request) {
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal membuat acara kalender, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membuat acara kalender, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

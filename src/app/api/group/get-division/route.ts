@@ -1,9 +1,10 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { NextResponse } from "next/server";
-
 export const dynamic = 'force-dynamic'
 export const revalidate = true
+
+
 export async function GET(request: Request) {
     try {
         const user = await funGetUserByCookies()
@@ -32,6 +33,9 @@ export async function GET(request: Request) {
                 id: true,
                 name: true,
                 Division: {
+                    where: {
+                        isActive: true
+                    },
                     select: {
                         id: true,
                         name: true
@@ -44,6 +48,6 @@ export async function GET(request: Request) {
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan grup, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan grup, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

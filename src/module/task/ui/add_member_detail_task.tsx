@@ -1,36 +1,20 @@
 "use client"
-import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from "@/module/_global";
-import { funGetDivisionById, funGetSearchMemberDivision, IDataMemberDivision } from "@/module/division_new";
-import {
-   ActionIcon,
-   Anchor,
-   Avatar,
-   Box,
-   Button,
-   Center,
-   Checkbox,
-   Divider,
-   Flex,
-   Grid,
-   Group,
-   Indicator,
-   rem,
-   Stack,
-   Text,
-   TextInput,
-} from "@mantine/core";
+import { keyWibu, LayoutNavbarNew, SkeletonList, TEMA } from "@/module/_global";
+import LayoutModal from "@/module/_global/layout/layout_modal";
+import { funGetSearchMemberDivision, IDataMemberDivision } from "@/module/division_new";
+import { useHookstate } from "@hookstate/core";
+import { Carousel } from "@mantine/carousel";
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Indicator, rem, Stack, Text, TextInput } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaCheck } from "react-icons/fa6";
-import { funAddMemberTask, funGetTaskDivisionById } from "../lib/api_task";
-import { IDataMemberTaskDivision } from "../lib/type_task";
-import LayoutModal from "@/module/_global/layout/layout_modal";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { IoArrowBackOutline, IoClose } from "react-icons/io5";
-import { Carousel } from "@mantine/carousel";
-import { useHookstate } from "@hookstate/core";
+import { useWibuRealtime } from "wibu-realtime";
+import { funAddMemberTask, funGetTaskDivisionById } from "../lib/api_task";
+import { IDataMemberTaskDivision } from "../lib/type_task";
 
 export default function AddMemberDetailTask() {
    const router = useRouter()
@@ -41,10 +25,15 @@ export default function AddMemberDetailTask() {
    const [selectAll, setSelectAll] = useState(false)
    const [openModal, setOpenModal] = useState(false)
    const [loading, setLoading] = useState(true)
+   const [loadingModal, setLoadingModal] = useState(false)
    const [onClickSearch, setOnClickSearch] = useState(false)
    const [searchQuery, setSearchQuery] = useState('')
    const tema = useHookstate(TEMA)
    const isMobile2 = useMediaQuery("(max-width: 438px)");
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
 
    async function getData() {
@@ -64,7 +53,6 @@ export default function AddMemberDetailTask() {
             toast.error(res.message);
          }
 
-         setLoading(false)
       } catch (error) {
          console.error(error)
          toast.error("Gagal mendapatkan anggota, coba lagi nanti");
@@ -118,8 +106,13 @@ export default function AddMemberDetailTask() {
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const res = await funAddMemberTask(param.detail, { idDivision: param.id, member: selectedFiles });
          if (res.success) {
+            setDataRealtime([{
+               category: "tugas-detail-anggota",
+               id: param.detail,
+            }])
             toast.success(res.message)
             router.back()
          } else {
@@ -128,6 +121,9 @@ export default function AddMemberDetailTask() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal menambahkan anggota, coba lagi nanti");
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -146,6 +142,7 @@ export default function AddMemberDetailTask() {
    async function fetchGetMember(val: string) {
       setSearchQuery(val)
       try {
+         setLoading(true)
          const res = await funGetSearchMemberDivision('?search=' + val, param.id);
          if (res.success) {
             setData(res.data)
@@ -154,6 +151,8 @@ export default function AddMemberDetailTask() {
          }
       } catch (error) {
          console.error(error);
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -246,12 +245,12 @@ export default function AddMemberDetailTask() {
 
 
          <Box p={20}>
-            <Group justify="space-between" mt={100} onClick={handleSelectAll}>
+            {/* <Group justify="space-between" mt={100} onClick={handleSelectAll}>
                <Text c={tema.get().utama} fw={"bold"}>
                   Pilih Semua Anggota
                </Text>
                {selectAll ? <FaCheck style={{ marginRight: 10 }} /> : ""}
-            </Group>
+            </Group> */}
             {loading ? Array(8)
                .fill(null)
                .map((_, i) => (
@@ -270,7 +269,7 @@ export default function AddMemberDetailTask() {
                         const isSelected = selectedFiles.some((i: any) => i?.idUser == v.idUser);
                         const found = isDataMember.some((i: any) => i.idUser == v.idUser)
                         return (
-                           <Box mb={15} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
+                           <Box mb={15} mt={i === 0 ? 100 : 0} key={i} onClick={() => (!found) ? handleFileClick(i) : null}>
                               <Grid align='center'>
                                  <Grid.Col span={{
                                     base: 1,
@@ -325,13 +324,14 @@ export default function AddMemberDetailTask() {
             </Button>
          </Box>
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menambahkan anggota?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
       </Box>
    );

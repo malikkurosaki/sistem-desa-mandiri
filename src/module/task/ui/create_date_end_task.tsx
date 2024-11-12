@@ -1,37 +1,24 @@
 "use client";
 import { LayoutNavbarNew, TEMA } from "@/module/_global";
-import {
-  ActionIcon,
-  Avatar,
-  Box,
-  Button,
-  Flex,
-  Group,
-  Input,
-  rem,
-  SimpleGrid,
-  Stack,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import React, { useState } from "react";
-import { DatePicker } from "@mantine/dates";
-import { useParams, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { IFormDateTask } from "../lib/type_task";
-import moment from "moment";
-import { HiChevronLeft } from "react-icons/hi2";
 import { useHookstate } from "@hookstate/core";
+import { ActionIcon, Box, Button, Flex, Group, rem, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
+import { useShallowEffect } from "@mantine/hooks";
+import moment from "moment";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { HiChevronLeft } from "react-icons/hi2";
+import { IFormDateTask } from "../lib/type_task";
 
 
-export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: boolean) => void, onSet: (val: IFormDateTask) => void }) {
+export default function ViewDateEndTask({ onClose, onSet }: { onClose: (val: boolean) => void, onSet: (val: IFormDateTask) => void }) {
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
-  const router = useRouter()
-  const param = useParams<{ id: string }>()
   const [title, setTitle] = useState("")
+  const [acuan, setAcuan] = useState(false)
   const tema = useHookstate(TEMA)
   const [touched, setTouched] = useState({
     title: false,
+    date: false
   });
 
   function onSubmit() {
@@ -41,15 +28,64 @@ export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: bool
     if (title == "")
       return toast.error("Error! harus memasukkan judul tugas")
 
-    onSet(
-      {
-        dateStart: value[0],
-        dateEnd: value[1],
-        title: title
-      }
-    )
+    onSet({
+      dateStart: moment(value[0]).format('YYYY-MM-DD'),
+      dateEnd: moment(value[1]).format('YYYY-MM-DD'),
+      title: title
+    })
 
   }
+
+  function onCheck() {
+    const cek = checkAll()
+    if (!cek)
+      return false
+    onSubmit()
+  }
+
+  function checkAll() {
+    let nilai = true
+
+    if (title == "") {
+      setTouched(touched => ({ ...touched, title: true }))
+      nilai = false
+    }
+
+    if (value[0] == null || value[1] == null) {
+      setTouched(touched => ({ ...touched, date: true }))
+      nilai = false
+    }
+
+    return nilai
+
+  }
+
+
+  function onValidation(kategori: string, val: string) {
+    if (kategori == 'title') {
+      setTitle(val)
+      if (val === "") {
+        setTouched({ ...touched, title: true })
+      } else {
+        setTouched({ ...touched, title: false })
+      }
+    } else if (kategori == 'date') {
+      const array = val.split(",")
+      if (array[0] == '' || array[1] == '') {
+        setTouched({ ...touched, date: true })
+      } else {
+        setTouched({ ...touched, date: false })
+      }
+    }
+  }
+
+  useShallowEffect(() => {
+    if (acuan) {
+      onValidation('date', String(value))
+    } else {
+      setAcuan(true)
+    }
+  }, [value])
 
   return (
     <Box>
@@ -78,7 +114,9 @@ export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: bool
         </Group>
         <SimpleGrid cols={{ base: 2, sm: 2, lg: 2 }} mt={20}>
           <Box>
-            <Text>Tanggal Mulai</Text>
+            <Flex justify="flex-start" align="flex-start" direction="row" wrap="nowrap" gap={5}>
+              <Text fw={500}>Tanggal Mulai</Text> <Text c={"red"}>*</Text>
+            </Flex>
             <Group
               justify="center"
               bg={"white"}
@@ -89,7 +127,9 @@ export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: bool
             </Group>
           </Box>
           <Box>
-            <Text >Tanggal Berakhir</Text>
+            <Flex justify="flex-start" align="flex-start" direction="row" wrap="nowrap" gap={5}>
+              <Text fw={500}>Tanggal Berakhir</Text> <Text c={"red"}>*</Text>
+            </Flex>
             <Group
               justify="center"
               bg={"white"}
@@ -100,6 +140,11 @@ export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: bool
             </Group>
           </Box>
         </SimpleGrid>
+        {
+          (touched && touched.date)
+            ? <Text size="sm" c={"red"}>Tanggal Tidak Boleh Kosong</Text>
+            : <></>
+        }
         <Stack pt={15} mb={100}>
           <TextInput
             styles={{
@@ -108,17 +153,15 @@ export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: bool
                 borderRadius: 10,
               },
             }}
-            placeholder="Input Judul Tahapan"
-            label="Judul Tahapan"
+            placeholder="Input Judul Tugas"
+            label="Judul Tugas"
             required
             size="md"
             value={title}
             onChange={(e) => {
-              setTitle(e.target.value)
-              setTouched({ ...touched, title: false })
+              onValidation('title', e.target.value)
             }}
-            onBlur={() => setTouched({ ...touched, title: true })}
-            error={touched.title && title == "" ? "Judul Tahapan Tidak Boleh Kosong" : null}
+            error={touched.title && title == "" ? "Judul Tugas Tidak Boleh Kosong" : null}
           />
         </Stack>
       </Box>
@@ -133,7 +176,7 @@ export default function ViewDateEndTask({ onClose, onSet }: {onClose: (val: bool
           size="lg"
           radius={30}
           fullWidth
-          onClick={() => { onSubmit() }}
+          onClick={() => { onCheck() }}
         >
           Simpan
         </Button>

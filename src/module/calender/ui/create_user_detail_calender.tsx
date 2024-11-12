@@ -1,18 +1,19 @@
 "use client"
-import React, { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { keyWibu, LayoutNavbarNew, SkeletonList, TEMA } from '@/module/_global';
 import { funGetSearchMemberDivision, IDataMemberDivision } from '@/module/division_new';
-import toast from 'react-hot-toast';
+import { useHookstate } from '@hookstate/core';
+import { Carousel } from '@mantine/carousel';
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Indicator, rem, Stack, Text, TextInput } from '@mantine/core';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
-import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Stack, Text, TextInput } from '@mantine/core';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaCheck } from 'react-icons/fa6';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
-import { Carousel } from '@mantine/carousel';
 import { funAddMemberCalender, funGetOneCalender } from '../lib/api_calender';
 import { IDataDetailByIdCalender, IDataDetailByIdMember } from '../lib/type_calender';
-import { useHookstate } from '@hookstate/core';
+import { useWibuRealtime } from 'wibu-realtime';
 
 export default function CreateUserDetailCalender() {
   const router = useRouter()
@@ -27,6 +28,11 @@ export default function CreateUserDetailCalender() {
   const [searchQuery, setSearchQuery] = useState('')
   const tema = useHookstate(TEMA)
   const isMobile2 = useMediaQuery("(max-width: 438px)");
+  const [loadingSubmit, setLoadingSubmit] = useState(false)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
   async function getData() {
     try {
@@ -88,9 +94,13 @@ export default function CreateUserDetailCalender() {
       if (selectedFiles.length == 0) {
         return toast.error("Error! silahkan pilih anggota")
       }
-
+      setLoadingSubmit(true)
       const res = await funAddMemberCalender(String(isDataCalender?.idCalendar), selectedFiles)
       if (res.success) {
+        setDataRealtime([{
+          category: "calendar-detail",
+          id: isDataCalender?.idCalendar,
+        }])
         toast.success(res.message)
         router.push('./')
       } else {
@@ -99,6 +109,8 @@ export default function CreateUserDetailCalender() {
     } catch (error) {
       console.error(error);
       toast.error("Gagal menambahkan anggota, coba lagi nanti");
+    } finally {
+      setLoadingSubmit(false)
     }
   }
 
@@ -290,6 +302,7 @@ export default function CreateUserDetailCalender() {
         backgroundColor: `${tema.get().bgUtama}`,
       }}>
         <Button
+          loading={loadingSubmit}
           c={"white"}
           bg={tema.get().utama}
           size="lg"

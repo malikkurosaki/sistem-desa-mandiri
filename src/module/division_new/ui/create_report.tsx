@@ -1,19 +1,18 @@
 "use client";
-import { LayoutNavbarNew, TEMA } from "@/module/_global";
-import { Box, Select, Skeleton, Stack, Text } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
-import React, { useState } from "react";
-import EchartPaiReport from "./echart_pai_report";
-import EchartBarReport from "./echart_bar_report";
-import EventReport from "./event_report";
-import DiscussionReport from "./discussion_report";
+import { globalRole, LayoutNavbarNew, TEMA } from "@/module/_global";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
-import toast from "react-hot-toast";
-import { useShallowEffect } from "@mantine/hooks";
-import { funGetReportDivision } from "../lib/api_division";
-import { useParams } from "next/navigation";
-import moment from "moment";
 import { useHookstate } from "@hookstate/core";
+import { Box, Select, Skeleton, Stack } from "@mantine/core";
+import { DateInput } from "@mantine/dates";
+import { useShallowEffect } from "@mantine/hooks";
+import moment from "moment";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { funGetReportDivision } from "../lib/api_division";
+import EchartBarReport from "./echart_bar_report";
+import EchartPaiReport from "./echart_pai_report";
+import EventReport from "./event_report";
 
 export default function CreateReport() {
   const [value, setValue] = useState<Date | null>(null);
@@ -23,6 +22,7 @@ export default function CreateReport() {
   const [isGroup, setIsGroup] = useState("");
   const param = useParams<{ id: string }>()
   const tema = useHookstate(TEMA)
+  const roleLogin = useHookstate(globalRole)
   const [report, setReport] = useState({
     progress: [],
     dokumen: [],
@@ -74,13 +74,20 @@ export default function CreateReport() {
   }
 
   function onChangeDate(val: any) {
-    if (val != null && val != "" && isGroup != "" && isGroup != "null") {
-      onReport(isGroup, val)
-    }
 
-    if (isGroup == null || isGroup == "") {
-      setTampil(false)
-      toast.error("Error! harus memilih grup")
+    if (roleLogin.get() == "supadmin") {
+      if (val != null && val != "" && isGroup != "" && isGroup != "null") {
+        onReport(isGroup, val)
+      }
+
+      if (isGroup == null || isGroup == "") {
+        setTampil(false)
+        toast.error("Error! harus memilih grup")
+      }
+    } else {
+      if (val != null && val != "") {
+        onReport(isGroup, val)
+      }
     }
 
     setValue(val)
@@ -95,19 +102,23 @@ export default function CreateReport() {
       <LayoutNavbarNew back="/division" title="Laporan Divisi" menu />
       <Box p={20}>
         <Stack>
-          <Select
-            placeholder="Grup"
-            label="Grup"
-            size="md"
-            required
-            radius={10}
-            data={dataGroup?.map((pro: any) => ({
-              value: String(pro.id),
-              label: pro.name
-            }))}
-            onChange={(val) => { onChooseGroup(val) }}
-          />
+          {roleLogin.get() == "supadmin" &&
+            <Select
+              placeholder="Grup"
+              label="Grup"
+              size="md"
+              required
+              radius={10}
+              data={dataGroup?.map((pro: any) => ({
+                value: String(pro.id),
+                label: pro.name
+              }))}
+              onChange={(val) => { onChooseGroup(val) }}
+            />
+          }
+
           <DateInput
+            valueFormat="DD-MM-YYYY"
             value={value}
             onChange={(val) => { onChangeDate(val) }}
             radius={10}

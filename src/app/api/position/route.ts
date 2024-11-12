@@ -9,7 +9,6 @@ import { NextResponse } from "next/server";
 // GET ALL POSITION
 export async function GET(request: Request) {
     try {
-
         let grup
         const { searchParams } = new URL(request.url);
         const idGroup = searchParams.get("group");
@@ -69,14 +68,17 @@ export async function GET(request: Request) {
         });
 
         const allData = positions.map((v: any) => ({
-            ..._.omit(v, ["Group"]),
+            ..._.omit(v, ["Group", "name"]),
+            name: v.name,
             group: v.Group.name
         }))
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan jabatan", data: allData, filter }, { status: 200 });
+        const dataFix = _.orderBy(allData, [data => data.name.toLowerCase()], ['asc']);
+
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan jabatan", data: dataFix, filter }, { status: 200 });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan jabatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan jabatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -113,6 +115,7 @@ export async function POST(request: Request) {
                 select: {
                     id: true,
                     name: true,
+                    idGroup: true
                 },
             });
 
@@ -134,6 +137,6 @@ export async function POST(request: Request) {
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal menambahkan jabatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal menambahkan jabatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

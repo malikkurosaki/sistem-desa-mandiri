@@ -1,41 +1,50 @@
 "use client"
+import { globalRole, keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
+import { globalIsAdminDivision } from "@/module/division_new";
+import { useHookstate } from "@hookstate/core";
 import { ActionIcon, Avatar, Badge, Box, Center, Divider, Flex, Grid, Group, rem, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
-import { globalRole, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
-import { GrChatOption } from "react-icons/gr";
-import { LuSendHorizonal } from "react-icons/lu";
-import { useState } from "react";
-import { funCreateComent, funGetDiscussionById } from "../lib/api_discussion";
-import { useShallowEffect } from "@mantine/hooks";
-import { IDetailDiscussion } from "../lib/type_discussion";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import moment from "moment";
 import "moment/locale/id";
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { useHookstate } from "@hookstate/core";
-import { globalRefreshDiscussion } from "../lib/val_discussion";
+import { GrChatOption } from "react-icons/gr";
 import { HiMenu } from "react-icons/hi";
+import { LuSendHorizonal } from "react-icons/lu";
+import { useWibuRealtime } from "wibu-realtime";
+import { funCreateComent, funGetDiscussionById } from "../lib/api_discussion";
+import { IDetailDiscussion } from "../lib/type_discussion";
+import { globalRefreshDiscussion } from "../lib/val_discussion";
 import DrawerDetailDiscussion from "./drawer_detail_discussion";
-import {globalIsAdminDivision } from "@/module/division_new";
 
 export default function DetailDiscussion({ id, idDivision }: { id: string, idDivision: string }) {
    const [isData, setData] = useState<IDetailDiscussion>()
    const [isComent, setIsComent] = useState("")
    const param = useParams<{ id: string, detail: string }>()
    const [isLoad, setIsLoad] = useState(true)
-   const router = useRouter()
    const refresh = useHookstate(globalRefreshDiscussion)
    const roleLogin = useHookstate(globalRole)
    const [isCreator, setCreator] = useState(false)
+   const [isUser, setUser] = useState('')
    const adminLogin = useHookstate(globalIsAdminDivision)
    const tema = useHookstate(TEMA)
+   const router = useRouter()
+   const isMobile = useMediaQuery('(max-width: 369px)');
+   const isMobile2 = useMediaQuery("(max-width: 438px)");
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
-   const getData = async () => {
+   const getData = async (loading: boolean) => {
       try {
-         setIsLoad(true)
+         setIsLoad(loading)
          const response = await funGetDiscussionById(id)
          setData(response.data)
          setIsLoad(false)
          setCreator(response.data.isCreator)
+         setUser(response.user)
       } catch (error) {
          console.error(error)
       } finally {
@@ -44,8 +53,21 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
    }
 
    useShallowEffect(() => {
-      getData()
+      getData(true)
    }, [refresh.get()])
+
+   useShallowEffect(() => {
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'discussion-detail' && i.id == id)) {
+         getData(false)
+      }
+
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'discussion-delete' && i.id == id && i.user != isUser)) {
+         toast.error("Data telah di hapus, anda akan beralih ke halaman list diskusi")
+         setTimeout(() => {
+            router.push(`/division/${param.id}/discussion`)
+         }, 1000)
+      }
+   }, [dataRealTime])
 
    async function reloadData() {
       try {
@@ -65,6 +87,10 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
 
          if (response.success) {
             setIsComent("")
+            setDataRealtime([{
+               category: "discussion-detail",
+               id: id,
+            }])
             reloadData()
          } else {
             toast.error(response.message)
@@ -125,24 +151,22 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                <>
                   {isData?.totalComments == 0 ?
                      <Box mb={60} pl={5} pr={5}>
-                        <Flex
-                           justify={"space-between"}
-                           align={"center"}
-                           mt={20}
-                        >
-                           {isData?.username ?
-                              <Group>
-                                 <Avatar src={`https://wibu-storage.wibudev.com/api/files/${isData?.user_img}`} alt="it's me" size="lg" />
-                                 <Box>
-                                    <Text c={tema.get().utama} fw={"bold"}>
-                                       {isData?.username}
-                                    </Text>
-                                    <Badge color={isData?.status === 1 ? "green" : "red"} size="sm">{isData?.status === 1 ? "BUKA" : "TUTUP"}</Badge>
-                                 </Box>
-                              </Group> : ""
-                           }
-                           <Text c={"grey"} fz={13}>{isData?.createdAt}</Text>
-                        </Flex>
+                        <Grid align='center'>
+                           <Grid.Col span={1}>
+                              <Avatar src={`https://wibu-storage.wibudev.com/api/files/${isData?.user_img}`} alt="it's me" size={'lg'} />
+                           </Grid.Col>
+                           <Grid.Col span={8}>
+                              <Box pl={isMobile2 ? 40 : 30}>
+                                 <Text lineClamp={1} fz={isMobile ? 15 : 16}>{isData?.username}</Text>
+                                 <Badge color={isData?.status === 1 ? "green" : "red"} size="sm">{isData?.status === 1 ? "BUKA" : "TUTUP"}</Badge>
+                              </Box>
+                           </Grid.Col>
+                           <Grid.Col span={3}>
+                              <Text c={tema.get().utama} ta={'end'} fz={isMobile ? 15 : 16}>
+                                 {isData?.createdAt}
+                              </Text>
+                           </Grid.Col>
+                        </Grid>
                         <Box mt={10}>
                            <Spoiler maxHeight={50} showLabel="Lebih banyak" hideLabel="Lebih sedikit">
                               <Text
@@ -164,26 +188,20 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                         </Group>
                      </Box> :
                      <Box mb={20}>
-                        <Grid align="center">
-                           <Grid.Col span={2}>
-                              <Avatar src={`https://wibu-storage.wibudev.com/api/files/${isData?.user_img}`} alt="it's me" size="lg" />
+                        <Grid align='center'>
+                           <Grid.Col span={1}>
+                              <Avatar src={`https://wibu-storage.wibudev.com/api/files/${isData?.user_img}`} alt="it's me" size={'lg'} />
                            </Grid.Col>
-                           <Grid.Col span={6}>
-                              <Box pl={{
-                                 sm: 0,
-                                 lg: 0,
-                                 xl: 0,
-                                 md: 0,
-                                 base: 10
-                              }}>
-                                 <Text c={tema.get().utama} fw={"bold"} lineClamp={1}>
-                                    {isData?.username}
-                                 </Text>
+                           <Grid.Col span={8}>
+                              <Box pl={isMobile2 ? 40 : 30}>
+                                 <Text lineClamp={1} fz={isMobile ? 15 : 16}>{isData?.username}</Text>
                                  <Badge color={isData?.status === 1 ? "green" : "red"} size="sm">{isData?.status === 1 ? "BUKA" : "TUTUP"}</Badge>
                               </Box>
                            </Grid.Col>
-                           <Grid.Col span={4}>
-                              <Text c={"grey"} ta={"end"} fz={13}>{isData?.createdAt}</Text>
+                           <Grid.Col span={3}>
+                              <Text c={tema.get().utama} ta={'end'} fz={isMobile ? 15 : 16}>
+                                 {isData?.createdAt}
+                              </Text>
                            </Grid.Col>
                         </Grid>
                         <Box mt={10}>
@@ -245,17 +263,17 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                      return (
                         <Box key={i} p={10} >
                            <Grid align="center">
-                              <Grid.Col span={2}>
+                              <Grid.Col span={1}>
                                  <Avatar alt="it's me" size="md" src={`https://wibu-storage.wibudev.com/api/files/${v.img}`} />
                               </Grid.Col>
-                              <Grid.Col span={6}>
+                              <Grid.Col span={8}>
                                  <Box>
-                                    <Text c={tema.get().utama} fw={"bold"} lineClamp={1} fz={15}>
+                                    <Text c={tema.get().utama} fw={"bold"} lineClamp={1} pl={isMobile2 ? 25 : 15} fz={isMobile ? 15 : 16}>
                                        {v.username}
                                     </Text>
                                  </Box>
                               </Grid.Col>
-                              <Grid.Col span={4}>
+                              <Grid.Col span={3}>
                                  <Text c={"grey"} ta={"end"} fz={13}>{moment(v.createdAt).format("ll")}</Text>
                               </Grid.Col>
                            </Grid>

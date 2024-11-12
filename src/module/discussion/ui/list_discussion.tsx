@@ -1,16 +1,18 @@
 'use client'
-import { currentScroll, TEMA } from "@/module/_global";
+import { currentScroll, globalNotifPage, keyWibu, ReloadButtonTop, TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import { Avatar, Badge, Box, Divider, Flex, Grid, Group, Skeleton, Spoiler, Text, TextInput } from "@mantine/core";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { GrChatOption } from "react-icons/gr";
 import { HiMagnifyingGlass } from "react-icons/hi2";
+import { useWibuRealtime } from "wibu-realtime";
 import { funGetAllDiscussion } from "../lib/api_discussion";
-import { useShallowEffect } from "@mantine/hooks";
 import { IDataDiscussion } from "../lib/type_discussion";
-import toast from "react-hot-toast";
-import _ from "lodash";
-import { useHookstate } from "@hookstate/core";
+
 
 export default function ListDiscussion({ id }: { id: string }) {
    const [isData, setData] = useState<IDataDiscussion[]>([])
@@ -21,11 +23,16 @@ export default function ListDiscussion({ id }: { id: string }) {
    const router = useRouter()
    const { value: containerRef } = useHookstate(currentScroll);
    const [isPage, setPage] = useState(1)
+   const notifLoadPage = useHookstate(globalNotifPage)
+   const [isRefresh, setRefresh] = useState(false)
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    const getData = async (loading: boolean) => {
       try {
-         if (loading)
-            setLoading(true)
+         setLoading(loading)
          const response = await funGetAllDiscussion('?division=' + id + '&search=' + searchQuery + '&page=' + isPage)
          if (response.success) {
             if (isPage == 1) {
@@ -36,7 +43,6 @@ export default function ListDiscussion({ id }: { id: string }) {
          } else {
             toast.error(response.message)
          }
-         setLoading(false)
       } catch (error) {
          console.error(error)
       } finally {
@@ -45,13 +51,13 @@ export default function ListDiscussion({ id }: { id: string }) {
    }
 
    useShallowEffect(() => {
+      getData(false)
+   }, [isPage])
+
+   useShallowEffect(() => {
       setPage(1)
       getData(true)
    }, [searchQuery])
-
-   useShallowEffect(() => {
-      getData(false)
-   }, [isPage])
 
    useEffect(() => {
       const handleScroll = async () => {
@@ -75,8 +81,42 @@ export default function ListDiscussion({ id }: { id: string }) {
    }, [containerRef, isPage]);
 
 
+
+   useShallowEffect(() => {
+      if (notifLoadPage.get().category == 'division/' + param.id + '/discussion' && notifLoadPage.get().load == true) {
+         setRefresh(true)
+      }
+   }, [notifLoadPage.get().load])
+
+   useShallowEffect(() => {
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'division/' + param.id + '/discussion')) {
+         setRefresh(true)
+      }
+   }, [dataRealTime])
+
+   function onRefresh() {
+      notifLoadPage.set({
+         category: '',
+         load: false
+      })
+      setRefresh(false)
+      setPage(1)
+      setTimeout(() => {
+         getData(false)
+      }, 500)
+   }
+
+
    return (
       <Box p={20}>
+         {
+            isRefresh &&
+            <ReloadButtonTop
+               onReload={() => { onRefresh() }}
+               title='UPDATE'
+            />
+
+         }
          <TextInput
             styles={{
                input: {

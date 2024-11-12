@@ -1,32 +1,25 @@
 "use client";
-import { LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
-import {
-   Box,
-   Button,
-   Flex,
-   Group,
-   rem,
-   SimpleGrid,
-   Stack,
-   Text,
-} from "@mantine/core";
-import React, { useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { IoIosArrowDropright } from "react-icons/io";
-import { Dropzone } from "@mantine/dropzone";
-import _ from "lodash";
-import { IListFileTask } from "../lib/type_task";
-import ResultsFile from "./results_file";
-import { FaTrash } from "react-icons/fa6";
-import { funAddFileTask, funCekNamFileUploadTask } from "../lib/api_task";
+import { keyWibu, LayoutDrawer, LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
 import { useHookstate } from "@hookstate/core";
+import { Box, Button, Flex, Group, Loader, rem, SimpleGrid, Stack, Text, } from "@mantine/core";
+import { Dropzone } from "@mantine/dropzone";
+import _ from "lodash";
+import { useParams, useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { FaTrash } from "react-icons/fa6";
+import { IoIosArrowDropright } from "react-icons/io";
+import { useWibuRealtime } from "wibu-realtime";
+import { funAddFileTask, funCekNamFileUploadTask } from "../lib/api_task";
+import { IListFileTask } from "../lib/type_task";
+import ResultsFile from "./results_file";
 
 
 export default function AddFileDetailTask() {
    const router = useRouter()
    const [openModal, setOpenModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const [fileForm, setFileForm] = useState<any[]>([])
    const [listFile, setListFile] = useState<IListFileTask[]>([])
    const param = useParams<{ id: string, detail: string }>()
@@ -34,6 +27,11 @@ export default function AddFileDetailTask() {
    const [openDrawerFile, setOpenDrawerFile] = useState(false)
    const tema = useHookstate(TEMA)
    const openRef = useRef<() => void>(null)
+   const [loadingUpload, setLoadingUpload] = useState(false)
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    function deleteFile(index: number) {
       setListFile([...listFile.filter((val, i) => i !== index)])
@@ -44,6 +42,7 @@ export default function AddFileDetailTask() {
 
    async function cekFileName(data: any) {
       try {
+         setLoadingUpload(true)
          const fd = new FormData();
          fd.append(`file`, data);
          const res = await funCekNamFileUploadTask(param.detail, fd)
@@ -56,11 +55,14 @@ export default function AddFileDetailTask() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal menambahkan file, coba lagi nanti")
+      } finally {
+         setLoadingUpload(false)
       }
    }
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const fd = new FormData();
          for (let i = 0; i < fileForm.length; i++) {
             fd.append(`file${i}`, fileForm[i]);
@@ -68,6 +70,10 @@ export default function AddFileDetailTask() {
 
          const response = await funAddFileTask(param.detail, fd)
          if (response.success) {
+            setDataRealtime([{
+               category: "tugas-detail-file",
+               id: param.detail,
+            }])
             toast.success(response.message)
             setFileForm([])
             setListFile([])
@@ -78,6 +84,9 @@ export default function AddFileDetailTask() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal menambahkan tugas divisi, coba lagi nanti");
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -141,6 +150,12 @@ export default function AddFileDetailTask() {
                   </Box>
                </Box>
             }
+            {
+               loadingUpload &&
+               <Group justify="center" py={20}>
+                  <Loader color="gray" type="dots" />
+               </Group>
+            }
          </Box>
          <Box pos={'fixed'} bottom={0} p={rem(20)} w={"100%"} style={{
             maxWidth: rem(550),
@@ -182,13 +197,14 @@ export default function AddFileDetailTask() {
             </Stack>
          </LayoutDrawer>
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menambahkan file?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
 
       </Box>

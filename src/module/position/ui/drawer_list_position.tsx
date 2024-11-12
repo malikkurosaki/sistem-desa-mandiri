@@ -1,20 +1,22 @@
-import { WARNA, LayoutDrawer, globalRole, TEMA } from "@/module/_global";
+import { globalRole, keyWibu, LayoutDrawer, TEMA } from "@/module/_global";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
-import { Box, Stack, SimpleGrid, Flex, TextInput, Button, Text, Select } from "@mantine/core";
+import { useHookstate } from "@hookstate/core";
+import { Box, Button, Flex, Select, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { IoAddCircle } from "react-icons/io5";
 import { RiFilter2Line } from "react-icons/ri";
+import { useWibuRealtime } from "wibu-realtime";
 import { funCreatePosition } from "../lib/api_position";
-import { useHookstate } from "@hookstate/core";
 import { globalRefreshPosition } from "../lib/val_posisition";
 
 
 export default function DrawerListPosition({ onCreated }: { onCreated: (val: boolean) => void }) {
    const roleLogin = useHookstate(globalRole)
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
+   const [loadingSave, setLoadingSave] = useState(false)
    const router = useRouter()
    const [listGroup, setListGorup] = useState<IDataGroup[]>([])
    const refresh = useHookstate(globalRefreshPosition)
@@ -25,10 +27,13 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
       name: false,
       idGroup: false
    });
-
    const [listData, setListData] = useState({
       name: "",
       idGroup: "",
+   })
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
    })
 
    async function getAllGroup() {
@@ -52,16 +57,21 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
 
    async function onSubmit() {
       try {
+         setLoadingSave(true)
          const res = await funCreatePosition({
             name: listData.name,
             idGroup: listData.idGroup
          })
 
          if (res.success) {
-            setOpenDrawerGroup(false)
             toast.success(res.message)
+            setDataRealtime([{
+               category: "data-position",
+               group: res.positions.idGroup,
+            }])
             refresh.set(!refresh.get())
             onCreated(true)
+            setOpenDrawerGroup(false)
          } else {
             toast.error(res.message)
             setOpenDrawerGroup(false)
@@ -70,32 +80,50 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
 
       } catch (error) {
          toast.error('Error')
+      } finally {
+         setLoadingSave(false)
       }
    }
 
    function onCheck() {
-      if (Object.values(touched).some((v) => v == true))
-        return false
+      const check = checkAll()
+      if (!check)
+         return false
       onSubmit()
    }
-   
+
+   function checkAll() {
+      let nilai = true
+      if (listData.name == "" || listData.name.length < 3) {
+         setTouched(touched => ({ ...touched, name: true }))
+         nilai = false
+      }
+
+      if (roleLogin.get() == "supadmin" && (listData.idGroup == "" || String(listData.idGroup) == "null")) {
+         setTouched(touched => ({ ...touched, idGroup: true }))
+         nilai = false
+      }
+
+      return nilai
+   }
+
    function onValidation(kategori: string, val: string) {
       if (kategori == 'name') {
-         setListData({...listData, name: val})
-        if (val == "" || val.length < 3) {
-          setTouched({ ...touched, name: true })
-        } else {
-          setTouched({ ...touched, name: false })
-        }
+         setListData({ ...listData, name: val })
+         if (val == "" || val.length < 3) {
+            setTouched({ ...touched, name: true })
+         } else {
+            setTouched({ ...touched, name: false })
+         }
       } else if (kategori == 'idGroup') {
          setListData({ ...listData, idGroup: val })
-         if (val == "") {
+         if (val == "" || String(val) == "null") {
             setTouched({ ...touched, idGroup: true })
          } else {
             setTouched({ ...touched, idGroup: false })
          }
       }
-    }
+   }
 
    return (
       <Box>
@@ -124,14 +152,8 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                }
             </SimpleGrid>
          </Stack>
-         <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Tambah Jabatan'} size="lg">
-            <Box pt={10} pos={"relative"} h={{
-               base: "65vh",
-               sm: "67vh",
-               lg: "67vh",
-               xl: "70vh"
-               
-            }}>
+         <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Tambah Jabatan'} size="md">
+            <Box pos={"relative"} h={"35vh"}>
                {
                   roleLogin.get() == "supadmin" &&
                   <Select
@@ -147,11 +169,9 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      }
                      size="md"
                      radius={10}
-                     mb={5}
+                     mb={15}
                      withAsterisk
-                     onChange={(e: any) => 
-                        { onValidation('idGroup', e) }
-                     }
+                     onChange={(e: any) => { onValidation('idGroup', e) }}
                      styles={{
                         input: {
                            color: tema.get().utama,
@@ -161,7 +181,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      }}
                      error={
                         touched.idGroup && (
-                           listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                           listData.idGroup == "" || String(listData.idGroup) == "null" ? "Grup Tidak Boleh Kosong" : null
                         )
                      }
                   />
@@ -175,20 +195,20 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                         borderColor: tema.get().utama,
                      },
                   }}
-                  my={15}
+                  mb={15}
                   size="md"
                   onChange={(e) => { onValidation('name', e.target.value) }}
                   radius={10}
                   placeholder="Nama Jabatan"
                   error={
                      touched.name &&
-                     (listData.name == "" ? "Error! harus memasukkan Nama Jabatan" :
+                     (listData.name == "" ? "Nama Jabatan Tidak Boleh Kosong" :
                         listData.name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
                      )
-                   }
+                  }
                   required
                />
-               <Box pos={"absolute"} bottom={10} left={0} right={0}>
+               <Box pos={"absolute"} bottom={0} left={0} right={0}>
                   <Button
                      c={"white"}
                      bg={tema.get().utama}
@@ -196,6 +216,7 @@ export default function DrawerListPosition({ onCreated }: { onCreated: (val: boo
                      radius={30}
                      fullWidth
                      onClick={() => { onCheck() }}
+                     loading={loadingSave}
                   >
                      SIMPAN
                   </Button>

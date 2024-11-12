@@ -1,19 +1,20 @@
 'use client'
-import { TEMA } from "@/module/_global";
+import { keyWibu, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { Avatar, Box, Button, Center, Grid, Group, rem, Text, Textarea } from "@mantine/core";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { funCreateDiscussion, funGetDiscussionById } from "../lib/api_discussion";
-import { useParams, useRouter } from "next/navigation";
-import { useShallowEffect } from "@mantine/hooks";
 import { funGetProfileByCookies } from "@/module/user/profile/lib/api_profile";
 import { useHookstate } from "@hookstate/core";
+import { Avatar, Box, Button, Grid, rem, Textarea } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useWibuRealtime } from "wibu-realtime";
+import { funCreateDiscussion } from "../lib/api_discussion";
 
 export default function FormCreateDiscussion({ id }: { id: string }) {
    const [isValModal, setValModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const router = useRouter()
-   const [isImg, setImg] = useState("")
    const param = useParams<{ id: string, detail: string }>()
    const [loading, setLoading] = useState(true)
    const [img, setIMG] = useState<any | null>()
@@ -25,35 +26,41 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
       desc: "",
       idDivision: id
    })
+   const [data, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
+
    async function getData() {
       try {
-        setLoading(true)
-        const res = await funGetProfileByCookies()
-        setIMG(`https://wibu-storage.wibudev.com/api/files/${res.data.img}`)
-        setLoading(false)
+         setLoading(true)
+         const res = await funGetProfileByCookies()
+         setIMG(`https://wibu-storage.wibudev.com/api/files/${res.data.img}`)
+         setLoading(false)
       } catch (error) {
-        console.error(error);
+         console.error(error);
       } finally {
-        setLoading(false)
+         setLoading(false)
       }
-    }
-  
-    useShallowEffect(() => {
+   }
+
+   useShallowEffect(() => {
       getData()
-    }, [])
+   }, [])
 
    async function createDiscussion(val: boolean) {
       try {
          if (val) {
+            setLoadingModal(true)
             const response = await funCreateDiscussion({
                desc: isData.desc,
                idDivision: id
             })
 
             if (response.success) {
+               setDataRealtime(response.notif)
                toast.success(response.message)
                router.push(`/division/${param.id}/discussion/`)
-               setValModal(false)
             } else {
                toast.error(response.message)
             }
@@ -62,6 +69,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
          console.error(error);
          toast.error("Gagal menambahkan diskusi, coba lagi nanti");
       } finally {
+         setLoadingModal(false)
          setValModal(false)
       }
    }
@@ -70,7 +78,7 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
    return (
       <Box >
          <Box p={20} >
-            <Grid  pt={10}>
+            <Grid pt={10}>
                <Grid.Col span={2}>
                   <Avatar src={img} alt="it's me" size="lg" />
                </Grid.Col>
@@ -87,12 +95,12 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
                         }}
                         value={isData.desc}
                         onChange={(e) => setData({ ...isData, desc: e.target.value })}
-                        onBlur={() => setTouched({ ...touched, desc: true })}
-                        error={
-                           touched.desc && (
-                              isData.desc == "" ? "Form Tidak Boleh Kosong" : null
-                           )
-                        }
+                     // onBlur={() => setTouched({ ...touched, desc: true })}
+                     // error={
+                     //    touched.desc && (
+                     //       isData.desc == "" ? "Form Tidak Boleh Kosong" : null
+                     //    )
+                     // }
                      />
                   </Box>
                </Grid.Col>
@@ -123,9 +131,11 @@ export default function FormCreateDiscussion({ id }: { id: string }) {
             </Button>
          </Box>
 
-         <LayoutModal opened={isValModal} onClose={() => setValModal(false)}
+         <LayoutModal loading={loadingModal} opened={isValModal} onClose={() => setValModal(false)}
             description="Apakah Anda yakin ingin menambah data?"
-            onYes={(val) => { createDiscussion(val) }} />
+            onYes={(val) => {
+               createDiscussion(val)
+            }} />
       </Box>
    )
 }  

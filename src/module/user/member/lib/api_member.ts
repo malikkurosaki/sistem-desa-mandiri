@@ -1,4 +1,4 @@
-import { IEditDataMember, IFormMember, IStatusmember } from "./type_member";
+import { IStatusmember } from "./type_member";
 
 export const funGetAllmember = async (path?: string) => {
     const response = await fetch(`/api/user${(path) ? path : ''}`, { next: { tags: ['member'] } });

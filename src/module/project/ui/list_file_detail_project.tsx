@@ -1,21 +1,23 @@
 'use client'
-import { LayoutDrawer, LayoutModalViewFile, TEMA } from '@/module/_global';
-import { Box, Center, Flex, Grid, Group, SimpleGrid, Skeleton, Stack, Text } from '@mantine/core';
-import React, { useState } from 'react';
-import toast from 'react-hot-toast';
-import { funDeleteFileProject, funGetOneProjectById } from '../lib/api_project';
-import { useParams } from 'next/navigation';
-import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
-import { IDataFileProject } from '../lib/type_project';
-import { BsFileTextFill, BsFiletypeCsv, BsFiletypeHeic, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from 'react-icons/bs';
+import { keyWibu, LayoutDrawer, LayoutModalViewFile, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
-import { FaTrash } from 'react-icons/fa6';
 import { useHookstate } from '@hookstate/core';
+import { Box, Flex, Grid, Group, SimpleGrid, Skeleton, Stack, Text } from '@mantine/core';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { BsFileTextFill, BsFiletypeCsv, BsFiletypeHeic, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from 'react-icons/bs';
+import { FaTrash } from 'react-icons/fa6';
+import { useWibuRealtime } from 'wibu-realtime';
+import { funDeleteFileProject, funGetOneProjectById } from '../lib/api_project';
+import { IDataFileProject } from '../lib/type_project';
 
 export default function ListFileDetailProject() {
   const [isData, setData] = useState<IDataFileProject[]>([])
   const param = useParams<{ id: string }>()
   const [loading, setLoading] = useState(true)
+  const [loadingDelete, setLoadingDelete] = useState(false)
   const [idData, setIdData] = useState('')
   const [idStorage, setIdStorage] = useState('')
   const [nameData, setNameData] = useState('')
@@ -26,6 +28,10 @@ export default function ListFileDetailProject() {
   const tema = useHookstate(TEMA)
   const isMobile = useMediaQuery("(max-width: 350px)");
   const [reason, setReason] = useState("")
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
   async function getOneDataCancel() {
     try {
@@ -46,9 +52,9 @@ export default function ListFileDetailProject() {
     getOneDataCancel();
   }, [param.id])
 
-  async function getOneData() {
+  async function getOneData(loading: boolean) {
     try {
-      setLoading(true)
+      setLoading(loading)
       const res = await funGetOneProjectById(param.id, 'file');
       if (res.success) {
         setData(res.data)
@@ -65,16 +71,21 @@ export default function ListFileDetailProject() {
   }
 
   useShallowEffect(() => {
-    getOneData();
+    getOneData(true);
   }, [param.id])
 
 
   async function onDelete() {
     try {
+      setLoadingDelete(true)
       const res = await funDeleteFileProject(idData);
       if (res.success) {
+        setDataRealtime([{
+          category: "project-detail-file",
+          id: param.id,
+        }])
         toast.success(res.message)
-        getOneData()
+        getOneData(false)
         setIdData("")
         setIdStorage("")
         setOpenDrawer(false)
@@ -84,9 +95,20 @@ export default function ListFileDetailProject() {
     } catch (error) {
       console.error(error);
       toast.error("Gagal menghapus file, coba lagi nanti");
+    } finally {
+      setOpenModal(false)
+      setLoadingDelete(false)
     }
 
   }
+
+  useShallowEffect(() => {
+    if (dataRealTime && dataRealTime.some((i: any) => i.category == 'project-detail-file' && i.id == param.id)) {
+      getOneData(false)
+    } else if (dataRealTime && dataRealTime.some((i: any) => i.category == 'project-detail-status' && i.id == param.id)) {
+      getOneDataCancel()
+    }
+  }, [dataRealTime])
 
   return (
     <>
@@ -111,7 +133,7 @@ export default function ListFileDetailProject() {
                   </Box>
                 ))
               :
-              isData.length === 0 ? <Text>Tidak ada file</Text> :
+              isData.length === 0 ? <Text c={"dimmed"} ta={"center"}>Tidak ada file</Text> :
                 isData.map((item, index) => {
                   return (
                     <Box
@@ -208,13 +230,14 @@ export default function ListFileDetailProject() {
         </LayoutDrawer>
 
 
-        <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+        <LayoutModal loading={loadingDelete} opened={isOpenModal} onClose={() => setOpenModal(false)}
           description="Apakah Anda yakin ingin menghapus file ini? File yang dihapus tidak dapat dikembalikan"
           onYes={(val) => {
             if (val) {
               onDelete()
+            } else {
+              setOpenModal(false)
             }
-            setOpenModal(false)
           }} />
 
         <LayoutModalViewFile opened={isOpenModalView} onClose={() => setOpenModalView(false)} file={idStorage} extension={isExtension} fitur='project' />

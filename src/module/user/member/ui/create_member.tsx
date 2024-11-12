@@ -1,25 +1,27 @@
 "use client";
-import { globalRole, TEMA, WARNA } from "@/module/_global";
+import { globalRole, keyWibu, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
+import { funGetUserByCookies } from "@/module/auth";
 import { funGetAllGroup, IDataGroup } from "@/module/group";
+import { funGetAllPosition } from "@/module/position/lib/api_position";
+import { useHookstate } from "@hookstate/core";
 import { Avatar, Box, Button, Indicator, rem, Select, Stack, Text, TextInput } from "@mantine/core";
+import { Dropzone } from "@mantine/dropzone";
+import { useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { IDataPositionMember, IDataROleMember } from "../lib/type_member";
-import { funGetAllPosition } from "@/module/position/lib/api_position";
-import { funCreateMember } from "../lib/api_member";
-import _ from "lodash";
-import { useHookstate } from "@hookstate/core";
-import { useShallowEffect } from "@mantine/hooks";
-import { funGetUserByCookies } from "@/module/auth";
-import { valueRoleUser } from "../../lib/val_user";
 import { FaCamera } from "react-icons/fa6";
-import { Dropzone } from "@mantine/dropzone";
+import { valueRoleUser } from "../../lib/val_user";
+import { funCreateMember } from "../lib/api_member";
+import { IDataPositionMember, IDataROleMember } from "../lib/type_member";
+import { useWibuRealtime } from "wibu-realtime";
 
 export default function CreateMember() {
   const router = useRouter();
   const [isModal, setModal] = useState(false);
+  const [loadingKonfirmasi, setLoadingKonfirmasi] = useState(false);
   const [listGroup, setListGorup] = useState<IDataGroup[]>([]);
   const [listPosition, setListPosition] = useState<IDataPositionMember[]>([]);
   const [listUserRole, setListUserRole] = useState<IDataROleMember[]>([]);
@@ -28,6 +30,10 @@ export default function CreateMember() {
   const [imgForm, setImgForm] = useState<any>()
   const openRef = useRef<() => void>(null)
   const tema = useHookstate(TEMA)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
   const [touched, setTouched] = useState({
     nik: false,
     name: false,
@@ -100,37 +106,37 @@ export default function CreateMember() {
 
   async function onSubmit(val: boolean) {
     try {
-      if (_.isEmpty(listData)) {
-        return;
-      }
-      if (val) {
-        const fd = new FormData()
-        fd.append("file", imgForm)
-        fd.append("data", JSON.stringify(
-          {
-            nik: listData.nik,
-            name: listData.name,
-            phone: listData.phone,
-            email: listData.email,
-            gender: listData.gender,
-            idGroup: listData.idGroup,
-            idPosition: listData.idPosition,
-            idUserRole: listData.idUserRole,
-          }
-        ))
-        const res = await funCreateMember(fd);
-        if (res.success) {
-          toast.success(res.message);
-          setModal(false);
-          router.push("/member?active=true");
-        } else {
-          toast.error(res.message);
+      setLoadingKonfirmasi(true)
+      const fd = new FormData()
+      fd.append("file", imgForm)
+      fd.append("data", JSON.stringify(
+        {
+          nik: listData.nik,
+          name: listData.name,
+          phone: listData.phone,
+          email: listData.email,
+          gender: listData.gender,
+          idGroup: listData.idGroup,
+          idPosition: listData.idPosition,
+          idUserRole: listData.idUserRole,
         }
+      ))
+      const res = await funCreateMember(fd);
+      if (res.success) {
+        setDataRealtime([{
+          category: "data-member",
+          group: res.data.idGroup,
+        }])
+        toast.success(res.message);
+        router.push("/member?active=true");
+      } else {
+        toast.error(res.message);
       }
       setModal(false);
     } catch (error) {
       toast.error("Error");
     } finally {
+      setLoadingKonfirmasi(false)
       setModal(false);
     }
   }
@@ -142,12 +148,61 @@ export default function CreateMember() {
   }, []);
 
   function onCheck() {
-    if (Object.values(touched).some((v) => v == true))
+    const cek = checkAll()
+    if (!cek)
       return false
     setModal(true)
   }
 
-  function onValidation(kategori: string, val: string) {
+  function checkAll() {
+    let nilai = true
+
+    if (listData.nik === "" || listData.nik.length !== 16) {
+      setTouched(touched => ({ ...touched, nik: true }))
+      nilai = false
+    }
+
+    if (listData.name === "") {
+      setTouched(touched => ({ ...touched, name: true }))
+      nilai = false
+    }
+
+    if (listData.phone == "" || !(listData.phone.length >= 10 && listData.phone.length <= 15)) {
+      setTouched(touched => ({ ...touched, phone: true }))
+      nilai = false
+    }
+
+    if (listData.email == "" || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(listData.email)) {
+      setTouched(touched => ({ ...touched, email: true }))
+      nilai = false
+    }
+
+    if (listData.gender == "" || String(listData.gender) == "null") {
+      setTouched(touched => ({ ...touched, gender: true }))
+      nilai = false
+    }
+
+    if (roleLogin.get() == "supadmin" && (listData.idGroup == "" || String(listData.idGroup) == "null")) {
+      setTouched(touched => ({ ...touched, idGroup: true }))
+      nilai = false
+    }
+
+    if (listData.idPosition === "" || String(listData.idPosition) == "null") {
+      setTouched(touched => ({ ...touched, idPosition: true }))
+      nilai = false
+    }
+
+    if (listData.idUserRole === "" || String(listData.idUserRole) == "null") {
+      setTouched(touched => ({ ...touched, idUserRole: true }))
+      nilai = false
+    }
+
+    return nilai
+
+  }
+
+
+  function onValidation(kategori: string, val: any) {
     if (kategori == 'nik') {
       setListData({ ...listData, nik: val })
       if (val === "" || val.length !== 16) {
@@ -178,28 +233,28 @@ export default function CreateMember() {
       }
     } else if (kategori == 'gender') {
       setListData({ ...listData, gender: val })
-      if (val == "" || val == "null") {
+      if (val == "" || String(val) == "null") {
         setTouched({ ...touched, gender: true })
       } else {
         setTouched({ ...touched, gender: false })
       }
     } else if (kategori == 'idGroup') {
-      setListData({ ...listData, idGroup: val, idPosition: "", })
-      if (val === "") {
-        setTouched({ ...touched, idGroup: true })
+      setListData(listData => ({ ...listData, idGroup: val, }))
+      if (val === "" || String(val) == "null") {
+        setTouched(touched => ({ ...touched, idGroup: true }))
       } else {
         setTouched({ ...touched, idGroup: false })
       }
     } else if (kategori == 'idPosition') {
-      setListData({ ...listData, idPosition: val })
-      if (val === "") {
-        setTouched({ ...touched, idPosition: true })
+      setListData(listData => ({ ...listData, idPosition: val }))
+      if (val === "" || String(val) == "null") {
+        setTouched(touched => ({ ...touched, idPosition: true }))
       } else {
         setTouched({ ...touched, idPosition: false })
       }
     } else if (kategori == 'idUserRole') {
       setListData({ ...listData, idUserRole: val })
-      if (val === "") {
+      if (val === "" || String(val) == "null") {
         setTouched({ ...touched, idUserRole: true })
       } else {
         setTouched({ ...touched, idUserRole: false })
@@ -210,6 +265,7 @@ export default function CreateMember() {
   async function changeGrup(val: any) {
     setListPosition([]);
     onValidation('idGroup', val)
+    onValidation('idPosition', '')
     getAllPosition(val);
   }
 
@@ -269,7 +325,7 @@ export default function CreateMember() {
             onChange={(val: any) => { changeGrup(val) }}
             error={
               touched.idGroup && (
-                listData.idGroup == "" ? "Grup Tidak Boleh Kosong" : null
+                listData.idGroup == "" || String(listData.idGroup) == "null" ? "Grup Tidak Boleh Kosong" : null
               )
             }
           />
@@ -301,7 +357,7 @@ export default function CreateMember() {
           value={listData.idPosition == "" ? null : listData.idPosition}
           error={
             touched.idPosition && (
-              listData.idPosition == "" ? "Jabatan Tidak Boleh Kosong" : null
+              listData.idPosition == "" || String(listData.idPosition) == "null" ? "Jabatan Tidak Boleh Kosong" : null
             )
           }
         />
@@ -331,7 +387,7 @@ export default function CreateMember() {
           onChange={(val: any) => { onValidation('idUserRole', val) }}
           error={
             touched.idUserRole && (
-              listData.idUserRole == "" ? "Role Tidak Boleh Kosong" : null
+              listData.idUserRole == "" || String(listData.idUserRole) == "null" ? "Role Tidak Boleh Kosong" : null
             )
           }
         />
@@ -423,7 +479,7 @@ export default function CreateMember() {
           error={
             touched.phone && (
               listData.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" :
-                listData.phone.length < 10 ? "Nomor Telepon harus 10 digit" : null
+                listData.phone.length < 10 ? "Nomor Telepon Tidak Valid" : null
             )
           }
         />
@@ -449,7 +505,7 @@ export default function CreateMember() {
           onChange={(val: any) => { onValidation('gender', val) }}
           error={
             touched.gender && (
-              listData.gender == "" ? "Jenis Kelamin Tidak Boleh Kosong" : null
+              listData.gender == "" || String(listData.gender == "null") ? "Jenis Kelamin Tidak Boleh Kosong" : null
             )
           }
         />
@@ -471,11 +527,16 @@ export default function CreateMember() {
         </Button>
       </Box>
       <LayoutModal
+        loading={loadingKonfirmasi}
         opened={isModal}
         onClose={() => setModal(false)}
         description="Apakah Anda yakin ingin menambahkan data?"
         onYes={(val) => {
-          onSubmit(val);
+          if (val) {
+            onSubmit(val);
+          } else {
+            setModal(false);
+          }
         }}
       />
     </Box>

@@ -1,17 +1,15 @@
 'use client'
-import { TEMA, WARNA } from "@/module/_global";
+import { TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
 import { Carousel } from "@mantine/carousel";
-import { Box, Card, Flex, Title, Text, Progress, Stack, Skeleton, ActionIcon } from "@mantine/core";
+import { Badge, Box, Card, Flex, Group, Progress, Skeleton, Stack, Text, Title } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
+import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { funGetHome } from "../lib/api_home";
 import { IDataHomeKegiatan } from "../lib/type_home";
-import _ from "lodash";
-import { useHookstate } from "@hookstate/core";
-import { MdMoreVert } from "react-icons/md";
-import { IoIosArrowDropright } from "react-icons/io";
 
 export default function ListProjects() {
    const router = useRouter()
@@ -24,7 +22,6 @@ export default function ListProjects() {
          setData([]);
          setLoading(true);
          const response = await funGetHome('?cat=kegiatan')
-
          if (response.success) {
             setData(response.data)
          } else {
@@ -49,7 +46,7 @@ export default function ListProjects() {
    return (
       <>
          <Box pt={10}>
-            <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Kegiatan Terbaru</Text>
+            <Text c={tema.get().utama} mb={10} fw={'bold'} fz={16}>Kegiatan Terupdate</Text>
             {loading ?
                <Box pb={20}>
                   <Skeleton width={"100%"} height={200} radius={"md"} />
@@ -78,11 +75,28 @@ export default function ListProjects() {
                                  </Card.Section>
                                  <Stack h={isMobile ? 100 : 150} align="stretch" justify="center">
                                     <Progress.Root size="xl" radius="xl" style={{ border: `1px solid ${'#BDBDBD'}` }}>
-                                       <Progress.Section value={v.progress} color="yellow" striped >
-                                          <Progress.Label>{v.progress}%</Progress.Label>
+                                       <Progress.Section value={_.isNull(v.progress) ? 0 : v.progress} color="yellow" striped >
+                                          <Progress.Label>{_.isNull(v.progress) ? 0 : v.progress}%</Progress.Label>
                                        </Progress.Section>
                                     </Progress.Root>
-                                    <Text c={tema.get().utama} fz={isMobile ? 14 : 16}>{v.createdAt}</Text>
+                                    <Group align='center' pt={10} justify='space-between'>
+                                       <Text c={tema.get().utama} fz={isMobile ? 14 : 16}>{v.createdAt}</Text>
+                                       <Badge color={
+                                          v.status === 0 ? '#1372C4' :
+                                             v.status === 1 ? '#C5771A' :
+                                                v.status === 2 ? '#0B6025' :
+                                                   v.status === 3 ? '#BB1F1F' :
+                                                      "grey"
+                                       }>
+                                          {
+                                             v.status === 0 ? 'Segera' :
+                                                v.status === 1 ? 'Dikerjakan' :
+                                                   v.status === 2 ? 'Selesai' :
+                                                      v.status === 3 ? 'Dibatalkan' :
+                                                         "Segera"
+                                          }
+                                       </Badge>
+                                    </Group>
                                  </Stack>
                               </Card>
                            </Box>

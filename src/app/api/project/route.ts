@@ -1,9 +1,8 @@
 import { DIR, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
-import _ from "lodash";
-import moment from "moment";
-import { NextResponse } from "next/server";
 import { createLogUser } from "@/module/user";
+import _ from "lodash";
+import { NextResponse } from "next/server";
 
 
 // GET ALL DATA PROJECT
@@ -90,7 +89,7 @@ export async function GET(request: Request) {
                     }
                 }
             },
-            orderBy:{
+            orderBy: {
                 createdAt: 'desc'
             }
         })
@@ -120,7 +119,7 @@ export async function GET(request: Request) {
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -157,8 +156,8 @@ export async function POST(request: Request) {
                 ..._.omit(v, ["dateStart", "dateEnd", "name"]),
                 idProject: data.id,
                 title: v.title,
-                dateStart: new Date(moment(v.dateStart).format('YYYY-MM-DD')),
-                dateEnd: new Date(moment(v.dateEnd).format('YYYY-MM-DD')),
+                dateStart: new Date(v.dateStart),
+                dateEnd: new Date(v.dateEnd),
             }))
 
             const insertTask = await prisma.projectTask.createMany({
@@ -247,7 +246,7 @@ export async function POST(request: Request) {
                         ]
                     }
                 },
-                select:{
+                select: {
                     id: true
                 }
             })
@@ -273,10 +272,10 @@ export async function POST(request: Request) {
 
         // create log user
         const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data kegiatan', table: 'project', data: data.id })
-        return NextResponse.json({ success: true, message: "Berhasil membuat kegiatan" }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil membuat kegiatan", notif: dataNotif }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal membuat kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membuat kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

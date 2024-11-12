@@ -1,17 +1,18 @@
 'use client'
-import { globalRole, LayoutDrawer, SkeletonList, SkeletonSingle, TEMA } from "@/module/_global";
-import { Box, Group, Flex, Avatar, Text, SimpleGrid, Stack, Grid, Divider } from "@mantine/core";
+import { globalRole, keyWibu, LayoutDrawer, SkeletonList, TEMA } from "@/module/_global";
+import LayoutModal from "@/module/_global/layout/layout_modal";
+import { globalIsAdminDivision } from "@/module/division_new";
+import { useHookstate } from "@hookstate/core";
+import { Avatar, Box, Divider, Flex, Grid, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { funDeleteMemberTask, funGetTaskDivisionById } from "../lib/api_task";
-import { IDataMemberTaskDivision } from "../lib/type_task";
 import { FaUser } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
-import LayoutModal from "@/module/_global/layout/layout_modal";
-import { useHookstate } from "@hookstate/core";
-import { globalIsAdminDivision } from "@/module/division_new";
+import { useWibuRealtime } from "wibu-realtime";
+import { funDeleteMemberTask, funGetTaskDivisionById } from "../lib/api_task";
+import { IDataMemberTaskDivision } from "../lib/type_task";
 
 
 export default function ListAnggotaDetailTask() {
@@ -20,6 +21,7 @@ export default function ListAnggotaDetailTask() {
    const param = useParams<{ id: string, detail: string }>()
    const [openDrawer, setOpenDrawer] = useState(false)
    const [isOpenModal, setOpenModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const [dataChoose, setDataChoose] = useState({ id: '', name: '' })
    const router = useRouter()
    const roleLogin = useHookstate(globalRole)
@@ -28,6 +30,10 @@ export default function ListAnggotaDetailTask() {
    const isMobile2 = useMediaQuery("(max-width: 438px)");
    const tema = useHookstate(TEMA)
    const [reason, setReason] = useState("")
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    async function getOneDataCancel() {
       try {
@@ -48,16 +54,15 @@ export default function ListAnggotaDetailTask() {
       getOneDataCancel();
    }, [param.detail])
 
-   async function getOneData() {
+   async function getOneData(loading: boolean) {
       try {
-         setLoading(true)
+         setLoading(loading)
          const res = await funGetTaskDivisionById(param.detail, 'member');
          if (res.success) {
             setData(res.data)
          } else {
             toast.error(res.message);
          }
-
       } catch (error) {
          console.error(error);
          toast.error("Gagal mendapatkan member tugas divisi, coba lagi nanti");
@@ -67,17 +72,31 @@ export default function ListAnggotaDetailTask() {
    }
 
    useShallowEffect(() => {
-      getOneData();
+      getOneData(true);
    }, [param.detail])
+
+
+   useShallowEffect(() => {
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'tugas-detail-anggota' && i.id == param.detail)) {
+         getOneData(false)
+      } else if (dataRealTime && dataRealTime.some((i: any) => i.category == 'tugas-detail-status' && i.id == param.detail)) {
+         getOneDataCancel()
+      }
+   }, [dataRealTime])
 
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const res = await funDeleteMemberTask(param.detail, { idUser: dataChoose.id });
          if (res.success) {
+            setDataRealtime([{
+               category: "tugas-detail-anggota",
+               id: param.detail,
+            }])
             toast.success(res.message)
             setDataChoose({ id: '', name: '' })
-            getOneData()
+            getOneData(false)
             setOpenDrawer(false)
          } else {
             toast.error(res.message)
@@ -85,6 +104,9 @@ export default function ListAnggotaDetailTask() {
       } catch (error) {
          console.error(error);
          toast.error("Gagal menghapus anggota tugas divisi, coba lagi nanti");
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -184,13 +206,14 @@ export default function ListAnggotaDetailTask() {
             </Box>
          </LayoutDrawer>
 
-         <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={isOpenModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin mengeluarkan anggota?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
       </Box>
    )

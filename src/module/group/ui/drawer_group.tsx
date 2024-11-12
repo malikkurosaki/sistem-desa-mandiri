@@ -1,14 +1,6 @@
 import { LayoutDrawer, TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
-import {
-  Box,
-  Button,
-  Flex,
-  SimpleGrid,
-  Stack,
-  Text,
-  TextInput
-} from "@mantine/core";
+import { Box, Button, Flex, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { IoAddCircle } from "react-icons/io5";
@@ -20,6 +12,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
   const [namaGroup, setNamaGroup] = useState("");
   const tema = useHookstate(TEMA)
   const refresh = useHookstate(globalRefreshGroup)
+  const [loading, setLoading] = useState(false)
   const [touched, setTouched] = useState({
     name: false,
   });
@@ -27,8 +20,8 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
 
   async function createData() {
     try {
+      setLoading(true)
       const response = await funCreateGroup({ name: namaGroup })
-
       if (response.success) {
         toast.success(response.message);
         refresh.set(!refresh.get())
@@ -41,12 +34,16 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
     } catch (error) {
       console.error(error);
       toast.error("Gagal menambahkan grup, coba lagi nanti");
+    } finally {
+      setLoading(false)
     }
   }
 
   function onCheck() {
-    if (Object.values(touched).some((v) => v == true))
+    const cek = checkAll()
+    if (!cek) {
       return false
+    }
     createData()
   }
 
@@ -58,7 +55,15 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
       } else {
         setTouched({ ...touched, name: false })
       }
-    } 
+    }
+  }
+
+  function checkAll() {
+    if (namaGroup == "" || namaGroup.length < 3) {
+      setTouched({ ...touched, name: true })
+      return false
+    }
+    return true
   }
 
   return (
@@ -83,7 +88,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
         onClose={() => setOpenDrawerGroup(false)}
         title={"Tambah Grup"}
       >
-        <Box pt={10}>
+        <Box pos={"relative"} h={"28.5vh"}>
           <TextInput
             styles={{
               input: {
@@ -92,7 +97,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
                 borderColor: tema.get().utama,
               },
             }}
-            size="lg"
+            size="md"
             radius={10}
             label="Grup"
             required
@@ -102,12 +107,12 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
             }}
             error={
               touched.name &&
-              (namaGroup == "" ? "Error! harus memasukkan grup" :
+              (namaGroup == "" ? "Grup Tidak Boleh Kosong" :
                 namaGroup.length < 3 ? "Masukkan Minimal 3 karakter" : ""
               )
             }
           />
-          <Box mt={"xl"}>
+          <Box pos={"absolute"} bottom={10} left={0} right={0}>
             <Button
               c={"white"}
               bg={tema.get().utama}
@@ -115,6 +120,7 @@ export default function DrawerGroup({ onSuccess, }: { onSuccess: (val: boolean) 
               radius={30}
               fullWidth
               onClick={() => { onCheck() }}
+              loading={loading}
             >
               Simpan
             </Button>

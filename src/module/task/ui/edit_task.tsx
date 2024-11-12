@@ -1,46 +1,58 @@
 "use client";
-import { LayoutNavbarNew, TEMA } from "@/module/_global";
-import {
-   Box,
-   Button,
-   Input,
-   rem,
-   Skeleton,
-   Stack,
-   Textarea,
-   TextInput,
-} from "@mantine/core";
-import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { keyWibu, LayoutNavbarNew, TEMA } from "@/module/_global";
 import LayoutModal from "@/module/_global/layout/layout_modal";
-import { funEditTask, funGetTaskDivisionById } from "../lib/api_task";
-import { useShallowEffect } from "@mantine/hooks";
 import { useHookstate } from "@hookstate/core";
+import { Box, Button, rem, Skeleton, Stack, TextInput } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useWibuRealtime } from "wibu-realtime";
+import { funEditTask, funGetTaskDivisionById } from "../lib/api_task";
 
 
 export default function EditTask() {
    const router = useRouter()
    const [title, setTitle] = useState("")
    const [openModal, setOpenModal] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const param = useParams<{ id: string, detail: string }>()
    const [loading, setLoading] = useState(true)
    const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       title: false,
    });
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    function onVerification() {
-      if (title == "")
-         return toast.error("Error! harus memasukkan judul tugas")
-
+      if (Object.values(touched).some((v) => v == true))
+         return false
       setOpenModal(true)
+   }
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'title') {
+         setTitle(val)
+         if (val === "") {
+            setTouched({ ...touched, title: true })
+         } else {
+            setTouched({ ...touched, title: false })
+         }
+      }
    }
 
    async function onSubmit() {
       try {
+         setLoadingModal(true)
          const res = await funEditTask(param.detail, { title })
          if (res.success) {
+            setDataRealtime([{
+               category: "tugas-detail",
+               id: param.detail,
+            }])
             toast.success(res.message)
             router.push("./")
          } else {
@@ -49,6 +61,9 @@ export default function EditTask() {
       } catch (error) {
          console.error(error)
          toast.error("Gagal mengedit tugas, coba lagi nanti")
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -96,16 +111,12 @@ export default function EditTask() {
                      label="Judul Tugas"
                      size="md"
                      value={title}
-                     onChange={(e) => {
-                        setTitle(e.target.value)
-                        setTouched({ ...touched, title: false })
-                     }}
+                     onChange={(e) => { onValidation('title', e.target.value) }}
                      error={
                         touched.title && (
-                           title == "" ? "Error! harus memasukkan judul tugas" : null
+                           title == "" ? "Judul Tugas Tidak Boleh Kosong" : null
                         )
                      }
-                     onBlur={() => setTouched({ ...touched, title: true })}
                   />
                }
             </Stack>
@@ -133,13 +144,14 @@ export default function EditTask() {
          </Box>
 
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin mengedit tugas ini?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
       </Box>
    );

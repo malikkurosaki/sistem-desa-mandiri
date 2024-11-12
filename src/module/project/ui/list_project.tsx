@@ -1,17 +1,16 @@
 "use client"
-import { currentScroll, globalRole, SkeletonList, TEMA } from '@/module/_global';
+import { currentScroll, globalNotifPage, globalRole, ReloadButtonTop, SkeletonList, TEMA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Avatar, Badge, Box, Card, Center, Divider, Flex, Grid, Group, Skeleton, Text, TextInput, Title } from '@mantine/core';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
+import _ from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { HiMagnifyingGlass, HiMiniPresentationChartBar, HiOutlineListBullet, HiSquares2X2 } from 'react-icons/hi2';
 import { MdAccountCircle } from 'react-icons/md';
-import { RiCircleFill } from 'react-icons/ri';
 import { funGetAllProject } from '../lib/api_project';
-import toast from 'react-hot-toast';
-import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
 import { IDataProject } from '../lib/type_project';
-import { useHookstate } from '@hookstate/core';
-import _ from 'lodash';
 
 export default function ListProject() {
   const [isList, setIsList] = useState(false)
@@ -30,6 +29,8 @@ export default function ListProject() {
   const [totalData, setTotalData] = useState(0)
   const isMobile = useMediaQuery('(max-width: 369px)');
   const paddingLift = useMediaQuery('(max-width: 505px)')
+  const [isRefresh, setRefresh] = useState(false)
+  const notifLoadPage = useHookstate(globalNotifPage)
 
   const handleList = () => {
     setIsList(!isList)
@@ -39,6 +40,9 @@ export default function ListProject() {
     try {
       if (loading)
         setLoading(true)
+      if (isPage == 1) {
+        setData([])
+      }
       const response = await funGetAllProject('?status=' + status + '&search=' + searchQuery + '&group=' + group + '&page=' + isPage)
       if (response.success) {
         setNameGroup(response.filter.name)
@@ -46,12 +50,11 @@ export default function ListProject() {
         if (isPage == 1) {
           setData(response.data)
         } else {
-          setData([...isData, ...response.data])
+          setData((isData) => [...isData, ...response.data])
         }
       } else {
         toast.error(response.message);
       }
-      setLoading(false);
     } catch (error) {
       toast.error("Gagal mendapatkan kegiatan, coba lagi nanti");
       console.error(error);
@@ -92,8 +95,34 @@ export default function ListProject() {
     };
   }, [containerRef, isPage]);
 
+  useShallowEffect(() => {
+    if (notifLoadPage.get().category == 'project' && notifLoadPage.get().load == true) {
+      setRefresh(true)
+    }
+  }, [notifLoadPage.get().load])
+
+  function onRefresh() {
+    notifLoadPage.set({
+      category: '',
+      load: false
+    })
+    setRefresh(false)
+    setPage(1)
+    setTimeout(() => {
+      fetchData(true)
+    }, 500)
+  }
+
   return (
     <Box mt={20}>
+      {
+        isRefresh &&
+        <ReloadButtonTop
+          onReload={() => { onRefresh() }}
+          title='UPDATE'
+        />
+
+      }
       <Grid justify='center' align='center'>
         <Grid.Col span={10}>
           <TextInput
@@ -127,7 +156,7 @@ export default function ListProject() {
         <Box bg={tema.get().bgTotalKegiatan} p={10} style={{ borderRadius: 10 }}>
           <Text fw={'bold'} c={tema.get().utama}>Total Kegiatan</Text>
           <Flex justify={'center'} align={'center'} h={'100%'}>
-            <Text fz={40} fw={'bold'} c={tema.get().utama}>{totalData}</Text>
+            <Text fz={40} fw={'bold'} c={tema.get().utama}>{loading ? 0 : totalData}</Text>
           </Flex>
         </Box>
         {isList ? (
@@ -137,7 +166,7 @@ export default function ListProject() {
                 .fill(null)
                 .map((_, i) => (
                   <Box key={i}>
-                    <SkeletonList/>
+                    <SkeletonList />
                   </Box>
                 ))
               :
@@ -147,59 +176,59 @@ export default function ListProject() {
                   <Text c="dimmed" ta={"center"} fs={"italic"}>Tidak ada Kegiatan</Text>
                 </Box>
                 :
-                  isData.map((v, i) => {
-                    return (
-                      <Box key={i}>
-                        <Grid align='center' onClick={() => router.push(`/project/${v.id}`)}>
-                          <Grid.Col span={{
-                            base: 1,
-                            xs: 1,
-                            sm: 1,
-                            md: 1,
-                            lg: 1,
-                            xl: 1
-                          }}>
-                            <Group >
-                              <Center>
-                                <ActionIcon
-                                  variant="gradient"
-                                  size={50}
-                                  aria-label="Gradient action icon"
-                                  radius={100}
-                                  bg={tema.get().bgFiturHome}
-                                >
-                                  <HiMiniPresentationChartBar size={25} color={tema.get().utama} />
-                                </ActionIcon>
-                              </Center>
-                            </Group>
-                          </Grid.Col>
-                          <Grid.Col span={{
-                            base: 11,
-                            xs: 11,
-                            sm: 11,
-                            md: 11,
-                            lg: 11,
-                            xl: 11,
-                          }}>
-                            <Group justify='space-between' align='center'>
-                              <Box>
-                                <Box w={{
-                                  base: isMobile ? 200 : 230,
-                                  xl: 430
-                                }}>
-                                  <Text truncate="end" pl={paddingLift ? 30 : 20}>
-                                    {v.title}
-                                  </Text>
-                                </Box>
+                isData.map((v, i) => {
+                  return (
+                    <Box key={i}>
+                      <Grid align='center' onClick={() => router.push(`/project/${v.id}`)}>
+                        <Grid.Col span={{
+                          base: 1,
+                          xs: 1,
+                          sm: 1,
+                          md: 1,
+                          lg: 1,
+                          xl: 1
+                        }}>
+                          <Group >
+                            <Center>
+                              <ActionIcon
+                                variant="gradient"
+                                size={50}
+                                aria-label="Gradient action icon"
+                                radius={100}
+                                bg={tema.get().bgFiturHome}
+                              >
+                                <HiMiniPresentationChartBar size={25} color={tema.get().utama} />
+                              </ActionIcon>
+                            </Center>
+                          </Group>
+                        </Grid.Col>
+                        <Grid.Col span={{
+                          base: 11,
+                          xs: 11,
+                          sm: 11,
+                          md: 11,
+                          lg: 11,
+                          xl: 11,
+                        }}>
+                          <Group justify='space-between' align='center'>
+                            <Box>
+                              <Box w={{
+                                base: isMobile ? 200 : 230,
+                                xl: 430
+                              }}>
+                                <Text truncate="end" pl={paddingLift ? 30 : 20}>
+                                  {v.title}
+                                </Text>
                               </Box>
-                            </Group>
-                          </Grid.Col>
-                        </Grid>
-                        <Divider my="sm" />
-                      </Box>
-                    );
-                  })
-                }
+                            </Box>
+                          </Group>
+                        </Grid.Col>
+                      </Grid>
+                      <Divider my="sm" />
+                    </Box>
+                  );
+                })
+            }
           </Box>
         ) : (
           <Box pt={20}>

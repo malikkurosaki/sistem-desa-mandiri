@@ -1,15 +1,16 @@
 "use client"
-import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import toast from 'react-hot-toast';
-import { funEditDetailProject, funGetDetailProject } from '../lib/api_project';
-import moment from 'moment';
-import { useShallowEffect } from '@mantine/hooks';
-import { Box, Button, Group, Input, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
-import { LayoutNavbarNew, TEMA } from '@/module/_global';
-import { DatePicker } from '@mantine/dates';
+import { keyWibu, LayoutNavbarNew, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { useHookstate } from '@hookstate/core';
+import { Box, Button, Flex, Group, rem, SimpleGrid, Skeleton, Stack, Text, TextInput } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import { useShallowEffect } from '@mantine/hooks';
+import moment from 'moment';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useWibuRealtime } from 'wibu-realtime';
+import { funEditDetailProject, funGetDetailProject } from '../lib/api_project';
 
 export default function EditDetailTaskProject() {
    const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
@@ -18,10 +19,16 @@ export default function EditDetailTaskProject() {
    const param = useParams<{ id: string }>()
    const [openModal, setOpenModal] = useState(false)
    const [loading, setLoading] = useState(true)
+   const [loadingModal, setLoadingModal] = useState(false)
    const tema = useHookstate(TEMA)
    const [touched, setTouched] = useState({
       title: false,
+      date: false,
    });
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
    const router = useRouter()
 
    async function onSubmit() {
@@ -32,14 +39,19 @@ export default function EditDetailTaskProject() {
          return toast.error("Error! harus memasukkan judul tugas")
 
       try {
+         setLoadingModal(true)
          const res = await funEditDetailProject(param.id, {
             title: name,
-            dateStart: value[0],
-            dateEnd: value[1],
+            dateStart: moment(value[0]).format('YYYY-MM-DD'),
+            dateEnd: moment(value[1]).format('YYYY-MM-DD'),
 
          })
 
          if (res.success) {
+            setDataRealtime([{
+               category: "project-detail-task",
+               id: idProject,
+            }])
             toast.success(res.message);
             router.push('/project/' + idProject)
          } else {
@@ -48,6 +60,9 @@ export default function EditDetailTaskProject() {
       } catch (error) {
          console.error(error);
          toast.error("Gagal edit detail tugas Kegiatan, coba lagi nanti");
+      } finally {
+         setLoadingModal(false)
+         setOpenModal(false)
       }
    }
 
@@ -78,6 +93,36 @@ export default function EditDetailTaskProject() {
       getOneData();
    }, [param.id])
 
+   function onCheck() {
+      if (Object.values(touched).some((v) => v == true))
+         return false
+      setOpenModal(true)
+   }
+
+
+   function onValidation(kategori: string, val: string) {
+      if (kategori == 'title') {
+         setName(val)
+         if (val === "") {
+            setTouched({ ...touched, title: true })
+         } else {
+            setTouched({ ...touched, title: false })
+         }
+      } else if (kategori == 'date') {
+         const array = val.split(",")
+         if (array[0] == '' || array[1] == '') {
+            setTouched({ ...touched, date: true })
+         } else {
+            setTouched({ ...touched, date: false })
+         }
+      }
+   }
+
+
+   useShallowEffect(() => {
+      onValidation('date', String(value))
+   }, [value])
+
    return (
       <Box>
          <LayoutNavbarNew back="" title={"Edit Tanggal dan tugas"} menu />
@@ -103,7 +148,9 @@ export default function EditDetailTaskProject() {
                      <Skeleton height={45} mt={20} radius={10} />
                      :
                      <>
-                        <Text>Tanggal Mulai</Text>
+                        <Flex justify="flex-start" align="flex-start" direction="row" wrap="nowrap" gap={5}>
+                           <Text fw={500}>Tanggal Mulai</Text> <Text c={"red"}>*</Text>
+                        </Flex>
                         <Group
                            justify="center"
                            bg={"white"}
@@ -120,7 +167,9 @@ export default function EditDetailTaskProject() {
                      <Skeleton height={45} mt={20} radius={10} />
                      :
                      <>
-                        <Text>Tanggal Berakhir</Text>
+                        <Flex justify="flex-start" align="flex-start" direction="row" wrap="nowrap" gap={5}>
+                           <Text fw={500}>Tanggal Berakhir</Text> <Text c={"red"}>*</Text>
+                        </Flex>
                         <Group
                            justify="center"
                            bg={"white"}
@@ -133,6 +182,11 @@ export default function EditDetailTaskProject() {
                   }
                </Box>
             </SimpleGrid>
+            {
+               (!loading && touched && touched.date)
+                  ? <Text size="sm" c={"red"}>Tanggal Tidak Boleh Kosong</Text>
+                  : <></>
+            }
             <Stack pt={15} pb={100}>
                {loading ?
                   <Skeleton height={40} mt={20} radius={10} />
@@ -144,16 +198,15 @@ export default function EditDetailTaskProject() {
                            borderRadius: 10,
                         },
                      }}
-                     placeholder="Input Judul Tahapan"
-                     label="Judul Tahapan"
+                     placeholder="Input Judul Tugas"
+                     label="Judul Tugas"
                      required
                      size="md"
                      value={name}
-                     onChange={(e) => { setName(e.target.value) }}
-                     onBlur={() => setTouched({ ...touched, title: true })}
+                     onChange={(e) => { onValidation('title', e.target.value) }}
                      error={
                         touched.title && (
-                           name == "" ? "Judul Tahapan Tidak Boleh Kosong" : null
+                           name == "" ? "Judul Tugas Tidak Boleh Kosong" : null
                         )
                      }
                   />
@@ -174,28 +227,21 @@ export default function EditDetailTaskProject() {
                   size="lg"
                   radius={30}
                   fullWidth
-                  onClick={() => {
-                     if (
-                        name !== ""
-                     ) {
-                        setOpenModal(true)
-                     } else {
-                        toast.error("Judul Tidak Boleh Kosong")
-                     }
-                  }}
+                  onClick={() => { onCheck() }}
                >
                   Simpan
                </Button>
             }
          </Box>
 
-         <LayoutModal opened={openModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin mengubah data?"
             onYes={(val) => {
                if (val) {
                   onSubmit()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
       </Box>
    );

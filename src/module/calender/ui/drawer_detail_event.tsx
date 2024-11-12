@@ -1,5 +1,5 @@
 "use client"
-import { TEMA } from '@/module/_global';
+import { keyWibu, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
 import { Box, Flex, SimpleGrid, Stack, Text } from '@mantine/core';
 import { useParams, useRouter } from 'next/navigation';
@@ -9,30 +9,48 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 import { funDeleteCalenderById } from '../lib/api_calender';
 import { FaUsers } from 'react-icons/fa6';
 import { useHookstate } from '@hookstate/core';
+import { useWibuRealtime } from 'wibu-realtime';
 
-export default function DrawerDetailEvent({ idCalendar }: { idCalendar: string }) {
+export default function DrawerDetailEvent({ idCalendar, close }: { idCalendar: string, close: (val: boolean) => void }) {
   const router = useRouter()
   const [isModal, setModal] = useState(false)
   const param = useParams<{ id: string, detail: string }>()
   const tema = useHookstate(TEMA)
+  const [loadingDelete, setLoadingDelete] = useState(false)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
-  async function fetchDeleteCalender(val: boolean) {
+  async function fetchDeleteCalender() {
     try {
-      if (val) {
-        const response = await funDeleteCalenderById(idCalendar)
-        if (response.success) {
-          toast.success(response.message)
-          setModal(false)
-          router.push(`/division/${param.id}/calender`)
-        } else {
-          toast.error(response.message)
-        }
+      setLoadingDelete(true)
+      const response = await funDeleteCalenderById(idCalendar)
+      if (response.success) {
+        setDataRealtime([
+          {
+            category: "calendar-detail-delete",
+            id: idCalendar,
+            idUserFrom: response.user
+          },
+          {
+            category: "calendar-event",
+            division: param.id,
+            date: response.data.dateStart,
+          }
+        ])
+        toast.success(response.message)
+        router.push(`/division/${param.id}/calender`)
+      } else {
+        toast.error(response.message)
       }
-      setModal(false)
     } catch (error) {
       console.error(error);
-      setModal(false)
       toast.error("Gagal hapus acara, coba lagi nanti");
+    } finally {
+      close(true)
+      setLoadingDelete(false)
+      setModal(false)
     }
   }
 
@@ -72,9 +90,15 @@ export default function DrawerDetailEvent({ idCalendar }: { idCalendar: string }
           </Flex>
         </SimpleGrid>
       </Stack>
-      <LayoutModal opened={isModal} onClose={() => setModal(false)}
+      <LayoutModal loading={loadingDelete} opened={isModal} onClose={() => setModal(false)}
         description="Apakah Anda yakin ingin menghapus data acara ini? Data ini akan mempengaruhi semua data yang terkait"
-        onYes={(val) => { fetchDeleteCalender(val) }} />
+        onYes={(val) => {
+          if (val) {
+            fetchDeleteCalender()
+          } else {
+            setModal(false)
+          }
+        }} />
     </Box>
   );
 }

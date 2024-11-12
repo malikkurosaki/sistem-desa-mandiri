@@ -1,47 +1,18 @@
-import { TEMA } from "@/module/_global";
-import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  Group,
-  Modal,
-  ScrollArea,
-  Skeleton,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import React, { useState } from "react";
+import { keyWibu, TEMA } from "@/module/_global";
+import { useHookstate } from "@hookstate/core";
+import { Box, Breadcrumbs, Button, Divider, Flex, Grid, Group, Modal, ScrollArea, Skeleton, Text, TextInput, } from "@mantine/core";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { FcFolder } from "react-icons/fc";
-import {
-  funCreateFolder,
-  funGetAllDocument,
-  funMoveDocument,
-} from "../lib/api_document";
-import { useParams } from "next/navigation";
-import {
-  IDataDocument,
-  IFormDetailMoreItem,
-  IJalurItem,
-} from "../lib/type_document";
-import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
-import { MdFolder } from "react-icons/md";
-import router from "next/router";
 import { GoChevronRight } from "react-icons/go";
-import { useHookstate } from "@hookstate/core";
+import { MdFolder } from "react-icons/md";
+import { useWibuRealtime } from "wibu-realtime";
+import { funCreateFolder, funGetAllDocument } from "../lib/api_document";
+import { IDataDocument, IFormDetailMoreItem, IJalurItem, } from "../lib/type_document";
 
-export default function DrawerCutDocuments({
-  category,
-  onChoosePath,
-  data,
-}: {
-  category: string;
-  data: IFormDetailMoreItem[];
-  onChoosePath: (val: string) => void;
-}) {
+export default function DrawerCutDocuments({ category, loadingAction, onChoosePath, data, }: { category: string; loadingAction: boolean; data: IFormDetailMoreItem[]; onChoosePath: (val: string) => void; }) {
   const [opened, setOpened] = useState(false);
   const param = useParams<{ id: string }>();
   const [path, setPath] = useState("home");
@@ -51,6 +22,10 @@ export default function DrawerCutDocuments({
   const tema = useHookstate(TEMA);
   const [loading, setLoading] = useState(true);
   const isMobile = useMediaQuery("(max-width: 369px)");
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
 
   async function onCreateFolder() {
     try {
@@ -60,7 +35,11 @@ export default function DrawerCutDocuments({
         idDivision: param.id,
       });
       if (res.success) {
-        getOneData();
+        getOneData(false);
+        setDataRealtime([{
+          category: "division-document",
+          id: path,
+        }])
       } else {
         toast.error(res.message);
       }
@@ -72,9 +51,9 @@ export default function DrawerCutDocuments({
     setOpened(false);
   }
 
-  async function getOneData() {
+  async function getOneData(loading: boolean) {
     try {
-      setLoading(true);
+      setLoading(loading);
       const respon = await funGetAllDocument(
         "?division=" + param.id + "&path=" + path + "&category=folder"
       );
@@ -84,7 +63,6 @@ export default function DrawerCutDocuments({
       } else {
         toast.error(respon.message);
       }
-      setLoading(false);
     } catch (error) {
       console.error(error);
       toast.error("Gagal mendapatkan item, coba lagi nanti");
@@ -94,7 +72,7 @@ export default function DrawerCutDocuments({
   }
 
   useShallowEffect(() => {
-    getOneData();
+    getOneData(true);
   }, [param.id, path]);
 
   return (
@@ -122,6 +100,7 @@ export default function DrawerCutDocuments({
           </Grid.Col>
           <Grid.Col span={6}>
             <Button
+              loading={loadingAction}
               variant="filled"
               fullWidth
               color={tema.get().utama}
@@ -133,7 +112,7 @@ export default function DrawerCutDocuments({
           </Grid.Col>
         </Grid>
       </Box>
-      <Box  pb={60}>
+      <Box pb={60}>
         <Box>
           <Breadcrumbs
             separator={<GoChevronRight />}

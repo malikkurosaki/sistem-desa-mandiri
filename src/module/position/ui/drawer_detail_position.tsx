@@ -1,23 +1,24 @@
-import { LayoutDrawer, TEMA, WARNA } from "@/module/_global"
+import { keyWibu, LayoutDrawer, TEMA } from "@/module/_global"
 import LayoutModal from "@/module/_global/layout/layout_modal"
-import { funGetAllGroup, IDataGroup } from "@/module/group"
-import { Box, Stack, SimpleGrid, Flex, Text, Select, TextInput, Button, Skeleton } from "@mantine/core"
+import { funGetAllGroup } from "@/module/group"
+import { useHookstate } from "@hookstate/core"
+import { Box, Button, Flex, SimpleGrid, Skeleton, Stack, Text, TextInput } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import toast from "react-hot-toast"
 import { FaPencil, FaToggleOff } from "react-icons/fa6"
+import { useWibuRealtime } from "wibu-realtime"
 import { funEditPosition, funEditStatusPosition, funGetOnePosition } from "../lib/api_position"
 import { IDataPosition } from "../lib/type_position"
-import { useHookstate } from "@hookstate/core"
 import { globalRefreshPosition } from "../lib/val_posisition"
 
-export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
-   onUpdated: (val: boolean) => void, id: string, isActive: boolean;
-}) {
+export default function DrawerDetailPosition({ onUpdated, id, isActive }: { onUpdated: (val: boolean) => void, id: string, isActive: boolean; }) {
    const [openDrawerGroup, setOpenDrawerGroup] = useState(false)
    const [isModal, setModal] = useState(false)
    const refresh = useHookstate(globalRefreshPosition)
    const [loading, setLoading] = useState(true)
+   const [loadingEdit, setLoadingEdit] = useState(false)
+   const [loadingModal, setLoadingModal] = useState(false)
    const tema = useHookstate(TEMA)
    const [data, setData] = useState<any>({
       id: id,
@@ -27,8 +28,11 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
    const [listGroup, setListGorup] = useState<IDataPosition[]>([])
    const [touched, setTouched] = useState({
       name: false,
-      idGroup: false
    });
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    function onCLose() {
       onUpdated(true)
@@ -70,6 +74,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
    async function onSubmit() {
       try {
+         setLoadingEdit(true)
          const res = await funEditPosition(id, {
             name: data.name,
             idGroup: data.idGroup
@@ -77,6 +82,10 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
          if (res.success) {
             toast.success(res.message);
+            setDataRealtime([{
+               category: "data-position",
+               group: data.idGroup,
+            }])
             refresh.set(!refresh.get())
             onUpdated(true);
             onCLose();
@@ -88,6 +97,8 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
       } catch (error) {
          toast.error('Error');
          toast.error("Edit jabatan gagal, coba lagi nanti");
+      } finally {
+         setLoadingEdit(false)
       }
    }
 
@@ -98,27 +109,32 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
 
    function onCheck() {
       if (Object.values(touched).some((v) => v == true))
-        return false
+         return false
       onSubmit()
    }
 
    function onValidation(kategori: string, val: string) {
       if (kategori == 'name') {
-         setData({...data, name: val})
-        if (val == "" || val.length < 3) {
-          setTouched({ ...touched, name: true })
-        } else {
-          setTouched({ ...touched, name: false })
-        }
+         setData({ ...data, name: val })
+         if (val == "" || val.length < 3) {
+            setTouched({ ...touched, name: true })
+         } else {
+            setTouched({ ...touched, name: false })
+         }
       }
-    }
+   }
 
    async function nonActive(val: boolean) {
       try {
          if (val) {
+            setLoadingModal(true)
             const res = await funEditStatusPosition(id, { isActive: isActive })
             if (res.success) {
                toast.success(res.message);
+               setDataRealtime([{
+                  category: "data-position",
+                  group: data.idGroup,
+               }])
                refresh.set(!refresh.get())
                onUpdated(true);
             } else {
@@ -126,12 +142,13 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                toast.error(res.message)
             }
          }
-         setModal(false);
       } catch (error) {
          console.error(error);
-         setModal(false);
          toast.error("Edit jabatan gagal, coba lagi nanti");
-         onUpdated(false);
+         onUpdated(false)
+      } finally {
+         setLoadingModal(false)
+         setModal(false)
       }
    }
 
@@ -169,7 +186,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
          </Stack>
 
          <LayoutDrawer opened={openDrawerGroup} onClose={() => setOpenDrawerGroup(false)} title={'Edit Jabatan'} >
-            <Box pt={10} pos={"relative"} h={"28.5vh"}>
+            <Box pos={"relative"} h={"28.5vh"}>
                {loading ?
                   <Box>
                      <Skeleton height={40} mt={6} radius={10} />
@@ -189,13 +206,12 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                         size="md"
                         value={String(data.name)}
                         onChange={(e) => { onValidation('name', e.target.value) }}
-                        onBlur={() => setTouched({ ...touched, name: true })}
                         error={
                            touched.name &&
-                           (data.name == "" ? "Error! harus memasukkan Nama Jabatan" :
+                           (data.name == "" ? "Nama Jabatan Tidak Boleh Kosong" :
                               data.name.length < 3 ? "Masukkan Minimal 3 karakter" : ""
                            )
-                         }
+                        }
                         radius={10}
                         placeholder="Nama Jabatan"
                      />
@@ -208,7 +224,8 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
                      size="lg"
                      radius={30}
                      fullWidth
-                     onClick={onSubmit}
+                     onClick={() => { onCheck() }}
+                     loading={loadingEdit}
                   >
                      EDIT
                   </Button>
@@ -217,7 +234,7 @@ export default function DrawerDetailPosition({ onUpdated, id, isActive }: {
          </LayoutDrawer>
 
 
-         <LayoutModal opened={isModal} onClose={() => setModal(false)}
+         <LayoutModal loading={loadingModal} opened={isModal} onClose={() => setModal(false)}
             description="Apakah Anda yakin ingin mengubah status aktifasi data?"
             onYes={(val) => { nonActive(val) }} />
       </Box>

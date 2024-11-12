@@ -1,22 +1,7 @@
 import { TEMA } from "@/module/_global";
-import {
-  funGetListDivisionByIdDivision,
-  IDataDivison,
-} from "@/module/division_new";
+import { funGetListDivisionByIdDivision, IDataDivison, } from "@/module/division_new";
 import { useHookstate } from "@hookstate/core";
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  Group,
-  ScrollArea,
-  Skeleton,
-  Stack,
-  Text
-} from "@mantine/core";
+import { ActionIcon, Box, Button, Divider, Flex, Grid, Group, ScrollArea, Skeleton, Stack, Text } from "@mantine/core";
 import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -26,11 +11,7 @@ import { funShareDocument } from "../lib/api_document";
 import { IShareDivision } from "../lib/type_document";
 import { globalRefreshDocument } from "../lib/val_document";
 
-export default function DrawerShareDocument({
-  data,
-}: {
-  data: IShareDivision[];
-}) {
+export default function DrawerShareDocument({ data, }: { data: IShareDivision[]; }) {
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
   const [isData, setData] = useState<IDataDivison[]>([]);
   const param = useParams<{ id: string }>();

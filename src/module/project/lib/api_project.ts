@@ -1,4 +1,4 @@
-import { IFormAddDetailproject, IFormAddMemberProject, IFormDateProject, IFormProject } from "./type_project";
+import { IFormAddDetailproject, IFormAddMemberProject, IFormDateProject, NewIFormDateProject } from "./type_project";
 
 
 export const funGetAllProject = async (path?: string) => {
@@ -54,7 +54,7 @@ export const funGetDetailProject = async (path: string) => {
     return await response.json().catch(() => null);
 }
 
-export const funEditDetailProject = async (path: string, data: IFormDateProject) => {
+export const funEditDetailProject = async (path: string, data: NewIFormDateProject) => {
     const response = await fetch(`/api/project/detail/${path}`, {
         method: "POST",
         headers: {

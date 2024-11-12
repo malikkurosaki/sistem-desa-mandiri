@@ -35,10 +35,20 @@ export async function GET(request: Request) {
                   isActive: true,
                }
             }
-         } else {
+         } else if (roleUser == "admin" || roleUser == "cosupadmin") {
             kondisi = {
                isActive: true,
                idGroup: idGroup
+            }
+         } else {
+            kondisi = {
+               isActive: true,
+               idGroup: idGroup,
+               ProjectMember: {
+                  some: {
+                     idUser: user.id
+                  }
+               }
             }
          }
 
@@ -133,17 +143,31 @@ export async function GET(request: Request) {
             kondisi = {
                isActive: true,
                Division: {
+                  isActive: true,
                   idVillage: idVillage,
                   Group: {
                      isActive: true,
                   }
                }
             }
+         } else if (roleUser == "admin" || roleUser == "cosupadmin") {
+            kondisi = {
+               isActive: true,
+               Division: {
+                  isActive: true,
+                  idGroup: idGroup
+               }
+            }
          } else {
             kondisi = {
                isActive: true,
                Division: {
-                  idGroup: idGroup
+                  isActive: true,
+                  DivisionMember: {
+                     some: {
+                        idUser: user.id
+                     }
+                  }
                }
             }
          }
@@ -161,9 +185,10 @@ export async function GET(request: Request) {
             const cek = data.some((i: any) => i.status == dataStatus[index].status)
             if (cek) {
                const find = ((Number(data.find((i: any) => i.status == dataStatus[index].status)?._count) * 100) / data.reduce((n, { _count }) => n + _count, 0)).toFixed(2)
+               const fix = find != "100.00" ? find.substr(-2, 2) == "00" ? find.substr(0, 2) : find : "100"
                input = {
                   name: dataStatus[index].name,
-                  value: find
+                  value: fix
                }
             } else {
                input = {
@@ -185,10 +210,20 @@ export async function GET(request: Request) {
                isActive: true,
                category: 'FILE',
                Division: {
+                  isActive: true,
                   idVillage: idVillage,
                   Group: {
                      isActive: true,
                   }
+               }
+            }
+         } else if (roleUser == "admin" || roleUser == "cosupadmin") {
+            kondisi = {
+               isActive: true,
+               category: 'FILE',
+               Division: {
+                  isActive: true,
+                  idGroup: idGroup
                }
             }
          } else {
@@ -196,7 +231,12 @@ export async function GET(request: Request) {
                isActive: true,
                category: 'FILE',
                Division: {
-                  idGroup: idGroup
+                  isActive: true,
+                  DivisionMember: {
+                     some: {
+                        idUser: user.id
+                     }
+                  }
                }
             }
          }
@@ -248,6 +288,7 @@ export async function GET(request: Request) {
                isActive: true,
                dateStart: new Date(),
                Division: {
+                  isActive: true,
                   idVillage: idVillage,
                   Group: {
                      isActive: true,
@@ -262,6 +303,7 @@ export async function GET(request: Request) {
                isActive: true,
                dateStart: new Date(),
                Division: {
+                  isActive: true,
                   idGroup: idGroup
                },
                DivisionCalendar: {
@@ -284,7 +326,7 @@ export async function GET(request: Request) {
                dateEnd: true,
                createdAt: true,
                status: true,
-               idDivision:true,
+               idDivision: true,
                DivisionCalendar: {
                   select: {
                      title: true,
@@ -327,10 +369,20 @@ export async function GET(request: Request) {
                isActive: true,
                status: 1,
                Division: {
+                  isActive: true,
                   idVillage: idVillage,
                   Group: {
                      isActive: true,
                   }
+               }
+            }
+         } else if (roleUser == "admin" || roleUser == "cosupadmin") {
+            kondisi = {
+               isActive: true,
+               status: 1,
+               Division: {
+                  idGroup: idGroup,
+                  isActive: true
                }
             }
          } else {
@@ -338,7 +390,12 @@ export async function GET(request: Request) {
                isActive: true,
                status: 1,
                Division: {
-                  idGroup: idGroup
+                  isActive: true,
+                  DivisionMember: {
+                     some: {
+                        idUser: user.id
+                     }
+                  }
                }
             }
          }
@@ -366,7 +423,7 @@ export async function GET(request: Request) {
 
          allData = data.map((v: any) => ({
             ..._.omit(v, ["createdAt", "User"]),
-            date: moment(v.dateStart).format("ll"),
+            date: moment(v.createdAt).format("ll"),
             user: v.User.name
          }))
       } else if (kategori == "header") {
@@ -395,6 +452,6 @@ export async function GET(request: Request) {
    }
    catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan data, coba lagi nanti 99", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan data, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }

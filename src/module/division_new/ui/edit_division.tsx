@@ -1,25 +1,22 @@
 "use client"
 import { LayoutNavbarNew, TEMA } from '@/module/_global';
 import LayoutModal from '@/module/_global/layout/layout_modal';
-import { Box, Button, rem, Select, Skeleton, Stack, Textarea, TextInput } from '@mantine/core';
+import { useHookstate } from '@hookstate/core';
+import { Box, Button, rem, Skeleton, Stack, Textarea, TextInput } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { funEditDivision, funGetDivisionById } from '../lib/api_division';
-import { funGetAllGroup, IDataGroup } from '@/module/group';
-import { funGetUserByCookies } from '@/module/auth';
-import { useHookstate } from '@hookstate/core';
-
 
 export default function EditDivision() {
   const [openModal, setOpenModal] = useState(false)
   const router = useRouter()
   const param = useParams<{ id: string }>()
   const tema = useHookstate(TEMA)
+  const [loadingModal, setLoadingModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const [body, setBody] = useState<any>({
-    idGroup: "",
     name: "",
     desc: "",
   });
@@ -27,6 +24,36 @@ export default function EditDivision() {
   const [touched, setTouched] = useState({
     name: false,
   });
+
+  function onValidation(kategori: string, val: any) {
+    if (kategori == 'name') {
+      setBody({ ...body, name: val })
+      if (val === "") {
+        setTouched({ ...touched, name: true })
+      } else {
+        setTouched({ ...touched, name: false })
+      }
+    } else if (kategori == "desc") {
+      setBody({ ...body, desc: val })
+    }
+  }
+
+  function onCheck() {
+    const cek = checkAll()
+    if (!cek)
+      return false
+    setOpenModal(true)
+  }
+
+  function checkAll() {
+    let nilai = true
+    if (body.name === "") {
+      setTouched(touched => ({ ...touched, name: true }))
+      nilai = false
+    }
+    return nilai
+  }
+
 
 
   async function getOneData() {
@@ -43,8 +70,6 @@ export default function EditDivision() {
       } else {
         toast.error(res.message);
       }
-      setLoading(false);
-
     } catch (error) {
       console.error(error);
       toast.error("Gagal mendapatkan divisi, coba lagi nanti");
@@ -56,17 +81,20 @@ export default function EditDivision() {
 
   async function onUpdate() {
     try {
+      setLoadingModal(true)
       const res = await funEditDivision(param.id, body)
       if (res.success) {
         toast.success(res.message)
+        router.push("/division/info/" + param.id)
       } else {
         toast.error(res.message)
       }
-      setOpenModal(false)
     } catch (error) {
       console.error(error)
-      setOpenModal(false)
       toast.error("Gagal mengedit divisi, coba lagi nanti");
+    } finally {
+      setLoadingModal(false)
+      setOpenModal(false)
     }
 
   }
@@ -88,26 +116,22 @@ export default function EditDivision() {
             :
             <>
               <TextInput
-                placeholder="Judul"
-                label="Judul"
+                placeholder="Nama Divisi"
+                label="Nama Divisi"
                 size="md"
                 required
-                radius={40}
+                radius={10}
                 value={body.name}
-                onChange={(e) => {
-                  setBody({ ...body, name: e.target.value })
-                  setTouched({ ...touched, name: false })
-                }}
-                onBlur={() => setTouched({ ...touched, name: true })}
+                onChange={(e) => { onValidation('name', e.currentTarget.value) }}
                 error={
                   touched.name && (
-                    body.name == "" ? "Judul Tidak Boleh Kosong" : null
+                    body.name == "" ? "Nama Divisi Tidak Boleh Kosong" : null
                   )
                 }
               />
               <Textarea placeholder="Deskripsi" label="Deskripsi" size="md" radius={10}
                 value={body.desc}
-                onChange={(e) => { setBody({ ...body, desc: e.currentTarget.value }) }}
+                onChange={(e) => { onValidation('desc', e.currentTarget.value) }}
                 styles={{
                   input: {
                     height: "40vh"
@@ -132,21 +156,13 @@ export default function EditDivision() {
             size="lg"
             radius={30}
             fullWidth
-            onClick={() => {
-              if (
-                body.name !== ""
-              ) {
-                setOpenModal(true)
-              } else {
-                toast.error("Judul Tidak Boleh Kosong")
-              }
-            }}
+            onClick={() => { onCheck() }}
           >
             Simpan
           </Button>
         }
       </Box>
-      <LayoutModal opened={openModal} onClose={() => setOpenModal(false)} description='Apakah Anda yakin ingin edit data'
+      <LayoutModal loading={loadingModal} opened={openModal} onClose={() => setOpenModal(false)} description='Apakah Anda yakin ingin edit data'
         onYes={(val) => {
           if (val) {
             onUpdate()

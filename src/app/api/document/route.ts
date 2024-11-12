@@ -110,7 +110,7 @@ export async function GET(request: Request) {
                select: {
                   DivisionDocumentFolderFile: {
                      select: {
-                        idStorage: true, 
+                        idStorage: true,
                         id: true,
                         category: true,
                         name: true,
@@ -125,6 +125,11 @@ export async function GET(request: Request) {
                         updatedAt: true
                      }
                   }
+               },
+               orderBy: {
+                  DivisionDocumentFolderFile: {
+                     createdAt: 'desc'
+                  }
                }
             })
 
@@ -137,8 +142,8 @@ export async function GET(request: Request) {
                extension: v.DivisionDocumentFolderFile.extension,
                path: v.DivisionDocumentFolderFile.path,
                createdBy: v.DivisionDocumentFolderFile.User.name,
-               createdAt: moment(v.DivisionDocumentFolderFile.createdAt).format("DD-MM-YYYY HH:mm"),
-               updatedAt: moment(v.DivisionDocumentFolderFile.updatedAt).format("DD-MM-YYYY HH:mm"),
+               createdAt: v.DivisionDocumentFolderFile.createdAt,
+               updatedAt: v.DivisionDocumentFolderFile.updatedAt,
                share: true
             }))
 
@@ -169,15 +174,15 @@ export async function GET(request: Request) {
             updatedAt: true
          },
          orderBy: {
-            name: 'asc'
+            createdAt: 'desc'
          }
       })
 
       const allData = data.map((v: any) => ({
          ..._.omit(v, ["User", "createdAt", "updatedAt"]),
          createdBy: v.User.name,
-         createdAt: moment(v.createdAt).format("DD-MM-YYYY HH:mm"),
-         updatedAt: moment(v.updatedAt).format("DD-MM-YYYY HH:mm"),
+         createdAt: v.createdAt,
+         updatedAt: v.updatedAt,
          share: false
       }))
 
@@ -185,7 +190,13 @@ export async function GET(request: Request) {
          allData.push(...formatDataShare)
       }
 
-      const formatData = _.orderBy(allData, ['category', 'name'], ['desc', 'asc']);
+      const formatData = _.orderBy(allData, ['category', 'createdAt'], ['desc', 'desc']);
+
+      const fixData = formatData.map((v: any) => ({
+         ..._.omit(v, ["createdAt", "updatedAt"]),
+         createdAt: moment(v.createdAt).format("DD-MM-YYYY HH:mm"),
+         updatedAt: moment(v.updatedAt).format("DD-MM-YYYY HH:mm"),
+      }))
 
       let pathNow = path
       let jalur = []
@@ -216,11 +227,11 @@ export async function GET(request: Request) {
       jalur.push({ id: 'home', name: 'home' })
       jalur = [...jalur].reverse()
 
-      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: formatData, jalur }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: fixData, jalur }, { status: 200 });
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan item, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -296,7 +307,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil membuat folder baru" }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal membuat folder, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal membuat folder, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };
 
@@ -356,7 +367,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil mengubah nama item" }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mengubah nama item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mengubah nama item (error: 500), coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
    }
 };
 
@@ -390,6 +401,6 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ success: true, message: "Berhasil menghapus item" }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal menghapus item, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menghapus item, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };

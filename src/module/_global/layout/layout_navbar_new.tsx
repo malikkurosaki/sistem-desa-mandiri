@@ -1,11 +1,10 @@
 'use client'
-import { ActionIcon, Box, Grid, Group, Text, Title } from '@mantine/core';
-import React from 'react';
-import { WARNA } from '../fun/WARNA';
-import LayoutIconBack from './layout_icon_back';
-import _ from 'lodash';
 import { useHookstate } from '@hookstate/core';
+import { Box, Grid, Group, Title } from '@mantine/core';
+import _ from 'lodash';
+import React from 'react';
 import { TEMA } from '../bin/val_global';
+import LayoutIconBack from './layout_icon_back';
 
 export const LayoutNavbarNew = ({ back, state, title, menu }: { back?: string, title: string, menu: React.ReactNode, state?: React.ReactNode }) => {
    const tema = useHookstate(TEMA)

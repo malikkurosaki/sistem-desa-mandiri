@@ -27,7 +27,7 @@ export async function GET(request: Request, context: { params: { id: string } })
         });
 
         if (!data) {
-            return NextResponse.json({ success: false, message: "Gagal mendapatkan project, data tidak ditemukan", }, { status: 404 });
+            return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan", }, { status: 404 });
         }
 
 
@@ -49,8 +49,8 @@ export async function GET(request: Request, context: { params: { id: string } })
             const progress = Math.ceil((selesai / semua) * 100)
 
             allData = {
-                progress: progress,
-                lastUpdate: moment(dataProgress[0].updatedAt).format("DD MMMM YYYY"),
+                progress: (_.isNaN(progress)) ? 0 : progress,
+                lastUpdate: moment(dataProgress[0]?.updatedAt).format("DD MMMM YYYY"),
             }
         } else if (kategori == "task") {
             const dataProgress = await prisma.projectTask.findMany({
@@ -65,6 +65,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                     status: true,
                     dateStart: true,
                     dateEnd: true,
+                    createdAt: true
                 },
                 orderBy: {
                     createdAt: 'asc'
@@ -72,12 +73,13 @@ export async function GET(request: Request, context: { params: { id: string } })
             })
 
             const formatData = dataProgress.map((v: any) => ({
-                ..._.omit(v, ["dateStart", "dateEnd"]),
+                ..._.omit(v, ["dateStart", "dateEnd", "createdAt"]),
                 dateStart: moment(v.dateStart).format("DD-MM-YYYY"),
                 dateEnd: moment(v.dateEnd).format("DD-MM-YYYY"),
+                createdAt: moment(v.createdAt).format("DD-MM-YYYY HH:mm"),
             }))
-
-            allData = formatData
+            const dataFix = _.orderBy(formatData, 'createdAt', 'asc')
+            allData = dataFix
 
         } else if (kategori == "file") {
             const dataFile = await prisma.projectFile.findMany({
@@ -86,7 +88,7 @@ export async function GET(request: Request, context: { params: { id: string } })
                     idProject: String(id)
                 },
                 orderBy: {
-                    createdAt: 'desc'
+                    createdAt: 'asc'
                 },
                 select: {
                     id: true,
@@ -133,11 +135,11 @@ export async function GET(request: Request, context: { params: { id: string } })
             allData = fix
         }
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan project", data: allData, }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kegiatan", data: allData, }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan project, coba lagi nantiiiiii", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -171,8 +173,8 @@ export async function POST(request: Request, context: { params: { id: string } }
             data: {
                 title: name,
                 idProject: id,
-                dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
-                dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
+                dateStart: new Date(dateStart),
+                dateEnd: new Date(dateEnd),
             },
             select: {
                 id: true
@@ -186,7 +188,7 @@ export async function POST(request: Request, context: { params: { id: string } }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal tambah tahapan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal tambah tahapan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -210,7 +212,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
         if (data == 0) {
             return NextResponse.json(
                 {
-                    success: false, message: "Gagal mendapatkan project, data tidak ditemukan",
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
@@ -232,7 +234,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal membatalkan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal membatalkan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -278,6 +280,6 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengupdate kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

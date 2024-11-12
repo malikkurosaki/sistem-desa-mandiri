@@ -20,6 +20,7 @@ export async function GET(request: Request) {
       const idGroup = searchParams.get("group");
       const name = searchParams.get('search');
       const page = searchParams.get('page');
+      const active = searchParams.get("active");
       const dataSkip = Number(page) * 10 - 10;
 
       if (idGroup == "null" || idGroup == undefined) {
@@ -30,7 +31,7 @@ export async function GET(request: Request) {
 
 
       let kondisi: any = {
-         isActive: true,
+         isActive: active == 'false' ? false : true,
          idVillage: String(villaId),
          idGroup: grup,
          name: {
@@ -41,7 +42,7 @@ export async function GET(request: Request) {
 
       if (roleUser != "supadmin" && roleUser != "cosupadmin" && roleUser != "admin") {
          kondisi = {
-            isActive: true,
+            isActive: active == 'false' ? false : true,
             idVillage: String(villaId),
             idGroup: grup,
             name: {
@@ -104,7 +105,7 @@ export async function GET(request: Request) {
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -122,11 +123,20 @@ export async function POST(request: Request) {
       const userRoleLogin = user.idUserRole
       const sent = (await request.json())
 
+      let fixGroup
+      if (sent.data.idGroup == "null" || sent.data.idGroup == undefined || sent.data.idGroup == "") {
+         fixGroup = user.idGroup
+      } else {
+         fixGroup = sent.data.idGroup
+      }
+
+
+
       const data = await prisma.division.create({
          data: {
             name: sent.data.name,
             idVillage: String(user.idVillage),
-            idGroup: sent.data.idGroup,
+            idGroup: fixGroup,
             desc: sent.data.desc,
             createdBy: String(user.id)
          },
@@ -214,9 +224,9 @@ export async function POST(request: Request) {
       // create log user
       const log = await createLogUser({ act: 'CREATE', desc: 'User membuat data divisi', table: 'division', data: data.id })
 
-      return NextResponse.json({ success: true, message: "Berhasil menambahkan divisi", data, }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Berhasil menambahkan divisi", notif: dataNotif, }, { status: 200 });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal menambahkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal menambahkan divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };

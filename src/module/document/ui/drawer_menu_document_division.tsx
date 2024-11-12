@@ -1,31 +1,34 @@
 "use clent"
-import { LayoutDrawer, TEMA } from '@/module/_global';
-import { ActionIcon, Box, Button, Center, Divider, Flex, Grid, Modal, Progress, rem, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import React, { useRef, useState } from 'react';
-import toast from 'react-hot-toast';
-import { FaFolderClosed, FaRegImage } from 'react-icons/fa6';
-import { HiDocumentText } from 'react-icons/hi2';
-import { IoAddCircle, IoDocumentText } from 'react-icons/io5';
-import { funCreateFolder, funUploadFileDocument } from '../lib/api_document';
+import { keyWibu, LayoutDrawer, TEMA } from '@/module/_global';
 import { useHookstate } from '@hookstate/core';
-import { globalRefreshDocument } from '../lib/val_document';
+import { ActionIcon, Box, Button, Flex, Grid, Modal, Progress, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import _ from 'lodash';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { FaFolderClosed } from 'react-icons/fa6';
+import { HiDocumentText } from 'react-icons/hi2';
+import { IoAddCircle } from 'react-icons/io5';
+import { useWibuRealtime } from 'wibu-realtime';
+import { funCreateFolder, funUploadFileDocument } from '../lib/api_document';
+import { globalRefreshDocument } from '../lib/val_document';
 
 export default function DrawerMenuDocumentDivision() {
   const [openDrawerDocument, setOpenDrawerDocument] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-  const router = useRouter()
   const param = useParams<{ id: string }>()
   const searchParams = useSearchParams()
   const path = searchParams.get('path')
   const refresh = useHookstate(globalRefreshDocument)
   const openRef = useRef<() => void>(null)
-  const [fileForm, setFileForm] = useState<any>()
   const tema = useHookstate(TEMA)
   const [loading, setLoading] = useState(false)
-
+  const [loadingCreate, setLoadingCreate] = useState(false)
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
   const [bodyFolder, setBodyFolder] = useState({
     name: '',
     path: (path == undefined || path == '' || path == null) ? 'home' : path,
@@ -34,18 +37,26 @@ export default function DrawerMenuDocumentDivision() {
 
   async function onCreateFolder() {
     try {
+      setLoadingCreate(true)
       const res = await funCreateFolder(bodyFolder)
       if (!res.success) {
         toast.error(res.message)
+      } else {
+        setDataRealtime([{
+          category: "division-document",
+          id: path,
+        }])
       }
     } catch (error) {
       console.error(error);
       toast.error("Gagal membuat folder baru, coba lagi nanti");
+    } finally {
+      setLoadingCreate(false)
+      refresh.set(true)
+      setOpenModal(false)
+      setOpenDrawerDocument(false)
     }
 
-    refresh.set(true)
-    setOpenModal(false)
-    setOpenDrawerDocument(false)
   }
 
   async function onUploadFile(data: any) {
@@ -63,6 +74,11 @@ export default function DrawerMenuDocumentDivision() {
 
       if (!res.success) {
         toast.error(res.message)
+      } else {
+        setDataRealtime([{
+          category: "division-document",
+          id: path,
+        }])
       }
       setLoading(false)
     } catch (error) {
@@ -192,7 +208,7 @@ export default function DrawerMenuDocumentDivision() {
               <Button variant="subtle" fullWidth color='#969494' onClick={() => setOpenModal(false)}>Batalkan</Button>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Button variant="subtle" fullWidth color={tema.get().utama} onClick={() => onCreateFolder()}>Membuat</Button>
+              <Button loading={loadingCreate} variant="subtle" fullWidth color={tema.get().utama} onClick={() => onCreateFolder()}>Membuat</Button>
             </Grid.Col>
           </Grid>
         </Box>

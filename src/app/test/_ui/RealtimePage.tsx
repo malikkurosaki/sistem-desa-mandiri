@@ -14,10 +14,19 @@ export function RealtimePage({ wibuKey }: { wibuKey: string }) {
    }, [data])
 
    async function onTekan() {
-      setData({
+      setData([{
+         idUserTo: 'supadminAmalia',
          title: Math.random().toString(),
-         desc: 'Anda memiliki pengumuman baru. Silahkan periksa detailnya.'
-      })
+         desc: 'Anda memiliki pengumuman baru. Silahkan periksa detailnya.',
+         category: 'announcement',
+         idContent:'cm1eg9fqh00019rhi3oqbej1i'
+      },{
+         idUserTo: 'supadmieenAmalia',
+         title: Math.random().toString(),
+         desc: 'Anda memiliki pengumuman baru. Silahkan periksa detailnya.',
+         category: 'announcement',
+         idContent:'dfdf'
+      }])
    }
    return (
       <Stack p={"lg"}>

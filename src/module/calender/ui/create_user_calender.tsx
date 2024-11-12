@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
-import { globalCalender } from '../lib/val_calender';
-import { useParams, useRouter } from 'next/navigation';
-import { funGetDivisionById, funGetSearchMemberDivision, IDataMemberDivision } from '@/module/division_new';
+import { LayoutNavbarNew, SkeletonList, TEMA } from '@/module/_global';
+import { funGetSearchMemberDivision, IDataMemberDivision } from '@/module/division_new';
 import { useHookstate } from '@hookstate/core';
-import toast from 'react-hot-toast';
+import { Carousel } from '@mantine/carousel';
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Indicator, rem, Stack, Text, TextInput } from '@mantine/core';
 import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
-import { LayoutNavbarNew, SkeletonList, SkeletonSingle, TEMA } from '@/module/_global';
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, Indicator, rem, Stack, Text, TextInput } from '@mantine/core';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaCheck } from 'react-icons/fa6';
 import { HiChevronLeft, HiMagnifyingGlass } from 'react-icons/hi2';
 import { IoArrowBackOutline, IoClose } from 'react-icons/io5';
-import { Carousel } from '@mantine/carousel';
+import { globalCalender } from '../lib/val_calender';
 
 export default function CreateUserCalender({ onClose }: { onClose: (val: any) => void }) {
-  const router = useRouter()
   const param = useParams<{ id: string }>()
   const [selectedFiles, setSelectedFiles] = useState<any>([])
   const [isData, setData] = useState<IDataMemberDivision[]>([])
@@ -34,11 +33,9 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
         if (member.length > 0) {
           setSelectedFiles(JSON.parse(JSON.stringify(member.get())))
         }
-        setLoading(false)
       } else {
         toast.error(response.message)
       }
-
     } catch (error) {
       console.error(error)
       toast.error("Gagal mendapatkan anggota, coba lagi nanti");
@@ -103,6 +100,7 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
   async function fetchGetMember(val: string) {
     setSearchQuery(val)
     try {
+      setLoading(true)
       const res = await funGetSearchMemberDivision('?search=' + val, param.id);
       if (res.success) {
         setData(res.data)
@@ -111,6 +109,8 @@ export default function CreateUserCalender({ onClose }: { onClose: (val: any) =>
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false)
     }
   }
 

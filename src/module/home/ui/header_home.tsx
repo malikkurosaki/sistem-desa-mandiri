@@ -2,22 +2,26 @@
 import { LayoutNavbarHome, TEMA } from "@/module/_global";
 import { useHookstate } from "@hookstate/core";
 import { ActionIcon, Box, Group, Indicator, Text } from "@mantine/core";
+import { useShallowEffect } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiMagnifyingGlass, HiOutlineBell, HiOutlineUser } from "react-icons/hi2";
 import { funGetHome } from "../lib/api_home";
-import { useShallowEffect } from "@mantine/hooks";
+import { globalParamJumlahNotif } from "../lib/val_home";
 
 export default function HeaderHome() {
    const router = useRouter()
    const tema = useHookstate(TEMA)
    const [isDesa, setDesa] = useState("")
    const [isNotif, setNotif] = useState(0)
+   const paramNotif = useHookstate(globalParamJumlahNotif)
+   const [loading, setLoading] = useState(true)
 
 
    const fetchData = async () => {
       try {
+         setLoading(true)
          const response = await funGetHome('?cat=header')
          if (response.success) {
             setDesa(response.data.village)
@@ -28,6 +32,8 @@ export default function HeaderHome() {
       } catch (error) {
          toast.error("Gagal mendapatkan data, coba lagi nanti");
          console.error(error);
+      } finally {
+         setLoading(false)
       }
    };
 
@@ -35,6 +41,12 @@ export default function HeaderHome() {
    useShallowEffect(() => {
       fetchData();
    }, []);
+
+   useShallowEffect(() => {
+      if (!loading) {
+         setNotif(isNotif + 1)
+      }
+   }, [paramNotif.get()])
 
 
    return (

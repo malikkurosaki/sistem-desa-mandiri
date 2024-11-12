@@ -1,11 +1,8 @@
 import { DIR, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
+import { createLogUser } from "@/module/user";
 import _, { ceil } from "lodash";
 import { NextResponse } from "next/server";
-import path from "path";
-import fs from "fs";
-import moment from "moment";
-import { createLogUser } from "@/module/user";
 
 
 // GET ALL DATA TUGAS DIVISI
@@ -96,7 +93,7 @@ export async function GET(request: Request) {
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }
 
@@ -113,6 +110,8 @@ export async function POST(request: Request) {
       const body = await request.formData()
       const dataBody = body.get("data")
       const cekFile = body.has("file0")
+      const userId = user.id
+      const userRoleLogin = user.idUserRole
 
       const { title, task, member, idDivision } = JSON.parse(dataBody as string)
 
@@ -145,8 +144,8 @@ export async function POST(request: Request) {
             idDivision: idDivision,
             idProject: data.id,
             title: v.title,
-            dateStart: new Date(moment(v.dateStart).format('YYYY-MM-DD')),
-            dateEnd: new Date(moment(v.dateEnd).format('YYYY-MM-DD')),
+            dateStart: new Date(v.dateStart),
+            dateEnd: new Date(v.dateEnd),
          }))
 
          const insertTask = await prisma.divisionProjectTask.createMany({
@@ -233,6 +232,25 @@ export async function POST(request: Request) {
          desc: 'Terdapat tugas baru. Silahkan periksa detailnya.'
       }))
 
+      if (userRoleLogin != "supadmin") {
+         const perbekel = await prisma.user.findFirst({
+            where: {
+               isActive: true,
+               idUserRole: "supadmin",
+               idVillage: user.idVillage
+            }
+         })
+
+         dataNotif.push({
+            idUserTo: perbekel?.id,
+            idUserFrom: userId,
+            category: 'division/' + idDivision + '/task',
+            idContent: data.id,
+            title: 'Tugas Baru',
+            desc: 'Terdapat tugas baru. Silahkan periksa detailnya.'
+         })
+      }
+
       const insertNotif = await prisma.notifications.createMany({
          data: dataNotif
       })
@@ -242,10 +260,10 @@ export async function POST(request: Request) {
       const log = await createLogUser({ act: 'CREATE', desc: 'User membuat tugas divisi baru', table: 'divisionProject', data: data.id })
 
 
-      return NextResponse.json({ success: true, message: "Berhasil membuat tugas divisi" }, { status: 200 });
+      return NextResponse.json({ success: true, message: "Berhasil membuat tugas divisi", notif: dataNotif }, { status: 200 });
 
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ success: false, message: "Gagal membuat tugas divisi, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+      return NextResponse.json({ success: false, message: "Gagal membuat tugas divisi, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 }

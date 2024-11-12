@@ -1,7 +1,6 @@
 import { prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
-import moment from "moment";
 import { NextResponse } from "next/server";
 
 
@@ -82,7 +81,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
         );
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal menghapus tahapan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal menghapus tahapan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -159,7 +158,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengupdate status tahapan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate status tahapan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -183,16 +182,16 @@ export async function GET(request: Request, context: { params: { id: string } })
         if (!data) {
             return NextResponse.json(
                 {
-                    success: false, message: "Gagal mendapatkan project, data tidak ditemukan",
+                    success: false, message: "Gagal mendapatkan kegiatan, data tidak ditemukan",
                 },
                 { status: 404 }
             );
         }
 
-        return NextResponse.json({ success: true, message: "Detail project berhasil ditemukan", data }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Detail kegiatan berhasil ditemukan", data }, { status: 200 });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -231,8 +230,8 @@ export async function POST(request: Request, context: { params: { id: string } }
             },
             data: {
                 title,
-                dateStart: new Date(moment(dateStart).format('YYYY-MM-DD')),
-                dateEnd: new Date(moment(dateEnd).format('YYYY-MM-DD')),
+                dateStart: new Date(dateStart),
+                dateEnd: new Date(dateEnd),
             }
         })
 
@@ -243,6 +242,6 @@ export async function POST(request: Request, context: { params: { id: string } }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengupdate detail tahapan kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengupdate detail tahapan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

@@ -1,28 +1,29 @@
 'use client'
-import { currentScroll, globalNotifPage, SkeletonSingle, SkeletonUser, TEMA, WARNA } from '@/module/_global';
-import { ActionIcon, Box, Center, Divider, Grid, Group, Spoiler, Stack, Text, TextInput } from '@mantine/core';
-import React, { useEffect, useState } from 'react';
-import { TfiAnnouncement } from "react-icons/tfi";
-import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useShallowEffect } from '@mantine/hooks';
-import { IListDataAnnouncement } from '../lib/type_announcement';
-import { funGetAllAnnouncement } from '../lib/api_announcement';
-import toast from 'react-hot-toast';
+import { currentScroll, globalNotifPage, ReloadButtonTop, SkeletonUser, TEMA } from '@/module/_global';
+import { funGetUserByCookies } from '@/module/auth';
 import { useHookstate } from '@hookstate/core';
+import { ActionIcon, Box, Center, Divider, Grid, Spoiler, Stack, Text, TextInput } from '@mantine/core';
+import { useShallowEffect } from '@mantine/hooks';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { TfiAnnouncement } from "react-icons/tfi";
+import { funGetAllAnnouncement } from '../lib/api_announcement';
+import { IListDataAnnouncement } from '../lib/type_announcement';
 
 
 export default function ListAnnouncement() {
    const [isData, setIsData] = useState<IListDataAnnouncement[]>([])
+   const [user, setUser] = useState('')
    const [searchQuery, setSearchQuery] = useState('')
    const router = useRouter()
    const [loading, setLoading] = useState(true);
    const tema = useHookstate(TEMA)
-   const load = useHookstate(globalNotifPage)
-
-   // ini
+   const notifLoadPage = useHookstate(globalNotifPage)
    const { value: containerRef } = useHookstate(currentScroll);
    const [isPage, setPage] = useState(1)
+   const [isRefresh, setRefresh] = useState(false)
 
 
    const fetchData = async (loading: boolean) => {
@@ -31,11 +32,11 @@ export default function ListAnnouncement() {
             setLoading(true)
          const response = await funGetAllAnnouncement('?search=' + searchQuery + '&page=' + isPage)
          if (response.success) {
-               if (isPage == 1) {
-                  setIsData(response?.data)
-               } else {
-                  setIsData([...isData, ...response?.data])
-               }
+            if (isPage == 1) {
+               setIsData(response?.data)
+            } else {
+               setIsData([...isData, ...response?.data])
+            }
          } else {
             toast.error(response.message);
          }
@@ -48,7 +49,12 @@ export default function ListAnnouncement() {
       }
    }
 
-   function onSearch(val:string){
+   async function onUser() {
+      const user = await funGetUserByCookies()
+      setUser(String(user.id))
+   }
+
+   function onSearch(val: string) {
       setSearchQuery(val)
       setPage(1)
    }
@@ -61,6 +67,11 @@ export default function ListAnnouncement() {
    useShallowEffect(() => {
       fetchData(false)
    }, [isPage])
+
+
+   useShallowEffect(() => {
+      onUser()
+   }, [])
 
 
 
@@ -84,8 +95,35 @@ export default function ListAnnouncement() {
       };
    }, [containerRef, isPage]);
 
+
+   useShallowEffect(() => {
+      if (notifLoadPage.get().category == 'announcement' && notifLoadPage.get().load == true) {
+         setRefresh(true)
+      }
+   }, [notifLoadPage.get().load])
+
+   function onRefresh() {
+      notifLoadPage.set({
+         category: '',
+         load: false
+      })
+      setRefresh(false)
+      setPage(1)
+      setTimeout(() => {
+         fetchData(true)
+      }, 500)
+   }
+
    return (
       <Box p={20}>
+         {
+            isRefresh &&
+            <ReloadButtonTop
+               onReload={() => { onRefresh() }}
+               title='UPDATE'
+            />
+
+         }
          <TextInput
             styles={{
                input: {

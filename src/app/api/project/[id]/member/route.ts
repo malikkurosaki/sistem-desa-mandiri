@@ -49,7 +49,7 @@ export async function POST(request: Request, context: { params: { id: string } }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal menambah anggota kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal menambah anggota kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -95,7 +95,7 @@ export async function DELETE(request: Request, context: { params: { id: string }
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota kegiatan, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mengeluarkan anggota kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }
 
@@ -136,22 +136,39 @@ export async function GET(request: Request, context: { params: { id: string } })
                 id: {
                     not: String(userId)
                 },
+                OR: [
+                    { idUserRole: 'coadmin', },
+                    { idUserRole: 'user', }
+                ],
                 isActive: true,
                 name: {
                     contains: (name == undefined || name == "null") ? "" : name,
                     mode: 'insensitive'
                 }
-                
+
             },
             select: {
                 id: true,
                 name: true,
                 email: true,
-                img: true
+                img: true,
+                UserRole: {
+                    select: {
+                        name: true
+                    }
+                }
+            },
+            orderBy: {
+                name: 'asc'
             }
         })
 
-        const fixMember = member.map((v: any) => ({
+        const omitData = member.map((v: any) => ({
+            ..._.omit(v, ["UserRole"]),
+            userRole: v.UserRole.name
+        }))
+
+        const fixMember = omitData.map((v: any) => ({
             idUser: v.id,
             name: v.name,
             email: v.email,
@@ -163,10 +180,10 @@ export async function GET(request: Request, context: { params: { id: string } })
             member: fixMember
         }
 
-        return NextResponse.json({ success: true, message: "Berhasil mendapatkan project", data: dataFix, }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Berhasil mendapatkan kegiatan", data: dataFix, }, { status: 200 });
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Gagal mendapatkan project, coba lagi nanti", reason: (error as Error).message, }, { status: 500 });
+        return NextResponse.json({ success: false, message: "Gagal mendapatkan kegiatan, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
     }
 }

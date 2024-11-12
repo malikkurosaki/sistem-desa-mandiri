@@ -1,28 +1,14 @@
 "use client"
 import { LayoutLogin, WARNA } from "@/module/_global";
-import {
-  Box,
-  Button,
-  Checkbox,
-  Image,
-  rem,
-  Stack,
-  Text,
-  TextInput,
-  Title,
-} from "@mantine/core";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { Box, Button, Stack, Text, TextInput } from "@mantine/core";
+import { useFocusTrap } from "@mantine/hooks";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import ViewVerification from "../../varification/view/view_verification";
-import { useFocusTrap } from "@mantine/hooks";
 
 function ViewLogin() {
   const focusTrapRef = useFocusTrap()
-  const router = useRouter()
-  const textInfo =
-    "Kami akan mengirimkan kode verifikasi melalui WhatsApp untuk mengonfirmasi nomor Anda.";
-
+  const textInfo = "Kami akan mengirimkan kode verifikasi melalui WhatsApp untuk mengonfirmasi nomor Anda.";
   const [isPhone, setPhone] = useState("")
   const [isOTP, setOTP] = useState<any>(null)
   const [isValPhone, setValPhone] = useState<any>(null)
@@ -37,38 +23,49 @@ function ViewLogin() {
     if (isPhone.toString().length <= 11)
       return toast.error('Nomor telepon tidak valid')
 
-    const cek = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ phone: isPhone })
-    })
-    const cekLogin = await cek.json()
-
-    if (cekLogin.success) {
-      const code = Math.floor(Math.random() * 1000) + 1000
+    try {
       setLoading(true)
-
-      const res = await fetch(`https://wa.wibudev.com/code?nom=${cekLogin.phone}&text=*DARMASABA*%0A%0A
-JANGAN BERIKAN KODE RAHASIA ini kepada siapa pun TERMASUK PIHAK DARMASABA. Masukkan otentikasi:  *${encodeURIComponent(code)}*`).then(
-        async (res) => {
-          if (res.status == 200) {
-            setValPhone(cekLogin.phone)
-            setOTP(code)
-            setUser(cekLogin.id)
-            setVerif(true)
-            setLoading(false)
-            toast.success('Kode verifikasi telah dikirim')
-          } else {
-            toast.error('Internal Server Error')
-            setLoading(false)
-          }
+      const cek = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ phone: isPhone })
+      })
+      const cekLogin = await cek.json()
+      if (cekLogin.success) {
+        const code = Math.floor(Math.random() * 1000) + 1000
+        try {
+          const res = await fetch(`https://wa.wibudev.com/code?nom=${cekLogin.phone}&text=*DARMASABA*%0A%0A
+            JANGAN BERIKAN KODE RAHASIA ini kepada siapa pun TERMASUK PIHAK DARMASABA. Masukkan otentikasi:  *${encodeURIComponent(code)}*`).then(
+            async (res) => {
+              if (res.status == 200) {
+                setValPhone(cekLogin.phone)
+                setOTP(code)
+                setUser(cekLogin.id)
+                setVerif(true)
+                toast.success('Kode verifikasi telah dikirim')
+              } else {
+                console.error(res.status)
+                toast.error('Internal Server Error')
+              }
+            }
+          )
+        } catch (error) {
+          console.error(error)
+          toast.error('Internal Server Error')
         }
-      )
-    } else {
-      return toast.error(cekLogin.message)
+      } else {
+        return toast.error(cekLogin.message)
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error('Internal Server Error')
+    } finally {
+      setLoading(false)
     }
+
+
 
   }
 

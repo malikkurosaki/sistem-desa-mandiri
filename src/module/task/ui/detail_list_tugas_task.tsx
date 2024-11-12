@@ -1,23 +1,25 @@
 'use client'
-import { LayoutDrawer, SkeletonDetailListTugasTask, TEMA } from "@/module/_global"
-import { Box, Grid, Center, Checkbox, Group, SimpleGrid, Text, Stack, Flex, Divider } from "@mantine/core"
+import { keyWibu, LayoutDrawer, SkeletonDetailListTugasTask, TEMA } from "@/module/_global"
+import LayoutModal from "@/module/_global/layout/layout_modal"
+import { useHookstate } from "@hookstate/core"
+import { Box, Center, Checkbox, Divider, Flex, Grid, Group, SimpleGrid, Stack, Text } from "@mantine/core"
 import { useShallowEffect } from "@mantine/hooks"
+import "moment/locale/id"
 import { useParams, useRouter } from "next/navigation"
+import { useState } from "react"
 import toast from "react-hot-toast"
 import { AiOutlineFileDone, AiOutlineFileSync } from "react-icons/ai"
-import { funDeleteDetailTask, funGetTaskDivisionById, funUpdateStatusDetailTask } from "../lib/api_task"
-import { useState } from "react"
-import { IDataListTaskDivision } from "../lib/type_task"
 import { FaCheck, FaPencil, FaTrash } from "react-icons/fa6"
-import LayoutModal from "@/module/_global/layout/layout_modal"
+import { useWibuRealtime } from "wibu-realtime"
+import { funDeleteDetailTask, funGetTaskDivisionById, funUpdateStatusDetailTask } from "../lib/api_task"
+import { IDataListTaskDivision } from "../lib/type_task"
 import { globalRefreshTask, valStatusDetailTask } from "../lib/val_task"
-import { useHookstate } from "@hookstate/core"
-import "moment/locale/id"
 
 export default function ListTugasDetailTask() {
    const [openDrawer, setOpenDrawer] = useState(false)
    const [openDrawerStatus, setOpenDrawerStatus] = useState(false)
    const [isOpenModal, setOpenModal] = useState(false)
+   const [loadingHapus, setLoadingHapus] = useState(false)
    const [isData, setData] = useState<IDataListTaskDivision[]>([])
    const [loading, setLoading] = useState(true)
    const param = useParams<{ id: string, detail: string }>()
@@ -27,6 +29,10 @@ export default function ListTugasDetailTask() {
    const refresh = useHookstate(globalRefreshTask)
    const tema = useHookstate(TEMA)
    const [reason, setReason] = useState("")
+   const [dataRealTime, setDataRealtime] = useWibuRealtime({
+      WIBU_REALTIME_TOKEN: keyWibu,
+      project: "sdm"
+   })
 
    async function getOneDataCancel() {
       try {
@@ -47,9 +53,9 @@ export default function ListTugasDetailTask() {
       getOneDataCancel();
    }, [param.detail])
 
-   async function getOneData() {
+   async function getOneData(loading: boolean) {
       try {
-         setLoading(true)
+         setLoading(loading)
          const res = await funGetTaskDivisionById(param.detail, 'task');
          if (res.success) {
             setData(res.data)
@@ -66,17 +72,22 @@ export default function ListTugasDetailTask() {
    }
 
    useShallowEffect(() => {
-      getOneData();
+      getOneData(true);
    }, [param.detail])
 
 
    async function onDelete() {
       try {
+         setLoadingHapus(true)
          const res = await funDeleteDetailTask(idData, { idProject: param.detail });
          if (res.success) {
+            setDataRealtime([{
+               category: "tugas-detail-task",
+               id: param.detail,
+            }])
             toast.success(res.message);
             refresh.set(true)
-            getOneData();
+            getOneData(false);
             setIdData("")
             setOpenDrawer(false)
          } else {
@@ -85,6 +96,9 @@ export default function ListTugasDetailTask() {
       } catch (error) {
          console.error(error);
          toast.error("Gagal menghapus tugas divisi, coba lagi nanti");
+      } finally {
+         setLoadingHapus(false)
+         setOpenModal(false)
       }
 
    }
@@ -93,9 +107,13 @@ export default function ListTugasDetailTask() {
       try {
          const res = await funUpdateStatusDetailTask(idData, { status: val, idProject: param.detail });
          if (res.success) {
+            setDataRealtime([{
+               category: "tugas-detail-task",
+               id: param.detail,
+            }])
             toast.success(res.message);
             refresh.set(true)
-            getOneData();
+            getOneData(false);
             setIdData("")
             setOpenDrawerStatus(false)
             setOpenDrawer(false)
@@ -108,6 +126,15 @@ export default function ListTugasDetailTask() {
       }
    }
 
+   useShallowEffect(() => {
+      if (dataRealTime && dataRealTime.some((i: any) => i.category == 'tugas-detail-task' && i.id == param.detail)) {
+         refresh.set(true)
+         getOneData(false)
+      } else if (dataRealTime && dataRealTime.some((i: any) => i.category == 'tugas-detail-status' && i.id == param.detail)) {
+         getOneDataCancel()
+      }
+   }, [dataRealTime])
+
    return (
       <Box pt={20}>
          <Text fw={"bold"} c={tema.get().utama}>
@@ -118,8 +145,9 @@ export default function ListTugasDetailTask() {
             style={{
                borderRadius: 10,
                border: `1px solid ${"#D6D8F6"}`,
-               padding:20
             }}
+            pl={20}
+            pr={20}
          >
             {
                loading ?
@@ -129,7 +157,7 @@ export default function ListTugasDetailTask() {
                      </Box>
                   </>
                   :
-                  isData.length === 0 ? <Text c={"dimmed"} ta={"center"} fs={"italic"}>Tidak ada tugas</Text> :
+                  isData.length === 0 ? <Text c={"dimmed"} ta={"center"} fs={"italic"} py={20}>Tidak ada tugas</Text> :
                      isData.map((item, index) => {
                         return (
                            <Box key={index}>
@@ -239,51 +267,49 @@ export default function ListTugasDetailTask() {
             </Box>
          </LayoutDrawer>
 
-         <LayoutModal opened={isOpenModal} onClose={() => setOpenModal(false)}
+         <LayoutModal loading={loadingHapus} opened={isOpenModal} onClose={() => setOpenModal(false)}
             description="Apakah Anda yakin ingin menghapus tugas ini?"
             onYes={(val) => {
                if (val) {
                   onDelete()
+               } else {
+                  setOpenModal(false)
                }
-               setOpenModal(false)
             }} />
 
 
          <LayoutDrawer opened={openDrawerStatus} title={'Status'} onClose={() => setOpenDrawerStatus(false)}>
             <Box>
-               <Stack pt={10}>
-                  {
-                     valStatusDetailTask.map((item, index) => {
-                        return (
-                           <Box mb={5} key={index} onClick={() => { onUpdateStatus(item.value) }}>
-                              <Flex justify={"space-between"} align={"center"}>
-                                 <Group>
-                                    <Text style={{
-                                       cursor: 'pointer',
-                                       display: 'flex',
-                                       alignItems: 'center',
-                                    }}>
-                                       {item.name}
-                                    </Text>
-                                 </Group>
-                                 <Text
-                                    style={{
-                                       cursor: 'pointer',
-                                       display: 'flex',
-                                       alignItems: 'center',
-                                       paddingLeft: 20,
-                                    }}
-                                 >
-                                    {statusData === item.value ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+               {
+                  valStatusDetailTask.map((item, index) => {
+                     return (
+                        <Box key={index} onClick={() => { onUpdateStatus(item.value) }}>
+                           <Flex justify={"space-between"} align={"center"}>
+                              <Group>
+                                 <Text style={{
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                 }}>
+                                    {item.name}
                                  </Text>
-                              </Flex>
-                              <Divider my={"md"} />
-                           </Box>
-                        )
-                     })
-                  }
-
-               </Stack>
+                              </Group>
+                              <Text
+                                 style={{
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    paddingLeft: 20,
+                                 }}
+                              >
+                                 {statusData === item.value ? <FaCheck style={{ marginRight: 10 }} /> : ""}
+                              </Text>
+                           </Flex>
+                           <Divider my={20} />
+                        </Box>
+                     )
+                  })
+               }
             </Box>
          </LayoutDrawer>
       </Box>

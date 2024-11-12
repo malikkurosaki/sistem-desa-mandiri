@@ -2,7 +2,7 @@ export interface IDataHomeKegiatan {
    id: string
    title: string
    desc: string
-   status: string
+   status: number
    progress: number
    createdAt: string
 }

@@ -1,58 +1,30 @@
 "use client";
-import {
-  LayoutDrawer,
-  LayoutModalViewFile,
-  LayoutNavbarNew,
-  TEMA,
-} from "@/module/_global";
-import {
-  ActionIcon,
-  Anchor,
-  Box,
-  Breadcrumbs,
-  Button,
-  Checkbox,
-  Divider,
-  Flex,
-  Grid,
-  Group,
-  Indicator,
-  Menu,
-  Modal,
-  rem,
-  Select,
-  SimpleGrid,
-  Skeleton,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import React, { useState } from "react";
-import { HiMenu } from "react-icons/hi";
-import { FcDocument, FcFolder, FcImageFile } from "react-icons/fc";
-import { BsDownload, BsListCheck } from "react-icons/bs";
+import { keyWibu, LayoutDrawer, LayoutModalViewFile, LayoutNavbarNew, TEMA, } from "@/module/_global";
+import LayoutModal from "@/module/_global/layout/layout_modal";
+import { funGetDivisionById } from "@/module/division_new";
+import { useHookstate } from "@hookstate/core";
+import { ActionIcon, Box, Breadcrumbs, Button, Checkbox, Divider, Flex, Grid, Group, Indicator, Menu, Modal, rem, SimpleGrid, Skeleton, Text, TextInput } from "@mantine/core";
+import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { AiOutlineDelete } from "react-icons/ai";
+import { BsDownload, BsListCheck } from "react-icons/bs";
 import { CgRename } from "react-icons/cg";
+import { FaShare } from "react-icons/fa6";
+import { FcDocument, FcFolder, FcImageFile } from "react-icons/fc";
+import { GoChevronRight } from "react-icons/go";
+import { HiMenu } from "react-icons/hi";
 import { LuShare2 } from "react-icons/lu";
 import { MdClose, MdOutlineMoreHoriz } from "react-icons/md";
-import LayoutModal from "@/module/_global/layout/layout_modal";
-import toast from "react-hot-toast";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { RiListCheck } from "react-icons/ri";
+import { useWibuRealtime } from "wibu-realtime";
+import { funDeleteDocument, funGetAllDocument, funRenameDocument, } from "../lib/api_document";
+import { IDataDocument, IJalurItem } from "../lib/type_document";
+import { globalRefreshDocument } from "../lib/val_document";
 import DrawerMenuDocumentDivision from "./drawer_menu_document_division";
 import DrawerMore from "./drawer_more";
-import { funGetDivisionById } from "@/module/division_new";
-import { useMediaQuery, useShallowEffect } from "@mantine/hooks";
-import {
-  funDeleteDocument,
-  funGetAllDocument,
-  funRenameDocument,
-} from "../lib/api_document";
-import { IDataDocument, IJalurItem } from "../lib/type_document";
-import { useHookstate } from "@hookstate/core";
-import { globalRefreshDocument } from "../lib/val_document";
-import { RiListCheck } from "react-icons/ri";
-import { GoChevronRight } from "react-icons/go";
 import DrawerShareDocument from "./drawer_share_document";
-import { FaShare } from "react-icons/fa6";
 
 export default function NavbarDocumentDivision() {
   const router = useRouter();
@@ -80,6 +52,12 @@ export default function NavbarDocumentDivision() {
   const isMobile2 = useMediaQuery("(max-width: 496px)");
   const tema = useHookstate(TEMA);
   const [loading, setLoading] = useState(true);
+  const [loadingRename, setLoadingRename] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [dataRealTime, setDataRealtime] = useWibuRealtime({
+    WIBU_REALTIME_TOKEN: keyWibu,
+    project: "sdm"
+  })
   const [bodyRename, setBodyRename] = useState({
     id: "",
     name: "",
@@ -162,58 +140,74 @@ export default function NavbarDocumentDivision() {
   };
 
   async function onConfirmDelete(val: boolean) {
-    if (val) {
-      try {
+    try {
+      if (val) {
+        setLoadingDelete(true)
         const respon = await funDeleteDocument(selectedFiles);
         if (respon.success) {
-          getOneData();
+          getOneData(false);
+          setDataRealtime([{
+            category: "division-document",
+            id: path,
+          }])
         } else {
           toast.error(respon.message);
         }
-      } catch (error) {
-        console.error(error);
-        toast.error("Gagal menghapus item, coba lagi nanti");
+        handleBatal();
       }
-
-      handleBatal();
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal menghapus item, coba lagi nanti");
+    } finally {
+      setLoadingDelete(false)
+      setIsDelete(false);
     }
-
-    setIsDelete(false);
   }
 
   async function onRenameSubmit() {
     try {
+      setLoadingRename(true);
       const res = await funRenameDocument(bodyRename);
       if (res.success) {
-        getOneData();
+        setDataRealtime([{
+          category: "division-document",
+          id: path,
+        }])
+        getOneData(false);
       } else {
         toast.error(res.message);
       }
     } catch (error) {
       console.error(error);
       toast.error("Gagal mengganti nama item, coba lagi nanti");
+    } finally {
+      setLoadingRename(false)
+      setSelectedFiles([]);
+      setDariSelectAll(false);
+      setRename(false);
     }
 
-    setSelectedFiles([]);
-    setDariSelectAll(false);
-    setRename(false);
   }
 
-  async function getOneData() {
+  useShallowEffect(() => {
+    if (dataRealTime && dataRealTime.some((i: any) => i.category == 'division-document' && i.id == path)) {
+      getOneData(false)
+    }
+  }, [dataRealTime])
+
+  async function getOneData(loading: boolean) {
     try {
-      setLoading(true);
+      setLoading(loading);
       const respon = await funGetAllDocument(
         "?division=" + param.id + "&path=" + path
       );
       if (respon.success) {
         setDataDocument(respon.data);
         setDataJalur(respon.jalur);
-        setLoading(false);
       } else {
         toast.error(respon.message);
         setDataDocument([]);
         setDataJalur([]);
-        setLoading(false);
       }
       const res = await funGetDivisionById(param.id);
       if (res.success) {
@@ -242,7 +236,7 @@ export default function NavbarDocumentDivision() {
   }, [selectedFiles]);
 
   useShallowEffect(() => {
-    getOneData();
+    getOneData(true);
     resetRefresh();
   }, [param.id, path, refresh.get()]);
 
@@ -814,6 +808,7 @@ export default function NavbarDocumentDivision() {
 
       {/* MODAL KONFIRMASI DELETE */}
       <LayoutModal
+        loading={loadingDelete}
         opened={isDelete}
         onClose={() => setIsDelete(false)}
         description="Apakah Anda yakin ingin menghapus item?"
@@ -873,6 +868,7 @@ export default function NavbarDocumentDivision() {
             </Grid.Col>
             <Grid.Col span={6}>
               <Button
+                loading={loadingRename}
                 variant="subtle"
                 fullWidth
                 color={tema.get().utama}
