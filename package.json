@@ -55,6 +55,8 @@
     "rrule": "^2.8.1",
     "supabase": "^1.192.5",
     "web-push": "^3.6.7",
+    "wibu-cli": "^1.0.91",
+    "wibu-pkg": "^1.0.63",
     "wibu-realtime": "bipproduction/wibu-realtime",
     "yargs": "^17.7.2"
   },
