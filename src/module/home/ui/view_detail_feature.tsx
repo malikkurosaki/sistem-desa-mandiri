@@ -1,14 +1,13 @@
 'use client'
-import { globalRole, LayoutNavbarNew, TEMA, WARNA } from '@/module/_global';
+import { globalRole, LayoutNavbarNew, TEMA } from '@/module/_global';
+import { useHookstate } from '@hookstate/core';
 import { ActionIcon, Box, Center, SimpleGrid, Text } from '@mantine/core';
-import React from 'react';
-import { HiMiniUserGroup, HiMiniPresentationChartBar, HiMegaphone, HiSquares2X2, HiChevronLeft, HiUserGroup, HiUsers } from "react-icons/hi2";
-import { PiUsersFourFill } from "react-icons/pi";
+import { useMediaQuery } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import { FaUserTag, FaUserTie } from 'react-icons/fa6';
-import { useHookstate } from '@hookstate/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { IoColorPalette, IoColorPaletteOutline } from 'react-icons/io5';
+import { HiMegaphone, HiMiniPresentationChartBar, HiMiniUserGroup } from "react-icons/hi2";
+import { IoColorPalette } from 'react-icons/io5';
+import { PiUsersFourFill } from "react-icons/pi";
 import { RiLayoutTop2Fill } from "react-icons/ri";
 
 export default function ViewDetailFeature() {
@@ -16,6 +15,24 @@ export default function ViewDetailFeature() {
   const roleLogin = useHookstate(globalRole)
   const isMobile = useMediaQuery('(max-width: 369px)');
   const tema = useHookstate(TEMA)
+
+  async function onKirim() {
+    try {
+      const res = await fetch('/api/push-notification', {
+        method: 'PUT',
+      })
+
+      const dataText = await res.text()
+      if (!res.ok) {
+        alert(dataText)
+        throw new Error(dataText)
+      }
+      alert("berhasil kirim")
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <>
       <LayoutNavbarNew back='/home' title='Fitur' menu={<></>} />
@@ -157,6 +174,24 @@ export default function ViewDetailFeature() {
                 </Box>
               </>
             }
+
+            {/* DELETE SOON */}
+            <Box onClick={() => { onKirim() }}>
+              <Center>
+                <ActionIcon variant="gradient"
+                  size={isMobile ? 50 : 68}
+                  aria-label="Gradient action icon"
+                  radius={100}
+                  // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
+                  bg={tema.get().bgFiturHome}
+                >
+                  <RiLayoutTop2Fill size={isMobile ? 25 : 35} color={tema.get().utama} />
+                </ActionIcon>
+              </Center>
+              <Center>
+                <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Kirim Notifikasi</Text>
+              </Center>
+            </Box>
 
           </SimpleGrid>
         </Box>
