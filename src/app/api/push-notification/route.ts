@@ -6,6 +6,7 @@ WibuServerPush.init({
    VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY!,
 })
 
+// UNTUK SUBSCRIBE USER DEVICE
 export async function POST(req: Request) {
    const { user, subscription } = await req.json()
    const upsert = await prisma.subscribe.upsert({
@@ -25,6 +26,8 @@ export async function POST(req: Request) {
 
 }
 
+
+// UNTUK KIRIM NOTIFIKASI
 export async function PUT(req: Request) {
    const sub = await prisma.subscribe.findMany()
    const subs: PushSubscription[] = sub.map((v) => JSON.parse(v.subscription)) as PushSubscription[]
