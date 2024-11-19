@@ -1,19 +1,13 @@
-import "@mantine/core/styles.css";
-import {
-  Box,
-  ColorSchemeScript,
-  Container,
-  MantineProvider,
-  rem,
-} from "@mantine/core";
-import { ScrollProvider, WARNA } from "@/module/_global";
-import { Lato } from "next/font/google";
-import '@mantine/carousel/styles.css';
-import { Toaster } from 'react-hot-toast';
-import '@mantine/dates/styles.css';
-import '@mantine/notifications/styles.css';
-import { Notifications } from '@mantine/notifications'
+import { ScrollProvider } from "@/module/_global";
 import LayoutBackground from "@/module/_global/layout/layout_background";
+import '@mantine/carousel/styles.css';
+import { Box, ColorSchemeScript, MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
+import '@mantine/dates/styles.css';
+import { Notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
+import { Lato } from "next/font/google";
+import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
   title: "SISTEM DESA MANDIRI",

@@ -5,14 +5,15 @@ import { useShallowEffect } from "@mantine/hooks";
 import { useParams, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { LuFolders, LuFolderSymlink } from "react-icons/lu";
+import { LuFolders, LuFolderSymlink, LuInfo } from "react-icons/lu";
 import { useWibuRealtime } from "wibu-realtime";
 import { funCopyDocument, funMoveDocument } from "../lib/api_document";
 import { IDataDocument } from "../lib/type_document";
 import { globalRefreshDocument } from "../lib/val_document";
 import DrawerCutDocuments from "./drawer_cut_documents";
+import DrawerInfoDocument from "./drawer_info_document";
 
-export default function DrawerMore({ data }: { data: IDataDocument[] }) {
+export default function DrawerMore({ data, share }: { data: IDataDocument[], share: boolean }) {
   const [isCut, setIsCut] = useState(false)
   const [isCopy, setIsCopy] = useState(false)
   const refresh = useHookstate(globalRefreshDocument)
@@ -27,6 +28,8 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
   })
   const searchParams = useSearchParams()
   const pathAwal = searchParams.get('path')
+  const [nFileSelected, setNFileSelected] = useState(0)
+  const [isInfo, setIsInfo] = useState(false)
 
 
   async function onMoveItem(path: string) {
@@ -86,6 +89,7 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
   function cekFileSelected() {
     const cek = data.some((i: any) => i.category == "FOLDER")
     setForbidCopy(cek)
+    setNFileSelected(data.length)
   }
 
   useShallowEffect(() => {
@@ -100,14 +104,17 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
         <SimpleGrid
           cols={{ base: 3, sm: 3, lg: 3 }}
         >
-          <Flex onClick={() => setIsCut(true)} justify={'center'} align={'center'} direction={'column'} >
-            <Box>
-              <LuFolderSymlink size={30} color={tema.get().utama} />
-            </Box>
-            <Box>
-              <Text c={tema.get().utama}>Pindah</Text>
-            </Box>
-          </Flex>
+          {
+            !share &&
+            <Flex onClick={() => setIsCut(true)} justify={'center'} align={'center'} direction={'column'} >
+              <Box>
+                <LuFolderSymlink size={30} color={tema.get().utama} />
+              </Box>
+              <Box>
+                <Text c={tema.get().utama}>Pindah</Text>
+              </Box>
+            </Flex>
+          }
           {
             (!forbidCopy) &&
             <Flex onClick={() => setIsCopy(true)} justify={'center'} align={'center'} direction={'column'} >
@@ -116,6 +123,17 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
               </Box>
               <Box>
                 <Text c={tema.get().utama}>Salin</Text>
+              </Box>
+            </Flex>
+          }
+          {
+            (nFileSelected == 1) &&
+            <Flex onClick={() => setIsInfo(true)} justify={'center'} align={'center'} direction={'column'} >
+              <Box>
+                <LuInfo size={30} color={tema.get().utama} />
+              </Box>
+              <Box>
+                <Text c={tema.get().utama}>Informasi</Text>
               </Box>
             </Flex>
           }
@@ -129,6 +147,10 @@ export default function DrawerMore({ data }: { data: IDataDocument[] }) {
 
       <LayoutDrawer opened={isCopy} onClose={() => setIsCopy(false)} title={'Pilih Lokasi Salin'} size="lg">
         <DrawerCutDocuments data={data} loadingAction={loadingCopy} onChoosePath={(val) => { onCopyItem(val) }} category="copy" />
+      </LayoutDrawer>
+
+      <LayoutDrawer opened={isInfo} onClose={() => setIsInfo(false)} title={'Informasi Dokumen'} size="lg">
+        <DrawerInfoDocument data={data} />
       </LayoutDrawer>
     </Box>
   );

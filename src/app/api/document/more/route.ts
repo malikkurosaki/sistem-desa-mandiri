@@ -2,7 +2,9 @@ import { DIR, funCopyFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
+import moment from "moment";
 import { NextResponse } from "next/server";
+import "moment/locale/id";
 
 
 // MOVE ITEM
@@ -200,3 +202,92 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ success: false, message: "Gagal membagikan item, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
    }
 };
+
+// GET INFO ITEM
+export async function GET(request: Request) {
+   try {
+      const user = await funGetUserByCookies()
+      if (user.id == undefined) {
+         return NextResponse.json({ success: false, message: "Anda harus login untuk mengakses ini" }, { status: 401 });
+      }
+
+
+      const { searchParams } = new URL(request.url);
+      const idItem = searchParams.get("item");
+
+      const cekItem = await prisma.divisionDocumentFolderFile.count({
+         where: {
+            id: String(idItem),
+         }
+      })
+
+      if (cekItem == 0) {
+         return NextResponse.json({ success: false, message: "Gagal mendapatkan dokumen, data tidak ditemukan" }, { status: 404 });
+      }
+
+      const data = await prisma.divisionDocumentFolderFile.findUnique({
+         where: {
+            id: String(idItem),
+         },
+         select: {
+            category: true,
+            name: true,
+            extension: true,
+            createdAt: true,
+            path: true,
+            Division: {
+               select: {
+                  name: true
+               }
+            },
+            User: {
+               select: {
+                  name: true
+               }
+            }
+         }
+      })
+
+      const dataPath = await prisma.divisionDocumentFolderFile.findUnique({
+         where: {
+            id: data?.path
+         }
+      })
+
+      const share = await prisma.divisionDocumentShare.findMany({
+         where: {
+            idDocument: String(idItem),
+            isActive: true
+         },
+         select: {
+            Division: {
+               select: {
+                  name: true
+               }
+            }
+         }
+      })
+
+
+      const dataUtama = {
+         category: data?.category,
+         name: data?.name,
+         extension: data?.extension,
+         createdAt: moment(data?.createdAt).format('DD MMMM YYYY'),
+         path: (dataPath?.name !== undefined && dataPath?.name !== null && dataPath?.name !== '') ? dataPath.name : "home",
+         division: data?.Division?.name,
+         createdBy: data?.User?.name
+      }
+
+      const dataShare = share.map((v: any) => ({
+         ..._.omit(v, ["Division"]),
+         division: v.Division.name
+      }))
+
+      return NextResponse.json({ success: true, message: "Berhasil mendapatkan item", data: dataUtama, share: dataShare }, { status: 200 });
+
+   } catch (error) {
+      console.error(error);
+      return NextResponse.json({ success: false, message: "Gagal mendapatkan item, coba lagi nanti (error: 500)", reason: (error as Error).message, }, { status: 500 });
+   }
+}
