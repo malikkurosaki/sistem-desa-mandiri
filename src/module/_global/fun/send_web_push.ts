@@ -1,4 +1,10 @@
+'use server'
 import { WibuServerPush } from "wibu-pkg";
+
+WibuServerPush.init({
+   NEXT_PUBLIC_VAPID_PUBLIC_KEY: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+   VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY!
+})
 
 export async function funSendWebPush({ sub, message }: { sub: { idUser: string, subscription: string }[], message: { body: string, title: string } }) {
    try {
