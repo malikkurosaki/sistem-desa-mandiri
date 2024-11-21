@@ -16,23 +16,6 @@ export default function ViewDetailFeature() {
   const isMobile = useMediaQuery('(max-width: 369px)');
   const tema = useHookstate(TEMA)
 
-  async function onKirim() {
-    try {
-      const res = await fetch('/api/push-notification', {
-        method: 'PUT',
-      })
-
-      const dataText = await res.text()
-      if (!res.ok) {
-        alert(dataText)
-        throw new Error(dataText)
-      }
-      alert("berhasil kirim")
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   return (
     <>
       <LayoutNavbarNew back='/home' title='Fitur' menu={<></>} />
@@ -174,25 +157,6 @@ export default function ViewDetailFeature() {
                 </Box>
               </>
             }
-
-            {/* DELETE SOON */}
-            <Box onClick={() => { onKirim() }}>
-              <Center>
-                <ActionIcon variant="gradient"
-                  size={isMobile ? 50 : 68}
-                  aria-label="Gradient action icon"
-                  radius={100}
-                  // gradient={{ from: '#DFDA7C', to: '#F2AF46', deg: 174 }}
-                  bg={tema.get().bgFiturHome}
-                >
-                  <RiLayoutTop2Fill size={isMobile ? 25 : 35} color={tema.get().utama} />
-                </ActionIcon>
-              </Center>
-              <Center>
-                <Text fz={isMobile ? 13 : 15} c={tema.get().utama}>Kirim Notifikasi</Text>
-              </Center>
-            </Box>
-
           </SimpleGrid>
         </Box>
       </Box>

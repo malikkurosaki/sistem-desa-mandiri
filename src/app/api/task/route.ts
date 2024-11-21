@@ -1,4 +1,4 @@
-import { DIR, funUploadFile, prisma } from "@/module/_global";
+import { DIR, funSendWebPush, funUploadFile, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _, { ceil } from "lodash";
@@ -215,15 +215,22 @@ export async function POST(request: Request) {
          select: {
             User: {
                select: {
-                  id: true
+                  id: true,
+                  Subscribe: {
+                     select: {
+                        subscription: true
+                     }
+                  }
                }
             }
          }
       })
 
-
+      // mengirim notifikasi
+      // datanotif untuk realtime notifikasi
+      // datapush untuk web push notifikasi ketika aplikasi tidak aktif
       const dataNotif = memberDivision.map((v: any) => ({
-         ..._.omit(v, ["User"]),
+         ..._.omit(v, ["User", "Subscribe"]),
          idUserTo: v.User.id,
          idUserFrom: String(user.id),
          category: 'division/' + idDivision + '/task',
@@ -232,12 +239,26 @@ export async function POST(request: Request) {
          desc: 'Terdapat tugas baru. Silahkan periksa detailnya.'
       }))
 
+      const dataPush = memberDivision.map((v: any) => ({
+         ..._.omit(v, ["User", "Subscribe"]),
+         idUser: v.User.id,
+         subscription: v.User.Subscribe?.subscription,
+      }))
+
       if (userRoleLogin != "supadmin") {
          const perbekel = await prisma.user.findFirst({
             where: {
                isActive: true,
                idUserRole: "supadmin",
                idVillage: user.idVillage
+            },
+            select: {
+               id: true,
+               Subscribe: {
+                  select: {
+                     subscription: true
+                  }
+               }
             }
          })
 
@@ -249,8 +270,48 @@ export async function POST(request: Request) {
             title: 'Tugas Baru',
             desc: 'Terdapat tugas baru. Silahkan periksa detailnya.'
          })
+
+         dataPush.push({
+            idUser: perbekel?.id,
+            subscription: perbekel?.Subscribe?.subscription
+         })
       }
 
+      if (userRoleLogin != "cosupadmin") {
+         const ketuaGrup = await prisma.user.findFirst({
+            where: {
+               isActive: true,
+               idUserRole: "cosupadmin",
+               idGroup: user.idGroup
+            },
+            select: {
+               id: true,
+               Subscribe: {
+                  select: {
+                     subscription: true
+                  }
+               }
+            }
+         })
+
+         dataNotif.push({
+            idUserTo: ketuaGrup?.id,
+            idUserFrom: userId,
+            category: 'division/' + idDivision + '/task',
+            idContent: data.id,
+            title: 'Tugas Baru',
+            desc: 'Terdapat tugas baru. Silahkan periksa detailnya.'
+         })
+
+         dataPush.push({
+            idUser: ketuaGrup?.id,
+            subscription: ketuaGrup?.Subscribe?.subscription
+         })
+      }
+
+      const pushNotif = dataPush.filter((item) => item.subscription != undefined)
+
+      const sendWebPush = await funSendWebPush({ sub: pushNotif, message: { body: 'Terdapat tugas baru. Silahkan periksa detailnya.', title: 'Tugas Baru' } })
       const insertNotif = await prisma.notifications.createMany({
          data: dataNotif
       })
