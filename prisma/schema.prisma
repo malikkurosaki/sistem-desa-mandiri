@@ -124,7 +124,7 @@ model User {
   DivisionCalendarMember     DivisionCalendarMember[]
   Notifications              Notifications[]              @relation("UserToUser")
   Notifications2             Notifications[]              @relation("UserFromUser")
-  Subscribe                  Subscribe[]
+  Subscribe                  Subscribe?
 }
 
 model UserLog {

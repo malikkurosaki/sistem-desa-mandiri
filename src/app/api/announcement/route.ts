@@ -1,4 +1,4 @@
-import { prisma } from "@/module/_global";
+import { funSendWebPush, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import _ from "lodash";
 import moment from "moment";
@@ -160,14 +160,25 @@ export async function POST(request: Request) {
                 }
             },
             select: {
-                idUser: true
+                idUser: true,
+                User: {
+                    select: {
+                        Subscribe: {
+                            select: {
+                                subscription: true
+                            }
+                        }
+                    }
+                }
             }
         })
 
 
-
+        // mengirim notifikasi
+        // datanotif untuk realtime notifikasi
+        // datapush untuk web push notifikasi ketika aplikasi tidak aktif
         const dataNotif = memberNotif.map((v: any) => ({
-            ..._.omit(v, ["idUser"]),
+            ..._.omit(v, ["idUser", "User", "Subscribe"]),
             idUserTo: v.idUser,
             idUserFrom: userId,
             category: 'announcement',
@@ -176,14 +187,29 @@ export async function POST(request: Request) {
             desc: 'Anda memiliki pengumuman baru. Silahkan periksa detailnya.'
         }))
 
+        const dataPush = memberNotif.map((v: any) => ({
+            ..._.omit(v, ["idUser", "User", "Subscribe"]),
+            idUser: v.idUser,
+            subscription: v.User.Subscribe?.subscription,
+        }))
+
         if (userRoleLogin != "supadmin") {
             const perbekel = await prisma.user.findFirst({
                 where: {
                     isActive: true,
                     idUserRole: "supadmin",
                     idVillage: user.idVillage
+                },
+                select: {
+                    id: true,
+                    Subscribe: {
+                        select: {
+                            subscription: true
+                        }
+                    }
                 }
             })
+
 
             dataNotif.push({
                 idUserTo: perbekel?.id,
@@ -193,8 +219,17 @@ export async function POST(request: Request) {
                 title: 'Pengumuman Baru',
                 desc: 'Anda memiliki pengumuman baru. Silahkan periksa detailnya.'
             })
+
+            dataPush.push({
+                idUser: perbekel?.id,
+                subscription: perbekel?.Subscribe?.subscription
+            })
         }
 
+
+        const pushNotif = dataPush.filter((item) => item.subscription != undefined)
+
+        const sendWebPush = await funSendWebPush({ sub: pushNotif, message: { title: 'Pengumuman Baru', body: 'Anda memiliki pengumuman baru. Silahkan periksa detailnya.' } })
         const insertNotif = await prisma.notifications.createMany({
             data: dataNotif
         })
