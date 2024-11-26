@@ -26,6 +26,7 @@ import { ScrollProvider } from "./components/scroll_provider";
 import SkeletonUser from "./components/skeleton_user";
 import SkeletonList from "./components/skeleton_list";
 import { funViewDir } from "./fun/view_dir";
+import { funSendWebPush } from "./fun/send_web_push";
 
 export { WARNA };
 export { LayoutLogin };
@@ -61,3 +62,4 @@ export { SkeletonUser }
 export { SkeletonList }
 export { keyWibu }
 export { funViewDir }
+export { funSendWebPush }

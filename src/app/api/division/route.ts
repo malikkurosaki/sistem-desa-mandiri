@@ -1,4 +1,4 @@
-import { prisma } from "@/module/_global";
+import { funSendWebPush, prisma } from "@/module/_global";
 import { funGetUserByCookies } from "@/module/auth";
 import { createLogUser } from "@/module/user";
 import _ from "lodash";
@@ -158,6 +158,9 @@ export async function POST(request: Request) {
       })
 
 
+      // mengirim notifikasi
+      // datanotif untuk realtime notifikasi
+      // datapush untuk web push notifikasi ketika aplikasi tidak aktif
       const dataNotif = sent.member.map((v: any) => ({
          ..._.omit(v, ["idUser", "name", "img"]),
          idUserTo: v.idUser,
@@ -168,12 +171,45 @@ export async function POST(request: Request) {
          desc: 'Terdapat divisi baru. Silahkan periksa detailnya.'
       }))
 
+      const selectUser = await prisma.divisionMember.findMany({
+         where: {
+            isActive: true,
+            idDivision: data.id
+         },
+         select: {
+            idUser: true,
+            User: {
+               select: {
+                  Subscribe: {
+                     select: {
+                        subscription: true
+                     }
+                  }
+               }
+            }
+         }
+      })
+
+      const dataPush = selectUser.map((v: any) => ({
+         ..._.omit(v, ["idUser", "User", "Subscribe"]),
+         idUser: v.idUser,
+         subscription: v.User.Subscribe?.subscription,
+      }))
+
       if (userRoleLogin != "supadmin") {
          const perbekel = await prisma.user.findFirst({
             where: {
                isActive: true,
                idUserRole: "supadmin",
                idVillage: user.idVillage
+            },
+            select: {
+               id: true,
+               Subscribe: {
+                  select: {
+                     subscription: true
+                  }
+               }
             }
          })
 
@@ -185,6 +221,12 @@ export async function POST(request: Request) {
             title: 'Divisi Baru',
             desc: 'Terdapat divisi baru. Silahkan periksa detailnya.'
          })
+
+         dataPush.push({
+            idUser: perbekel?.id,
+            subscription: perbekel?.Subscribe?.subscription
+         })
+
       } else {
          const atasanGroup = await prisma.user.findMany({
             where: {
@@ -198,12 +240,17 @@ export async function POST(request: Request) {
                }
             },
             select: {
-               id: true
+               id: true,
+               Subscribe: {
+                  select: {
+                     subscription: true
+                  }
+               }
             }
          })
 
          const omitData = atasanGroup.map((v: any) => ({
-            ..._.omit(v, ["id"]),
+            ..._.omit(v, ["id", "Subscribe"]),
             idUserTo: v.id,
             idUserFrom: userId,
             category: 'division',
@@ -212,10 +259,21 @@ export async function POST(request: Request) {
             desc: 'Terdapat divisi baru. Silahkan periksa detailnya.'
          }))
 
+         const omitPush = atasanGroup.map((v: any) => ({
+            ..._.omit(v, ["id", "Subscribe"]),
+            idUser: v.id,
+            subscription: v.Subscribe?.subscription,
+         }))
+
          dataNotif.push(...omitData)
+         dataPush.push(...omitPush)
 
       }
 
+
+      const pushNotif = dataPush.filter((item) => item.subscription != undefined)
+
+      const sendWebPush = await funSendWebPush({ sub: pushNotif, message: { title: 'Divisi Baru', body: 'Terdapat divisi baru. Silahkan periksa detailnya.' } })
       const insertNotif = await prisma.notifications.createMany({
          data: dataNotif
       })
