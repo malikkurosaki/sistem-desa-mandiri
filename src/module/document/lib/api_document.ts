@@ -79,6 +79,11 @@ export const funShareDocument = async (data: IShareDocument) => {
    return await response.json().catch(() => null);
 };
 
+export const funGetInfoDocument = async (path?: string) => {
+   const response = await fetch(`/api/document/more${(path) ? path : ''}`);
+   return await response.json().catch(() => null);
+};
+
 export const funUploadFileDocument = async (data: FormData) => {
    const response = await fetch(`/api/document/upload`, {
       method: "POST",

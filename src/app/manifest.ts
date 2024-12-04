@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Sistem Desa Mandiri",
-    short_name: "SDM",
-    description: "Sistem Desa Mandiri",
+    name: "Wibu Example",
+    short_name: "WibuExp",
+    description: "Contoh penggunaan PWA dan push",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
@@ -13,17 +13,15 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         src: "/icon-192x192.png",
         sizes: "192x192",
-        type: "image/png"
+        type: "image/png",
       },
       {
         src: "/icon-512x512.png",
         sizes: "512x512",
-        type: "image/png"
-      }
+        type: "image/png",
+      },
     ],
-    serviceworker: {
-      src: "/wibu_worker.js"
-    },
-
   };
 }
+
+// wibu:1.0.87

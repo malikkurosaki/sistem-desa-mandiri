@@ -461,7 +461,7 @@ export default function NavbarDocumentDivision() {
                     variant="subtle"
                     aria-label="share"
                     onClick={
-                      selectedFiles.length > 0 && !shareSelected
+                      (selectedFiles.length == 1) || (selectedFiles.length > 0 && !shareSelected)
                         ? () => setMore(true)
                         : undefined
                     }
@@ -469,7 +469,7 @@ export default function NavbarDocumentDivision() {
                     <MdOutlineMoreHoriz
                       size={20}
                       color={
-                        selectedFiles.length > 0 && !shareSelected
+                        (selectedFiles.length == 1) || (selectedFiles.length > 0 && !shareSelected)
                           ? "white"
                           : "#656060"
                       }
@@ -479,7 +479,7 @@ export default function NavbarDocumentDivision() {
                     fz={12}
                     ta={"center"}
                     c={
-                      selectedFiles.length > 0 && !shareSelected
+                      (selectedFiles.length == 1) || (selectedFiles.length > 0 && !shareSelected)
                         ? "white"
                         : "#656060"
                     }
@@ -891,7 +891,7 @@ export default function NavbarDocumentDivision() {
       </LayoutDrawer>
 
       <LayoutDrawer opened={more} title={""} onClose={() => setMore(false)}>
-        <DrawerMore data={selectedFiles} />
+        <DrawerMore data={selectedFiles} share={shareSelected} />
       </LayoutDrawer>
 
       <LayoutModalViewFile

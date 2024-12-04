@@ -11,6 +11,20 @@ export interface IDataDocument {
    updatedAt: string;
 }
 
+export interface IInfoDocument {
+   id: string;
+   path: string;
+   name: string;
+   extension: string;
+   category: string;
+   division: string;
+   createdBy: string;
+   createdAt: string;
+}
+
+export interface IInfoShare {
+   division: string
+}
 
 export interface IFormFolder {
    name: string;
