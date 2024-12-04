@@ -1,20 +1,17 @@
 "use client"
 import { TEMA } from '@/module/_global';
-import { ActionIcon, Box, Center, Grid, Group, SimpleGrid, Text } from '@mantine/core';
-import React, { useState } from 'react';
-import { HiMiniUserGroup } from 'react-icons/hi2';
-import { IoIosArrowRoundForward } from 'react-icons/io';
-import { LuClipboardEdit } from "react-icons/lu";
-import { GoCommentDiscussion } from "react-icons/go";
-import { BsFileEarmarkText } from "react-icons/bs";
-import { IoCalendarOutline } from "react-icons/io5";
-import { LuFileSignature } from "react-icons/lu";
-import { useParams, useRouter } from 'next/navigation';
-import { funGetDetailDivisionById } from '../lib/api_division';
-import toast from 'react-hot-toast';
-import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
-import { IDataJumlahDetailDivision } from '../lib/type_division';
 import { useHookstate } from '@hookstate/core';
+import { ActionIcon, Box, Grid, Group, SimpleGrid, Text } from '@mantine/core';
+import { useMediaQuery, useShallowEffect } from '@mantine/hooks';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { BsClipboard2Check, BsFileEarmarkText } from "react-icons/bs";
+import { GoCommentDiscussion } from "react-icons/go";
+import { IoIosArrowRoundForward } from 'react-icons/io';
+import { IoCalendarOutline } from "react-icons/io5";
+import { funGetDetailDivisionById } from '../lib/api_division';
+import { IDataJumlahDetailDivision } from '../lib/type_division';
 
 export default function FeatureDetailDivision() {
   const param = useParams<{ id: string }>()
@@ -70,7 +67,7 @@ export default function FeatureDetailDivision() {
                 radius={100}
                 color={tema.get().bgTotalKegiatan}
               >
-                <LuClipboardEdit size={isMobile2 ? 20 : 25} color={tema.get().utama} />
+                <BsClipboard2Check size={isMobile2 ? 20 : 25} color={tema.get().utama} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col
