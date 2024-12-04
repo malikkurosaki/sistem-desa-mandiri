@@ -11,7 +11,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { GrChatOption } from "react-icons/gr";
 import { HiMenu } from "react-icons/hi";
-import { LuSendHorizonal } from "react-icons/lu";
+import { VscSend } from "react-icons/vsc";
 import { useWibuRealtime } from "wibu-realtime";
 import { funCreateComent, funGetDiscussionById } from "../lib/api_discussion";
 import { IDetailDiscussion } from "../lib/type_discussion";
@@ -335,7 +335,7 @@ export default function DetailDiscussion({ id, idDivision }: { id: string, idDiv
                               <ActionIcon
                                  onClick={sendComent}
                                  variant="subtle" aria-label="submit" disabled={isData?.status === 2}>
-                                 <LuSendHorizonal size={30} />
+                                 <VscSend size={30} />
                               </ActionIcon>
                            </Center>
                         </Grid.Col>
