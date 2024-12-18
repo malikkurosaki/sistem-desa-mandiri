@@ -363,7 +363,7 @@ export default function EditMember({ id }: { id: string }) {
                      error={
                         touched.phone && (
                            data.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" :
-                              data.phone.length < 10 ? "Nomor Telepon Tidak Valid" : null
+                              data.phone.length < 9 ? "Nomor Telepon Tidak Valid" : null
                         )
                      }
                   />
