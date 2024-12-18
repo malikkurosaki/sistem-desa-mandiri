@@ -20,7 +20,7 @@ function ViewLogin() {
     if (isPhone == "")
       return toast.error('Silakan diisi dengan lengkap')
 
-    if (isPhone.toString().length <= 11)
+    if (isPhone.toString().length <= 8)
       return toast.error('Nomor telepon tidak valid')
 
     try {

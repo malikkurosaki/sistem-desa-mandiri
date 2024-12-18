@@ -479,7 +479,7 @@ export default function CreateMember() {
           error={
             touched.phone && (
               listData.phone == "" ? "Nomor Telepon Tidak Boleh Kosong" :
-                listData.phone.length < 10 ? "Nomor Telepon Tidak Valid" : null
+                listData.phone.length < 9 ? "Nomor Telepon Tidak Valid" : null
             )
           }
         />
